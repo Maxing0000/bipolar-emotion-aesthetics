@@ -1,7 +1,8 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.5.1-blue)
+![Version](https://img.shields.io/badge/version-1.5.2-blue)
+[![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
 
@@ -154,7 +155,7 @@ git clone --depth 1 https://github.com/Maxing0000/bipolar-emotion-aesthetics && 
 `mcp-server/` 把 BEA 计算工具封装为标准 MCP 服务——Claude Desktop、Cursor、WorkBuddy 等任何 MCP 客户端装上后，AI 可直接调用四个工具：`bea_list_categories`（品类权重表）、`bea_wt_calc`（W(T) 与范式落点）、`bea_wt_compare`（A/B 方案裁决）、`bea_scoresheet`（评分卡与短板修复）。
 
 ```bash
-pip install "git+https://github.com/Maxing0000/bipolar-emotion-aesthetics#subdirectory=mcp-server"
+pip install bea-mcp   # PyPI 一键安装：https://pypi.org/project/bea-mcp/
 ```
 
 客户端配置（Claude Desktop / Cursor / WorkBuddy 同格式）：
@@ -184,7 +185,7 @@ pip install "git+https://github.com/Maxing0000/bipolar-emotion-aesthetics#subdir
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.5.0, 2026. CC BY 4.0.
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.5.2, 2026. CC BY 4.0.
 
 BibTeX：
 
@@ -193,7 +194,7 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.5.1},
+  version= {1.5.2},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
   license= {CC BY 4.0},
   note   = {永久 DOI 将于 Zenodo 归档后补充}
@@ -201,6 +202,12 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.5.2（2026-09-13）
+- **PyPI 正式上线**：`pip install bea-mcp` 全球可装（https://pypi.org/project/bea-mcp/），安装命令从 git 直装切换为 PyPI，新增 PyPI 版本徽章
+
+### v1.5.1（2026-09-13）
+- 仓库卫生修复：移除误入版本控制的 `__pycache__/*.pyc`，`.gitignore` 补全 Python 构建产物规则
 
 ### v1.5.0（2026-09-13）
 - 新增 **MCP Server**（`mcp-server/`）：bea_list_categories / bea_wt_calc / bea_wt_compare / bea_scoresheet 四工具，pip 一键安装，Claude Desktop / Cursor / WorkBuddy 等 MCP 客户端直连

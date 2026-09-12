@@ -15,10 +15,13 @@
 ## 安装
 
 ```bash
-# 方式一：从 GitHub 直接安装（推荐）
+# 方式一：PyPI 一键安装（推荐）
+pip install bea-mcp
+
+# 方式二：从 GitHub 直接安装
 pip install "git+https://github.com/Maxing0000/bipolar-emotion-aesthetics#subdirectory=mcp-server"
 
-# 方式二：本地源码
+# 方式三：本地源码
 git clone https://github.com/Maxing0000/bipolar-emotion-aesthetics
 cd bipolar-emotion-aesthetics/mcp-server
 pip install .
