@@ -36,6 +36,8 @@ def main():
         failures.append("CATEGORY_WEIGHTS 不一致（mcp-server vs wt_calc.py）")
     if srv.PARADIGM_RANGES != wt.PARADIGM_RANGES:
         failures.append("PARADIGM_RANGES 不一致")
+    if srv.DIM_MOVES != wt.DIM_MOVES:
+        failures.append("DIM_MOVES 维度手法表不一致（mcp-server vs wt_calc.py）")
     if srv.DIMENSIONS != ss.DIMENSIONS or srv.FIX_MAP != ss.FIX_MAP:
         failures.append("评分卡维度/修复映射不一致（mcp-server vs scoresheet.py）")
 
@@ -43,7 +45,7 @@ def main():
         for f in failures:
             print(f"✗ {f}")
         return 1
-    print("✓ MCP Server 与 CLI 脚本数据表完全一致（3 项）")
+    print("✓ MCP Server 与 CLI 脚本数据表完全一致（4 项）")
     return 0
 
 
