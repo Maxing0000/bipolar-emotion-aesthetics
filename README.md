@@ -7,6 +7,8 @@
 
 > 一套**可解释、可计算、可执行**的形式美学方法 / A computable framework for formal aesthetics.
 > **核心命题：美感 = 可控张力下的情绪奖赏（Aesthetic pleasure = emotional reward under controlled tension）。**
+>
+> 🧮 [W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)　｜　📖 [完整在线理论著作](docs/theory-book.html)　｜　🌐 [English README](README_EN.md)　｜　📚 [中英术语表](GLOSSARY.md)　｜　❓ [常见质疑 FAQ](FAQ.md)
 
 ![BEA 双极封面](docs/cover.png)
 
@@ -52,11 +54,24 @@ BEA 不会回答「更大气一点」，而是给出元素级、可复算的结�
 
 ```
 bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
-├── README.md / LICENSE / FAQ.md            # 说明 / 许可 / 常见质疑回应
+├── README.md / README_EN.md / LICENSE / FAQ.md   # 中文说明 / 英文说明 / 许可 / 常见质疑回应
+├── GLOSSARY.md                             # 中英术语表（全文统一译名，25+ 核心术语）
 ├── release.sh                              # 三平台一键发版脚本（GitHub/Gitee/ModelScope）
 ├── docs/
 │   ├── cover.png                           # 封面
-│   └── index.html                          # 网页版 W(T) 交互计算器（GitHub Pages）
+│   ├── index.html                          # 网页版 W(T) 交互计算器（GitHub Pages 首页）
+│   ├── theory-book.html                    # ★ 完整在线理论著作（十一编，体系图/诊断表/术语表/FAQ）
+│   ├── boundary.md                         # 模型边界与合规声明（适用范围/量化性质/原创性声明/数据隐私）
+│   ├── faq.md                              # 中英双语常见问题（8 问）
+│   └── promotion.md                        # 传播物料包（三档中英文案 + 18 自媒体选题 + 发布渠道）
+├── cases/                                  # 标准化示范案例（含完整 W(T) 计算与 BEA 评分）
+│   ├── case-phone.md                       # 手机外形：甜腻症 → 亲和精致（W(T) 0.175→0.29，76→88分）
+│   ├── case-logo.md                        # 心理咨询 LOGO：微差补偿法（91 分）
+│   └── case-poster.md                      # 电子音乐节海报：攻击症 → 崇高震撼（0.74→0.60，68→88分）
+├── templates/
+│   └── BEA评分卡模板.md                    # 5 套可复制模板（基调卡/审计表/W(T)计算/评分卡/18项审计清单）
+├── references/
+│   └── 学术参考文献.md                      # BEA 整合的 12 项公共学术来源与原创增量声明
 └── bipolar-emotion-aesthetics/             # ← 技能本体：把此文件夹放进 Agent 的 skills 目录
     ├── SKILL.md                            # 主入口：触发描述 + 核心模型 + 四类工作流（A/B/C/D）
     ├── references/
@@ -105,6 +120,17 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 - 素材不涉及任何个人信息、真实用户数据或受版权限制的第三方内容；
 - 采用宽松的 CC BY 4.0 协议，允许自由使用与商用，仅需署名。
 
+## 在线版本 / Online Reading
+
+本仓库提供两个互补的在线页面，部署到 GitHub Pages 后即可访问（Settings → Pages → Source 选 `main` 分支 `/docs` 目录）：
+
+| 页面 | 地址 | 用途 |
+| --- | --- | --- |
+| 🧮 W(T) 交互计算器 | `docs/index.html`（首页） | 拖滑块实时计算危极权重、范式落点、极性画像、四象限定位；附 iPhone 17 Pro / 问界 M9 等快捷示例 |
+| 📖 完整在线理论著作 | `docs/theory-book.html` | 十一编完整体系（本体→机制→元素→结构→阈值→范式→语境→方法→应用→诊断→评价）+ 体系图 SVG / 六范式卡 / 诊断表 / 术语表 / FAQ，暖橙冷蓝双极配色，响应式适配移动端 |
+
+两页互相链接：计算器页脚有「完整在线理论著作」入口，著作内有计算器引用。
+
 ## 多平台获取
 
 | 平台 | 用途 | 地址 |
@@ -143,6 +169,16 @@ BibTeX：
 - **新增 FAQ.md**：十问十答，直面「美怎么能量化」「与设计心理学何异」「W(T) 权重凭什么」「事后解释何来预测力」等最强质疑；
 - **新增网页版 W(T) 交互计算器**（docs/index.html，GitHub Pages 在线）：品类选择、维度滑块、实时 W(T) 与范式落点、极性画像、四象限定位、目标区间对照，附 iPhone 17 Pro / 问界 M9 等快捷示例；
 - **新增 release.sh 三平台一键发版脚本**：版本号替换、更新日志生成、GitHub 提交/标签/Release、Gitee 直推、ModelScope SDK 同步，一条命令完成。
+- **新增完整在线理论著作**（`docs/theory-book.html`，十一编 50KB+）：本体→机制→元素→结构→阈值→范式→语境→方法→应用→诊断→评价，含体系总图 SVG、六范式配比卡、美感地图四象限、BEA 评分卡、病症处方表、术语表、FAQ，暖橙冷蓝双极配色，scrollspy 导航，响应式；
+- **新增 README_EN.md** 英文精简介绍（面向海外设计师）；
+- **新增 GLOSSARY.md** 中英术语表（25+ 核心术语统一译名）；
+- **新增 docs/boundary.md** 模型边界与合规声明（适用范围/量化性质/原创性声明/数据隐私/安全承诺）；
+- **新增 docs/faq.md** 中英双语常见问题（8 问）；
+- **新增 docs/promotion.md** 传播物料包（三档中英文案 + 18 个自媒体选题 + 可复用素材清单 + 发布渠道建议）；
+- **新增 templates/BEA评分卡模板.md** 5 套可复制模板（基调卡/极性审计表/W(T)计算表/评分卡/18 项审计清单）；
+- **新增 cases/** 三个标准化示范案例（手机甜腻症 / 心理咨询LOGO微差补偿 / 电子音乐节海报崇高范式，均含完整 W(T) 计算与 BEA 评分）；
+- **新增 references/学术参考文献.md** BEA 整合的 12 项公共学术来源（伯克/康德/泽基/LeDoux/格式塔/进化论/信息论/中国阴阳等）与原创增量声明；
+- **SKILL.md 补强**：安全合规前置段落、双模式说明（诊断模式/创作模式）、仓库附加资源导航、版本标注。
 
 ### v1.1.1（2026-09-12）
 

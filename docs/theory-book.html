@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>双极情绪美学理论体系 · BEA v1.2.0 · Bipolar Emotion Aesthetics</title>
+<meta name="description" content="双极情绪美学（Bipolar Emotion Aesthetics, BEA）v1.2.0：一套可分析、可配比、可验证的形式美学方法论。核心命题『美感=可控张力下的情绪奖赏』，用亲极 P+ 与危极 T− 的秩序化组合解释并设计一切感官形式。作者 星空本空，CC BY 4.0。">
+<meta name="keywords" content="双极情绪美学,BEA,Bipolar Emotion Aesthetics,形式美学,设计美学,设计方法论,情绪设计,产品设计,设计原则,aesthetic theory,design methodology">
+<meta name="author" content="星空本空">
+<meta name="license" content="CC BY 4.0">
+<meta property="og:type" content="article">
+<meta property="og:title" content="双极情绪美学理论体系 · Bipolar Emotion Aesthetics v1.2.0">
+<meta property="og:description" content="美感=可控张力下的情绪奖赏：亲极与危极在秩序内组合的可计算形式美学方法，含十一编体系、范式配比、六步创作法与诊断工具。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bipolar Emotion Aesthetics (BEA) v1.2.0">
+<meta name="twitter:description" content="A computable framework of formal aesthetics: aesthetic pleasure as emotional reward under controlled tension.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='13' cy='16' r='9' fill='%23C07A45'/%3E%3Cpath d='M20 7 L29 3 L26 12 Z' fill='%2335556E'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<style>
+:root{
+  --paper:#FAF7F1; --card:#FFFFFF; --ink:#26221C; --ink-soft:#57504A; --ink-faint:#8A8177;
+  --line:#E7DFD2; --line-strong:#D6CBB8;
+  --warm:#C07A45; --warm-soft:#F3E7D8; --warm-deep:#9A5E2F;
+  --cool:#35556E; --cool-soft:#DFE7EE; --cool-deep:#243C50;
+  --gold:#A98A4C; --gold-soft:#F1EAD9;
+  --serif:"Noto Serif SC","Songti SC","STSong",serif;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --shadow:0 1px 2px rgba(38,34,28,.04),0 8px 24px -12px rgba(38,34,28,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-weight:400;line-height:1.85;font-size:16px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--gold-soft)}
+.topnav{position:sticky;top:0;z-index:100;background:rgba(250,247,241,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topnav-inner{max-width:1080px;margin:0 auto;padding:10px 24px;display:flex;align-items:center;gap:18px}
+.brand{font-family:var(--serif);font-weight:700;font-size:15px;letter-spacing:.05em;white-space:nowrap;color:var(--ink);display:flex;align-items:center;gap:8px}
+.brand-mark{width:18px;height:18px;flex:none}
+.nav-links{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{flex:none;font-size:13px;color:var(--ink-soft);text-decoration:none;padding:4px 10px;border-radius:20px;white-space:nowrap;transition:all .2s}
+.nav-links a:hover{background:var(--warm-soft);color:var(--warm-deep)}
+.nav-links a.active{background:var(--ink);color:#fff}
+.cover{max-width:1080px;margin:0 auto;padding:88px 24px 64px;position:relative}
+.cover .kicker{font-size:13px;letter-spacing:.32em;color:var(--gold);font-weight:500;margin-bottom:26px;text-transform:uppercase}
+.cover h1{font-family:var(--serif);font-weight:900;font-size:clamp(34px,6vw,58px);line-height:1.22;letter-spacing:.01em;margin-bottom:8px}
+.cover .latin{font-family:var(--serif);font-style:italic;font-size:clamp(15px,2.2vw,20px);color:var(--ink-faint);font-weight:400;margin-bottom:30px;letter-spacing:.04em}
+.cover .thesis{max-width:760px;font-size:clamp(17px,2.4vw,21px);line-height:1.9;color:var(--ink-soft);font-family:var(--serif);border-left:3px solid var(--gold);padding-left:22px}
+.cover .thesis strong{color:var(--ink)}
+.cover-meta{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:38px;font-size:13.5px;color:var(--ink-faint)}
+.cover-meta span b{color:var(--ink-soft);font-weight:500}
+.polar-legend{display:flex;gap:14px;margin-top:26px;flex-wrap:wrap}
+.polar-legend .tag{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;padding:6px 14px;border-radius:30px;font-weight:500}
+.tag.warm{background:var(--warm-soft);color:var(--warm-deep)}
+.tag.cool{background:var(--cool-soft);color:var(--cool-deep)}
+.tag .dot{width:9px;height:9px;border-radius:50%}
+.tag.warm .dot{background:var(--warm);border-radius:50% 50% 50% 0;transform:rotate(-45deg)}
+.tag.cool .dot{background:var(--cool);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+section.part{padding:54px 0 18px;scroll-margin-top:70px}
+.part-head{display:flex;align-items:baseline;gap:18px;margin-bottom:8px;border-bottom:2px solid var(--ink);padding-bottom:16px}
+.part-no{font-family:var(--serif);font-size:15px;font-weight:700;color:var(--gold);letter-spacing:.15em;white-space:nowrap}
+.part-head h2{font-family:var(--serif);font-size:clamp(24px,3.6vw,33px);font-weight:900;letter-spacing:.01em}
+.part-sub{color:var(--ink-faint);font-size:14.5px;margin:12px 0 30px;font-style:italic;font-family:var(--serif)}
+h3.ch{font-family:var(--serif);font-size:20.5px;font-weight:700;margin:40px 0 14px;display:flex;align-items:center;gap:12px}
+h3.ch .cn{color:var(--gold);font-size:14px;font-family:var(--sans);font-weight:700;letter-spacing:.1em;background:var(--gold-soft);padding:2px 9px;border-radius:4px}
+h4{font-family:var(--serif);font-size:17px;font-weight:700;margin:26px 0 10px;color:var(--cool-deep)}
+p{margin:12px 0;color:#332E27}
+p.lead{font-size:17px;color:var(--ink)}
+ul,ol{margin:12px 0 12px 4px;padding-left:22px}
+li{margin:7px 0;color:#332E27}
+strong{color:var(--ink);font-weight:700}
+em{font-style:normal;color:var(--warm-deep);font-weight:500}
+.small{font-size:13.5px;color:var(--ink-faint)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 26px;margin:22px 0;box-shadow:var(--shadow)}
+.axiom{background:linear-gradient(180deg,#fff, #FDFBF7);border:1px solid var(--line-strong);border-radius:14px;padding:22px 26px;margin:18px 0;position:relative}
+.axiom::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;background:var(--gold);border-radius:3px}
+.axiom .at{font-family:var(--serif);font-weight:700;color:var(--gold);font-size:13px;letter-spacing:.18em;margin-bottom:6px}
+.def{background:var(--cool-soft);border-radius:12px;padding:20px 24px;margin:20px 0;border:1px solid #C9D6E1}
+.def .dt{font-weight:700;color:var(--cool-deep);font-family:var(--serif);font-size:16px;margin-bottom:6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mini{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.mini h5{font-family:var(--serif);font-size:16px;font-weight:700;margin-bottom:8px}
+.mini.warm h5{color:var(--warm-deep)} .mini.cool h5{color:var(--cool-deep)} .mini.gold h5{color:var(--gold)}
+.mini p{font-size:14.5px;margin:6px 0;color:var(--ink-soft)}
+.tbl-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;background:var(--card);font-size:14.5px;min-width:560px}
+table.fixed{table-layout:fixed}
+th,td{padding:13px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.7}
+thead th{background:#F4EEE3;font-family:var(--serif);font-weight:700;font-size:14px;color:var(--ink);letter-spacing:.02em}
+tbody tr:last-child td{border-bottom:none}
+td.warm-c{background:#FDF8F2} td.cool-c{background:#F6F9FB}
+.col-warm{color:var(--warm-deep)} .col-cool{color:var(--cool-deep)}
+.tbl-cap{font-size:13px;color:var(--ink-faint);margin:-10px 2px 24px}
+figure.fig{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 26px 18px;margin:26px 0;box-shadow:var(--shadow)}
+figure.fig svg{width:100%;height:auto;display:block}
+figcaption{font-size:13.5px;color:var(--ink-faint);text-align:center;margin-top:12px;line-height:1.7}
+figcaption b{color:var(--ink-soft)}
+.paradigm{border-radius:14px;padding:0;margin:20px 0;overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);background:var(--card)}
+.paradigm .ph{padding:18px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.paradigm .ph .pname{font-family:var(--serif);font-size:19px;font-weight:900}
+.paradigm .ph .pratio{margin-left:auto;font-size:13px;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.7)}
+.paradigm .pb{padding:6px 24px 22px}
+.ratio-bar{display:flex;height:10px;border-radius:10px;overflow:hidden;margin:6px 0 16px}
+.ratio-bar .w{background:var(--warm)} .ratio-bar .c{background:var(--cool)}
+.p1 .ph{background:linear-gradient(120deg,#F6EADA,#EFE0CC)} .p2 .ph{background:linear-gradient(120deg,#E4EAEF,#D7E0E8)}
+.p3 .ph{background:linear-gradient(120deg,#F8EDE0,#F3E3D2)} .p4 .ph{background:linear-gradient(120deg,#DCE4EB,#CBD7E1)}
+.p5 .ph{background:linear-gradient(120deg,#E8E4DC,#DCD5C8)} .p6 .ph{background:linear-gradient(120deg,#E0D8D0,#CFC4B8)}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin:24px 0}
+.step{background:var(--card);border:1px solid var(--line);padding:16px 14px;position:relative;text-align:center}
+.step:not(:last-child){border-right:none}
+.step .sn{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-family:var(--serif);font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:15px}
+.step h6{font-family:var(--serif);font-size:15px;font-weight:700;margin-bottom:5px}
+.step p{font-size:12.5px;line-height:1.6;color:var(--ink-faint);margin:0}
+.diag{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:20px 0}
+.diag .d{border:1px solid var(--line);border-radius:12px;padding:18px 20px;background:var(--card)}
+.diag .d .sym{font-family:var(--serif);font-weight:700;font-size:16px;margin-bottom:6px;color:var(--cool-deep)}
+.diag .d .rx{font-size:14px;color:var(--warm-deep);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line-strong)}
+.check li{list-style:none;position:relative;padding-left:30px;margin:10px 0}
+.check li::before{content:"";position:absolute;left:0;top:5px;width:16px;height:16px;border:1.5px solid var(--gold);border-radius:4px;background:#fff}
+.check li::after{content:"";position:absolute;left:5px;top:8px;width:6px;height:10px;border:solid var(--gold);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.gloss{display:grid;grid-template-columns:repeat(2,1fr);gap:0 28px;margin:18px 0}
+.gloss .g{padding:13px 0;border-bottom:1px solid var(--line)}
+.gloss .g dt{font-family:var(--serif);font-weight:700;font-size:15.5px;color:var(--ink)}
+.gloss .g dt span{color:var(--ink-faint);font-size:12.5px;font-family:var(--sans);font-weight:400;margin-left:8px}
+.gloss .g dd{font-size:14px;color:var(--ink-soft);margin-top:3px;line-height:1.7}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:22px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.quad .q{padding:22px 24px;min-height:120px}
+.quad .q h5{font-family:var(--serif);font-size:16px;font-weight:700;margin-bottom:6px}
+.quad .q p{font-size:14px;color:var(--ink-soft);margin:4px 0}
+.quad .gold-q{background:var(--gold-soft);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.quad .gold-q h5{color:#8A6F33}
+.quad .anx{background:#FBEDE8;border-bottom:1px solid var(--line)}
+.quad .anx h5{color:#A04030}
+.quad .dull{background:#F0EDE6;border-right:1px solid var(--line)}
+.quad .dull h5{color:var(--ink-faint)}
+.quad .chaos{background:#F5F2EC}
+.quad .chaos h5{color:var(--ink-faint)}
+footer{border-top:1px solid var(--line);margin-top:70px;padding:40px 24px 60px;text-align:center;color:var(--ink-faint);font-size:13.5px}
+footer .fserif{font-family:var(--serif);font-size:15px;color:var(--ink-soft);margin-bottom:8px}
+footer a{color:var(--warm-deep);text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:1px;margin:0 4px;white-space:nowrap}
+footer a:hover{color:var(--warm);border-color:var(--warm)}
+@media(max-width:820px){
+  .grid2,.grid3,.diag,.gloss,.quad{grid-template-columns:1fr}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .step:not(:last-child){border-right:1px solid var(--line)}
+  .cover{padding:56px 24px 40px}
+  .part-head{flex-wrap:wrap;gap:6px}
+  .tbl-wrap{-webkit-overflow-scrolling:touch}
+  table{font-size:13.5px}
+  .check{columns:1 !important}
+  body{font-size:15.5px}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32"><circle cx="13" cy="16" r="9" fill="#C07A45"/><path d="M20 7 L29 3 L26 12 Z" fill="#35556E"/></svg>
+      BEA 双极情绪美学
+    </div>
+    <div class="nav-links" id="navLinks">
+      <a href="#p0">首页</a><a href="#p1">本体</a><a href="#p2">机制</a>
+      <a href="#p3">元素</a><a href="#p4">结构</a><a href="#p5">阈值</a>
+      <a href="#p6">范式</a><a href="#p7">语境</a><a href="#p8">方法</a>
+      <a href="#p9">应用</a><a href="#p10">诊断</a><a href="#p11">评价</a><a href="#pa">附录</a>
+    </div>
+  </div>
+</nav>
+
+<header class="cover" id="p0">
+  <div class="kicker">A Systematic Theory of Form & Feeling · v1.2.0</div>
+  <h1>双极情绪美学理论体系</h1>
+  <div class="latin">Bipolar Emotion Aesthetics — BEA</div>
+  <p class="thesis">美感的本质，是<strong>「可控张力下的情绪奖赏」</strong>：一切形式元素都先天携带<strong>亲近愉悦</strong>与<strong>警惕威胁</strong>两种对立的情绪极性；当二者在可被认知的秩序中组合、且威胁唤醒被约束在安全阈值之内，人便获得「既被吸引、又被安抚」的复合愉悦。</p>
+  <div class="polar-legend">
+    <span class="tag warm"><span class="dot"></span>亲极 P+ · 趋近 / 安全 / 愉悦</span>
+    <span class="tag cool"><span class="dot"></span>危极 T− · 警觉 / 唤醒 / 畏惧</span>
+  </div>
+  <div class="cover-meta">
+    <span><b>体系结构</b>　十一编 · 五级递进</span>
+    <span><b>版本</b>　v1.2.0（2026-09-13）</span>
+    <span><b>作者</b>　星空本空</span>
+    <span><b>授权</b>　CC BY 4.0（自由使用·需署名）</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section class="part" id="overview">
+  <div class="part-head"><span class="part-no">OVERVIEW</span><h2>卷首　体系总览与阅读地图</h2></div>
+  <p class="part-sub">十一编并非平行罗列，而是一条「解释美 → 构成美 → 分辨美 → 创造美 → 检验美」的递进链条。</p>
+  <figure class="fig">
+    <svg viewBox="0 0 1000 280" role="img" aria-label="BEA理论体系五级递进结构图">
+      <g><rect x="20" y="30" width="170" height="220" rx="12" fill="#F3E7D8" stroke="#C07A45" stroke-width="1.2"/>
+        <text x="105" y="58" text-anchor="middle" font-family="Noto Serif SC" font-size="15" font-weight="700" fill="#9A5E2F">基础层·解释美</text>
+        <rect x="40" y="76" width="130" height="68" rx="8" fill="#fff" stroke="#D6CBB8"/>
+        <text x="105" y="102" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#26221C">一·本体论</text>
+        <text x="105" y="122" text-anchor="middle" font-size="11" fill="#8A8177">定义·公理·边界</text>
+        <rect x="40" y="156" width="130" height="68" rx="8" fill="#fff" stroke="#D6CBB8"/>
+        <text x="105" y="182" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#26221C">二·机制论</text>
+        <text x="105" y="202" text-anchor="middle" font-size="11" fill="#8A8177">生理·进化·认知</text></g>
+      <path d="M195 140 L215 140" stroke="#A98A4C" stroke-width="2" marker-end="url(#ar)"/>
+      <g><rect x="220" y="30" width="240" height="220" rx="12" fill="#F1EAD9" stroke="#A98A4C" stroke-width="1.2"/>
+        <text x="340" y="58" text-anchor="middle" font-family="Noto Serif SC" font-size="15" font-weight="700" fill="#8A6F33">构成层·拆解美</text>
+        <rect x="240" y="74" width="200" height="48" rx="8" fill="#fff" stroke="#D6CBB8"/>
+        <text x="340" y="96" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#26221C">三·元素论</text>
+        <text x="340" y="114" text-anchor="middle" font-size="11" fill="#8A8177">双极谱系·强度量表</text>
+        <rect x="240" y="130" width="200" height="48" rx="8" fill="#fff" stroke="#D6CBB8"/>
+        <text x="340" y="152" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#26221C">四·结构论</text>
+        <text x="340" y="170" text-anchor="middle" font-size="11" fill="#8A8177">组合法则·美感地图</text>
+        <rect x="240" y="186" width="200" height="48" rx="8" fill="#fff" stroke="#D6CBB8"/>
+        <text x="340" y="208" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#26221C">五·阈值论</text>
+        <text x="340" y="226" text-anchor="middle" font-size="11" fill="#8A8177">美的边界·审美窗口</text></g>
+      <path d="M465 140 L485 140" stroke="#A98A4C" stroke-width="2" marker-end="url(#ar)"/>
+      <g><rect x="490" y="30" width="170" height="220" rx="12" fill="#DFE7EE" stroke="#35556E" stroke-width="1.2"/>
+        <text x="575" y="58" text-anchor="middle" font-family="Noto Serif SC" font-size="15" font-weight="700" fill="#243C50">类型层·分辨美</text>
+        <rect x="510" y="76" width="130" height="68" rx="8" fill="#fff" stroke="#C9D6E1"/>
+        <text x="575" y="102" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#26221C">六·范式论</text>
+        <text x="575" y="122" text-anchor="middle" font-size="11" fill="#8A8177">配比谱·六锚点</text>
+        <rect x="510" y="156" width="130" height="68" rx="8" fill="#fff" stroke="#C9D6E1"/>
+        <text x="575" y="182" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#26221C">七·语境论</text>
+        <text x="575" y="202" text-anchor="middle" font-size="11" fill="#8A8177">文化·受众·功能</text></g>
+      <path d="M665 140 L685 140" stroke="#A98A4C" stroke-width="2" marker-end="url(#ar)"/>
+      <g><rect x="690" y="30" width="170" height="220" rx="12" fill="#F3E7D8" stroke="#C07A45" stroke-width="1.2"/>
+        <text x="775" y="58" text-anchor="middle" font-family="Noto Serif SC" font-size="15" font-weight="700" fill="#9A5E2F">实践层·创造美</text>
+        <rect x="710" y="76" width="130" height="68" rx="8" fill="#fff" stroke="#D6CBB8"/>
+        <text x="775" y="102" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#26221C">八·方法论</text>
+        <text x="775" y="122" text-anchor="middle" font-size="11" fill="#8A8177">六步法·评分卡</text>
+        <rect x="710" y="156" width="130" height="68" rx="8" fill="#fff" stroke="#D6CBB8"/>
+        <text x="775" y="182" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#26221C">九·应用论</text>
+        <text x="775" y="202" text-anchor="middle" font-size="11" fill="#8A8177">九大领域落地</text></g>
+      <path d="M865 140 L882 140" stroke="#A98A4C" stroke-width="2" marker-end="url(#ar)"/>
+      <g><rect x="887" y="30" width="93" height="220" rx="12" fill="#F4EEE3" stroke="#8A8177" stroke-width="1.2"/>
+        <text x="933" y="58" text-anchor="middle" font-family="Noto Serif SC" font-size="13" font-weight="700" fill="#57504A">反思层</text>
+        <rect x="899" y="76" width="69" height="74" rx="8" fill="#fff" stroke="#D6CBB8"/>
+        <text x="933" y="106" text-anchor="middle" font-family="Noto Serif SC" font-size="12" font-weight="700" fill="#26221C">十·诊断</text>
+        <text x="933" y="126" text-anchor="middle" font-size="10.5" fill="#8A8177">病症处方</text>
+        <rect x="899" y="162" width="69" height="74" rx="8" fill="#fff" stroke="#D6CBB8"/>
+        <text x="933" y="192" text-anchor="middle" font-family="Noto Serif SC" font-size="12" font-weight="700" fill="#26221C">十一·评价</text>
+        <text x="933" y="212" text-anchor="middle" font-size="10.5" fill="#8A8177">标准·边界</text></g>
+      <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#A98A4C"/></marker></defs>
+    </svg>
+    <figcaption><b>图 0　BEA 理论体系总图</b>　五层逐级递进：先回答「美是什么、为何产生」，再拆解「美由什么构成、边界何在」，进而分辨「美有哪些类型、如何被语境调制」，最终落到「如何创造、如何检验」。</figcaption>
+  </figure>
+  <div class="grid3">
+    <div class="mini gold"><h5>一条主线</h5><p>美 = 双极元素 × 结构秩序 × 阈值控制。所有编章都是这一公式在不同层面的展开。</p></div>
+    <div class="mini warm"><h5>两种读法</h5><p>求理解者按编号顺序通读；求应用者可直接从「六·范式」「八·方法」「九·应用」切入，再回查基础编。</p></div>
+    <div class="mini cool"><h5>一套工具</h5><p>极性谱系表、美感地图、范式配比、六步流程、BEA 评分卡、诊断处方表、创作审计清单。</p></div>
+  </div>
+</section>
+
+<section class="part" id="p1">
+  <div class="part-head"><span class="part-no">PART Ⅰ</span><h2>第一编　本体论</h2></div>
+  <p class="part-sub">美是什么——确立理论的研究对象、基本概念、公理体系与学科位置。</p>
+  <h3 class="ch"><span class="cn">1.1</span>核心定义 / Core Definition</h3>
+  <div class="def">
+    <div class="dt">美感 = 可控张力下的情绪奖赏 / Aesthetic pleasure = emotional reward under controlled tension</div>
+    <p style="margin:0">任何感官形式都由元素构成，每一元素都在「亲近愉悦极（亲极 P+）」与「警惕威胁极（危极 T−）」之间占据一个极性位置；当一组双极元素在<strong>可认知的秩序</strong>下被组织，且危极唤醒被约束在主体的<strong>安全阈值</strong>内，警觉系统产生的唤醒被奖赏系统收编为快感，主体获得「被吸引（张力）＋被安抚（安全）」并存的复合愉悦，即审美体验。</p>
+  </div>
+  <p>三要件缺一不可：<strong>双极并存</strong>（纯亲极只舒适、纯危极只排斥）、<strong>秩序组织</strong>（混乱对立只造成认知负担）、<strong>阈值安全</strong>（越界唤醒变为真实不适）。</p>
+  <h3 class="ch"><span class="cn">1.2</span>五个基本概念 / Five Concepts</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="width:18%">概念</th><th style="width:30%">英文</th><th>含义与操作意义</th></tr></thead>
+    <tbody>
+      <tr><td><strong>元素</strong></td><td>Element</td><td>感官可分辨的最小形式单位（一条线/一块色/一段质/一个音），分析的起点</td></tr>
+      <tr><td><strong>极性</strong></td><td>Polarity</td><td>元素先天的情绪方向（亲/危），连续可分级（0–10）；方向有生理恒常性，强度受文化调制</td></tr>
+      <tr><td><strong>张力</strong></td><td>Tension</td><td>双极对立造成的情绪唤醒，是美感的引力来源</td></tr>
+      <tr><td><strong>秩序</strong></td><td>Order</td><td>对称/比例/节奏/层级/呼应等可认知结构，把张力消化为美感</td></tr>
+      <tr><td><strong>阈值</strong></td><td>Threshold</td><td>危极由快感转为不适的临界，分本能/认知/文化三级，是美与非美的边界</td></tr>
+    </tbody>
+  </table></div>
+  <h3 class="ch"><span class="cn">1.3</span>三公理 / Three Axioms</h3>
+  <div class="axiom"><div class="at">公理一 · 元素极性公理</div><p style="margin:0">不存在情绪中性的形式元素；极性方向跨文化相对恒定，强度可被调制。</p></div>
+  <div class="axiom"><div class="at">公理二 · 复合美感公理</div><p style="margin:0">审美愉悦必为双极复合；单一极性只产生生理舒适或生理排斥，美感强度与有效张力正相关。</p></div>
+  <div class="axiom"><div class="at">公理三 · 阈值边界公理</div><p style="margin:0">危极存在临界阈值，阈内畏惧转化为审美张力，越阈转化为焦虑/伤害，美感即刻消失。</p></div>
+  <h3 class="ch"><span class="cn">1.4</span>适用边界 / Scope</h3>
+  <p>BEA 只解释<strong>形式美</strong>（形/色/质/空间/光影/声/动态及其组合），不裁决内容美、道德美、思想美。量表分值是协作刻度，不是心理物理常数。详见附录「评价与边界」。</p>
+</section>
+
+<section class="part" id="p2">
+  <div class="part-head"><span class="part-no">PART Ⅱ</span><h2>第二编　机制论</h2></div>
+  <p class="part-sub">美何以产生——从生理、进化、认知三层解释美感的生成机制。</p>
+  <h3 class="ch"><span class="cn">2.1</span>双回路生理机制 / Dual-Circuit Neural Mechanism</h3>
+  <div class="grid2">
+    <div class="mini warm"><h5>趋近—奖赏回路</h5><p>多巴胺、眶额皮层。对安全、柔和、可掌控信号产生放松接近。<br><span class="small">对应亲极 P+</span></p></div>
+    <div class="mini cool"><h5>警觉—威胁回路</h5><p>杏仁核、惊跳反射。对尖锐、突变、不可预测信号产生唤醒防御。<br><span class="small">对应危极 T−</span></p></div>
+  </div>
+  <p>二者<strong>并行、快速、先于理性</strong>。审美的特殊性是两条回路同时激活且不互相取消：危极供「被抓住」的能量，亲极与安全判断供「其实没事」的解除，叠加成比单纯舒适更强更持久的奖赏。</p>
+  <h3 class="ch"><span class="cn">2.2</span>进化机制 / Evolutionary Basis</h3>
+  <p>亲极进化语义＝<strong>安全与资源</strong>：曲线≈无伤害，对称≈健康，暖色柔质≈体温庇护，规律≈可控。危极进化语义＝<strong>危险与未知</strong>：锐角≈武器荆棘，突变≈伏击，黑暗强对比≈视野受限，失衡≈坠落失控。</p>
+  <p>推论：极性<strong>方向</strong>跨文化恒定（理论普遍性的根基），文化只调强度与符号联想。</p>
+  <h3 class="ch"><span class="cn">2.3</span>唤醒机制：倒 U 与审美窗口 / Inverted-U & Aesthetic Window</h3>
+  <p>情绪唤醒与愉悦呈<strong>倒 U 形</strong>：过低→单调无聊；适度→注意被捕获且可处理，愉悦达峰；过高→紧张回避。危极强度即唤醒水平，美对应曲线上一个有宽度的「审美窗口」，不是一个点。审美经验丰富者窗口更宽、整体右移。</p>
+  <h3 class="ch"><span class="cn">2.4</span>认知机制：秩序如何消化张力 / Cognition</h3>
+  <p>大脑是预测机器。秩序使预测成功、轻松完形，产生掌控感（亲）；适量危极造成「轻微失预测」，捕获注意，随后在秩序框架内被重新理解（危）。「预测—轻微失预测—重新理解」的微过程即审美快感的认知来源，表现为<strong>意料之外、情理之中</strong>。</p>
+  <h3 class="ch"><span class="cn">2.5</span>情绪转化：安全框架 / Safety Frame</h3>
+  <p>「危险的东西为何美」——当大脑通过线索确认威胁并非真实作用于我，警觉唤醒不导向逃跑，而被征用为高强度情绪能量，叠加「我是安全的」认知，转为痛快/震撼/崇高。四类安全框架线索：</p>
+  <ol>
+    <li><strong>物理距离</strong>：威胁够不到身体（画廊里的锋利雕塑、银幕风暴）</li>
+    <li><strong>形式框定</strong>：画框、舞台、展陈宣告「这是被观看的对象」</li>
+    <li><strong>秩序约束</strong>：对称、比例、节奏宣告「它在掌控中」</li>
+    <li><strong>已知语境</strong>：经验告知「这是风格而非事故」</li>
+  </ol>
+  <p>撤除安全框架（信以为真），同一对象立刻从崇高跌回恐惧。</p>
+  <h3 class="ch"><span class="cn">2.6</span>美感生成总链条 / Full Chain</h3>
+  <div class="card"><p style="margin:0;font-family:var(--serif);font-size:16px;line-height:2">形式元素 →（进化预置方向）双极信号 →（双回路并行）趋近奖赏＋警觉唤醒 →（安全框架）判定威胁非真实 →（认知秩序）失预测被重新理解 → 唤醒被奖赏系统收编 → 「张力＋安抚」复合奖赏＝<strong>美感</strong>。</p><p class="small" style="margin-top:10px">任一环节断裂，退化为单调舒适、混乱焦虑或真实恐惧。</p></div>
+</section>
+
+<section class="part" id="p3">
+  <div class="part-head"><span class="part-no">PART Ⅲ</span><h2>第三编　元素论</h2></div>
+  <p class="part-sub">美由什么构成——建立跨感官的元素双极谱系与强度量表。</p>
+  <h3 class="ch"><span class="cn">3.1</span>元素五层级 / Five Levels</h3>
+  <p>点 → 线/序 → 面/段 → 体/章 → 场/整体，逐层复合、极性向上叠加。低层极性是高层感受的基础；低层微调可在不改大结构时显著改变气质（<strong>细节定调性</strong>）。</p>
+  <h3 class="ch"><span class="cn">3.2</span>视觉双极谱系 / Visual Spectrum</h3>
+  <div class="tbl-wrap"><table class="fixed">
+    <colgroup><col style="width:16%"><col style="width:42%"><col style="width:42%"></colgroup>
+    <thead><tr><th>子维度</th><th class="col-warm">亲极 P+（趋近·安全）</th><th class="col-cool">危极 T−（警觉·唤醒）</th></tr></thead>
+    <tbody>
+      <tr><td>形状线条</td><td class="warm-c">曲线、圆角、闭合形、对称、低重心、连续平滑、水平舒展</td><td class="cool-c">锐角、折线、锯齿、破碎开放、失衡高重心、断裂、斜向冲刺</td></tr>
+      <tr><td>色彩色相</td><td class="warm-c">柔暖调、低饱和、邻近色、自然大地色</td><td class="cool-c">极端冷色、高饱和原色、强互补撞色、荧光色</td></tr>
+      <tr><td>明度对比</td><td class="warm-c">高明度、柔和明暗过渡、灰阶丰富</td><td class="cool-c">极低明度、硬明暗交界、强黑白反差、大面积纯黑</td></tr>
+      <tr><td>质感肌理</td><td class="warm-c">光滑、柔软、温润、细腻、哑光、亲肤</td><td class="cool-c">粗糙、坚硬、冰冷、毛刺、锈蚀、破碎凹凸、高反冷金属</td></tr>
+      <tr><td>构图空间</td><td class="warm-c">居中稳定、留白均匀、层次递进、呼吸感、重心落地</td><td class="cool-c">偏移裁切、压迫负空间、失重倾斜、满版拥挤、冲出边界</td></tr>
+      <tr><td>光影</td><td class="warm-c">漫射柔光、均匀受光、暖光、柔投影</td><td class="cool-c">硬光、顶光/底光、长投影、强光穿透黑暗</td></tr>
+    </tbody>
+  </table></div>
+  <h3 class="ch"><span class="cn">3.3</span>听觉 / 触觉 / 动态双极 / Audio · Touch · Motion</h3>
+  <div class="grid3">
+    <div class="mini warm"><h5>听觉亲极</h5><p>中低频、温暖音色、协和和声、平稳动态、规整节奏、乐句完整收束</p></div>
+    <div class="mini cool"><h5>听觉危极</h5><p>极高频尖锐、刺耳啸叫、不协和、骤强骤弱、断裂错位、悬而不决</p></div>
+    <div class="mini gold"><h5>触觉</h5><p>亲极：圆角磨砂亲肤温润；危极：锋利棱边冰凉裸金属硌手。<br><strong>视觉决定是否拿起，触觉决定是否长期喜欢。</strong></p></div>
+    <div class="mini warm"><h5>动态亲极</h5><p>舒缓匀速、缓入缓出、平滑曲线、循环规律、反馈及时一致</p></div>
+    <div class="mini cool"><h5>动态危极</h5><p>极速骤启骤停、直角急转、抖动震颤、随机跳切、延迟不定</p></div>
+    <div class="mini gold"><h5>跨模态一致</h5><p>各通道极性方向同构（尖锐形/刺耳音/硌手质/急转动共同指危）。<strong>方向冲突会造成潜意识「违和」</strong>，即便说不出原因也判为不高级。</p></div>
+  </div>
+  <h3 class="ch"><span class="cn">3.4</span>极性强度 0–10 量表 / Intensity Scale（以形状为例）</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>强度</th><th>亲极侧</th><th>分值带</th><th>危极侧</th></tr></thead>
+    <tbody>
+      <tr><td>0–1</td><td>极柔：饱满大圆角、连续有机曲面</td><td>中性</td><td>—</td></tr>
+      <tr><td>2–3</td><td>柔和：小圆角、曲线为主</td><td>弱极性</td><td>轻微：直线、小倒角</td></tr>
+      <tr><td>4–5</td><td>微暖：曲中带直</td><td>平衡</td><td>微凉：直中带曲、锐利小细节</td></tr>
+      <tr><td>6–7</td><td>—</td><td>强极性</td><td>锐利：明显锐角、折线、楔形</td></tr>
+      <tr><td>8–9</td><td>—</td><td>极强</td><td>尖锐：锯齿、尖刺、破碎、攻击姿态</td></tr>
+      <tr><td>10</td><td>—</td><td>临界/越阈</td><td>引发真实伤害联想或生理不适</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">绝对值不必追求实验室精度，价值在于统一团队对「多锐算锐」的刻度，把审美争论变成变量调整。</p>
+</section>
+
+<section class="part" id="p4">
+  <div class="part-head"><span class="part-no">PART Ⅳ</span><h2>第四编　结构论</h2></div>
+  <p class="part-sub">元素如何组合——四条结构法则与张力×秩序美感地图。</p>
+  <h3 class="ch"><span class="cn">4.1</span>法则一 · 主辅基底 / Primary-Secondary Base</h3>
+  <p>存在主导极性（占 60%–90%，定基调与第一印象）与从属极性（10%–40%，制造张力或缓冲）。从属极的价值在「少数」：锐角被大量曲线包围才显精致，处处锐角只剩攻击。<strong>亲危均分无层级＝情绪暧昧（均分症）</strong>。</p>
+  <h3 class="ch"><span class="cn">4.2</span>法则二 · 对立统一 / Unity of Opposites</h3>
+  <p>能量来自对立（刚柔/明暗/繁简/方圆/疏密/冷暖），成立来自统一（共同比例、色板、材质语言、栅格把对立收进同一秩序）。差异要<strong>成对出现</strong>；至少一条统一要素贯穿全局。有立无统＝割裂，有统无立＝单调。</p>
+  <h3 class="ch"><span class="cn">4.3</span>法则三 · 秩序组织 / Order（五种可叠加手段）</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>手段</th><th>含义</th><th>消化的张力</th></tr></thead>
+    <tbody>
+      <tr><td>对称/均衡</td><td>绕轴或重心达视觉力学平衡</td><td>失衡、高重心、压迫</td></tr>
+      <tr><td>比例/模数</td><td>固定比例（黄金比、整数模数）组织尺寸</td><td>尺寸杂乱、数量冲突</td></tr>
+      <tr><td>节奏/韵律</td><td>重复、渐变、交替规律排布</td><td>破碎、随机、跳变</td></tr>
+      <tr><td>层级/主次</td><td>清晰视觉等级与阅读顺序</td><td>拥挤、重点争抢</td></tr>
+      <tr><td>呼应/统一</td><td>形/色/质在不同位置反复回响</td><td>各自为政、整体割裂</td></tr>
+    </tbody>
+  </table></div>
+  <h3 class="ch"><span class="cn">4.4</span>法则四 · 层级嵌套 / Nested Hierarchy</h3>
+  <p>极性与秩序在点—线—面—体—场逐层嵌套、上下一致，两种成熟策略：</p>
+  <div class="grid2">
+    <div class="mini warm"><h5>同向叠加（强化型）</h5><p>各层方向一致、层层加码（整车锐利＋特征线锐利＋灯腔切面锐利），用于需要强烈个性。</p></div>
+    <div class="mini cool"><h5>微差补偿（高级型）</h5><p>宏观定基调，微观用对立极补偿（整车圆润，却在按键切面/logo 边缘/缝线藏锐），远观亲和、近看精密——<strong>「高级感」最常见结构</strong>。</p></div>
+  </div>
+  <h3 class="ch"><span class="cn">4.5</span>张力 × 秩序 美感地图 / Aesthetic Map</h3>
+  <div class="quad">
+    <div class="q gold-q"><h5>★ 高张力 × 高秩序＝美感黄金区</h5><p>对立被秩序统摄，高级、耐看、经典。改进的最终目标。</p></div>
+    <div class="q anx"><h5>高张力 × 低秩序＝失控焦虑区</h5><p>刺激但杂乱 → <strong>补秩序</strong></p></div>
+    <div class="q dull"><h5>低张力 × 高秩序＝呆板平庸区</h5><p>整齐但无张力（模板感、甜腻）→ <strong>加张力</strong></p></div>
+    <div class="q chaos"><h5>低张力 × 低秩序＝混沌平淡区</h5><p>潦草廉价 → 先立秩序再加张力</p></div>
+  </div>
+  <p>改进任何作品只有「补秩序」或「加张力」两个方向，最终都指向黄金区。</p>
+</section>
+
+<section class="part" id="p5">
+  <div class="part-head"><span class="part-no">PART Ⅴ</span><h2>第五编　阈值论</h2></div>
+  <p class="part-sub">美的边界——三级阈值体系与审美窗口。</p>
+  <h3 class="ch"><span class="cn">5.1</span>三级阈值 / Three-tier Threshold</h3>
+  <div class="diag">
+    <div class="d"><div class="sym">① 本能安全阈（绝对红线，不可移动）</div><p>锋利到割伤联想、频闪眩晕、强对比刺眼疼痛、音量伤听、触感划伤。越过即从审美对象变为伤害源，<strong>一票否决</strong>。</p></div>
+    <div class="d"><div class="sym">② 认知处理阈（相对，可右移）</div><p>混乱度/复杂度/失预测频率超过认知带宽即转焦虑；补秩序、建层级可右推。</p></div>
+    <div class="d"><div class="sym">③ 文化接受阈（相对，可移动）</div><p>元素在特定群体中被视为禁忌、廉价、不祥；理解语境、提供线索可移动。</p></div>
+    <div class="d"><div class="sym">审美窗口 / Aesthetic Window</div><p>三道门之间有宽度的区间。左缘「无聊线」、右缘「焦虑线」。核心技艺：<strong>在目标受众窗口内把张力推到尽可能靠右而不越界</strong>——越靠右越有力量、越难忘。</p></div>
+  </div>
+  <h3 class="ch"><span class="cn">5.2</span>五类阈值调制变量 / Modulation Variables</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>变量</th><th>影响</th><th>设计含义</th></tr></thead>
+    <tbody>
+      <tr><td>审美经验</td><td>越丰富认知阈越靠右、窗口越宽</td><td>专业受众可激进，大众需回收张力</td></tr>
+      <tr><td>情绪状态</td><td>焦虑疲惫时左移，放松时右移</td><td>疗愈走低张力，娱乐可走高张力</td></tr>
+      <tr><td>距离/时长</td><td>远距短时耐冲击，近距长期需柔和</td><td>海报可冲击，手机/家具须耐看</td></tr>
+      <tr><td>文化背景</td><td>改文化阈与符号联想，甚至局部翻转</td><td>跨文化重做符号审计</td></tr>
+      <tr><td>功能风险</td><td>高风险场景阈值整体左移</td><td>医疗/驾驶/操作界面安全优先</td></tr>
+    </tbody>
+  </table></div>
+  <h3 class="ch"><span class="cn">5.3</span>阈值诊断三问 / Three Questions</h3>
+  <ol>
+    <li><strong>红线问</strong>：有无元素触及本能安全阈？有则必删。</li>
+    <li><strong>认知问</strong>：目标受众能否借现有秩序把全部元素组织成整体？不能则补秩序/降复杂度。</li>
+    <li><strong>文化问</strong>：目标文化中有无元素越过文化接受阈？有则替换或补语境。</li>
+  </ol>
+</section>
+
+<section class="part" id="p6">
+  <div class="part-head"><span class="part-no">PART Ⅵ</span><h2>第六编　范式论</h2></div>
+  <p class="part-sub">美有哪些稳定类型——六大锚点的配比连续谱。</p>
+  <h3 class="ch"><span class="cn">6.1</span>配比连续谱 / Continuous Spectrum</h3>
+  <p>以「危极综合权重（占比 × 强度）」为横轴，所有审美风格排成一条连续谱。<strong>四大核心范式与两种过渡范式（共六个锚点）</strong>是被反复验证的稳定位置，锚点间是平滑过渡的中间风格。<strong>风格创新多发生在锚点之间的微调</strong>，不必拘泥六选一。</p>
+  <p>注意区分<strong>数量占比</strong>与<strong>强度</strong>：崇高范式不是危极「数量多」，而是危极「强度高」，同时有等量强大的亲极秩序安抚；先锋范式才是危极数量占主导。</p>
+  <h3 class="ch"><span class="cn">6.2</span>六大范式锚点 / Six Anchors</h3>
+  <div class="paradigm p1"><div class="ph"><span class="pname">① 治愈松弛 Healing & Relaxed</span><span class="pratio">P+ 90 : T− 10</span></div><div class="pb"><div class="ratio-bar"><div class="w" style="width:90%"></div><div class="c" style="width:10%"></div></div><p><strong>核心体验</strong>：放松、舒展、无攻击性，像被温柔接住。<strong>诀窍</strong>：高级的治愈不是无锐度，而是「柔中藏骨」——柔和造型里保留利落一根线、一块冷灰、一个清晰边界。<strong>适用</strong>：母婴、疗愈空间、家居、民生服务、公共/医疗空间。</p></div></div>
+  <div class="paradigm p2"><div class="ph"><span class="pname">② 亲和精致 Refined Approachable</span><span class="pratio">P+ 80 : T− 20</span></div><div class="pb"><div class="ratio-bar"><div class="w" style="width:80%"></div><div class="c" style="width:20%"></div></div><p><strong>核心体验</strong>：第一眼亲和友好，细看精密有锐度，舒适而不平庸——<strong>商业世界最通用的「高级感公式」</strong>。<strong>诀窍</strong>：20% 危极集中到「用户会凑近看/反复触摸」处（边缘倒角、按键、logo、缝线、字体），用微差补偿放大质感。<strong>适用</strong>：消费电子、高端日用品、主流品牌视觉、多数量产产品。</p></div></div>
+  <div class="paradigm p3"><div class="ph"><span class="pname">③ 均衡典雅（过渡）Balanced Elegance</span><span class="pratio">P+ 60 : T− 40</span></div><div class="pb"><div class="ratio-bar"><div class="w" style="width:60%"></div><div class="c" style="width:40%"></div></div><p><strong>核心体验</strong>：刚柔各半、以柔领刚，克制端庄、持久耐看。<strong>适用</strong>：经典主义、新中式、奢侈品经典线。</p></div></div>
+  <div class="paradigm p4"><div class="ph"><span class="pname">④ 崇高震撼 Sublime & Awe-inspiring</span><span class="pratio">P+ 45 : T− 55（均高强度）</span></div><div class="pb"><div class="ratio-bar"><div class="w" style="width:45%"></div><div class="c" style="width:55%"></div></div><p><strong>核心体验</strong>：先屏息敬畏、后沉浸沉醉的深层震撼（康德意义的崇高）。<strong>诀窍</strong>：成败全在「安抚力是否压得住张力」，用大尺度、强对比、坚硬冷峻制造压迫敬畏，同时以等量甚至更强的秩序与柔和（绝对对称、纯净光影、流畅大曲面）稳稳接住，秩序一旦弱于张力立刻滑向压抑、恐怖。<strong>适用</strong>：大型公共建筑、豪华/旗舰产品、史诗级视觉、当代装置、豪华汽车。</p></div></div>
+  <div class="paradigm p5"><div class="ph"><span class="pname">⑤ 冷峻克制（过渡）Cool & Restrained</span><span class="pratio">P+ 38 : T− 62</span></div><div class="pb"><div class="ratio-bar"><div class="w" style="width:38%"></div><div class="c" style="width:62%"></div></div><p><strong>核心体验</strong>：以冷硬简为主，靠精准比例与极少暖色维持人性温度。<strong>适用</strong>：极简主义、专业工具、德系工业设计。</p></div></div>
+  <div class="paradigm p6"><div class="ph"><span class="pname">⑥ 先锋反叛 Avant-garde & Rebellious</span><span class="pratio">P+ 30 : T− 70</span></div><div class="pb"><div class="ratio-bar"><div class="w" style="width:30%"></div><div class="c" style="width:70%"></div></div><p><strong>核心体验</strong>：刺激、反叛、临界于不适的痛快，受众享受「被挑战」。<strong>诀窍</strong>：先锋≠失控，那 30% 秩序锚点是它区别于「难看/事故」的唯一防线；只面向高阈值受众。<strong>适用</strong>：潮牌、亚文化、先锋艺术、概念设计、实验影像。</p></div></div>
+  <h3 class="ch"><span class="cn">6.3</span>范式选择三问 / Three Questions</h3>
+  <ol>
+    <li><strong>受众阈值多高？</strong> 大众偏左（柔），专业/爱好者偏右（锐）。</li>
+    <li><strong>使用距离与时长？</strong> 长期贴身偏左，短时远观可偏右。</li>
+    <li><strong>第一情绪是什么？</strong> 放松→治愈；好感/精致→亲和；敬畏→崇高；刺激/反叛→先锋。</li>
+  </ol>
+</section>
+
+<section class="part" id="p7">
+  <div class="part-head"><span class="part-no">PART Ⅶ</span><h2>第七编　语境论</h2></div>
+  <p class="part-sub">美如何被调制——文化、时代、受众、功能四类语境与极性翻转。</p>
+  <h3 class="ch"><span class="cn">7.1</span>总原理 / General Principle</h3>
+  <div class="def"><div class="dt">极性 ＝ 生理方向 × 语境系数 k</div><p style="margin:0">实际情绪效果 ＝ 先天极性方向（恒定）× 语境系数 k（可变）。k&gt;1 放大、k&lt;1 削弱、符号层偶可翻转（k 为负）。该公式同时解释美的普遍性（跨文化都觉圆润安全）与相对性（各文化最优配比与符号禁忌不同）。</p></div>
+  <h3 class="ch"><span class="cn">7.2</span>四类语境调制 / Four Contexts</h3>
+  <div class="grid2">
+    <div class="mini warm"><h5>文化语境</h5><p>文化叠加符号联想层，移动文化接受阈。例：残缺/粗糙在日本侘寂中＝时间质朴（趋亲），在量产语境＝做工差（趋危）；红色在中国＝喜庆（强亲），在部分西方＝警告（危）。<strong>跨文化设计重做符号层极性审计</strong>。</p></div>
+    <div class="mini cool"><h5>时代语境：风格周期律</h5><p>时代风格是社会整体阈值与「反熟悉化」的周期运动。一种配比长期霸屏→唤醒递减→滑向呆板→向对极摆动重造张力（极简极则极繁回潮、圆润泛滥则锐利回归）。<strong>追潮流不是照搬当红样式，而是判断主流已过度到哪一极，向另一极回拨 1–2 个锚点。</strong></p></div>
+    <div class="mini gold"><h5>受众语境：专家与大众</h5><p><strong>大众</strong>：经验少、带宽有限、偏好快速可感的愉悦，窗口偏左较窄；误判反馈「看不懂、太怪、有攻击性」。<strong>专家/爱好者</strong>：追求新鲜深度，窗口偏右更宽，能消化高张力与复杂秩序；误判反馈「太甜、太腻、没东西、俗」。</p></div>
+    <div class="mini cool"><h5>功能与场景语境</h5><p>对象「做什么用、在什么状态下被用」限定合法范式区间：功能风险越高、使用越长期、用户越脆弱，窗口越向左收。医疗/安全/驾驶界面（最左）＜长期贴身物（亲和精致）＜短时远观物（可崇高/先锋）＜娱乐/亚文化（先锋）。</p></div>
+  </div>
+  <h3 class="ch"><span class="cn">7.3</span>极性翻转的边界 / Polarity Reversal</h3>
+  <p>语境能否彻底翻转生理极性？BEA 的回答是<strong>分层的</strong>：</p>
+  <ul>
+    <li><strong>符号联想层可以翻转</strong>（红色由危险变喜庆、残缺由次品变侘寂）。</li>
+    <li><strong>生理唤醒层难以翻转</strong>：再喜庆的高饱和红仍比灰更「提神/刺眼」，再高级的侘寂残缺仍比光滑表面「更需认知努力」。</li>
+  </ul>
+  <p>所谓翻转几乎总是「符号意义变亲、生理唤醒仍在」。高明设计会顺势用秩序与语境安抚这层残留唤醒，而非假装它不存在。</p>
+</section>
+
+<section class="part" id="p8">
+  <div class="part-head"><span class="part-no">PART Ⅷ</span><h2>第八编　方法论</h2></div>
+  <p class="part-sub">如何创造美——六步创作法、W(T) 计算与 BEA 评分卡。</p>
+  <h3 class="ch"><span class="cn">8.1</span>六步创作法 / Six-step Method</h3>
+  <div class="steps">
+    <div class="step"><div class="sn">1</div><h6>定调</h6><p>受众+距离时长+第一情绪→选范式锚点，写基调卡与目标 W(T) 区间</p></div>
+    <div class="step"><div class="sn">2</div><h6>拆解</h6><p>逐维度列出元素，标亲/危方向与 0–10 强度（极性审计表）</p></div>
+    <div class="step"><div class="sn">3</div><h6>配比</h6><p>算 W(T) 落入目标区间；主辅比≥6:4；从属极集中高价值细节</p></div>
+    <div class="step"><div class="sn">4</div><h6>立序</h6><p>选至少一条秩序主线；宏中微三层选同向叠加或微差补偿；跨模态一致</p></div>
+    <div class="step"><div class="sn">5</div><h6>校阈</h6><p>本能红线一票否决；认知补秩序；文化做符号审计</p></div>
+    <div class="step"><div class="sn">6</div><h6>验证</h6><p>远观测试+近看/长期测试+BEA 评分卡；任一维&lt;15 回修</p></div>
+  </div>
+  <h3 class="ch"><span class="cn">8.2</span>W(T) 危极指数计算 / Threat Index</h3>
+  <div class="def"><div class="dt">W(T) = Σ wᵢ · (tᵢ / 10)，结果落在 0–1</div><p style="margin:0">i 遍历各维度；wᵢ 为该维度对本品类感受的权重，Σwᵢ=1；tᵢ 为该维度主导元素的危极强度（0–10）。</p></div>
+  <p><strong>品类权重经验</strong>（可按项目调整，合计 1）：</p>
+  <ul>
+    <li>手持消费电子：形状 0.25、质感/触觉 0.25、色彩 0.15、构图比例 0.15、光影 0.1、细节线条 0.1</li>
+    <li>汽车外形：形体曲面/动势 0.3、特征线条 0.25、灯组/图形 0.15、比例姿态 0.15、材质光影 0.15</li>
+    <li>平面/品牌：图形形状 0.25、色彩 0.25、字体 0.2、版式构图 0.2、质感 0.1</li>
+    <li>界面：布局/留白 0.25、色彩对比 0.2、组件形 0.2、动效 0.2、字体图标 0.15</li>
+  </ul>
+  <p><strong>对照区间</strong>：W(T)≈0.1 治愈｜0.2 亲和精致｜0.4 均衡典雅｜0.55 崇高（且单元素强度高）｜0.62 冷峻｜0.7 先锋；&gt;0.85 逼近越阈。</p>
+  <h3 class="ch"><span class="cn">8.3</span>BEA 评分卡 / Scorecard（四维各 25 分，满分 100）</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>维度</th><th>满分标准（观察点）</th><th style="width:14%">分值</th><th>低分病症</th></tr></thead>
+    <tbody>
+      <tr><td><strong>双极张力</strong></td><td>对立清晰且成对呼应，提神而不攻击，张力水平匹配范式</td><td>0–25</td><td>甜腻 / 攻击</td></tr>
+      <tr><td><strong>结构秩序</strong></td><td>主辅分明、比例精当、节奏清晰、层级一致、全局统一</td><td>0–25</td><td>失序 / 割裂</td></tr>
+      <tr><td><strong>阈值安全</strong></td><td>无本能红线，认知可消化，文化无禁忌，远近距都成立</td><td>0–25</td><td>越界 / 焦虑</td></tr>
+      <tr><td><strong>语境适配</strong></td><td>匹配受众阈值、使用场景、功能风险与时代位置</td><td>0–25</td><td>错位 / 过时</td></tr>
+    </tbody>
+  </table></div>
+  <p>判定：<strong>≥80 为成熟作品；任一维 &lt;15 为明显短板</strong>，必须回到对应步骤（张力→配比、秩序→立序、阈值→校阈、语境→定调）。</p>
+  <h3 class="ch"><span class="cn">8.4</span>远观 / 近看双重验证 / Dual Validation</h3>
+  <ul>
+    <li><strong>远观测试</strong>：退到真实使用距离（或缩成缩略图）。第一情绪是否等于基调卡目标？主辅基调是否一眼可辨？</li>
+    <li><strong>近看/长期测试</strong>：凑近看是否有精密锚点；连续观看/使用数日是否疲劳。长期不耐看＝张力配置错误（通常危极过多或缺少释放节奏）。</li>
+    <li>动态/影像额外做<strong>张力—释放检查</strong>：高张力段落后是否有亲极喘息段，避免全程高能。</li>
+  </ul>
+</section>
+
+<section class="part" id="p9">
+  <div class="part-head"><span class="part-no">PART Ⅸ</span><h2>第九编　应用论</h2></div>
+  <p class="part-sub">九大领域的极性配方与典型陷阱。</p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>领域</th><th>主导范式</th><th class="col-warm">亲极抓手</th><th class="col-cool">危极提神点</th><th>典型陷阱</th></tr></thead>
+    <tbody>
+      <tr><td>消费电子/手机</td><td>亲和精致</td><td>曲面握持、亲肤磨砂、暖调、均衡重量</td><td>金属亮边、锐利切面、精密线条</td><td>全圆角甜腻廉价</td></tr>
+      <tr><td>汽车/交通工具</td><td>亲和—崇高</td><td>饱满大曲面、水平稳重、温润内饰</td><td>楔形前冲、锐利灯组、特征棱线</td><td>棱线通胀显凶</td></tr>
+      <tr><td>建筑/室内</td><td>崇高/均衡</td><td>人体尺度、柔光、温润材料、对称</td><td>大尺度、清水混凝土、光影切割</td><td>冰冷拒人千里</td></tr>
+      <tr><td>品牌/平面</td><td>按定位选</td><td>留白、秩序栅格、柔和辅助色</td><td>强对比主色、锐利字体、冲突图形</td><td>模板感平庸</td></tr>
+      <tr><td>界面/交互</td><td>亲和精致</td><td>缓动、圆角、一致反馈、呼吸留白</td><td>关键 CTA 对比、必要警示色</td><td>处处强调＝无强调</td></tr>
+      <tr><td>服装/时尚</td><td>全谱皆可</td><td>垂顺面料、柔和廓形、亲肤内层</td><td>硬挺廓形、尖角肩线、撞色、铆钉</td><td>元素堆砌无主线</td></tr>
+      <tr><td>音乐/声音</td><td>按情绪选</td><td>协和和声、温暖音色、规整节奏</td><td>不协和音、音色突变、错位节奏</td><td>全程高能致疲劳</td></tr>
+      <tr><td>影视/动画</td><td>跨范式叙事</td><td>舒缓段落、稳定运镜、暖调</td><td>跳切、倾斜构图、硬光、骤响</td><td>张力无释放</td></tr>
+      <tr><td>公共/医疗空间</td><td>治愈松弛</td><td>圆角、柔色、自然材质、缓流动线</td><td>仅用于导视警示的少量高对比</td><td>冷硬加剧焦虑</td></tr>
+    </tbody>
+  </table></div>
+  <p class="small">完整领域展开与病症诊断见仓库 <code>bipolar-emotion-aesthetics/references/playbooks.md</code>；三个标准化案例见 <code>cases/</code>。</p>
+</section>
+
+<section class="part" id="p10">
+  <div class="part-head"><span class="part-no">PART Ⅹ</span><h2>第十编　诊断论</h2></div>
+  <p class="part-sub">为什么不好看——典型病症的识别与元素级处方。</p>
+  <h3 class="ch"><span class="cn">10.1</span>单一极性病症 / Single-Polarity Symptoms</h3>
+  <div class="diag">
+    <div class="d"><div class="sym">甜腻症（亲极过载）</div><p>全圆角、全柔色、无一处锐度，发腻幼稚廉价。<span class="rx">处方：高价值细节注入 10%–20% 危极（利落线/冷灰/清晰边界），柔中藏骨。</span></p></div>
+    <div class="d"><div class="sym">空洞症（张力缺失）</div><p>元素都对、挑不出错，但无记忆点、一眼到头。<span class="rx">处方：造一对清晰双极对立（方圆/明暗/繁简）并用秩序收束，向右推进。</span></p></div>
+    <div class="d"><div class="sym">攻击症（危极过载）</div><p>处处锐角、强对比、硬冷，令人紧张想回避。<span class="rx">处方：扩亲极基底、降危极到范式区间，用大曲面/柔光/对称接住张力。</span></p></div>
+    <div class="d"><div class="sym">刺激疲劳（危极持续拉满）</div><p>全程高能无喘息，短期抓眼长期疲惫。<span class="rx">处方：时空上安排亲极呼吸段，控制强调点数量。</span></p></div>
+  </div>
+  <h3 class="ch"><span class="cn">10.2</span>结构与层级病症 / Structure Symptoms</h3>
+  <div class="diag">
+    <div class="d"><div class="sym">均分症（主辅缺失）</div><p>亲危各半、无主次、情绪暧昧，「说不上哪里怪」。<span class="rx">处方：确立至少 6:4 主辅比，先让第一印象明确。</span></p></div>
+    <div class="d"><div class="sym">失序症（有立无统）</div><p>单个元素都精彩，堆一起互相打架。<span class="rx">处方：确立一条贯穿全局的统一主线（色板/模数/栅格/特征线）。</span></p></div>
+    <div class="d"><div class="sym">层级冲突症</div><p>宏观柔和却微观攻击、视觉圆润却触感硌手。<span class="rx">处方：逐层逐通道审计，选同向叠加或微差补偿，消除方向冲突。</span></p></div>
+    <div class="d"><div class="sym">重点通胀症</div><p>哪里都想强调，结果哪里都不突出、视觉噪音大。<span class="rx">处方：做减法，从属极与强调点压回 10%–30%，建视觉等级；一屏高危极强调点≤1–2 个。</span></p></div>
+  </div>
+  <h3 class="ch"><span class="cn">10.3</span>阈值与语境病症 / Threshold Symptoms</h3>
+  <div class="diag">
+    <div class="d"><div class="sym">本能越界</div><p>触及割伤、眩晕、疼痛、刺耳等生理红线。<span class="rx">处方：一票否决，删除或钝化，无风格借口。</span></p></div>
+    <div class="d"><div class="sym">认知超载</div><p>复杂度超受众带宽又缺秩序引导。<span class="rx">处方：降复杂度、补层级秩序，或改面向更高阈值受众。</span></p></div>
+    <div class="d"><div class="sym">文化误读</div><p>元素在目标文化中是禁忌/负面/廉价符号。<span class="rx">处方：符号层审计替换，或补足语境线索。</span></p></div>
+    <div class="d"><div class="sym">受众错位 / 时代滞后</div><p>用先锋配比服务大众，或甜美配比服务专家；在已过度饱和的主流一极继续加码。<span class="rx">处方：按受众阈值重定范式锚点；判断风格钟摆位置，向另一极适度反拨回窗口。</span></p></div>
+  </div>
+</section>
+
+<section class="part" id="p11">
+  <div class="part-head"><span class="part-no">PART Ⅺ</span><h2>第十一编　评价论</h2></div>
+  <p class="part-sub">如何评价美——标准、边界与原创性声明。</p>
+  <h3 class="ch"><span class="cn">11.1</span>评价标准 / Evaluation Standards</h3>
+  <p>一件作品的 BEA 评价由四维构成（即评分卡）：双极张力（是否有提神的对立且不攻击）、结构秩序（是否统一有层级）、阈值安全（是否在审美窗口内）、语境适配（是否匹配受众与场景）。<strong>≥80 分为成熟，任一维 &lt;15 分必须回修。</strong></p>
+  <p>高级感的共同结构：<strong>宏观定基调＋微观微差补偿＋高秩序＋阈值内靠右</strong>。远观有第一情绪，近看有精密锚点，长期看不疲劳。</p>
+  <h3 class="ch"><span class="cn">11.2</span>理论边界 / Theoretical Boundaries</h3>
+  <ul>
+    <li>BEA 只解释<strong>形式美</strong>，不裁决内容美、道德美、思想美、叙事价值。</li>
+    <li>W(T) 与 BEA 总分是<strong>相对协作量表</strong>，不是心理物理常数或客观真值。</li>
+    <li>极性方向跨文化恒定，但强度与符号联想随文化/时代/个体变化，不存在「唯一正确的美」。</li>
+    <li>BEA 不取代审美直觉，而是把直觉变成<strong>可沟通、可复现、可迭代</strong>的工作语言。</li>
+  </ul>
+  <h3 class="ch"><span class="cn">11.3</span>原创性声明 / Originality Statement</h3>
+  <div class="card">
+    <p style="margin:0">BEA 是<strong>原创整合框架</strong>，不是基础科学新发现。其底层思想来自已有的公共学术知识：神经美学（奖赏/警觉双回路）、伯克与康德的优美/崇高区分、格式塔心理学、伯莱因唤醒理论（倒 U）、进化论美学、信息论美学、中国阴阳美学、布洛距离说。</p>
+    <p style="margin:10px 0 0">BEA 的<strong>原创部分</strong>（作者 星空本空，CC BY 4.0）包括：元素级双极模型（P+/T−）与跨感官谱系、三级阈值体系与审美窗口、W(T) 危极指数、六大范式锚点、BEA 四维评分卡与六步创作法、病症—处方诊断体系、跨模态一致性原则、微差补偿/同向叠加层级策略，以及全部封装为可被 AI Agent 调用的标准化 Skill。他人可自由使用、修改、商用，但<strong>必须署名「星空本空 / Bipolar Emotion Aesthetics (BEA)」</strong>，不得宣称该框架为自己原创。</p>
+  </div>
+  <h3 class="ch"><span class="cn">11.4</span>一句话总纲 / One-line Summary</h3>
+  <div class="def" style="background:var(--gold-soft);border-color:var(--gold)"><div class="dt" style="color:#8A6F33">总纲</div><p style="margin:0;font-family:var(--serif);font-size:17px">以亲极安其心，以危极提其神，以秩序统其乱，以阈值守其界——<strong>柔中藏骨、险而不崩，方为大美</strong>。</p></div>
+</section>
+
+<section class="part" id="pa">
+  <div class="part-head"><span class="part-no">APPENDIX</span><h2>附录　速查工具集</h2></div>
+  <p class="part-sub">把全理论压缩为可随时取用的工具：术语表、极性速查、范式速查、创作审计清单、FAQ。</p>
+  <h3 class="ch"><span class="cn">A</span>核心术语表 / Glossary</h3>
+  <div class="gloss">
+    <div class="g"><dt>亲极 P+<span>Pole of Attraction</span></dt><dd>圆润、柔色、光滑、舒缓——趋近、安全、愉悦。</dd></div>
+    <div class="g"><dt>危极 T−<span>Pole of Threat</span></dt><dd>尖锐、强对比、坚硬、突变——警觉、唤醒、畏惧。</dd></div>
+    <div class="g"><dt>张力 Tension<span>双极对立强度</span></dt><dd>亲危对立造成的情绪唤醒，美感的引力来源。</dd></div>
+    <div class="g"><dt>秩序 Order<span>认知组织框架</span></dt><dd>对称、比例、节奏、层级、呼应，把张力消化为美感。</dd></div>
+    <div class="g"><dt>阈值 Threshold<span>美与非美的边界</span></dt><dd>本能（绝对）／认知（相对）／文化（相对）三级。</dd></div>
+    <div class="g"><dt>审美窗口<span>Aesthetic Window</span></dt><dd>既不无聊也不焦虑的区间，范式即窗口内不同位置。</dd></div>
+    <div class="g"><dt>安全框架<span>Safety Frame</span></dt><dd>大脑确认「威胁非真实」的线索，畏惧转快感的开关。</dd></div>
+    <div class="g"><dt>W(T)<span>Threat Index</span></dt><dd>各维度危极强度按权重加权的 0–1 指数，定位连续谱。</dd></div>
+    <div class="g"><dt>微差补偿<span>Micro-diff Compensation</span></dt><dd>宏观定基调、微观用对立极补偿，远观柔和近看精密。</dd></div>
+    <div class="g"><dt>美感地图<span>Aesthetic Map</span></dt><dd>张力×秩序四象限，美感稳定位于高张力×高秩序黄金区。</dd></div>
+  </div>
+  <h3 class="ch"><span class="cn">B</span>元素极性速查 / Polarity Quick Reference</h3>
+  <div class="tbl-wrap"><table class="fixed">
+    <colgroup><col style="width:12%"><col style="width:44%"><col style="width:44%"></colgroup>
+    <thead><tr><th>维度</th><th class="col-warm">亲极方向</th><th class="col-cool">危极方向</th></tr></thead>
+    <tbody>
+      <tr><td>形</td><td class="warm-c">曲线·圆角·对称·低重心·连续</td><td class="cool-c">锐角·折线·破碎·失衡·断裂</td></tr>
+      <tr><td>色</td><td class="warm-c">低饱和·高明度·暖柔·渐变邻近</td><td class="cool-c">高饱和·极暗·冷硬·强撞色</td></tr>
+      <tr><td>质</td><td class="warm-c">光滑·柔软·温润·亲肤哑光</td><td class="cool-c">粗糙·坚硬·冰冷·毛刺锈蚀</td></tr>
+      <tr><td>构</td><td class="warm-c">居中·留白·层次递进·呼吸感</td><td class="cool-c">裁切·压迫·失重·满版拥挤</td></tr>
+      <tr><td>光</td><td class="warm-c">漫射柔光·暖光·柔投影</td><td class="cool-c">硬光·顶底光·长黑影·强穿透</td></tr>
+      <tr><td>声</td><td class="warm-c">中低频·协和·平稳·规整节奏</td><td class="cool-c">高频尖锐·不协和·骤变·错位</td></tr>
+      <tr><td>动</td><td class="warm-c">缓动·平滑轨迹·可预测·接地</td><td class="cool-c">骤变·急转抖动·随机·前冲</td></tr>
+      <tr><td>触</td><td class="warm-c">圆角·磨砂亲肤·体温感·适阻尼</td><td class="cool-c">棱边·冰凉·黏滑·硌手毛刺</td></tr>
+    </tbody>
+  </table></div>
+  <h3 class="ch"><span class="cn">C</span>范式配比速查 / Archetype Quick Reference</h3>
+  <div class="tbl-wrap"><table class="fixed">
+    <colgroup><col style="width:22%"><col style="width:14%"><col style="width:28%"><col style="width:36%"></colgroup>
+    <thead><tr><th>范式</th><th>亲 : 危</th><th>第一情绪</th><th>典型领域</th></tr></thead>
+    <tbody>
+      <tr><td>治愈松弛</td><td>90 : 10</td><td>放松、被接住</td><td>母婴、疗愈、家居、民生</td></tr>
+      <tr><td>亲和精致</td><td>80 : 20</td><td>好感、精致高级</td><td>消费电子、日用品、主流品牌</td></tr>
+      <tr><td>均衡典雅（过渡）</td><td>60 : 40</td><td>端庄、耐看</td><td>经典奢侈品、新中式</td></tr>
+      <tr><td>崇高震撼</td><td>45 : 55</td><td>敬畏、沉醉</td><td>建筑、旗舰产品、豪华车、史诗视觉</td></tr>
+      <tr><td>冷峻克制（过渡）</td><td>38 : 62</td><td>理性、专业</td><td>极简主义、专业工具、德系工业</td></tr>
+      <tr><td>先锋反叛</td><td>30 : 70</td><td>刺激、反叛</td><td>潮牌、亚文化、概念艺术</td></tr>
+    </tbody>
+  </table></div>
+  <h3 class="ch"><span class="cn">D</span>BEA 创作审计总清单 / Audit Checklist</h3>
+  <div class="card"><ul class="check" style="columns:2;column-gap:40px">
+    <li>已用三问锁定受众、距离时长、第一情绪</li>
+    <li>已写出基调卡与目标危极权重区间</li>
+    <li>每个维度元素都标注了极性方向与强度</li>
+    <li>主辅比达到至少 6:4，基调一眼可辨</li>
+    <li>对立元素成对出现、互相衬托</li>
+    <li>至少一条秩序主线贯穿全局</li>
+    <li>宏中微三层极性一致（叠加或补偿）</li>
+    <li>视、触、听各通道极性协同无违和</li>
+    <li>无任何元素触及本能安全红线</li>
+    <li>复杂度在受众认知带宽内</li>
+    <li>已做目标文化的符号层审计</li>
+    <li>配比匹配使用距离、时长与功能风险</li>
+    <li>W(T) 计算结果落入目标范式区间</li>
+    <li>安排了张力之后的释放 / 呼吸</li>
+    <li>远观测试：第一情绪符合基调</li>
+    <li>近看 / 长期测试：细节精密、不疲劳</li>
+    <li>BEA 评分卡四维均不低于 15、总分≥80</li>
+    <li>已对照病症清单排除典型问题</li>
+  </ul></div>
+  <h3 class="ch"><span class="cn">E</span>常见问题速答 / FAQ Quick Answers</h3>
+  <div class="grid2">
+    <div class="mini warm"><h5>BEA 是新科学吗？</h5><p>不是。BEA 是工程化应用美学框架，整合神经美学、崇高理论、格式塔、唤醒理论等公共知识，原创性在于元素级可计算操作工具。</p></div>
+    <div class="mini cool"><h5>分数客观吗？</h5><p>是相对协作量表，不是客观真值。价值在于统一团队刻度，把审美争论变成变量调整。</p></div>
+    <div class="mini gold"><h5>可以商用吗？</h5><p>可以。CC BY 4.0 允许共享、改编、商用，唯一要求是署名「星空本空 / BEA」并标明改动。</p></div>
+    <div class="mini warm"><h5>和康德崇高的区别？</h5><p>康德区分优美/崇高两种范畴；BEA 把二者降维为同一连续谱上的不同配比，并增加三级阈值解释何时崇高变恐惧。</p></div>
+  </div>
+  <p class="small" style="margin-top:20px">完整 FAQ 见 <code>docs/faq.md</code>；完整边界与合规声明见 <code>docs/boundary.md</code>；学术参考文献见 <code>references/学术参考文献.md</code>；三个标准化案例见 <code>cases/</code>。</p>
+</section>
+
+</div>
+
+<footer>
+  <div class="fserif">双极情绪美学理论体系 · Bipolar Emotion Aesthetics</div>
+  <div>解释美 · 构成美 · 分辨美 · 创造美 · 检验美　|　形式美学的一套可分析、可配比、可验证方法</div>
+  <div style="margin-top:14px">版本 v1.2.0（2026-09-13）　·　作者 星空本空　·　授权 <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="noopener">CC BY 4.0（自由使用·需署名）</a></div>
+  <div class="flinks" style="margin-top:8px">
+    开源仓库：
+    <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank" rel="noopener">GitHub（国际）</a>
+    <a href="https://gitee.com/maxing0000/bipolar-emotion-aesthetics" target="_blank" rel="noopener">Gitee（国内）</a>
+    <a href="https://www.modelscope.cn/datasets/xkbk0000/bipolar-emotion-aesthetics" target="_blank" rel="noopener">ModelScope</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var links=document.querySelectorAll('#navLinks a');
+  var map={};links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  var obs=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.remove('active')});var l=map[e.target.id];if(l)l.classList.add('active');}});
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('section.part, header.cover').forEach(function(s){obs.observe(s);});
+})();
+</script>
+</body>
+</html>
