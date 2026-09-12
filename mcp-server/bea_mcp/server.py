@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """BEA MCP Server：把双极情绪美学的计算工具暴露给所有 MCP 客户端。
 
-提供四个工具：
+提供五个工具：
   bea_wt_calc       W(T) 危极指数计算：范式落点 + 极性画像 + 目标对照
   bea_wt_compare    A/B 双方案对比：双画像 + 差异维度 + 目标接近度裁决
+  bea_prescribe     诊断处方：从现状到目标 W(T) 的维度调整方案与具体手法
   bea_scoresheet    评分卡：四维打分 + 短板定位 + 六步法修复映射
   bea_list_categories  列出内置品类与维度权重表
 
@@ -42,6 +43,34 @@ FIX_MAP = {
     "秩序": "回第三步「秩序组织」：叠加五种秩序手段（对称/比例/节奏/层级/呼应），确立至少一条贯穿全局的统一要素（共同色板/栅格/母题）。",
     "阈值": "回第五步「校阈」：本能红线一票否决；认知阈靠补秩序/降复杂度右移；文化阈做符号审计（audit-templates.md 模板 8）。",
     "语境": "回第二步「范式选择」：重做受众三问（阈值/距离时长/第一情绪），检查符号层文化联想与使用场景是否错配。",
+}
+
+# 维度手法表：up=加锐（提 t）/down=减锐（降 t）的具体形式手法（与 wt_calc.py 同步）
+DIM_MOVES = {
+    # phone
+    "形状线条": {"up": "引入锐利轮廓转折、切割感边缘或非常规机身长宽比", "down": "增大圆角、回归对称直板轮廓"},
+    "质感触觉": {"up": "换冷硬材质（钛/陶瓷/磨砂金属）或强纹理表面", "down": "温润涂层、细腻喷砂、亲肤材质"},
+    "色彩": {"up": "提高饱和度或明暗对比，尝试撞色/非常规配色", "down": "低饱和中性色、单色渐变"},
+    "构图比例": {"up": "打破对称：偏心布局、放大单一模组占比", "down": "居中对称、经典分段比例"},
+    "光影": {"up": "强化高光反差、锐利阴影、舞台式打光", "down": "柔光、低反差均匀照明"},
+    "细节线条": {"up": "加装饰性刻线、锋芒倒角、外露结构细节", "down": "去装饰、隐藏接缝与开孔"},
+    # car
+    "形体曲面动势": {"up": "肌肉感曲面、俯冲姿态、外扩轮拱", "down": "平顺曲面、水平稳态轮廓"},
+    "特征线条": {"up": "锋利折线、闪电式腰线、非常规分割线", "down": "圆润贯穿线、减少折线数量"},
+    "灯组图形": {"up": "狭长锐角灯形、非常规灯语图形", "down": "圆润灯形、家族化经典布局"},
+    "比例姿态": {"up": "低趴宽体、长车头等非常规比例", "down": "标准比例、抬高视觉重心"},
+    "材质光影": {"up": "高反差漆色、碳纤维/哑光性能材质", "down": "高亮单色漆、镀铬饰条"},
+    # brand
+    "图形形状": {"up": "锐角、断裂、非常规几何或有机形", "down": "圆形/方正规整几何"},
+    "字体": {"up": "非常规字重对比、锐笔定制字形", "down": "经典无衬线、统一字重"},
+    "版式构图": {"up": "破格出血、对角动势、高密度排布", "down": "栅格对齐、大留白居中"},
+    "质感": {"up": "肌理噪点、金属/全息等强材质感", "down": "扁平纯色、细腻渐变"},
+    # ui
+    "布局留白": {"up": "紧凑高密度、破格层叠布局", "down": "增大留白、呼吸感栅格"},
+    "色彩对比": {"up": "高对比强调色、深色模式强反差", "down": "同色系低对比"},
+    "组件形": {"up": "小圆角锐角、非常规组件形态", "down": "大圆角、标准控件形态"},
+    "动效": {"up": "快速弹性、非常规转场动效", "down": "缓动淡入淡出"},
+    "字体图标": {"up": "粗字重、锐利图标笔触", "down": "常规字重、圆润图标笔触"},
 }
 
 # ---------------------------------------------------------------- 计算逻辑
@@ -101,6 +130,52 @@ def _check_tvals(weights, tvals, label=""):
             raise ValueError(f"{label}维度 {k} 的强度 {v} 超出 0-10")
 
 
+def prescribe(weights, tvals, target, max_step=3):
+    """诊断处方：从现状到目标 W(T) 的维度调整方案（与 wt_calc.py 同步）。
+
+    按权重杠杆从高到低排序，每维最多移动 max_step 档（t 每变 1，W 变 w/10）。
+    返回 (输出行列表, 调整后 t 值 dict)。
+    """
+    total, _ = compute_wt(weights, tvals)
+    lines = [
+        f"现状 W(T) = {total:.3f}（{paradigm_of(total)}）",
+        f"目标 W(T) = {target:.2f}（{paradigm_of(target)}）",
+    ]
+    gap = target - total
+    if abs(gap) <= 0.05:
+        lines.append(f"偏差 {gap:+.3f}，已落入目标区间（±0.05）——保持现状，只做细节质感精修。")
+        return lines, dict(tvals)
+    direction = "加锐" if gap > 0 else "减锐"
+    lines += [f"偏差 {gap:+.3f}，方向：{direction}", "", "处方（高权重维度先动，杠杆最大）："]
+    remaining = abs(gap)
+    new_t = dict(tvals)
+    steps = []
+    for dim, w in sorted(weights.items(), key=lambda x: -x[1]):
+        if remaining <= 0.005:
+            break
+        headroom = (10 - tvals[dim]) if gap > 0 else tvals[dim]
+        dt = int(min(max_step, headroom, remaining * 10 / w + 0.999))
+        if dt < 1:
+            continue
+        new_t[dim] = tvals[dim] + dt if gap > 0 else tvals[dim] - dt
+        covered = w * dt / 10 * (1 if gap > 0 else -1)
+        remaining -= abs(covered)
+        move = DIM_MOVES.get(dim, {}).get("up" if gap > 0 else "down", "")
+        steps.append((dim, tvals[dim], new_t[dim], dt, covered, move))
+    for dim, old, new, dt, covered, move in steps:
+        lines.append(f"  · {dim}：{old:.0f} → {new:.0f}（{direction} {dt} 档，贡献 {covered:+.3f}）")
+        if move:
+            lines.append(f"    手法：{move}")
+    after, _ = compute_wt(weights, new_t)
+    lines += ["", f"处方后 W(T) = {after:.3f}（{paradigm_of(after)}）"]
+    if abs(after - target) > 0.05:
+        lines.append(f"⚠ 单轮微调（每维 ≤{max_step} 档）未到位（差 {target - after:+.3f}）：可分两轮执行，或允许单维更大幅度调整。")
+    else:
+        lines.append("✓ 落入目标区间（±0.05）。")
+    lines.append("提醒：t 值调整须落回具体形式决策；改后回六步法第五步「校阈」复验本能/认知/文化三阈。")
+    return lines, new_t
+
+
 # ---------------------------------------------------------------- MCP 服务
 
 mcp = FastMCP(
@@ -109,6 +184,7 @@ mcp = FastMCP(
         "双极情绪美学（BEA）计算工具集。BEA 认为美感=可控张力下的情绪奖赏：每个形式元素都在"
         "亲极（柔和安全）与危极（锐利警觉）之间定位，W(T) 是各维度危极强度的品类加权和。"
         "先用 bea_list_categories 查品类维度，再用 bea_wt_calc 计算落点；两方案取舍用 bea_wt_compare；"
+        "有明确目标范式/W(T) 时用 bea_prescribe 直接出维度调整处方与具体手法；"
         "成稿验收用 bea_scoresheet（四维各 25 分，≥80 成熟，<15 为短板）。"
         "0-10 刻度与 W(T) 为协作参照，非心理物理常数。"
     ),
@@ -180,6 +256,28 @@ def bea_wt_compare(category: str, t_a: dict, t_b: dict, target: float = 0.0, wei
         da, db = abs(total_a - target), abs(total_b - target)
         closer = "A" if da < db else ("B" if db < da else "两者持平")
         lines.append(f"对照目标 {target:.2f}：{closer} 更接近（A 差 {da:.3f}，B 差 {db:.3f}）。")
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def bea_prescribe(category: str, t: dict, target: float, weights: dict = None) -> str:
+    """诊断处方：输入现状各维度危极强度与目标 W(T)，输出维度级调整方案——先动哪个维度、调几档、用什么具体设计手法。
+
+    Args:
+        category: 品类，phone/car/brand/ui 之一（自定义权重时随意填）
+        t: 现状各维度危极强度（0-10），如 {"形状线条": 5, "质感触觉": 4, "色彩": 6, "构图比例": 6, "光影": 3, "细节线条": 4}
+        target: 目标 W(T)（必填，如 0.28）；范式锚点：0.1 治愈｜0.2 亲和精致｜0.4 均衡典雅｜0.55 崇高｜0.62 冷峻｜0.7 先锋
+        weights: 可选，自定义权重表（合计须为 1），提供时忽略 category
+    """
+    try:
+        w = _resolve_weights(category, weights)
+        tv = {k: float(v) for k, v in t.items()}
+        _check_tvals(w, tv)
+        if not 0 < float(target) < 1:
+            raise ValueError(f"target {target} 应在 (0, 1) 区间")
+    except ValueError as e:
+        return f"输入错误：{e}"
+    lines, _ = prescribe(w, tv, float(target))
     return "\n".join(lines)
 
 

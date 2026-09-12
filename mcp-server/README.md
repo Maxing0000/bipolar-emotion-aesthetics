@@ -1,15 +1,16 @@
 # BEA MCP Server
 
 把**双极情绪美学（BEA）**的计算工具暴露给所有 MCP 客户端（Claude Desktop、Cursor、WorkBuddy 等）。
-一次安装，你的 AI 助手直接获得「计算 W(T)、A/B 方案对比、评分卡诊断」能力。
+一次安装，你的 AI 助手直接获得「计算 W(T)、A/B 方案对比、诊断处方、评分卡诊断」能力。
 
-## 四个工具
+## 五个工具
 
 | 工具 | 作用 |
 |---|---|
 | `bea_list_categories` | 列出内置品类（phone/car/brand/ui）与维度权重表 |
 | `bea_wt_calc` | 计算危极指数 W(T)：范式落点 + 极性画像 + 目标区间对照 |
 | `bea_wt_compare` | A/B 双方案对比：双画像 + 差异维度 + 目标接近度裁决 |
+| `bea_prescribe` | 诊断处方：从现状到目标 W(T)，先动哪个维度、调几档、用什么具体手法 |
 | `bea_scoresheet` | 评分卡：四维打分（各 25 分）+ 短板定位 + 六步法修复指引 |
 
 ## 安装
