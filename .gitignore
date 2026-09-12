@@ -12,3 +12,10 @@ _*_backup/
 *.tmp
 *.log
 __MACOSX/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
