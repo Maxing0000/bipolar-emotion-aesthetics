@@ -15,6 +15,10 @@ jobs:
           python-version: "3.12"
       - name: 单元测试（wt_calc / scoresheet）
         run: python3 tests/test_tools.py -v
+      - name: MCP 与 CLI 数据表同步校验
+        run: |
+          pip install "mcp>=1.2.0,<2"
+          python3 tests/test_mcp_sync.py
       - name: 案例算式复算（防数字漂移）
         run: python3 ci/verify_cases.py
       - name: 本地链接与文件引用检查（防幻影文件）

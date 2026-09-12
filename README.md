@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.4.0-blue)
+![Version](https://img.shields.io/badge/version-1.5.0-blue)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
 
@@ -66,6 +66,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 │   ├── promotion.md                        # 传播物料包（三档中英文案 + 18 自媒体选题 + 发布渠道）
 │   ├── ai-art-community-kit.md             # AI 生图社区传播包（审美控制语法的帖子模板）
 │   └── experiment-protocol.md              # 盲评实验协议（BEA 预测 vs 用户投票，实证众包）
+├── mcp-server/                           # MCP Server：bea_wt_calc / bea_wt_compare / bea_scoresheet 四工具（pip 可装）
 ├── arxiv/
 │   └── bea-position-paper.md               # 英文学术论文草稿（position paper）
 ├── ci/                                     # 内容体检：算式复算 / 链接有效性 / 中英混杂
@@ -148,6 +149,26 @@ git clone --depth 1 https://github.com/Maxing0000/bipolar-emotion-aesthetics && 
 
 两页互相链接：计算器页脚有「完整在线理论著作」入口，著作内有计算器引用。
 
+## MCP Server（AI 客户端直连）
+
+`mcp-server/` 把 BEA 计算工具封装为标准 MCP 服务——Claude Desktop、Cursor、WorkBuddy 等任何 MCP 客户端装上后，AI 可直接调用四个工具：`bea_list_categories`（品类权重表）、`bea_wt_calc`（W(T) 与范式落点）、`bea_wt_compare`（A/B 方案裁决）、`bea_scoresheet`（评分卡与短板修复）。
+
+```bash
+pip install "git+https://github.com/Maxing0000/bipolar-emotion-aesthetics#subdirectory=mcp-server"
+```
+
+客户端配置（Claude Desktop / Cursor / WorkBuddy 同格式）：
+
+```json
+{
+  "mcpServers": {
+    "bea-aesthetics": { "command": "python3", "args": ["-m", "bea_mcp.server"] }
+  }
+}
+```
+
+详见 `mcp-server/README.md`。数据表与 CLI 脚本 CI 强制同步（`tests/test_mcp_sync.py`）。
+
 ## 多平台获取
 
 | 平台 | 用途 | 地址 |
@@ -163,7 +184,7 @@ git clone --depth 1 https://github.com/Maxing0000/bipolar-emotion-aesthetics && 
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.4.0, 2026. CC BY 4.0.
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.5.0, 2026. CC BY 4.0.
 
 BibTeX：
 
@@ -172,7 +193,7 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.4.0},
+  version= {1.5.0},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
   license= {CC BY 4.0},
   note   = {永久 DOI 将于 Zenodo 归档后补充}
@@ -180,6 +201,11 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.5.0（2026-09-13）
+- 新增 **MCP Server**（`mcp-server/`）：bea_list_categories / bea_wt_calc / bea_wt_compare / bea_scoresheet 四工具，pip 一键安装，Claude Desktop / Cursor / WorkBuddy 等 MCP 客户端直连
+- 新增 `tests/test_mcp_sync.py`：MCP 与 CLI 脚本数据表一致性 CI 校验
+
 
 ### v1.4.0（2026-09-13）
 
