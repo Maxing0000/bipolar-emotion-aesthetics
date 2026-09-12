@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.5.0-blue)
+![Version](https://img.shields.io/badge/version-1.5.1-blue)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
 
@@ -193,7 +193,7 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.5.0},
+  version= {1.5.1},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
   license= {CC BY 4.0},
   note   = {永久 DOI 将于 Zenodo 归档后补充}
