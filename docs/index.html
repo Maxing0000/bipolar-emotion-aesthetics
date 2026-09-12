@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEA 双极情绪美学 · W(T) 交互计算器</title>
+<meta name="description" content="美感 = 可控张力下的情绪奖赏。在线计算 W(T) 危极指数、范式落点与极性画像。">
+<style>
+  :root{
+    --bg:#faf9f7; --card:#ffffff; --ink:#2b2a28; --sub:#6f6c66; --line:#e8e5e0;
+    --accent:#b5442c; --accent-soft:#f6ebe7; --qing:#7a9e9f; --ok:#3e7d54; --warn:#a05a1f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6;padding:32px 20px 60px}
+  .wrap{max-width:1060px;margin:0 auto}
+  header{margin-bottom:28px}
+  header h1{font-size:26px;font-weight:700;letter-spacing:.5px}
+  header h1 span{color:var(--accent)}
+  header p{color:var(--sub);font-size:14px;margin-top:6px}
+  header .formula{display:inline-block;margin-top:10px;padding:6px 14px;background:var(--accent-soft);
+    border-radius:8px;font-size:14px;color:var(--accent);border:1px solid #ead5cd}
+  .grid{display:grid;grid-template-columns:400px 1fr;gap:20px}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h2{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .card h2::before{content:"";display:inline-block;width:4px;height:14px;background:var(--accent);border-radius:2px}
+  label{font-size:13px;color:var(--sub)}
+  select{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;
+    background:#fff;color:var(--ink);margin:6px 0 18px;outline:none}
+  select:focus{border-color:var(--qing)}
+  .dim{margin-bottom:14px}
+  .dim .row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;margin-bottom:2px}
+  .dim .row b{font-weight:600;color:var(--ink)}
+  .dim .row span{color:var(--sub)}
+  .dim .row .val{color:var(--accent);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;height:22px;-webkit-appearance:none;background:transparent;cursor:pointer}
+  input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;
+    background:linear-gradient(90deg,#cfe0d8,#e9d8c9 55%,#d8b2a5)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+    background:#fff;border:2.5px solid var(--accent);margin-top:-6px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+  input[type=range]::-moz-range-track{height:6px;border-radius:3px;
+    background:linear-gradient(90deg,#cfe0d8,#e9d8c9 55%,#d8b2a5)}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:2.5px solid var(--accent)}
+  .presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .presets button{padding:5px 11px;font-size:12px;border:1px solid var(--line);border-radius:999px;
+    background:#fff;color:var(--sub);cursor:pointer;transition:all .15s}
+  .presets button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+  .result-top{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:18px}
+  .wt-num{font-size:52px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1}
+  .wt-num small{font-size:16px;font-weight:600;color:var(--sub)}
+  .paradigm{font-size:15px}
+  .paradigm b{display:inline-block;padding:4px 12px;border-radius:8px;background:var(--accent-soft);
+    color:var(--accent);font-weight:700}
+  .paradigm .hint{color:var(--sub);font-size:12px;margin-top:4px}
+  .target-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;font-size:13px}
+  .target-row input{width:90px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+  .target-row .delta{font-weight:600}
+  .delta.ok{color:var(--ok)} .delta.bad{color:var(--warn)}
+  .spectrum{margin:10px 0 22px}
+  .spec-track{position:relative;height:10px;border-radius:5px;
+    background:linear-gradient(90deg,#cfe0d8 0%,#dcd3c0 30%,#dfb8a0 60%,#c98467 85%,#a04326 100%)}
+  .spec-marker{position:absolute;top:-7px;width:2.5px;height:24px;background:var(--ink);border-radius:2px;
+    transform:translateX(-50%);transition:left .2s}
+  .spec-marker::after{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+    border:6px solid transparent;border-top-color:var(--ink)}
+  .spec-anchors{position:relative;height:34px;font-size:11px;color:var(--sub)}
+  .spec-anchors span{position:absolute;transform:translateX(-50%);white-space:nowrap;text-align:center}
+  .spec-anchors span::before{content:"";display:block;width:1px;height:6px;background:var(--line);margin:0 auto 2px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:640px){.two-col{grid-template-columns:1fr}}
+  .profile .prow{display:grid;grid-template-columns:88px 1fr 30px;gap:8px;align-items:center;font-size:12px;margin-bottom:7px}
+  .profile .pbar{height:9px;background:#f0ede8;border-radius:5px;overflow:hidden}
+  .profile .pfill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--qing),var(--accent));transition:width .2s}
+  .profile .pnum{text-align:right;color:var(--sub);font-variant-numeric:tabular-nums}
+  .quad{position:relative}
+  .quad svg{width:100%;height:auto;display:block}
+  .quad .qdot{transition:cx .2s,cy .2s}
+  footer{margin-top:26px;text-align:center;font-size:12px;color:var(--sub)}
+  footer a{color:var(--qing);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>BEA 双极情绪美学 · <span>W(T) 交互计算器</span></h1>
+    <p>任何感官对象的美感，都是亲极（安全趋近）与危极（警觉唤醒）在秩序之内的恰当组合。</p>
+    <div class="formula">美感 = 可控张力下的情绪奖赏 &nbsp;·&nbsp; W(T) = Σ wᵢ·(tᵢ/10)</div>
+  </header>
+
+  <div class="grid">
+    <!-- 左：输入 -->
+    <div class="card">
+      <h2>① 选择品类与各维度危极强度</h2>
+      <label for="cat">品类（决定各维度权重）</label>
+      <select id="cat">
+        <option value="phone">手机 / 手持电子</option>
+        <option value="car">汽车 / 交通工具</option>
+        <option value="brand">品牌 / 平面视觉</option>
+        <option value="ui">UI / 交互界面</option>
+      </select>
+      <div id="dims"></div>
+      <label>快捷示例</label>
+      <div class="presets" id="presets"></div>
+    </div>
+
+    <!-- 右：结果 -->
+    <div class="card">
+      <h2>② 计算结果</h2>
+      <div class="result-top">
+        <div class="wt-num"><span id="wt">0.000</span><small> W(T)</small></div>
+        <div class="paradigm">
+          范式落点：<b id="para">—</b>
+          <div class="hint" id="paraHint"></div>
+        </div>
+      </div>
+      <div class="target-row">
+        <label>目标区间</label>
+        <input type="number" id="target" step="0.01" min="0" max="1" placeholder="如 0.28">
+        <span class="delta" id="delta"></span>
+      </div>
+      <div class="spectrum">
+        <div class="spec-track"><div class="spec-marker" id="marker"></div></div>
+        <div class="spec-anchors" id="anchors"></div>
+      </div>
+      <div class="two-col">
+        <div class="profile">
+          <h2 style="font-size:13px;margin-bottom:10px">极性画像</h2>
+          <div id="profile"></div>
+        </div>
+        <div class="quad">
+          <h2 style="font-size:13px;margin-bottom:10px">四象限定位（横轴：结构秩序）</h2>
+          <svg viewBox="0 0 300 240" id="quadSvg">
+            <rect x="30" y="10" width="130" height="105" fill="#f2efe9"/>
+            <rect x="160" y="10" width="130" height="105" fill="#f6ebe7"/>
+            <rect x="30" y="115" width="130" height="105" fill="#f7f6f3"/>
+            <rect x="160" y="115" width="130" height="105" fill="#f2efe9"/>
+            <text x="95" y="60" text-anchor="middle" font-size="12" fill="#a09c93">甜腻 / 松散</text>
+            <text x="225" y="56" text-anchor="middle" font-size="12" fill="#b5442c" font-weight="700">黄金区</text>
+            <text x="225" y="74" text-anchor="middle" font-size="10" fill="#c8836b">高张力 × 高秩序</text>
+            <text x="95" y="162" text-anchor="middle" font-size="12" fill="#a09c93">呆板平庸</text>
+            <text x="225" y="162" text-anchor="middle" font-size="12" fill="#a09c93">混乱 / 焦虑</text>
+            <line x1="30" y1="115" x2="290" y2="115" stroke="#d8d4cd" stroke-width="1"/>
+            <line x1="160" y1="10" x2="160" y2="220" stroke="#d8d4cd" stroke-width="1"/>
+            <text x="30" y="235" font-size="10" fill="#6f6c66">秩序低</text>
+            <text x="258" y="235" font-size="10" fill="#6f6c66">秩序高</text>
+            <circle id="qdot" class="qdot" cx="160" cy="115" r="7" fill="#b5442c" stroke="#fff" stroke-width="2"/>
+          </svg>
+          <div style="font-size:12px;color:var(--sub)">纵轴高度 = W(T)（顶 = 0.85 越阈线）。点在右上角即「柔中藏骨、险而不崩」。</div>
+          <div style="margin-top:8px">
+            <label style="margin-right:8px">结构秩序（主观 0–10）</label>
+            <input type="range" id="order" min="0" max="10" value="6" style="width:100%">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    双极情绪美学 BEA v1.2.0 · 作者 星空本空 ·
+    <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics">GitHub 仓库</a> ·
+    CC BY 4.0 · 0–10 刻度与 W(T) 为协作参照，非心理物理常数
+  </footer>
+</div>
+
+<script>
+const DATA = {
+  phone: {name:"手机 / 手持电子", dims:[["形状线条",.25],["质感触觉",.25],["色彩",.15],["构图比例",.15],["光影",.10],["细节线条",.10]]},
+  car:   {name:"汽车 / 交通工具", dims:[["形体曲面动势",.3],["特征线条",.25],["灯组图形",.15],["比例姿态",.15],["材质光影",.15]]},
+  brand: {name:"品牌 / 平面视觉", dims:[["图形形状",.25],["色彩",.25],["字体",.2],["版式构图",.2],["质感",.1]]},
+  ui:    {name:"UI / 交互界面", dims:[["布局留白",.25],["色彩对比",.2],["组件形",.2],["动效",.2],["字体图标",.15]]}
+};
+const PARAS = [
+  [0.10,"治愈松弛"],[0.20,"亲和精致"],[0.40,"均衡典雅"],[0.55,"崇高震撼"],
+  [0.62,"冷峻克制"],[0.70,"先锋反叛"]
+];
+const PRESETS = [
+  {label:"iPhone 16 Pro",cat:"phone",t:[2,4,2,3,3,3],target:0.28},
+  {label:"iPhone 17 Pro",cat:"phone",t:[5,4,6,6,3,4],target:0.28},
+  {label:"问界 M9 现状",cat:"car",t:[2,2,3,2,3],target:0.45},
+  {label:"M9 处方后",cat:"car",t:[4,6,6,4,2],target:0.45},
+  {label:"先锋海报",cat:"brand",t:[7,6,5,6,5],target:0}
+];
+let vals = {};
+
+function paraOf(w){
+  if(w>0.85) return "越阈警告";
+  let best=PARAS[0];
+  for(const p of PARAS){ if(Math.abs(w-p[0])<=Math.abs(w-best[0])) best=p; }
+  return best[1];
+}
+function paraHint(w){
+  if(w>0.85) return "超过 0.85 警戒线：多数受众将转为焦虑 / 排斥，需回修。";
+  if(w<0.12) return "张力极低：安全但接近无聊线，适合治愈系场景。";
+  return "对照锚点：0.1 治愈 · 0.2 亲和精致 · 0.4 均衡典雅 · 0.55 崇高 · 0.62 冷峻 · 0.7 先锋 · 0.85 越阈";
+}
+
+function buildDims(){
+  const cat = document.getElementById("cat").value;
+  const box = document.getElementById("dims");
+  box.innerHTML = "";
+  vals = {};
+  DATA[cat].dims.forEach(([name,w],i)=>{
+    vals[name] = 3;
+    const d = document.createElement("div");
+    d.className = "dim";
+    d.innerHTML = `<div class="row"><b>${name}</b><span>权重 ${(w*100).toFixed(0)}%</span><span class="val" id="v${i}">3</span></div>
+      <input type="range" min="0" max="10" value="3" data-i="${i}" data-w="${w}" data-name="${name}">`;
+    box.appendChild(d);
+  });
+  box.querySelectorAll("input[type=range]").forEach(r=>{
+    r.addEventListener("input",e=>{
+      const name = e.target.dataset.name;
+      vals[name] = +e.target.value;
+      document.getElementById("v"+e.target.dataset.i).textContent = e.target.value;
+      calc();
+    });
+  });
+  calc();
+}
+
+function calc(){
+  const cat = document.getElementById("cat").value;
+  const dims = DATA[cat].dims;
+  let w = 0;
+  dims.forEach(([name],i)=>{ w += vals[name]/10 * DATA[cat].dims[i][1]; });
+  w = Math.round(w*1000)/1000;
+  document.getElementById("wt").textContent = w.toFixed(3);
+  document.getElementById("para").textContent = paraOf(w);
+  document.getElementById("paraHint").textContent = paraHint(w);
+  document.getElementById("marker").style.left = Math.min(w,1)*100/1*0.9+5+"%";
+  // 目标对照
+  const tgt = parseFloat(document.getElementById("target").value);
+  const delta = document.getElementById("delta");
+  if(!isNaN(tgt)){
+    const d = Math.round((w-tgt)*1000)/1000;
+    delta.textContent = d>0.05 ? `偏高 +${d.toFixed(3)}，建议降高权重维度` :
+                        d<-0.05 ? `偏低 ${d.toFixed(3)}，建议提细节锐度` :
+                        `落入区间（±0.05）✓`;
+    delta.className = "delta "+(Math.abs(d)<=0.05?"ok":"bad");
+  } else { delta.textContent=""; }
+  // 画像
+  const prof = document.getElementById("profile");
+  prof.innerHTML = "";
+  dims.forEach(([name],i)=>{
+    const t = vals[name];
+    const row = document.createElement("div");
+    row.className = "prow";
+    row.innerHTML = `<span>${name}</span><div class="pbar"><div class="pfill" style="width:${t*10}%"></div></div><span class="pnum">${t}</span>`;
+    prof.appendChild(row);
+  });
+  // 四象限
+  const order = +document.getElementById("order").value;
+  document.getElementById("qdot").setAttribute("cx", 30 + order/10*260);
+  document.getElementById("qdot").setAttribute("cy", 220 - Math.min(w,0.85)/0.85*205);
+}
+
+function buildAnchors(){
+  const box = document.getElementById("anchors");
+  box.innerHTML = "";
+  const items = [...PARAS.map(p=>[p[0],p[1]]),[0.85,"越阈"]];
+  items.forEach(([v,name])=>{
+    const s = document.createElement("span");
+    s.style.left = (v*0.9*100+5)+"%";
+    s.textContent = name;
+    box.appendChild(s);
+  });
+}
+
+function buildPresets(){
+  const box = document.getElementById("presets");
+  PRESETS.forEach(p=>{
+    const b = document.createElement("button");
+    b.textContent = p.label;
+    b.onclick = ()=>{
+      document.getElementById("cat").value = p.cat;
+      buildDims();
+      const inputs = document.querySelectorAll("#dims input[type=range]");
+      p.t.forEach((t,i)=>{ if(inputs[i]){ inputs[i].value = t; inputs[i].dispatchEvent(new Event("input")); } });
+      document.getElementById("target").value = p.target || "";
+      calc();
+    };
+    box.appendChild(b);
+  });
+}
+
+document.getElementById("cat").addEventListener("change",buildDims);
+document.getElementById("target").addEventListener("input",calc);
+document.getElementById("order").addEventListener("input",calc);
+buildAnchors(); buildPresets(); buildDims();
+</script>
+</body>
+</html>
