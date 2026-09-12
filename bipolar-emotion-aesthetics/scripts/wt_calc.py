@@ -32,6 +32,35 @@ PARADIGM_RANGES = [
     (float("inf"), "逼近越阈——非美区"),
 ]
 
+# 维度手法表：up=加锐（提 t）/down=减锐（降 t）的具体形式手法。
+# 自定义权重表中未收录的维度，处方只给档位建议、不给手法。
+DIM_MOVES = {
+    # phone
+    "形状线条": {"up": "引入锐利轮廓转折、切割感边缘或非常规机身长宽比", "down": "增大圆角、回归对称直板轮廓"},
+    "质感触觉": {"up": "换冷硬材质（钛/陶瓷/磨砂金属）或强纹理表面", "down": "温润涂层、细腻喷砂、亲肤材质"},
+    "色彩": {"up": "提高饱和度或明暗对比，尝试撞色/非常规配色", "down": "低饱和中性色、单色渐变"},
+    "构图比例": {"up": "打破对称：偏心布局、放大单一模组占比", "down": "居中对称、经典分段比例"},
+    "光影": {"up": "强化高光反差、锐利阴影、舞台式打光", "down": "柔光、低反差均匀照明"},
+    "细节线条": {"up": "加装饰性刻线、锋芒倒角、外露结构细节", "down": "去装饰、隐藏接缝与开孔"},
+    # car
+    "形体曲面动势": {"up": "肌肉感曲面、俯冲姿态、外扩轮拱", "down": "平顺曲面、水平稳态轮廓"},
+    "特征线条": {"up": "锋利折线、闪电式腰线、非常规分割线", "down": "圆润贯穿线、减少折线数量"},
+    "灯组图形": {"up": "狭长锐角灯形、非常规灯语图形", "down": "圆润灯形、家族化经典布局"},
+    "比例姿态": {"up": "低趴宽体、长车头等非常规比例", "down": "标准比例、抬高视觉重心"},
+    "材质光影": {"up": "高反差漆色、碳纤维/哑光性能材质", "down": "高亮单色漆、镀铬饰条"},
+    # brand
+    "图形形状": {"up": "锐角、断裂、非常规几何或有机形", "down": "圆形/方正规整几何"},
+    "字体": {"up": "非常规字重对比、锐笔定制字形", "down": "经典无衬线、统一字重"},
+    "版式构图": {"up": "破格出血、对角动势、高密度排布", "down": "栅格对齐、大留白居中"},
+    "质感": {"up": "肌理噪点、金属/全息等强材质感", "down": "扁平纯色、细腻渐变"},
+    # ui
+    "布局留白": {"up": "紧凑高密度、破格层叠布局", "down": "增大留白、呼吸感栅格"},
+    "色彩对比": {"up": "高对比强调色、深色模式强反差", "down": "同色系低对比"},
+    "组件形": {"up": "小圆角锐角、非常规组件形态", "down": "大圆角、标准控件形态"},
+    "动效": {"up": "快速弹性、非常规转场动效", "down": "缓动淡入淡出"},
+    "字体图标": {"up": "粗字重、锐利图标笔触", "down": "常规字重、圆润图标笔触"},
+}
+
 
 def paradigm_of(wt: float) -> str:
     for upper, name in PARADIGM_RANGES:
@@ -96,6 +125,52 @@ def check_target(total, target):
         print(f"对照目标 {target:.2f}：偏差 {diff:+.3f}，建议{advise}")
 
 
+def prescribe(weights, tvals, target, max_step=3):
+    """诊断处方：从现状到目标 W(T) 的维度调整方案。
+
+    按权重杠杆从高到低排序，每维最多移动 max_step 档（t 每变 1，W 变 w/10）。
+    返回 (输出行列表, 调整后 t 值 dict)。
+    """
+    total, _ = compute_wt(weights, tvals)
+    lines = [
+        f"现状 W(T) = {total:.3f}（{paradigm_of(total)}）",
+        f"目标 W(T) = {target:.2f}（{paradigm_of(target)}）",
+    ]
+    gap = target - total
+    if abs(gap) <= 0.05:
+        lines.append(f"偏差 {gap:+.3f}，已落入目标区间（±0.05）——保持现状，只做细节质感精修。")
+        return lines, dict(tvals)
+    direction = "加锐" if gap > 0 else "减锐"
+    lines += [f"偏差 {gap:+.3f}，方向：{direction}", "", "处方（高权重维度先动，杠杆最大）："]
+    remaining = abs(gap)
+    new_t = dict(tvals)
+    steps = []
+    for dim, w in sorted(weights.items(), key=lambda x: -x[1]):
+        if remaining <= 0.005:
+            break
+        headroom = (10 - tvals[dim]) if gap > 0 else tvals[dim]
+        dt = int(min(max_step, headroom, remaining * 10 / w + 0.999))
+        if dt < 1:
+            continue
+        new_t[dim] = tvals[dim] + dt if gap > 0 else tvals[dim] - dt
+        covered = w * dt / 10 * (1 if gap > 0 else -1)
+        remaining -= abs(covered)
+        move = DIM_MOVES.get(dim, {}).get("up" if gap > 0 else "down", "")
+        steps.append((dim, tvals[dim], new_t[dim], dt, covered, move))
+    for dim, old, new, dt, covered, move in steps:
+        lines.append(f"  · {dim}：{old:.0f} → {new:.0f}（{direction} {dt} 档，贡献 {covered:+.3f}）")
+        if move:
+            lines.append(f"    手法：{move}")
+    after, _ = compute_wt(weights, new_t)
+    lines += ["", f"处方后 W(T) = {after:.3f}（{paradigm_of(after)}）"]
+    if abs(after - target) > 0.05:
+        lines.append(f"⚠ 单轮微调（每维 ≤{max_step} 档）未到位（差 {target - after:+.3f}）：可分两轮执行，或允许单维更大幅度调整。")
+    else:
+        lines.append("✓ 落入目标区间（±0.05）。")
+    lines.append("提醒：t 值调整须落回具体形式决策；改后回六步法第五步「校阈」复验本能/认知/文化三阈。")
+    return lines, new_t
+
+
 def main():
     ap = argparse.ArgumentParser(description="BEA W(T) 计算器")
     ap.add_argument("--category", choices=sorted(CATEGORY_WEIGHTS), help="品类")
@@ -103,6 +178,7 @@ def main():
     ap.add_argument("--compare", help="B 方案各维度强度，与 --t 做 A/B 对比")
     ap.add_argument("--weights", help='自定义权重 JSON，如 {"形状":0.5,"色彩":0.5}')
     ap.add_argument("--target", type=float, help="目标 W(T)（对照判定用）")
+    ap.add_argument("--prescribe", action="store_true", help="诊断处方：给出从现状到 --target 的维度调整方案与手法")
     ap.add_argument("--list", action="store_true", help="列出品类与维度")
     args = ap.parse_args()
 
@@ -144,6 +220,10 @@ def main():
             print(f"对照目标 {args.target:.2f}：{closer} 更接近（A 差 {da:.3f}，B 差 {db:.3f}）。")
     elif args.target is not None:
         check_target(total_a, args.target)
+        if args.prescribe:
+            print()
+            lines, _ = prescribe(weights, tvals_a, args.target)
+            print("\n".join(lines))
 
 
 if __name__ == "__main__":
