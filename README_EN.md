@@ -6,7 +6,7 @@
 [![Version](https://img.shields.io/badge/version-v1.2.0-blue.svg)]()
 [![Author](https://img.shields.io/badge/author-%E6%98%9F%E7%A9%BA%E6%9C%AC%E7%A9%BA-orange.svg)]()
 
-> 中文 README：[README.md](README.md) ｜ 在线阅读：[docs/index.html](docs/index.html) ｜ 术语表：[GLOSSARY.md](GLOSSARY.md)
+> Chinese README: [README.md](README.md) | Read online: [docs/index.html](docs/index.html) | Glossary: [GLOSSARY.md](GLOSSARY.md)
 
 ---
 
@@ -87,17 +87,17 @@ bipolar-emotion-aesthetics/
 
 ## Originality & scope
 
-BEA integrates publicly established knowledge from neuroaesthetics, Burke's sublime, Gestalt psychology, and approach–avoidance motivation theory. The **original framework** — element bipolar classification, three-tier threshold, W(T) threat index, six archetypes, standardized diagnosis and scoring workflow — is authored by **星空本空 (Xingkong Benkong)** and released under **CC BY 4.0**.
+BEA integrates publicly established knowledge from neuroaesthetics, Burke's sublime, Gestalt psychology, and approach–avoidance motivation theory. The **original framework** — element bipolar classification, three-tier threshold, W(T) threat index, six archetypes, standardized diagnosis and scoring workflow — is authored by **Xingkong Benkong** and released under **CC BY 4.0**.
 
 BEA evaluates **formal aesthetics only** (line, texture, color, composition, rhythm). It does not judge content, narrative, morality, or ideas. W(T) and the BEA score are **relative reference scales**, not objective physical measurements.
 
 ## License
 
-**CC BY 4.0** — You are free to share, adapt, and use commercially, provided you give appropriate credit to **星空本空 / Bipolar Emotion Aesthetics (BEA)**, indicate changes, and link to the license.
+**CC BY 4.0** — You are free to share, adapt, and use commercially, provided you give appropriate credit to **Xingkong Benkong / Bipolar Emotion Aesthetics (BEA)**, indicate changes, and link to the license.
 
 ## Author & links
 
-- **Author:** 星空本空 (Xingkong Benkong)
+- **Author:** Xingkong Benkong
 - **Version:** v1.2.0
 - GitHub (international): https://github.com/Maxing0000/bipolar-emotion-aesthetics
 - Gitee (China): https://gitee.com/maxing0000/bipolar-emotion-aesthetics
