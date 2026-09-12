@@ -1,9 +1,9 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.0-blue)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
-![Stack](https://img.shields.io/badge/stack-Markdown%20only-orange)
+![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
 
 > 一套**可解释、可计算、可执行**的形式美学方法 / A computable framework for formal aesthetics.
 > **核心命题：美感 = 可控张力下的情绪奖赏（Aesthetic pleasure = emotional reward under controlled tension）。**
@@ -23,6 +23,7 @@
 | **A 分析 / 评价** | 一个设计对象（描述或图片） | 双极拆解、范式定位、W(T) 危极指数、BEA 评分卡、好/坏的机制解释 |
 | **B 创作 / 设计** | 目标气质 + 对象类型 + 语境 | 元素级设计方案、亲:危配比、形态/配色/材质/节奏的具体变量 |
 | **C 诊断 / 调优** |「廉价感 / 甜腻 / 杂乱 / 攻击性 / 不耐看」等问题 | 病灶定位（越阈/失衡/失序/错配）+ 对应处方与修改清单 |
+| **D 讲解 / 科普** |「给我讲讲 BEA / 这套理论」 | 固定叙事链（命题→机制→四象限→范式谱→六步法）+ 图示化讲解 |
 
 ## 30 秒看懂它怎么工作
 
@@ -54,13 +55,18 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 ├── README.md / LICENSE / .gitignore
 ├── docs/cover.png                          # 封面
 └── bipolar-emotion-aesthetics/             # ← 技能本体：把此文件夹放进 Agent 的 skills 目录
-    ├── SKILL.md                            # 主入口：触发描述 + 核心模型 + 三类工作流
-    └── references/
-        ├── theory.md                       # 本体/机制/双极谱系/结构法则/三级阈值
-        ├── paradigms.md                    # 范式连续谱、六锚点、语境调制、极性翻转
-        ├── method.md                       # 六步法、W(T) 计算、BEA 评分卡
-        ├── playbooks.md                    # 九大领域配方（含手机/汽车）+ 病症诊断处方
-        └── audit-templates.md              # 7 套可复制模板 + 1 个填好的完整示范
+    ├── SKILL.md                            # 主入口：触发描述 + 核心模型 + 四类工作流（A/B/C/D）
+    ├── references/
+    │   ├── theory.md                       # 本体/机制/双极谱系（含关系/间隔维度）/结构法则/三级阈值
+    │   ├── paradigms.md                    # 范式连续谱、六锚点、语境调制、极性翻转
+    │   ├── method.md                       # 六步法、W(T) 计算、疲劳函数、BEA 评分卡
+    │   ├── playbooks.md                    # 九大领域配方（含手机/汽车）+ 病症诊断处方
+    │   ├── audit-templates.md              # 8 套可复制模板（含文化符号审计表）+ A/C 双示范
+    │   └── bea-prompts.md                  # 提示词语法：范式×维度×强度档 → 生图提示词
+    ├── scripts/
+    │   └── wt_calc.py                      # W(T) 计算器：范式落点与极性画像（仅标准库，离线）
+    ├── anchors/                            # 0–10 强度锚定图卡（形状/明度/色彩）与对卡流程
+    └── cases/                              # 已验证案例库：M9 诊断 / 华为方案 / 宋式生图
 ```
 
 ## 安装
@@ -69,7 +75,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 2. 将内层 `bipolar-emotion-aesthetics/` 文件夹整体复制到你的 AI Agent 的技能目录（如 `…/workspace/.user_skills/` 或对应 `skills/` 目录）；
 3. 重启 / 刷新 Agent，技能会按 `SKILL.md` 中的描述自动触发。
 
-**零依赖**：技能为纯 Markdown 文本，不含可执行脚本、不联网、不调用外部 API、不读取或上传任何数据，离线可用。
+**近零依赖**：核心为纯 Markdown 方法论，离线可用；`scripts/wt_calc.py` 为可选计算辅助——仅用 Python 标准库、不联网、不调用外部 API、不读取或上传任何数据，无它时全部流程仍可手工执行。
 
 ## 快速开始（触发示例）
 
@@ -78,6 +84,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 - 「这张海报看着又甜又腻、不耐看，诊断一下并给出修改清单。」
 - 「帮我定一个新能源 SUV 的形态气质：既要科技锋利感又要家用亲和，怎么配比？」
 - 「这个 App 界面红色警示和圆角卡片混在一起很违和，做一次跨模态一致性审计。」
+- 「给我讲讲双极情绪美学这套理论。」
 
 ## 适用领域
 
@@ -91,7 +98,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 
 ## 安全与合规说明
 
-- 全部内容为静态 Markdown 方法论文档，**无脚本、无二进制程序、无网络请求、无数据采集、无第三方依赖**；
+- 核心内容为静态 Markdown 方法论文档；唯一的可执行文件 `scripts/wt_calc.py` 为纯标准库离线计算器，**无二进制程序、无网络请求、无数据采集、无第三方依赖**；
 - 素材不涉及任何个人信息、真实用户数据或受版权限制的第三方内容；
 - 采用宽松的 CC BY 4.0 协议，允许自由使用与商用，仅需署名。
 
@@ -110,7 +117,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.0.0, 2026. CC BY 4.0.
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.1.0, 2026. CC BY 4.0.
 
 BibTeX：
 
@@ -119,12 +126,30 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.0.0},
+  version= {1.1.0},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
   license= {CC BY 4.0},
   note   = {永久 DOI 将于 Zenodo 归档后补充}
 }
 ```
+
+## 更新日志
+
+### v1.1.0（2026-09-12）
+
+- **新增 D 类「讲解 / 科普」工作流**：固定叙事链 + 图示序列，理论传播场景开箱即用；
+- **新增第六维度「关系/间隔」**：疏朗呼吸（亲）↔ 近距压迫（危），谱系、审计表同步扩展——对阴阳美学「虚实相生」的元素级承接；
+- **新增 `scripts/wt_calc.py`**：W(T) 与极性画像计算器（四大品类权重内置，支持自定义权重与目标区间对照）；首跑即纠正一处手工加权误差，实证计算脚本化价值；
+- **新增 `references/bea-prompts.md`**：BEA 提示词语法——范式 × 维度 × 强度档到生图提示词的映射模板与词汇库，理论直通 AI 生成工作流；
+- **新增 `anchors/` 锚定图卡**：形状 / 明度 / 色彩三维度 0–10 档位参考图与对卡流程，解决评分刻度跨会话漂移；
+- **新增 `cases/` 案例库**：问界 M9 外观诊断（C 类）、华为旗舰档次提升（B 类）、宋式美学图像生成（B 类 + 生图）三个已验证完整案例；
+- **模板扩充**：新增模板 8 文化符号审计表（生理层/符号层分栏），A 类完整示范补齐；
+- **方法补强**：耐看性升级为「疲劳函数」（首次愉悦 × 衰减率）检查项；远观测试可执行化；感知边界声明（音频/触觉结论标注协作推断）；
+- **入口完善**：触发描述补负面边界（不裁决内容美/道德美，不做可用性/工程评估）；范式表数据源标注以 paradigms.md 为准。
+
+### v1.0.0（2026-09-12）
+
+- 首次发布：核心命题、五概念、三公理、美感生成机制、双极谱系、四结构法则、三级阈值、六范式连续谱、六步创作法、四维评分卡、九大领域配方、7 套模板。
 
 ## 许可证
 
