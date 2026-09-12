@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.3.0-blue)
+![Version](https://img.shields.io/badge/version-1.4.0-blue)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
 
@@ -39,7 +39,7 @@ BEA 不会回答「更大气一点」，而是给出元素级、可复算的结�
 4. **立序**：所有圆角统一到一套模数（机身 R / 模组 0.5R / 按键 0.15R），一条特征线从中框贯穿到镜头；
 5. **复算**：调整后 W(T)≈0.29，处「亲和精致」上沿、距 0.85 越阈线很远；评分由 76 升到 **88（成熟）**，远观仍亲和、近看见精密——即「柔中藏骨」。
 
-完整填好的示范见技能内 `references/audit-templates.md` 附录；不想装任何东西的话，直接用[网页版 W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)拖滑块体验。
+完整填好的示范见技能内 `bipolar-emotion-aesthetics/references/audit-templates.md` 附录；不想装任何东西的话，直接用[网页版 W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)拖滑块体验。
 
 ## 理论速览
 
@@ -59,10 +59,17 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 ├── release.sh                              # 三平台一键发版脚本（GitHub/Gitee/ModelScope）
 ├── docs/
 │   ├── cover.png                           # 封面
-│   ├── index.html                          # 网页版 W(T) 交互计算器（GitHub Pages 首页）
-│   ├── theory-book.html                    # ★ 完整在线理论著作（十一编，体系图/诊断表/术语表/FAQ）
-│   ├── boundary.md                         # 模型边界与合规声明（适用范围/量化性质/原创性声明/数据隐私）
-│   └── promotion.md                        # 传播物料包（三档中英文案 + 18 自媒体选题 + 发布渠道）
+│   ├── guide.html                          # ★ 10 分钟读懂 BEA（着陆页，传播入口）
+│   ├── index.html                          # 网页版 W(T) 交互计算器（分享链接/案例复现/导出报告/三步引导）
+│   ├── theory-book.html                    # ★ 完整在线理论著作（由 build_book.py 从 references 生成）
+│   ├── boundary.md                         # 模型边界与合规声明
+│   ├── promotion.md                        # 传播物料包（三档中英文案 + 18 自媒体选题 + 发布渠道）
+│   ├── ai-art-community-kit.md             # AI 生图社区传播包（审美控制语法的帖子模板）
+│   └── experiment-protocol.md              # 盲评实验协议（BEA 预测 vs 用户投票，实证众包）
+├── arxiv/
+│   └── bea-position-paper.md               # 英文学术论文草稿（position paper）
+├── ci/                                     # 内容体检：算式复算 / 链接有效性 / 中英混杂
+├── tests/                                  # 工具链单元测试
 ├── templates/
 │   └── bea-scorecard-templates.md          # 5 套可复制模板（基调卡/审计表/W(T)计算/评分卡/18项审计清单）
 ├── references/
@@ -77,18 +84,33 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
     │   ├── audit-templates.md              # 8 套可复制模板（含文化符号审计表）+ A/C 双示范
     │   └── bea-prompts.md                  # 提示词语法：范式×维度×强度档 → 生图提示词
     ├── scripts/
-    │   └── wt_calc.py                      # W(T) 计算器：范式落点与极性画像（仅标准库，离线）
+    │   ├── wt_calc.py                      # W(T) 计算器：范式落点/极性画像/A/B 对比（仅标准库，离线）
+    │   ├── scoresheet.py                   # BEA 评分卡：四维打分/短板定位/修复映射
+    │   └── build_book.py                   # 由 references 生成在线理论著作（单一事实源）
     ├── anchors/                            # 0–10 强度锚定图卡（形状/明度/色彩）与对卡流程
     └── cases/                              # 案例库（7 个）：M9 / 华为 / 宋式生图 / iPhone 17 Pro / 手机·LOGO·海报三个标准化示范
 ```
 
 ## 安装
 
-1. 下载本仓库；
-2. 将内层 `bipolar-emotion-aesthetics/` 文件夹整体复制到你的 AI Agent 的技能目录（如 `…/workspace/.user_skills/` 或对应 `skills/` 目录）；
-3. 重启 / 刷新 Agent，技能会按 `SKILL.md` 中的描述自动触发。
+**一行命令（macOS / Linux）**：
 
-**近零依赖**：核心为纯 Markdown 方法论，离线可用；`scripts/wt_calc.py` 为可选计算辅助——仅用 Python 标准库、不联网、不调用外部 API、不读取或上传任何数据，无它时全部流程仍可手工执行。
+```bash
+git clone --depth 1 https://github.com/Maxing0000/bipolar-emotion-aesthetics && cp -r bipolar-emotion-aesthetics/bipolar-emotion-aesthetics <你的技能目录>/
+```
+
+**各平台 30 秒接入**：
+
+| 平台 | 步骤 |
+|---|---|
+| WorkBuddy / CodeBuddy | 技能目录为 `~/.workbuddy/skills/`，复制后新会话自动触发 |
+| 扣子（Coze） | 技能已公开上架，直接搜索「双极情绪美学」添加 |
+| 豆包 | 复制 `bipolar-emotion-aesthetics/SKILL.md` 全文到自定义技能/指令 |
+| 其他 Agent | 任何支持 skills 目录的 Agent：把内层文件夹放进去即可 |
+
+**不想装任何东西**：直接用[网页版 W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)拖滑块体验，或先看 [10 分钟读懂 BEA](https://maxing0000.github.io/bipolar-emotion-aesthetics/guide.html)。
+
+**近零依赖**：核心为纯 Markdown 方法论，离线可用；`bipolar-emotion-aesthetics/scripts/` 下的 wt_calc.py 与 scoresheet.py 为可选计算辅助——仅用 Python 标准库、不联网、不调用外部 API、不读取或上传任何数据，无它们时全部流程仍可手工执行。
 
 ## 快速开始（触发示例）
 
@@ -111,7 +133,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 
 ## 安全与合规说明
 
-- 核心内容为静态 Markdown 方法论文档；唯一的可执行文件 `scripts/wt_calc.py` 为纯标准库离线计算器，**无二进制程序、无网络请求、无数据采集、无第三方依赖**；
+- 核心内容为静态 Markdown 方法论文档；唯一的可执行文件 `bipolar-emotion-aesthetics/scripts/wt_calc.py` 为纯标准库离线计算器，**无二进制程序、无网络请求、无数据采集、无第三方依赖**；
 - 素材不涉及任何个人信息、真实用户数据或受版权限制的第三方内容；
 - 采用宽松的 CC BY 4.0 协议，允许自由使用与商用，仅需署名。
 
@@ -141,7 +163,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.3.0, 2026. CC BY 4.0.
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.4.0, 2026. CC BY 4.0.
 
 BibTeX：
 
@@ -150,7 +172,7 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.3.0},
+  version= {1.4.0},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
   license= {CC BY 4.0},
   note   = {永久 DOI 将于 Zenodo 归档后补充}
@@ -158,6 +180,19 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.4.0（2026-09-13）
+
+- **wt_calc.py A/B 对比**：`--compare` 双方案对照——输出双画像、差异维度与目标接近度裁决，覆盖「两个方案选哪个」的决策场景；
+- **新增 scoresheet.py**：BEA 评分卡脚本化——四维打分、短板自动定位、修复指引自动映射回六步法环节；
+- **CI 内容体检**（GitHub Actions）：案例算式自动复算（防数字漂移）、本地链接有效性（防幻影文件）、英文文件中英混杂检测、工具链单元测试——AI 生成内容入库前过机器门；
+- **网页计算器四增强**：分享链接（配置编码进 URL，每次分析自带传播）、案例复现扩充至 10 个、Markdown 审计报告一键导出、三步上手引导；
+- **新增 docs/guide.html**：「10 分钟读懂 BEA」着陆页——核心命题/双极谱系/四象限/六范式/真实案例/三入口；
+- **安装说明升级**：一行命令 + 各平台 30 秒接入表；
+- **新增 docs/ai-art-community-kit.md**：AI 生图社区传播包（「审美控制语法」帖子模板）；
+- **新增 docs/experiment-protocol.md**：盲评实验协议——任何人可跑「BEA 预测 vs 用户投票」对照并提交数据；
+- **新增 arxiv/bea-position-paper.md**：英文学术论文草稿；
+- **单一事实源**：theory-book.html 改由 build_book.py 从 references/*.md 生成，理论正文只改一处。
 
 ### v1.3.0（2026-09-13）
 

@@ -78,6 +78,22 @@
   .quad .qdot{transition:cx .2s,cy .2s}
   footer{margin-top:26px;text-align:center;font-size:12px;color:var(--sub)}
   footer a{color:var(--qing);text-decoration:none}
+  .actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .actions button{padding:7px 14px;font-size:13px;border:1px solid var(--line);border-radius:8px;
+    background:#fff;color:var(--ink);cursor:pointer;transition:all .15s}
+  .actions button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+  .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:var(--ink);color:#fff;
+    padding:10px 20px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none}
+  .tour-mask{position:fixed;inset:0;background:rgba(43,42,40,.45);display:none;z-index:50}
+  .tour-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,90vw);
+    background:#fff;border-radius:14px;padding:26px;z-index:51;display:none;box-shadow:0 12px 40px rgba(0,0,0,.18)}
+  .tour-card h3{font-size:16px;margin-bottom:10px;color:var(--accent)}
+  .tour-card p{font-size:13.5px;color:var(--ink);margin-bottom:16px;line-height:1.7}
+  .tour-card .tour-btns{display:flex;justify-content:space-between}
+  .tour-card button{padding:7px 16px;font-size:13px;border:1px solid var(--line);border-radius:8px;
+    background:#fff;cursor:pointer}
+  .tour-card button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tour-step{font-size:11px;color:var(--sub);margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -100,8 +116,13 @@
         <option value="ui">UI / 交互界面</option>
       </select>
       <div id="dims"></div>
-      <label>快捷示例</label>
+      <label>案例复现 / 快捷示例</label>
       <div class="presets" id="presets"></div>
+      <div class="actions">
+        <button id="btnShare">🔗 复制分享链接</button>
+        <button id="btnExport">📄 导出审计报告</button>
+        <button id="btnTour">❓ 三步上手</button>
+      </div>
     </div>
 
     <!-- 右：结果 -->
@@ -180,6 +201,11 @@ const PRESETS = [
   {label:"iPhone 17 Pro",cat:"phone",t:[5,4,6,6,3,4],target:0.28},
   {label:"问界 M9 现状",cat:"car",t:[2,2,3,2,3],target:0.45},
   {label:"M9 处方后",cat:"car",t:[4,6,6,4,2],target:0.45},
+  {label:"甜腻手机现状",cat:"phone",t:[2,3,4,2,3,1],target:0.28},
+  {label:"甜腻手机回调后",cat:"phone",t:[2,4,3,2,3,4],target:0.28},
+  {label:"心理咨询LOGO",cat:"brand",t:[3,3,3,3,4],target:0.28},
+  {label:"音乐节海报现状",cat:"brand",t:[8,8,7,7,6],target:0.60},
+  {label:"音乐节海报处方",cat:"brand",t:[7,6,6,5,5],target:0.60},
   {label:"先锋海报",cat:"brand",t:[7,6,5,6,5],target:0}
 ];
 let vals = {};
@@ -288,7 +314,96 @@ function buildPresets(){
 document.getElementById("cat").addEventListener("change",buildDims);
 document.getElementById("target").addEventListener("input",calc);
 document.getElementById("order").addEventListener("input",calc);
-buildAnchors(); buildPresets(); buildDims();
+
+/* ---------- 分享链接：状态编码进 URL hash ---------- */
+function encodeState(){
+  const cat = document.getElementById("cat").value;
+  const ts = DATA[cat].dims.map(([n])=>vals[n]).join(",");
+  const tgt = document.getElementById("target").value;
+  const order = document.getElementById("order").value;
+  return "#c="+cat+"&t="+ts+"&g="+tgt+"&o="+order;
+}
+function decodeState(){
+  if(!location.hash) return false;
+  const p = new URLSearchParams(location.hash.slice(1));
+  const cat = p.get("c");
+  if(!cat || !DATA[cat]) return false;
+  document.getElementById("cat").value = cat;
+  buildDims();
+  const ts = (p.get("t")||"").split(",").map(Number);
+  const inputs = document.querySelectorAll("#dims input[type=range]");
+  ts.forEach((t,i)=>{ if(inputs[i] && !isNaN(t)){ inputs[i].value=t; inputs[i].dispatchEvent(new Event("input")); } });
+  if(p.get("g")) document.getElementById("target").value = p.get("g");
+  if(p.get("o")) document.getElementById("order").value = p.get("o");
+  calc();
+  return true;
+}
+function toast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.style.opacity = 1;
+  setTimeout(()=>{ el.style.opacity = 0; }, 2200);
+}
+document.getElementById("btnShare").onclick = ()=>{
+  const url = location.origin + location.pathname + encodeState();
+  navigator.clipboard.writeText(url).then(
+    ()=>toast("分享链接已复制，对方打开即可复现你的分析"),
+    ()=>{ prompt("复制此链接：", url); });
+};
+
+/* ---------- 导出 Markdown 审计报告 ---------- */
+document.getElementById("btnExport").onclick = ()=>{
+  const cat = document.getElementById("cat").value;
+  const w = document.getElementById("wt").textContent;
+  const para = document.getElementById("para").textContent;
+  const tgt = document.getElementById("target").value || "—";
+  const delta = document.getElementById("delta").textContent || "—";
+  let rows = "";
+  DATA[cat].dims.forEach(([name,wt])=>{
+    rows += "| " + name + " | " + (wt*100).toFixed(0) + "% | " + vals[name] + " | " + (wt*vals[name]/10).toFixed(3) + " |\n";
+  });
+  const md = "# BEA 极性审计报告\n\n- 品类：" + DATA[cat].name +
+    "\n- **W(T) = " + w + "**（范式落点：" + para + "）" +
+    "\n- 目标区间：" + tgt + "　对照：" + delta +
+    "\n\n| 维度 | 权重 | t (0-10) | 贡献 |\n|---|---|---|---|\n" + rows +
+    "\n> 由 BEA W(T) 交互计算器生成 · 双极情绪美学 · CC BY 4.0\n> " +
+    location.origin + location.pathname + encodeState() + "\n";
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([md],{type:"text/markdown"}));
+  a.download = "bea-audit.md"; a.click();
+  toast("审计报告已下载（Markdown）");
+};
+
+/* ---------- 三步上手引导 ---------- */
+const TOUR = [
+  {t:"① 拖一拖，看落点", b:"左侧选品类、拖滑块——右侧实时算出 W(T)（危极指数）并落到范式谱上。试试把某个维度拉到 8，看落点怎么往「先锋」方向移动。"},
+  {t:"② 载入一个真实案例", b:"点左侧「甜腻手机现状」——W(T)=0.255 看似达标，但危极全来自高饱和粉，细节锐度趴底：这就是「甜腻症」。问题不在总量，在张力来源错位。"},
+  {t:"③ 亲手开处方", b:"再点「甜腻手机回调后」——W(T)=0.295，质感与细节提了上来，色彩降了回去。诊断到处方的全过程，就是 BEA 的日常工作流。"}
+];
+let tourIdx = 0;
+function renderTour(){
+  document.getElementById("tourStep").textContent = (tourIdx+1) + " / " + TOUR.length;
+  document.getElementById("tourTitle").textContent = TOUR[tourIdx].t;
+  document.getElementById("tourBody").textContent = TOUR[tourIdx].b;
+  document.getElementById("tourNext").textContent = tourIdx === TOUR.length-1 ? "开始用 ✓" : "下一步 →";
+}
+function showTour(){
+  tourIdx = 0; renderTour();
+  document.getElementById("tourMask").style.display = "block";
+  document.getElementById("tourCard").style.display = "block";
+}
+function closeTour(){
+  document.getElementById("tourMask").style.display = "none";
+  document.getElementById("tourCard").style.display = "none";
+}
+document.getElementById("btnTour").onclick = showTour;
+document.getElementById("tourSkip").onclick = closeTour;
+document.getElementById("tourMask").onclick = closeTour;
+document.getElementById("tourNext").onclick = ()=>{
+  if(tourIdx < TOUR.length-1){ tourIdx++; renderTour(); } else { closeTour(); }
+};
+
+buildAnchors(); buildPresets();
+if(!decodeState()) buildDims();
 </script>
 </body>
 </html>
