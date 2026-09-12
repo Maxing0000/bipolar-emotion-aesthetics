@@ -1,7 +1,7 @@
 ---
 name: bipolar-emotion-aesthetics
 description: "双极情绪美学（Bipolar Emotion Aesthetics，BEA）形式美学分析、诊断与设计方法。当用户需要分析、评价、诊断或设计任何以感官形式呈现的对象——产品/手机/消费电子外形、汽车与交通工具造型、建筑与室内空间、平面与品牌视觉、Logo/字体/海报、UI 与交互界面、服装时尚、声音/音乐、影视动画镜头、装置与雕塑——的美感、高级感、亲和力、攻击性、治愈感、冷峻/克制感、崇高感、先锋/反叛感，或讨论圆润与尖锐、柔和与硬朗、繁与简、明与暗、甜腻、杂乱、失衡、廉价感、耐看、张力、比例、配色情绪、形态气质、风格定位时使用；也用于回答『为什么好看/不好看/不协调/有廉价感/有攻击性/不耐看』、做设计美学评审、形态或配色提调、把模糊审美偏好转化为元素级可执行修改方案。不用于：裁决内容美/道德美/思想美，非形式层的可用性、工程与安全评估。"
-version: "1.2.0"
+version: "1.3.0"
 updated: "2026-09-12"
 ---
 
@@ -121,8 +121,8 @@ updated: "2026-09-12"
 - `anchors/` — 0–10 强度锚定图卡与对卡流程。**打分前先对卡，保证跨会话刻度一致。**
 - `cases/` — 已验证完整案例库（分析/诊断/创作三类）。**需要参考输出格式或佐证时读。**
 
-> **开源仓库附加资源**（技能包内不包含，需到仓库获取）：完整在线理论著作 `docs/theory-book.html`（十一编）、W(T) 交互计算器 `docs/index.html`、中英术语表 `GLOSSARY.md`、英文介绍 `README_EN.md`、常见问题 `docs/faq.md`、模型边界 `docs/boundary.md`、传播物料 `docs/promotion.md`、三个标准化示范案例 `cases/`（手机/LOGO/海报）、可复制评分卡模板 `templates/`、学术参考文献 `references/学术参考文献.md`。仓库地址见 README。
+> **开源仓库附加资源**（技能包内不包含，需到仓库获取）：完整在线理论著作 `docs/theory-book.html`（十一编）、W(T) 交互计算器 `docs/index.html`、中英术语表 `GLOSSARY.md`、英文介绍 `README_EN.md`、常见问题 `FAQ.md`、模型边界 `docs/boundary.md`、传播物料 `docs/promotion.md`、可复制评分卡模板 `templates/bea-scorecard-templates.md`、学术参考文献 `references/academic-references.md`。仓库地址见 README。
 
 ---
 
-**版本**：v1.2.0 ｜ **作者**：星空本空 ｜ **许可证**：CC BY 4.0
+**版本**：v1.3.0 ｜ **作者**：星空本空 ｜ **许可证**：CC BY 4.0
