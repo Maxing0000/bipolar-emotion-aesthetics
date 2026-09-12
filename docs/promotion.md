@@ -88,11 +88,12 @@ BEA engineers this logic: you can rate each element's polarity on a 0–10 scale
 | 素材 | 位置 | 用途 |
 |---|---|---|
 | 封面图 | `docs/cover.png` | 社交分享、文章头图、视频封面 |
-| 在线著作 | `docs/index.html` | 可直接部署 GitHub Pages，作为落地页 |
-| 评分卡模板 | `templates/BEA评分卡模板.md` | 免费下载引流、工作坊材料 |
-| 三个案例 | `cases/` | 文章案例、演示素材 |
+| W(T) 交互计算器 | `docs/index.html` | GitHub Pages 首页，零安装在线体验 |
+| 在线理论著作 | `docs/theory-book.html` | 十一编完整体系，深度阅读落地页 |
+| 评分卡模板 | `templates/bea-scorecard-templates.md` | 免费下载引流、工作坊材料 |
+| 七个案例 | `bipolar-emotion-aesthetics/cases/` | 文章案例、演示素材 |
 | 术语表 | `GLOSSARY.md` | 中英对照、教学材料 |
-| FAQ | `docs/faq.md` | 客服话术、评论区回复模板 |
+| FAQ | `FAQ.md` | 客服话术、评论区回复模板 |
 | 边界声明 | `docs/boundary.md` | 应对质疑、合规说明 |
 
 ---

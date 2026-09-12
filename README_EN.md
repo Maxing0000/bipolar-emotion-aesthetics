@@ -27,9 +27,9 @@ Neither pole alone produces sophisticated beauty: pure P+ feels cloying and blan
 
 | Mode | Input | Output |
 |---|---|---|
-| **Analyze / Evaluate** | A design object (description or image) | Polarity breakdown, archetype定位, W(T) threat index, BEA scorecard, root-cause explanation |
+| **Analyze / Evaluate** | A design object (description or image) | Polarity breakdown, archetype placement, W(T) threat index, BEA scorecard, root-cause explanation |
 | **Create / Design** | Target mood + object type + context | Element-level design plan, P+/T− ratio, concrete variables for form/color/material/rhythm |
-| **Diagnose / Tune** | "Why does this look cheap / cloying / chaotic / aggressive?" | Symptom定位 (threshold breach / disorder / mis-pairing) + actionable prescription + revision checklist |
+| **Diagnose / Tune** | "Why does this look cheap / cloying / chaotic / aggressive?" | Symptom localization (threshold breach / disorder / mis-pairing) + actionable prescription + revision checklist |
 
 ## Applicable domains
 
@@ -62,21 +62,27 @@ Product & industrial design (phones, cars, appliances), architecture & interiors
 
 ```
 bipolar-emotion-aesthetics/
-├── README.md / README_EN.md   # 中文 / 英文介绍
-├── GLOSSARY.md                 # 中英术语表
+├── README.md / README_EN.md   # Chinese / English overview
+├── GLOSSARY.md                 # CN–EN glossary (unified translations)
+├── FAQ.md                      # Frequently asked questions (CN)
 ├── LICENSE                     # CC BY 4.0
-├── SKILL.md                    # Agent Skill 本体（扣子/豆包可用）
-├── bipolar-emotion-aesthetics/ # 技能子目录（SKILL.md + references/）
+├── release.sh                  # One-command release script (GitHub/Gitee/ModelScope)
 ├── docs/
-│   ├── index.html              # 在线理论著作（单文件，可 GitHub Pages 部署）
-│   ├── faq.md                  # 中英常见问题
-│   ├── boundary.md             # 模型边界与合规声明
-│   ├── theory-full.md          # 完整理论正文
-│   └── promotion.md            # 传播物料（中英文案 + 选题库）
+│   ├── cover.png               # Cover image
+│   ├── index.html              # Interactive W(T) calculator (GitHub Pages home)
+│   ├── theory-book.html        # Full online theory book (11 parts)
+│   ├── boundary.md             # Scope & compliance statement
+│   └── promotion.md            # Promotion kit (CN/EN copy + topic bank)
 ├── templates/
-│   └── BEA评分卡模板.md
-├── cases/                      # 标准化案例（手机 / LOGO / 海报）
-└── references/                 # 学术参考文献
+│   └── bea-scorecard-templates.md  # Copy-ready scorecard & audit templates
+├── references/
+│   └── academic-references.md  # 12 public academic sources + originality statement
+└── bipolar-emotion-aesthetics/ # ← The Agent Skill itself (copy this folder)
+    ├── SKILL.md                # Entry: triggers + core model + 4 workflows (A/B/C/D)
+    ├── references/             # theory / paradigms / method / playbooks / audit-templates / bea-prompts
+    ├── scripts/wt_calc.py      # W(T) calculator (stdlib only, offline)
+    ├── anchors/                # 0–10 intensity anchor charts
+    └── cases/                  # 7 verified cases (AITO M9 / Huawei / iPhone 17 Pro / phone·logo·poster demos)
 ```
 
 ## Originality & scope

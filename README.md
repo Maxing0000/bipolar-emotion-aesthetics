@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.2.0-blue)
+![Version](https://img.shields.io/badge/version-1.3.0-blue)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
 
@@ -62,16 +62,11 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 │   ├── index.html                          # 网页版 W(T) 交互计算器（GitHub Pages 首页）
 │   ├── theory-book.html                    # ★ 完整在线理论著作（十一编，体系图/诊断表/术语表/FAQ）
 │   ├── boundary.md                         # 模型边界与合规声明（适用范围/量化性质/原创性声明/数据隐私）
-│   ├── faq.md                              # 中英双语常见问题（8 问）
 │   └── promotion.md                        # 传播物料包（三档中英文案 + 18 自媒体选题 + 发布渠道）
-├── cases/                                  # 标准化示范案例（含完整 W(T) 计算与 BEA 评分）
-│   ├── case-phone.md                       # 手机外形：甜腻症 → 亲和精致（W(T) 0.175→0.29，76→88分）
-│   ├── case-logo.md                        # 心理咨询 LOGO：微差补偿法（91 分）
-│   └── case-poster.md                      # 电子音乐节海报：攻击症 → 崇高震撼（0.74→0.60，68→88分）
 ├── templates/
-│   └── BEA评分卡模板.md                    # 5 套可复制模板（基调卡/审计表/W(T)计算/评分卡/18项审计清单）
+│   └── bea-scorecard-templates.md          # 5 套可复制模板（基调卡/审计表/W(T)计算/评分卡/18项审计清单）
 ├── references/
-│   └── 学术参考文献.md                      # BEA 整合的 12 项公共学术来源与原创增量声明
+│   └── academic-references.md              # BEA 整合的 12 项公共学术来源与原创增量声明
 └── bipolar-emotion-aesthetics/             # ← 技能本体：把此文件夹放进 Agent 的 skills 目录
     ├── SKILL.md                            # 主入口：触发描述 + 核心模型 + 四类工作流（A/B/C/D）
     ├── references/
@@ -84,7 +79,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
     ├── scripts/
     │   └── wt_calc.py                      # W(T) 计算器：范式落点与极性画像（仅标准库，离线）
     ├── anchors/                            # 0–10 强度锚定图卡（形状/明度/色彩）与对卡流程
-    └── cases/                              # 已验证案例库：M9 / 华为 / 宋式生图 / iPhone 17 Pro
+    └── cases/                              # 案例库（7 个）：M9 / 华为 / 宋式生图 / iPhone 17 Pro / 手机·LOGO·海报三个标准化示范
 ```
 
 ## 安装
@@ -146,7 +141,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.2.0, 2026. CC BY 4.0.
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.3.0, 2026. CC BY 4.0.
 
 BibTeX：
 
@@ -155,7 +150,7 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.2.0},
+  version= {1.3.0},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
   license= {CC BY 4.0},
   note   = {永久 DOI 将于 Zenodo 归档后补充}
@@ -163,6 +158,15 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.3.0（2026-09-13）
+
+- **质量修复（审查豆包合并批次后）**：
+  - 案例算式纪律修复：手机案例删除「有效张力」黑箱，改为诚实的「初版 0.375 超阈 → 回调至 0.29」迭代示范；LOGO 案例修正品牌权重（图形 0.25/字体 0.20）与维度内混合计分（0.31，亲和精致上沿）；海报案例补混合取值说明；
+  - README_EN 目录结构重写：删除幻影文件 `docs/theory-full.md`、修正 index.html 标注、全英文化；
+  - 理论著作与计算器补齐双向互链；字体外链更换为 Google Fonts；
+- **结构收敛**：根目录 `cases/` 三个示范案例并入技能内案例库（共 7 个，单一日录）；双 FAQ 合并为根目录 FAQ.md（13 问）；`templates/BEA评分卡模板.md`、`references/学术参考文献.md` 更名为英文文件名；
+- **术语表补「有效张力」词条**：定性概念，计算一律以 W(T) 为准。
 
 ### v1.2.0（2026-09-12）
 
