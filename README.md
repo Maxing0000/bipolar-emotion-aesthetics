@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.1.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.1-blue)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
 
@@ -66,7 +66,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
     ├── scripts/
     │   └── wt_calc.py                      # W(T) 计算器：范式落点与极性画像（仅标准库，离线）
     ├── anchors/                            # 0–10 强度锚定图卡（形状/明度/色彩）与对卡流程
-    └── cases/                              # 已验证案例库：M9 诊断 / 华为方案 / 宋式生图
+    └── cases/                              # 已验证案例库：M9 诊断 / 华为方案 / 宋式生图 / iPhone 17 Pro 分析
 ```
 
 ## 安装
@@ -117,7 +117,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.1.0, 2026. CC BY 4.0.
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.1.1, 2026. CC BY 4.0.
 
 BibTeX：
 
@@ -126,7 +126,7 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.1.0},
+  version= {1.1.1},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
   license= {CC BY 4.0},
   note   = {永久 DOI 将于 Zenodo 归档后补充}
@@ -134,6 +134,11 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.1.1（2026-09-12）
+
+- **新增案例：iPhone 17 Pro 外观分析（A 类 + 轻诊断）**——横向相机台地争议的 BEA 完整解释：两代对比 W(T) 0.285 → 0.475，单代 +0.19 冲出手机品类窗口，机制化解「史上最丑」与「最大胆设计」并存的舆论两极；
+- **方法补强：「右缘策略」**——校阈节新增注记：辨识度/记忆点优先的产品（换代款、社交属性品）可有计算地把张力推到目标受众窗口的**右缘而非窗外**，短期争议与长期辨识度同时最大化（源自 iPhone 案例反哺，是案例库第一次实证回溯修订 reference）。
 
 ### v1.1.0（2026-09-12）
 
