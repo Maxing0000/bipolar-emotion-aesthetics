@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+
+# 临时与备份
+_*_backup/
+*.tmp
+*.log
+__MACOSX/
