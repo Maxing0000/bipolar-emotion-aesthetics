@@ -1,0 +1,18 @@
+<svg viewBox="0 0 680 170" width="100%" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>明度对比维度 0-10 锚定图卡</title>
+  <rect x="0" y="0" width="680" height="170" fill="#FAFAF8"/>
+  <text x="20" y="24" font-size="13" font-weight="500" fill="#444441">明度对比 · 危极强度锚定（左=亲极，右=危极）</text>
+  <rect x="30" y="55" width="90" height="64" fill="#F2F0EA"/>
+  <text x="75" y="135" text-anchor="middle" font-size="11" fill="#085041">0–1 高明度·几乎无反差</text>
+  <rect x="140" y="55" width="45" height="64" fill="#E4E1D8"/><rect x="185" y="55" width="45" height="64" fill="#C9C5B8"/>
+  <text x="185" y="135" text-anchor="middle" font-size="11" fill="#085041">2–3 柔和渐变·灰阶丰富</text>
+  <rect x="250" y="55" width="45" height="64" fill="#DDD9CE"/><rect x="295" y="55" width="45" height="64" fill="#9B978A"/>
+  <text x="295" y="135" text-anchor="middle" font-size="11" fill="#444441">4–5 中等对比·过渡可见</text>
+  <rect x="360" y="55" width="45" height="64" fill="#F0EEE8"/><rect x="405" y="55" width="45" height="64" fill="#4E4C46"/>
+  <text x="405" y="135" text-anchor="middle" font-size="11" fill="#791F1F">6–7 硬交界·强反差</text>
+  <rect x="470" y="55" width="30" height="64" fill="#FFFFFF"/><rect x="500" y="55" width="60" height="64" fill="#141414"/>
+  <text x="500" y="135" text-anchor="middle" font-size="11" fill="#791F1F">8–9 大面积纯黑·刺目</text>
+  <rect x="580" y="55" width="8" height="64" fill="#FFFFFF"/><rect x="588" y="55" width="62" height="64" fill="#000000"/>
+  <text x="615" y="135" text-anchor="middle" font-size="11" fill="#501313">10 越阈·刺眼疼痛</text>
+  <text x="20" y="158" font-size="11" fill="#888780">定级方法：与相邻两档比对取更近者；卡在中间取中间值。定义见 theory.md 3.2 明度对比行</text>
+</svg>
