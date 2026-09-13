@@ -1,8 +1,9 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.7.2-blue)
+![Version](https://img.shields.io/badge/version-1.7.3-blue)
 [![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
+[![DOI](https://img.shields.io/badge/DOI-10.6084%2Fm9.figshare.33684490-blue)](https://doi.org/10.6084/m9.figshare.33684490)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
 
@@ -185,7 +186,7 @@ pip install bea-mcp   # PyPI 一键安装：https://pypi.org/project/bea-mcp/
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.7.0, 2026. CC BY 4.0.
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.7.3, 2026. CC BY 4.0. DOI: [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490).
 
 BibTeX：
 
@@ -194,14 +195,17 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.7.0},
+  version= {1.7.3},
+  doi    = {10.6084/m9.figshare.33684490},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
-  license= {CC BY 4.0},
-  note   = {永久 DOI 将于 Zenodo 归档后补充}
+  license= {CC BY 4.0}
 }
 ```
 
 ## 更新日志
+
+### v1.7.3（2026-09-13）
+- **永久 DOI 落地**：Figshare 归档完成，DOI [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490)——README 新增 DOI 徽章，BibTeX 引用补 doi 字段，学术引用身份完整
 
 ### v1.7.2（2026-09-13）
 - **全代码 debug 轮**（bea-mcp 1.1.1）：修复中文逗号静默吞维度的解析 bug（wt_calc / scoresheet 均受影响）；非数字输入从英文 traceback 改为中文友好报错；新增 2 项回归测试（累计 13 项）；三个网页无头浏览器运行时回归零报错；build_book 幂等性验证通过
