@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEA 设计原则速查卡 · 双极情绪美学</title>
+<meta name="description" content="BEA双极情绪美学设计原则速查卡：核心命题、8范式、六步法、四维评分、病症处方，一页纸掌握形式美学方法论。">
+<style>
+:root {
+  --bea-orange: #E8743B;
+  --bea-orange-light: #F5A66E;
+  --bea-orange-bg: #FFF4EC;
+  --bea-blue: #2B6CB0;
+  --bea-blue-light: #63B3ED;
+  --bea-blue-bg: #EBF8FF;
+  --bea-dark: #1A202C;
+  --bea-gray: #4A5568;
+  --bea-light: #F7FAFC;
+  --bea-border: #E2E8F0;
+  --bea-gold: #D69E2E;
+  --bea-green: #38A169;
+  --bea-red: #E53E3E;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bea-light);
+  color: var(--bea-dark);
+  line-height: 1.6;
+}
+/* 导航栏 */
+.bea-nav {
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--bea-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0 24px;
+}
+.bea-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+.bea-nav-brand {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--bea-dark);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bea-nav-brand span { color: var(--bea-orange); }
+.bea-nav-links {
+  display: flex;
+  list-style: none;
+  gap: 4px;
+}
+.bea-nav-links a {
+  text-decoration: none;
+  color: var(--bea-gray);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.bea-nav-links a:hover { background: var(--bea-orange-bg); color: var(--bea-orange); }
+.bea-nav-links a.active { background: var(--bea-orange); color: white; }
+.bea-nav-toggle { display: none; background: none; border: none; font-size: 24px; cursor: pointer; }
+@media (max-width: 768px) {
+  .bea-nav-links { display: none; position: absolute; top: 56px; left: 0; right: 0; background: white; flex-direction: column; padding: 16px; border-bottom: 1px solid var(--bea-border); }
+  .bea-nav-links.open { display: flex; }
+  .bea-nav-toggle { display: block; }
+}
+/* 主内容 */
+.container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 48px 24px;
+  background: linear-gradient(135deg, var(--bea-orange-bg) 0%, var(--bea-blue-bg) 100%);
+  border-radius: 20px;
+  margin-bottom: 32px;
+}
+.hero h1 { font-size: 36px; font-weight: 800; margin-bottom: 12px; }
+.hero h1 .orange { color: var(--bea-orange); }
+.hero h1 .blue { color: var(--bea-blue); }
+.hero p { font-size: 18px; color: var(--bea-gray); max-width: 600px; margin: 0 auto; }
+.hero .formula {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 28px;
+  background: white;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.hero .formula .p { color: var(--bea-blue); }
+.hero .formula .t { color: var(--bea-orange); }
+/* 打印按钮 */
+.print-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.print-btn {
+  padding: 10px 24px;
+  border: 2px solid var(--bea-orange);
+  background: white;
+  color: var(--bea-orange);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.print-btn:hover { background: var(--bea-orange); color: white; }
+.print-btn.secondary { border-color: var(--bea-blue); color: var(--bea-blue); }
+.print-btn.secondary:hover { background: var(--bea-blue); color: white; }
+/* 卡片网格 */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid var(--bea-border);
+}
+.card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card h2 .icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.card.orange h2 .icon { background: var(--bea-orange-bg); }
+.card.blue h2 .icon { background: var(--bea-blue-bg); }
+.card.full { grid-column: 1 / -1; }
+/* 核心命题 */
+.core-proposition {
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--bea-dark);
+}
+.core-proposition strong { color: var(--bea-orange); }
+.core-proposition .p-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  background: var(--bea-blue-bg);
+  color: var(--bea-blue);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.core-proposition .t-tag {
+  display: inline-block;
+  padding: 2px 10px;
+  background: var(--bea-orange-bg);
+  color: var(--bea-orange);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+/* 五概念 */
+.concept-list { list-style: none; }
+.concept-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bea-border);
+  display: flex;
+  gap: 12px;
+}
+.concept-list li:last-child { border-bottom: none; }
+.concept-list .name {
+  font-weight: 700;
+  color: var(--bea-orange);
+  min-width: 60px;
+}
+.concept-list .desc { color: var(--bea-gray); font-size: 14px; }
+/* 三公理 */
+.axiom-list { list-style: none; counter-reset: axiom; }
+.axiom-list li {
+  counter-increment: axiom;
+  padding: 12px 0 12px 40px;
+  position: relative;
+  border-bottom: 1px solid var(--bea-border);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.axiom-list li:last-child { border-bottom: none; }
+.axiom-list li::before {
+  content: counter(axiom);
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 28px;
+  height: 28px;
+  background: var(--bea-orange);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+/* 范式连续谱 */
+.paradigm-spectrum {
+  background: linear-gradient(90deg, var(--bea-blue-bg) 0%, var(--bea-orange-bg) 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.spectrum-bar {
+  height: 8px;
+  background: linear-gradient(90deg, var(--bea-blue) 0%, var(--bea-orange) 100%);
+  border-radius: 4px;
+  position: relative;
+  margin: 20px 0 30px;
+}
+.spectrum-marker {
+  position: absolute;
+  top: -6px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border: 3px solid var(--bea-dark);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.spectrum-marker:hover { transform: translateX(-50%) scale(1.3); }
+.spectrum-marker.new { border-color: var(--bea-gold); box-shadow: 0 0 0 4px rgba(214,158,46,0.2); }
+.spectrum-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--bea-gray);
+  margin-top: -20px;
+}
+.paradigm-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.paradigm-item {
+  background: white;
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 12px;
+  border: 1px solid var(--bea-border);
+}
+.paradigm-item .wt { font-weight: 700; color: var(--bea-orange); font-size: 14px; }
+.paradigm-item .name { font-weight: 600; margin: 4px 0; }
+.paradigm-item .emotion { color: var(--bea-gray); font-size: 11px; }
+.paradigm-item.new { border-color: var(--bea-gold); background: #FFFAF0; }
+.paradigm-item.new .wt { color: var(--bea-gold); }
+@media (max-width: 768px) { .paradigm-grid { grid-template-columns: repeat(2, 1fr); } }
+/* 六步法 */
+.steps-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.step-item {
+  flex: 1;
+  min-width: 100px;
+  background: var(--bea-blue-bg);
+  border-radius: 10px;
+  padding: 12px 8px;
+  text-align: center;
+  position: relative;
+}
+.step-item .num {
+  width: 24px;
+  height: 24px;
+  background: var(--bea-blue);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  margin: 0 auto 6px;
+}
+.step-item .name { font-weight: 600; font-size: 13px; }
+.step-item .key { font-size: 11px; color: var(--bea-gray); margin-top: 4px; }
+.step-arrow { color: var(--bea-gray); font-size: 18px; }
+@media (max-width: 768px) { .step-arrow { display: none; } .step-item { flex: 1 1 45%; } }
+/* 四维评分卡 */
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.score-table th, .score-table td {
+  padding: 10px 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--bea-border);
+}
+.score-table th {
+  background: var(--bea-light);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--bea-gray);
+}
+.score-table .dim { font-weight: 600; }
+.score-table .full { color: var(--bea-orange); font-weight: 700; }
+/* 病症处方 */
+.disease-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+.disease-item {
+  border: 1px solid var(--bea-border);
+  border-radius: 10px;
+  padding: 14px;
+  background: var(--bea-light);
+}
+.disease-item .name {
+  font-weight: 700;
+  color: var(--bea-red);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.disease-item .symptom {
+  font-size: 12px;
+  color: var(--bea-gray);
+  margin-bottom: 8px;
+}
+.disease-item .prescription {
+  font-size: 12px;
+  color: var(--bea-green);
+  font-weight: 600;
+}
+/* 设计口诀 */
+.mantra-box {
+  background: linear-gradient(135deg, var(--bea-orange) 0%, var(--bea-blue) 100%);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  color: white;
+}
+.mantra-box .mantra {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.mantra-box .sub { font-size: 14px; opacity: 0.9; }
+/* 页脚 */
+.footer {
+  text-align: center;
+  padding: 32px;
+  color: var(--bea-gray);
+  font-size: 13px;
+  border-top: 1px solid var(--bea-border);
+  margin-top: 48px;
+}
+.footer a { color: var(--bea-orange); text-decoration: none; }
+/* 打印样式 */
+@media print {
+  .bea-nav, .print-bar, .footer { display: none; }
+  .container { padding: 0; }
+  .hero { padding: 24px; margin-bottom: 16px; }
+  .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+  body { background: white; }
+}
+</style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="bea-nav">
+  <div class="bea-nav-inner">
+    <a href="index.html" class="bea-nav-brand">BEA <span>双极情绪美学</span></a>
+    <button class="bea-nav-toggle" onclick="document.querySelector('.bea-nav-links').classList.toggle('open')">☰</button>
+    <ul class="bea-nav-links">
+      <li><a href="index.html">🧮 计算器</a></li>
+      <li><a href="quick-diagnosis.html">⚡ 快速诊断</a></li>
+      <li><a href="image-analysis.html">🖼️ 图片分析</a></li>
+      <li><a href="workbench.html">🔧 工作台</a></li>
+      <li><a href="cases.html">📚 案例库</a></li>
+      <li><a href="quiz.html">🧠 知识测验</a></li>
+      <li><a href="cheatsheet.html" class="active">📋 速查卡</a></li>
+      <li><a href="guide.html">📘 入门</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- Hero -->
+<div class="hero">
+  <h1><span class="orange">BEA</span> 设计原则 <span class="blue">速查卡</span></h1>
+  <p>一页纸掌握双极情绪美学方法论，设计师随身参考</p>
+  <div class="formula">
+    美感 = <span class="p">亲极安其心</span> + <span class="t">危极提其神</span> + 秩序统其乱 + 阈值守其界
+  </div>
+</div>
+
+<!-- 打印按钮 -->
+<div class="print-bar">
+  <button class="print-btn" onclick="window.print()">🖨️ 打印速查卡</button>
+  <button class="print-btn secondary" onclick="location.href='theory-book.html'">📖 完整理论著作</button>
+</div>
+
+<!-- 第一行：核心命题 + 五概念 + 三公理 -->
+<div class="card-grid">
+
+  <!-- 核心命题 -->
+  <div class="card orange">
+    <h2><span class="icon">🎯</span>核心命题</h2>
+    <div class="core-proposition">
+      <p><strong>美感 = 可控张力下的情绪奖赏</strong></p>
+      <p style="margin-top:12px">一切形式元素都在两极之间：</p>
+      <p style="margin-top:8px"><span class="p-tag">亲极 P+</span> 圆润、柔色、光滑、舒缓、对称、留白 → 激活奖赏回路，让人想接近</p>
+      <p style="margin-top:8px"><span class="t-tag">危极 T−</span> 尖锐、强对比、坚硬、突变、失衡、拥挤 → 激活警觉回路，制造唤醒张力</p>
+      <p style="margin-top:12px"><strong>单一极性不产生高级美感</strong>：纯亲极甜腻平庸，纯危极攻击排斥。双极在可认知秩序中组合、且危极约束在安全阈值内，才得到「既被吸引、又被安抚」的复合愉悦。</p>
+    </div>
+  </div>
+
+  <!-- 五概念 -->
+  <div class="card blue">
+    <h2><span class="icon">📐</span>五个基本概念</h2>
+    <ul class="concept-list">
+      <li><span class="name">元素</span><span class="desc">可分辨的最小形式单位（一条线/一块色/一段质）</span></li>
+      <li><span class="name">极性</span><span class="desc">元素的亲/危方向，连续可分级（0–10），最小可调变量</span></li>
+      <li><span class="name">张力</span><span class="desc">双极对立造成的唤醒强度，决定是否提神、有力量</span></li>
+      <li><span class="name">秩序</span><span class="desc">对称/比例/节奏/层级/呼应，把张力消化为美感</span></li>
+      <li><span class="name">阈值</span><span class="desc">危极由快感变不适的临界（本能/认知/文化三级），美与非美边界</span></li>
+    </ul>
+  </div>
+
+  <!-- 三公理 -->
+  <div class="card orange">
+    <h2><span class="icon">⚖️</span>三大公理</h2>
+    <ol class="axiom-list">
+      <li><strong>元素极性公理</strong>：不存在情绪中性的形式元素；极性方向跨文化相对恒定，强度可被文化经验调制。</li>
+      <li><strong>复合美感公理</strong>：审美愉悦必为双极复合；单一极性只产生生理舒适或排斥，美感强度与有效张力正相关。</li>
+      <li><strong>阈值边界公理</strong>：危极存在临界阈值，阈内畏惧转化为审美张力，越阈转化为焦虑/伤害，美感即刻消失。</li>
+    </ol>
+  </div>
+
+</div>
+
+<!-- 第二行：8范式连续谱（全宽） -->
+<div class="card full blue">
+  <h2><span class="icon">🌈</span>八大范式锚点（W(T) 连续谱）</h2>
+  
+  <div class="paradigm-spectrum">
+    <div class="spectrum-bar">
+      <div class="spectrum-marker" style="left:10%" title="治愈松弛 W(T)=0.10"></div>
+      <div class="spectrum-marker" style="left:20%" title="亲和精致 W(T)=0.20"></div>
+      <div class="spectrum-marker new" style="left:35%" title="诗意朦胧 W(T)=0.35 ✨新增"></div>
+      <div class="spectrum-marker" style="left:40%" title="均衡典雅 W(T)=0.40"></div>
+      <div class="spectrum-marker" style="left:55%" title="崇高震撼 W(T)=0.55"></div>
+      <div class="spectrum-marker" style="left:62%" title="冷峻克制 W(T)=0.62"></div>
+      <div class="spectrum-marker new" style="left:66%" title="神秘魅惑 W(T)=0.66 ✨新增"></div>
+      <div class="spectrum-marker" style="left:70%" title="先锋反叛 W(T)=0.70"></div>
+    </div>
+    <div class="spectrum-labels">
+      <span>柔（亲极主导）</span>
+      <span>W(T) 危极权重 →</span>
+      <span>锐（危极主导）</span>
+    </div>
+  </div>
+
+  <div class="paradigm-grid">
+    <div class="paradigm-item">
+      <div class="wt">0.10</div>
+      <div class="name">治愈松弛</div>
+      <div class="emotion">放松舒展无攻击</div>
+    </div>
+    <div class="paradigm-item">
+      <div class="wt">0.20</div>
+      <div class="name">亲和精致</div>
+      <div class="emotion">远看柔和近看精密</div>
+    </div>
+    <div class="paradigm-item new">
+      <div class="wt">0.35 ✨</div>
+      <div class="name">诗意朦胧</div>
+      <div class="emotion">模糊暗示留白</div>
+    </div>
+    <div class="paradigm-item">
+      <div class="wt">0.40</div>
+      <div class="name">均衡典雅</div>
+      <div class="emotion">刚柔各半克制端庄</div>
+    </div>
+    <div class="paradigm-item">
+      <div class="wt">0.55</div>
+      <div class="name">崇高震撼</div>
+      <div class="emotion">先敬畏后沉醉</div>
+    </div>
+    <div class="paradigm-item">
+      <div class="wt">0.62</div>
+      <div class="name">冷峻克制</div>
+      <div class="emotion">冷硬简精准比例</div>
+    </div>
+    <div class="paradigm-item new">
+      <div class="wt">0.66 ✨</div>
+      <div class="name">神秘魅惑</div>
+      <div class="emotion">未知诱惑禁忌</div>
+    </div>
+    <div class="paradigm-item">
+      <div class="wt">0.70</div>
+      <div class="name">先锋反叛</div>
+      <div class="emotion">刺激反叛临界痛快</div>
+    </div>
+  </div>
+</div>
+
+<!-- 第三行：六步法 + 四维评分卡 -->
+<div class="card-grid">
+
+  <!-- 六步创作法 -->
+  <div class="card orange">
+    <h2><span class="icon">🔄</span>六步创作法</h2>
+    <div class="steps-flow">
+      <div class="step-item">
+        <div class="num">1</div>
+        <div class="name">定调</div>
+        <div class="key">锁定范式+基调卡</div>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step-item">
+        <div class="num">2</div>
+        <div class="name">拆解</div>
+        <div class="key">极性审计表</div>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step-item">
+        <div class="num">3</div>
+        <div class="name">配比</div>
+        <div class="key">W(T)计算+主辅</div>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step-item">
+        <div class="num">4</div>
+        <div class="name">立序</div>
+        <div class="key">秩序主线+层级</div>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step-item">
+        <div class="num">5</div>
+        <div class="name">校阈</div>
+        <div class="key">阈值三问</div>
+      </div>
+      <span class="step-arrow">→</span>
+      <div class="step-item">
+        <div class="num">6</div>
+        <div class="name">验证</div>
+        <div class="key">远近距+评分卡</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 四维评分卡 -->
+  <div class="card blue">
+    <h2><span class="icon">📊</span>四维评分卡（满分100）</h2>
+    <table class="score-table">
+      <thead>
+        <tr><th>维度</th><th>满分</th><th>观察点</th><th>低分病症</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="dim">双极张力</td>
+          <td class="full">25</td>
+          <td>对立清晰成对、提神不攻击、匹配范式</td>
+          <td>甜腻/攻击</td>
+        </tr>
+        <tr>
+          <td class="dim">结构秩序</td>
+          <td class="full">25</td>
+          <td>主辅分明、比例精当、层级一致、全局统一</td>
+          <td>失序/割裂</td>
+        </tr>
+        <tr>
+          <td class="dim">阈值安全</td>
+          <td class="full">25</td>
+          <td>无本能红线、认知可消化、文化无禁忌</td>
+          <td>越界/焦虑</td>
+        </tr>
+        <tr>
+          <td class="dim">语境适配</td>
+          <td class="full">25</td>
+          <td>匹配受众阈值、场景、功能风险、时代位置</td>
+          <td>错位/过时</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px;font-size:13px;color:var(--bea-gray)"><strong>判定：</strong>≥80 成熟作品；任一维 &lt;15 为明显短板，必须回修。</p>
+  </div>
+
+</div>
+
+<!-- 第四行：常见病症处方（全宽） -->
+<div class="card full orange">
+  <h2><span class="icon">💊</span>常见审美病症 · 诊断处方</h2>
+  <div class="disease-grid">
+    <div class="disease-item">
+      <div class="name">🍬 甜腻症（亲极过载）</div>
+      <div class="symptom">全圆角、全柔色、无锐度，发腻幼稚廉价</div>
+      <div class="prescription">→ 高价值细节注入10%-20%危极，柔中藏骨</div>
+    </div>
+    <div class="disease-item">
+      <div class="name">🕳️ 空洞症（张力缺失）</div>
+      <div class="symptom">元素都对但无记忆点，一眼到头</div>
+      <div class="prescription">→ 造一对清晰双极对立并用秩序收束</div>
+    </div>
+    <div class="disease-item">
+      <div class="name">⚔️ 攻击症（危极过载）</div>
+      <div class="symptom">处处锐角强对比，令人紧张想回避</div>
+      <div class="prescription">→ 扩亲极基底，降危极到范式区间</div>
+    </div>
+    <div class="disease-item">
+      <div class="name">⚖️ 均分症（主辅缺失）</div>
+      <div class="symptom">亲危各半无主次，情绪暧昧说不上哪里怪</div>
+      <div class="prescription">→ 确立至少6:4主辅比，先让第一印象明确</div>
+    </div>
+    <div class="disease-item">
+      <div class="name">🌀 失序症（有立无统）</div>
+      <div class="symptom">单个元素都精彩，堆一起互相打架</div>
+      <div class="prescription">→ 确立一条贯穿全局的统一主线（色板/模数/栅格）</div>
+    </div>
+    <div class="disease-item">
+      <div class="name">🔀 层级冲突症</div>
+      <div class="symptom">宏观柔和却微观攻击，视觉圆润却触感硌手</div>
+      <div class="prescription">→ 逐层逐通道审计，选同向叠加或微差补偿</div>
+    </div>
+    <div class="disease-item">
+      <div class="name">📢 重点通胀症</div>
+      <div class="symptom">哪里都想强调，结果哪里都不突出</div>
+      <div class="prescription">→ 做减法，强调点压回10%-30%，建视觉等级</div>
+    </div>
+    <div class="disease-item">
+      <div class="name">🚨 本能越界</div>
+      <div class="symptom">锋利到割伤联想、频闪眩晕、强对比刺眼</div>
+      <div class="prescription">→ 一票否决，删除或钝化，无风格借口</div>
+    </div>
+  </div>
+</div>
+
+<!-- 设计口诀 -->
+<div class="mantra-box">
+  <div class="mantra">
+    以亲极安其心，以危极提其神<br>
+    以秩序统其乱，以阈值守其界<br>
+    柔中藏骨，险而不崩
+  </div>
+  <div class="sub">BEA 双极情绪美学 · 设计总纲 · v1.13.0</div>
+</div>
+
+</div>
+
+<!-- 页脚 -->
+<div class="footer">
+  <p>BEA 双极情绪美学 · 理论作者：星空本空 · CC BY 4.0</p>
+  <p style="margin-top:8px"><a href="index.html">计算器</a> · <a href="quick-diagnosis.html">快速诊断</a> · <a href="cases.html">案例库</a> · <a href="theory-book.html">理论著作</a> · <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics">GitHub</a></p>
+</div>
+
+</body>
+</html>

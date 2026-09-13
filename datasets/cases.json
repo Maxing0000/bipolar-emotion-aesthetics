@@ -6,9 +6,30 @@
     "author": "星空本空",
     "license": "CC BY 4.0",
     "last_updated": "2026-09-13",
-    "total_cases": 17,
-    "categories": ["消费电子", "汽车", "建筑", "品牌", "UI", "时尚", "游戏", "玩具", "家居"],
-    "paradigms": ["治愈松弛", "亲和精致", "诗意朦胧", "均衡典雅", "崇高震撼", "冷峻克制", "神秘魅惑", "先锋反叛", "跨范式叙事"]
+    "total_cases": 25,
+    "categories": [
+      "消费电子",
+      "汽车",
+      "建筑",
+      "品牌",
+      "UI",
+      "时尚",
+      "游戏",
+      "玩具",
+      "家居",
+      "艺术"
+    ],
+    "paradigms": [
+      "治愈松弛",
+      "亲和精致",
+      "诗意朦胧",
+      "均衡典雅",
+      "崇高震撼",
+      "冷峻克制",
+      "神秘魅惑",
+      "先锋反叛",
+      "跨范式叙事"
+    ]
   },
   "cases": [
     {
@@ -18,8 +39,18 @@
       "paradigm": "亲和精致",
       "wt": 0.22,
       "score": 91,
-      "scores": {"tension": 22, "order": 24, "threshold": 23, "context": 22},
-      "key_features": ["连续曲面", "钛金属中框", "精密倒角", "微差补偿"],
+      "scores": {
+        "tension": 22,
+        "order": 24,
+        "threshold": 23,
+        "context": 22
+      },
+      "key_features": [
+        "连续曲面",
+        "钛金属中框",
+        "精密倒角",
+        "微差补偿"
+      ],
       "summary": "亲和精致范式典范，远看柔和近看精密，高级感手机的标准结构。",
       "url": "cases/01-iphone17-pro.html"
     },
@@ -30,8 +61,18 @@
       "paradigm": "崇高震撼",
       "wt": 0.55,
       "score": 89,
-      "scores": {"tension": 23, "order": 23, "threshold": 21, "context": 22},
-      "key_features": ["饱满大曲面", "锐利灯组", "楔形姿态", "大面柔特征线锐"],
+      "scores": {
+        "tension": 23,
+        "order": 23,
+        "threshold": 21,
+        "context": 22
+      },
+      "key_features": [
+        "饱满大曲面",
+        "锐利灯组",
+        "楔形姿态",
+        "大面柔特征线锐"
+      ],
       "summary": "崇高震撼范式，饱满曲面托住安全豪华感，锐利灯组提供记忆点。",
       "url": "cases/02-aito-m9.html"
     },
@@ -42,8 +83,18 @@
       "paradigm": "冷峻克制",
       "wt": 0.62,
       "score": 87,
-      "scores": {"tension": 22, "order": 23, "threshold": 21, "context": 21},
-      "key_features": ["简洁线条", "低趴姿态", "冷色调", "精准比例"],
+      "scores": {
+        "tension": 22,
+        "order": 23,
+        "threshold": 21,
+        "context": 21
+      },
+      "key_features": [
+        "简洁线条",
+        "低趴姿态",
+        "冷色调",
+        "精准比例"
+      ],
       "summary": "冷峻克制范式，以冷硬简为主，靠精准比例与极少暖色维持人性温度。",
       "url": "cases/03-xiaomi-su7.html"
     },
@@ -54,8 +105,18 @@
       "paradigm": "崇高震撼",
       "wt": 0.55,
       "score": 85,
-      "scores": {"tension": 22, "order": 21, "threshold": 21, "context": 21},
-      "key_features": ["极简曲面", "无格栅设计", "流畅线条", "科技感"],
+      "scores": {
+        "tension": 22,
+        "order": 21,
+        "threshold": 21,
+        "context": 21
+      },
+      "key_features": [
+        "极简曲面",
+        "无格栅设计",
+        "流畅线条",
+        "科技感"
+      ],
       "summary": "崇高震撼范式，极简曲面与科技感结合，开创电动车设计语言。",
       "url": "cases/04-tesla-models.html"
     },
@@ -66,8 +127,18 @@
       "paradigm": "冷峻克制",
       "wt": 0.62,
       "score": 83,
-      "scores": {"tension": 21, "order": 21, "threshold": 20, "context": 21},
-      "key_features": ["工业设计", "透明机身", "锐利线条", "功能主义"],
+      "scores": {
+        "tension": 21,
+        "order": 21,
+        "threshold": 20,
+        "context": 21
+      },
+      "key_features": [
+        "工业设计",
+        "透明机身",
+        "锐利线条",
+        "功能主义"
+      ],
       "summary": "冷峻克制范式，工业设计与功能主义结合，科技感强烈。",
       "url": "cases/05-dyson-v15.html"
     },
@@ -76,10 +147,20 @@
       "name": "无印良品",
       "category": "品牌/家居",
       "paradigm": "亲和精致",
-      "wt": 0.20,
+      "wt": 0.2,
       "score": 87,
-      "scores": {"tension": 20, "order": 23, "threshold": 22, "context": 22},
-      "key_features": ["极简主义", "自然材质", "无品牌设计", "柔和色调"],
+      "scores": {
+        "tension": 20,
+        "order": 23,
+        "threshold": 22,
+        "context": 22
+      },
+      "key_features": [
+        "极简主义",
+        "自然材质",
+        "无品牌设计",
+        "柔和色调"
+      ],
       "summary": "亲和精致范式，极简主义与自然材质结合，无品牌设计的典范。",
       "url": "cases/06-muji.html"
     },
@@ -88,10 +169,20 @@
       "name": "奔驰 S 级",
       "category": "汽车",
       "paradigm": "均衡典雅",
-      "wt": 0.40,
+      "wt": 0.4,
       "score": 89,
-      "scores": {"tension": 22, "order": 24, "threshold": 22, "context": 21},
-      "key_features": ["豪华曲面", "经典比例", "温润内饰", "典雅气质"],
+      "scores": {
+        "tension": 22,
+        "order": 24,
+        "threshold": 22,
+        "context": 21
+      },
+      "key_features": [
+        "豪华曲面",
+        "经典比例",
+        "温润内饰",
+        "典雅气质"
+      ],
       "summary": "均衡典雅范式，刚柔各半以柔领刚，克制端庄持久耐看，豪华车的经典标杆。",
       "url": "cases/07-mercedes-s-class.html"
     },
@@ -100,10 +191,20 @@
       "name": "Cybertruck",
       "category": "汽车",
       "paradigm": "先锋反叛",
-      "wt": 0.70,
+      "wt": 0.7,
       "score": 78,
-      "scores": {"tension": 24, "order": 18, "threshold": 18, "context": 18},
-      "key_features": ["极简直角", "不锈钢车身", "未来感", "反传统"],
+      "scores": {
+        "tension": 24,
+        "order": 18,
+        "threshold": 18,
+        "context": 18
+      },
+      "key_features": [
+        "极简直角",
+        "不锈钢车身",
+        "未来感",
+        "反传统"
+      ],
       "summary": "先锋反叛范式，极简直角与反传统设计，停在审美窗口右缘的争议之作。",
       "url": "cases/08-cybertruck.html"
     },
@@ -114,8 +215,18 @@
       "paradigm": "亲和精致",
       "wt": 0.22,
       "score": 86,
-      "scores": {"tension": 21, "order": 22, "threshold": 22, "context": 21},
-      "key_features": ["柔和曲线", "亲肤材质", "简洁设计", "舒适佩戴"],
+      "scores": {
+        "tension": 21,
+        "order": 22,
+        "threshold": 22,
+        "context": 21
+      },
+      "key_features": [
+        "柔和曲线",
+        "亲肤材质",
+        "简洁设计",
+        "舒适佩戴"
+      ],
       "summary": "亲和精致范式，柔和曲线与亲肤材质结合，长期佩戴的舒适典范。",
       "url": "cases/09-sony-wh1000xm5.html"
     },
@@ -126,8 +237,18 @@
       "paradigm": "崇高震撼",
       "wt": 0.55,
       "score": 88,
-      "scores": {"tension": 23, "order": 23, "threshold": 21, "context": 21},
-      "key_features": ["铝合金边框", "曲面玻璃", "精密结构", "未来科技感"],
+      "scores": {
+        "tension": 23,
+        "order": 23,
+        "threshold": 21,
+        "context": 21
+      },
+      "key_features": [
+        "铝合金边框",
+        "曲面玻璃",
+        "精密结构",
+        "未来科技感"
+      ],
       "summary": "崇高震撼范式，精密结构与未来科技感结合，空间计算的开山之作。",
       "url": "cases/10-apple-vision-pro.html"
     },
@@ -136,10 +257,20 @@
       "name": "乐高 LEGO",
       "category": "玩具",
       "paradigm": "亲和精致",
-      "wt": 0.20,
+      "wt": 0.2,
       "score": 88,
-      "scores": {"tension": 21, "order": 24, "threshold": 22, "context": 21},
-      "key_features": ["标准化模块", "鲜艳色彩", "无限组合", "经典设计"],
+      "scores": {
+        "tension": 21,
+        "order": 24,
+        "threshold": 22,
+        "context": 21
+      },
+      "key_features": [
+        "标准化模块",
+        "鲜艳色彩",
+        "无限组合",
+        "经典设计"
+      ],
       "summary": "亲和精致范式，标准化模块与无限组合可能，跨越时代的经典玩具设计。",
       "url": "cases/11-lego.html"
     },
@@ -150,8 +281,18 @@
       "paradigm": "均衡典雅",
       "wt": 0.38,
       "score": 87,
-      "scores": {"tension": 20, "order": 23, "threshold": 22, "context": 22},
-      "key_features": ["北欧设计", "平价策略", "模块化", "民主设计"],
+      "scores": {
+        "tension": 20,
+        "order": 23,
+        "threshold": 22,
+        "context": 22
+      },
+      "key_features": [
+        "北欧设计",
+        "平价策略",
+        "模块化",
+        "民主设计"
+      ],
       "summary": "均衡典雅范式的大众标杆，温暖展厅与平价策略提供可接近感，设计感产品注入危极。",
       "url": "cases/12-ikea.html"
     },
@@ -162,8 +303,18 @@
       "paradigm": "跨范式叙事",
       "wt": 0.45,
       "score": 89,
-      "scores": {"tension": 23, "order": 23, "threshold": 21, "context": 22},
-      "key_features": ["开放世界", "多地区风格", "跨范式叙事", "三层嵌套"],
+      "scores": {
+        "tension": 23,
+        "order": 23,
+        "threshold": 21,
+        "context": 22
+      },
+      "key_features": [
+        "开放世界",
+        "多地区风格",
+        "跨范式叙事",
+        "三层嵌套"
+      ],
       "summary": "跨范式叙事的教科书，各地区独立覆盖从亲和到先锋的完整美学光谱，游戏美学的巅峰之作。",
       "url": "cases/13-genshin-impact.html"
     },
@@ -174,8 +325,18 @@
       "paradigm": "崇高震撼",
       "wt": 0.58,
       "score": 94,
-      "scores": {"tension": 24, "order": 25, "threshold": 22, "context": 23},
-      "key_features": ["清水混凝土", "十字光缝", "绝对对称", "倾斜5度墙体"],
+      "scores": {
+        "tension": 24,
+        "order": 25,
+        "threshold": 22,
+        "context": 23
+      },
+      "key_features": [
+        "清水混凝土",
+        "十字光缝",
+        "绝对对称",
+        "倾斜5度墙体"
+      ],
       "summary": "崇高美学的最高典范，骨中藏柔的建筑诗，极强秩序压住极强张力，十字光缝定义整个空间。",
       "url": "cases/14-church-of-light.html"
     },
@@ -186,8 +347,18 @@
       "paradigm": "亲和精致",
       "wt": 0.22,
       "score": 94,
-      "scores": {"tension": 21, "order": 25, "threshold": 24, "context": 24},
-      "key_features": ["全面圆角", "低饱和系统色", "缓入缓出动效", "SF Pro精准字体"],
+      "scores": {
+        "tension": 21,
+        "order": 25,
+        "threshold": 24,
+        "context": 24
+      },
+      "key_features": [
+        "全面圆角",
+        "低饱和系统色",
+        "缓入缓出动效",
+        "SF Pro精准字体"
+      ],
       "summary": "界面设计的亲和精致典范，微差补偿+注意力预算+物理惯性动效，高级界面的标准结构。",
       "url": "cases/15-ios-design.html"
     },
@@ -198,8 +369,18 @@
       "paradigm": "先锋反叛",
       "wt": 0.68,
       "score": 91,
-      "scores": {"tension": 24, "order": 22, "threshold": 21, "context": 24},
-      "key_features": ["高饱和正红", "红白强对比", "Futura Bold字体", "稀缺性营销"],
+      "scores": {
+        "tension": 24,
+        "order": 22,
+        "threshold": 21,
+        "context": 24
+      },
+      "key_features": [
+        "高饱和正红",
+        "红白强对比",
+        "Futura Bold字体",
+        "稀缺性营销"
+      ],
       "summary": "先锋美学的最高商业典范，32%秩序锚点压住68%反叛，越阈边缘的痛快，色彩即身份。",
       "url": "cases/16-supreme.html"
     },
@@ -210,10 +391,196 @@
       "paradigm": "崇高震撼",
       "wt": 0.57,
       "score": 91,
-      "scores": {"tension": 23, "order": 23, "threshold": 22, "context": 23},
-      "key_features": ["精密金属质感", "锐利几何线条", "圆润风筒", "细腻磨砂"],
+      "scores": {
+        "tension": 23,
+        "order": 23,
+        "threshold": 22,
+        "context": 23
+      },
+      "key_features": [
+        "精密金属质感",
+        "锐利几何线条",
+        "圆润风筒",
+        "细腻磨砂"
+      ],
       "summary": "BEA图片分析工具示范案例，精密金属质感与锐利几何线条营造科技崇高感，微差补偿结构的典范。",
       "url": "cases/image-analysis-example-dyson.html"
+    },
+    {
+      "id": "17",
+      "name": "保时捷 911",
+      "category": "汽车",
+      "paradigm": "均衡典雅",
+      "wt": 0.45,
+      "score": 93,
+      "scores": {
+        "tension": 22,
+        "order": 25,
+        "threshold": 23,
+        "context": 23
+      },
+      "key_features": [
+        "黄金比例",
+        "圆润车身",
+        "锐利腰线",
+        "低趴姿态"
+      ],
+      "summary": "均衡典雅的汽车最高典范，60年传承的经典秩序框架承载运动张力，优雅的野兽。",
+      "url": "cases/17-porsche-911.html"
+    },
+    {
+      "id": "18",
+      "name": "香奈儿经典套装",
+      "category": "时尚",
+      "paradigm": "均衡典雅",
+      "wt": 0.42,
+      "score": 96,
+      "scores": {
+        "tension": 23,
+        "order": 25,
+        "threshold": 24,
+        "context": 24
+      },
+      "key_features": [
+        "柔软粗花呢",
+        "利落肩线",
+        "结构化肩部",
+        "极简色彩"
+      ],
+      "summary": "均衡典雅的时尚最高典范，极简秩序框架承载女性独立张力，女性的力量。",
+      "url": "cases/18-chanel-classic.html"
+    },
+    {
+      "id": "19",
+      "name": "Notion 界面设计",
+      "category": "UI",
+      "paradigm": "亲和精致",
+      "wt": 0.22,
+      "score": 92,
+      "scores": {
+        "tension": 21,
+        "order": 25,
+        "threshold": 23,
+        "context": 23
+      },
+      "key_features": [
+        "大量留白",
+        "柔和色彩",
+        "精确排版",
+        "强大功能"
+      ],
+      "summary": "亲和精致的UI最高典范，极简秩序框架承载功能张力，简洁的力量。",
+      "url": "cases/19-notion-design.html"
+    },
+    {
+      "id": "20",
+      "name": "塞尔达传说·旷野之息",
+      "category": "游戏",
+      "paradigm": "跨范式叙事",
+      "wt": 0.45,
+      "score": 95,
+      "scores": {
+        "tension": 24,
+        "order": 24,
+        "threshold": 23,
+        "context": 24
+      },
+      "key_features": [
+        "开放世界",
+        "多范式区域",
+        "治愈自然",
+        "史诗Boss"
+      ],
+      "summary": "跨范式叙事的游戏最高典范，开放世界秩序框架承载多范式叙事张力，自由的史诗。",
+      "url": "cases/20-zelda-botw.html"
+    },
+    {
+      "id": "21",
+      "name": "耐克品牌视觉系统",
+      "category": "品牌",
+      "paradigm": "崇高震撼",
+      "wt": 0.58,
+      "score": 96,
+      "scores": {
+        "tension": 24,
+        "order": 25,
+        "threshold": 23,
+        "context": 24
+      },
+      "key_features": [
+        "Swoosh标志",
+        "经典黑白",
+        "运动力量",
+        "反叛精神"
+      ],
+      "summary": "崇高震撼的品牌最高典范，极简视觉秩序框架承载运动精神张力，秩序中的力量。",
+      "url": "cases/21-nike-visual.html"
+    },
+    {
+      "id": "22",
+      "name": "Hay 丹麦家居设计",
+      "category": "家居",
+      "paradigm": "亲和精致",
+      "wt": 0.2,
+      "score": 92,
+      "scores": {
+        "tension": 21,
+        "order": 24,
+        "threshold": 24,
+        "context": 23
+      },
+      "key_features": [
+        "明亮色彩",
+        "圆润造型",
+        "精密工艺",
+        "亲民价格"
+      ],
+      "summary": "亲和精致的家居典范，北欧设计秩序框架承载民主设计张力，民主的精致。",
+      "url": "cases/22-hay-design.html"
+    },
+    {
+      "id": "23",
+      "name": "扎哈·哈迪德建筑",
+      "category": "建筑",
+      "paradigm": "崇高震撼",
+      "wt": 0.62,
+      "score": 92,
+      "scores": {
+        "tension": 25,
+        "order": 23,
+        "threshold": 21,
+        "context": 23
+      },
+      "key_features": [
+        "流动曲面",
+        "参数化结构",
+        "未来造型",
+        "巨大尺度"
+      ],
+      "summary": "崇高震撼的建筑典范，参数化秩序框架承载未来主义张力，流动的未来。",
+      "url": "cases/23-zaha-hadid.html"
+    },
+    {
+      "id": "24",
+      "name": "草间弥生艺术",
+      "category": "艺术",
+      "paradigm": "先锋反叛",
+      "wt": 0.68,
+      "score": 95,
+      "scores": {
+        "tension": 25,
+        "order": 24,
+        "threshold": 22,
+        "context": 24
+      },
+      "key_features": [
+        "无限波点",
+        "圆润南瓜",
+        "反传统表达",
+        "深刻主题"
+      ],
+      "summary": "先锋反叛的艺术最高典范，极致重复秩序框架承载精神张力，治愈的反叛。",
+      "url": "cases/24-yayoi-kusama.html"
     }
   ],
   "statistics": {
@@ -221,25 +588,29 @@
       "治愈松弛": 0,
       "亲和精致": 5,
       "诗意朦胧": 0,
-      "均衡典雅": 2,
-      "崇高震撼": 5,
+      "均衡典雅": 4,
+      "崇高震撼": 7,
       "冷峻克制": 2,
       "神秘魅惑": 0,
-      "先锋反叛": 2,
-      "跨范式叙事": 1
+      "先锋反叛": 3,
+      "跨范式叙事": 2
     },
     "category_distribution": {
       "消费电子": 5,
-      "汽车": 5,
-      "建筑": 1,
-      "品牌": 1,
-      "UI": 1,
-      "时尚": 1,
-      "游戏": 1,
+      "汽车": 6,
+      "建筑": 2,
+      "品牌": 2,
+      "UI": 2,
+      "时尚": 2,
+      "游戏": 2,
       "玩具": 1,
-      "家居": 1
+      "家居": 2,
+      "艺术": 1
     },
-    "average_score": 87.6,
-    "score_range": {"min": 78, "max": 94}
+    "average_score": 91.2,
+    "score_range": {
+      "min": 78,
+      "max": 96
+    }
   }
 }
