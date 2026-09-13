@@ -298,6 +298,141 @@ body {
     <div class="formula">美感 = 可控张力下的情绪奖赏 &nbsp;·&nbsp; W(T) = Σ wᵢ·(tᵢ/10)</div>
   </header>
 
+  <!-- BEA 工具门户 -->
+  <section class="bea-tools-portal">
+    <style>
+      .bea-tools-portal {
+        margin: 28px 0 32px;
+        padding: 28px;
+        background: linear-gradient(135deg, rgba(232, 168, 124, 0.06) 0%, rgba(74, 144, 164, 0.06) 100%);
+        border-radius: 16px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      .bea-portal-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 6px;
+        text-align: center;
+      }
+      .bea-portal-subtitle {
+        font-size: 13.5px;
+        color: #666;
+        margin: 0 0 22px;
+        text-align: center;
+      }
+      .bea-tools-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .bea-tool-card {
+        display: block;
+        padding: 18px 16px;
+        background: white;
+        border-radius: 12px;
+        text-decoration: none;
+        color: inherit;
+        border: 1.5px solid rgba(0, 0, 0, 0.06);
+        transition: all 0.25s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .bea-tool-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        border-color: rgba(232, 168, 124, 0.4);
+      }
+      .bea-tool-card.bea-tool-active {
+        border-color: rgba(232, 168, 124, 0.5);
+        background: linear-gradient(135deg, rgba(232, 168, 124, 0.04), rgba(74, 144, 164, 0.04));
+      }
+      .bea-tool-icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+      .bea-tool-card h3 {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin: 0 0 6px;
+      }
+      .bea-tool-card p {
+        font-size: 12px;
+        color: #777;
+        margin: 0 0 10px;
+        line-height: 1.5;
+      }
+      .bea-tool-tag {
+        display: inline-block;
+        font-size: 10.5px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(232, 168, 124, 0.15), rgba(74, 144, 164, 0.15));
+        color: #555;
+        font-weight: 500;
+      }
+      .bea-tool-card.bea-tool-active .bea-tool-tag {
+        background: linear-gradient(135deg, #E8A87C, #4A90A4);
+        color: white;
+      }
+      @media (max-width: 768px) {
+        .bea-tools-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .bea-tools-portal {
+          padding: 20px 16px;
+        }
+      }
+      @media (max-width: 480px) {
+        .bea-tools-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <h2 class="bea-portal-title">🧰 BEA 工具全家桶</h2>
+    <p class="bea-portal-subtitle">从测试到诊断，从学习到创作，一站式满足你的审美需求</p>
+    <div class="bea-tools-grid">
+      <a href="index.html" class="bea-tool-card bea-tool-active">
+        <div class="bea-tool-icon">🧮</div>
+        <h3>W(T) 计算器</h3>
+        <p>拖滑块实时计算危极权重、范式落点、四象限定位</p>
+        <span class="bea-tool-tag">当前页面</span>
+      </a>
+      <a href="quick-diagnosis.html" class="bea-tool-card">
+        <div class="bea-tool-icon">⚡</div>
+        <h3>快速诊断</h3>
+        <p>3步出结果，零门槛快速判断一个设计好不好看</p>
+        <span class="bea-tool-tag">新手推荐</span>
+      </a>
+      <a href="aesthetic-test.html" class="bea-tool-card">
+        <div class="bea-tool-icon">🎯</div>
+        <h3>审美测试</h3>
+        <p>10道题测你的审美偏好，推荐最适合你的范式</p>
+        <span class="bea-tool-tag">趣味测试</span>
+      </a>
+      <a href="workbench.html" class="bea-tool-card">
+        <div class="bea-tool-icon">🔧</div>
+        <h3>完整工作台</h3>
+        <p>8品类+自然语言+A-B对比+历史记录+导出报告</p>
+        <span class="bea-tool-tag">专业版</span>
+      </a>
+      <a href="cases.html" class="bea-tool-card">
+        <div class="bea-tool-icon">📚</div>
+        <h3>案例库</h3>
+        <p>13个经典产品深度分析，iPhone/特斯拉/戴森等</p>
+        <span class="bea-tool-tag">参考学习</span>
+      </a>
+      <a href="theory-book.html" class="bea-tool-card">
+        <div class="bea-tool-icon">📖</div>
+        <h3>理论著作</h3>
+        <p>十一编完整体系，本体→机制→元素→结构→阈值→范式</p>
+        <span class="bea-tool-tag">系统学习</span>
+      </a>
+    </div>
+  </section>
+  <!-- /BEA 工具门户 -->
+
   <div class="grid">
     <!-- 左：输入 -->
     <div class="card">
