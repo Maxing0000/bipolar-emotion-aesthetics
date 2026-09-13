@@ -311,7 +311,7 @@ body{padding-top:54px!important}
       <div class="preset-label">💡 没有图片？试试预设示例：</div>
       <div class="preset-buttons">
         <button class="preset-btn" onclick="loadPreset('iphone')">📱 iPhone 17 Pro</button>
-        <button class="preset-btn" onclick="loadPreset('car')">🚗 问界 M9</button>
+        <button class="preset-btn" onclick="loadPreset('car')">🚗 尊界 S800</button>
         <button class="preset-btn" onclick="loadPreset('church')">⛪ 光之教堂</button>
         <button class="preset-btn" onclick="loadPreset('ios')">📱 iOS 界面</button>
         <button class="preset-btn" onclick="loadPreset('supreme')">🔥 Supreme</button>
@@ -558,7 +558,7 @@ const PRESETS = {
   },
   car: {
     type: 'car',
-    desc: '问界M9 汽车外形，饱满大曲面，水平稳重腰线，锐利灯组，楔形前冲姿态',
+    desc: '尊界S800 汽车外形，饱满大曲面，水平稳重腰线，锐利灯组，楔形前冲姿态',
     dimensions: { '形体曲面动势': 4, '特征线条': 6, '灯组图形': 7, '比例姿态': 5, '材质光影': 5 },
     scores: { tension: 23, order: 23, threshold: 21, context: 22 },
     diagnosis: '大面柔特征线锐的崇高结构。可优化：特征线可更克制，避免棱线通胀。',
@@ -636,7 +636,7 @@ function loadPreset(key) {
     }
   }, 200);
 
-  showToast(`✨ 已加载预设：${key === 'iphone' ? 'iPhone 17 Pro' : key === 'car' ? '问界 M9' : key === 'church' ? '光之教堂' : key === 'ios' ? 'iOS 界面' : 'Supreme'}`);
+  showToast(`✨ 已加载预设：${key === 'iphone' ? 'iPhone 17 Pro' : key === 'car' ? '尊界 S800' : key === 'church' ? '光之教堂' : key === 'ios' ? 'iOS 界面' : 'Supreme'}`);
 
   // 自动跳到步骤2查看效果
   setTimeout(() => goToStep(2), 500);
