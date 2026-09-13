@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.7.0-blue)
+![Version](https://img.shields.io/badge/version-1.7.1-blue)
 [![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
@@ -202,6 +202,9 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.7.1（2026-09-13）
+- **修复计算器 P0 故障**：补回丢失的引导弹窗/toast DOM 元素——JS 引用空元素中断初始化，导致滑块与预设自 v1.4.0 起完全不渲染（已用无头浏览器回归验证：22 预设、6 滑块、处方面板全正常）
 
 ### v1.7.0（2026-09-13）
 - **网页计算器升级「主流产品诊断」**：22 个一键载入预设——主流手机（iPhone 16/17 Pro、华为 Mate、小米 15、Nothing Phone）、主流汽车（问界 M9、小米 SU7、Model 3、理想 L9、保时捷 911、仰望 U9）、品牌/UI（苹果视觉、小米新 LOGO、iOS、特斯拉车机）+ 教学案例分组
