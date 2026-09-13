@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.9.0-blue)
+![Version](https://img.shields.io/badge/version-1.9.1-blue)
 [![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
 [![DOI](https://img.shields.io/badge/DOI-10.6084%2Fm9.figshare.33684490-blue)](https://doi.org/10.6084/m9.figshare.33684490)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
@@ -186,7 +186,7 @@ pip install bea-mcp   # PyPI 一键安装：https://pypi.org/project/bea-mcp/
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics(BEA)：可计算的形式美学技能》v1.9.0, 2026. CC BY 4.0. DOI: [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490).
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics(BEA)：可计算的形式美学技能》v1.9.1, 2026. CC BY 4.0. DOI: [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490).
 
 BibTeX：
 
@@ -203,6 +203,12 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.9.1（2026-09-13）
+
+- **范式区间全仓库统一**：修复从 v1.6 延续的 P0 问题——代码（wt_calc/MCP）用区间上界（0.15/0.30/0.48/0.60/0.66/0.85），文档（method.md/论文/SKILL/HTML）用中心点（0.1/0.2/0.4/0.55/0.62/0.7），导致同一 W(T) 值代码与文档判定范式不同。统一为区间定义，同步修改 method.md、ArXiv 论文、MCP bea_list_categories 输出、bea_prescribe docstring、计算器 index.html、在线著作 theory-book.html、社区工具包共 7 处
+- **修复 paradigms.md 旧表述**：第 10 行「四大范式...四选一」改为「四大核心范式与两种过渡范式（共六个锚点）...六选一」
+- **SKILL.md 版本升级**：v1.9.0 → v1.9.1，updated 日期更新为 2026-09-13
 
 ### v1.9.0（2026-09-13）
 

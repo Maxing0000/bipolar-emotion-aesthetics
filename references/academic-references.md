@@ -1,21 +1,21 @@
 # BEA 学术参考文献 / Academic References
 
 > BEA 是原创整合框架，其底层思想来自以下已有的公共学术知识。本文件用于明确理论溯源，方便海外读者与学术同行查证，同时界定 BEA 的原创增量部分。
-> 版本 v1.3.0。
+> 版本 v1.9.1。带 DOI 的文献可直接点击访问；经典书籍无统一 DOI，附 ISBN 与出版社信息。
 
 ---
 
 ## 一、美学与哲学 / Aesthetics & Philosophy
 
-1. **Burke, Edmund. *A Philosophical Enquiry into the Origin of Our Ideas of the Sublime and Beautiful*. 1757.**
+1. **Burke, Edmund. *A Philosophical Enquiry into the Origin of Our Ideas of the Sublime and Beautiful*. 1757.** DOI: [10.1017/CBO9781107360495](https://doi.org/10.1017/CBO9781107360495)（Cambridge 2014 学术版）
    - 贡献：系统区分"优美（Beautiful）"与"崇高（Sublime）"，提出崇高源于"惊惧（terror）"但在安全观照下转化为愉悦。
    - BEA 对应：亲极主导≈优美；危极高强度+安全框架≈崇高。BEA 把二者降维为同一连续谱上的配比。
 
-2. **Kant, Immanuel. *Critique of the Power of Judgment*. 1790.**
+2. **Kant, Immanuel. *Critique of the Power of Judgment*. 1790.** 学术版：Cambridge University Press, 2000（trans. Guyer & Matthews），ISBN 9780521348898，DOI: [10.1017/CBO9780511511817](https://doi.org/10.1017/CBO9780511511817)
    - 贡献：崇高的"数学的崇高"与"力学的崇高"，强调主体在面对巨大/强力对象时的理性超越感。
    - BEA 对应：崇高震撼范式（45:55，均高强度）的理论根基；三级阈值中"认知处理阈"的哲学来源。
 
-3. **Bullough, Edward. "Psychical Distance" as a Factor in Art and an Aesthetic Principle. 1912.**
+3. **Bullough, Edward. "Psychical Distance" as a Factor in Art and an Aesthetic Principle. *British Journal of Psychology*, 5(2), 87–118, 1912.** DOI: [10.1111/j.2044-8295.1912.tb00057.x](https://doi.org/10.1111/j.2044-8295.1912.tb00057.x)
    - 贡献："心理距离"说——审美需要主体与对象保持适当心理距离，过近则实用/焦虑，过远则冷漠。
    - BEA 对应：**安全框架（Safety Frame）**的直接理论来源；物理距离、形式框定、秩序约束、已知语境四类安全线索即心理距离的生成机制。
 
@@ -27,19 +27,19 @@
 
 ## 二、心理学与神经科学 / Psychology & Neuroscience
 
-5. **Berlyne, Daniel E. *Aesthetics and Psychobiology*. 1971.**
+5. **Berlyne, Daniel E. *Aesthetics and Psychobiology*. Appleton-Century-Crofts, New York, 1971.** 检索：[Semantic Scholar](https://www.semanticscholar.org/paper/Aesthetics-and-psychobiology-Berlyne/dc3c393a15e6a3f221761af4d744c78be41fc9d5)
    - 贡献：唤醒理论（Arousal Theory），提出愉悦—唤醒呈倒 U 形（inverted-U）；"协同性（collative）"变量（新奇、复杂、意外）驱动唤醒。
    - BEA 对应：**审美窗口（Aesthetic Window）**的直接来源；危极强度即唤醒水平；"预测—轻微失预测—重新理解"的认知快感机制。
 
-6. **Zeki, Semir. *Inner Vision: An Exploration of Art and the Brain*. 1999; *Neuroaesthetics* journal.**
+6. **Zeki, Semir. *Inner Vision: An Exploration of Art and the Brain*. Oxford University Press, 1999.** ISBN 9780198524229；*Neuroaesthetics* 期刊由 Zeki 于 1999 年创刊
    - 贡献：神经美学（Neuroaesthetics）奠基人，证明大脑对对称、曲线、适度复杂度有先天偏好；视觉皮层的"概念节点"与艺术抽象。
    - BEA 对应：极性方向有生理恒常性的神经科学依据；亲极（曲线、对称、柔和）的进化预置方向。
 
-7. **Ramachandran, V. S. & Hirstein, W. "The Science of Art: A Neurological Theory of Aesthetic Experience." 1999.**
+7. **Ramachandran, V. S. & Hirstein, W. "The Science of Art: A Neurological Theory of Aesthetic Experience." *Journal of Consciousness Studies*, 6(6–7), 15–51, 1999.** 全文：[Ingenta Connect](https://www.ingentaconnect.com/content/imp/jcs/1999/00000006/f0020006/949)
    - 贡献：提出艺术体验的八条"普遍法则"（峰值移位、隔离、对比、完形、问题解决等）。
    - BEA 对应：危极"提神"机制与"对比/峰值移位"法则；秩序组织与"完形"法则。
 
-8. **LeDoux, Joseph. *The Emotional Brain*. 1996; *Anxious*. 2015.**
+8. **LeDoux, Joseph. *The Emotional Brain: The Mysterious Underpinnings of Emotional Life*. Simon & Schuster, New York, 1996.** ISBN 9780684836591；续作 *Anxious* (2015), ISBN 9780143127572
    - 贡献：杏仁核在威胁检测与恐惧条件反射中的核心作用；"高路"与"低路"情绪处理。
    - BEA 对应：**警觉—威胁回路**的神经基础；危极元素快速、先于理性激活杏仁核的机制。
 
@@ -80,4 +80,4 @@
 
 ---
 
-*引用本文件时请注明：星空本空《BEA 学术参考文献》v1.3.0, 2026, CC BY 4.0。*
+*引用本文件时请注明：星空本空《BEA 学术参考文献》v1.9.1, 2026, CC BY 4.0。*

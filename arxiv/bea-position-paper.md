@@ -42,7 +42,7 @@ BEA integrates publicly established knowledge and adds an original operational l
 Six dimension families — form/line, color, light/shadow, material/texture, composition/space, relation/interval — each spanning P-pole (rounded, low-saturation, soft light, fine texture, breathing space, loose intervals) to T-pole (sharp, high-saturation, hard light, coarse texture, compressed space, tight intervals).
 
 ### 3.2 The threat index W(T)
-`W(T) = Σ wᵢ · (tᵢ/10)` where tᵢ is element threat intensity (0–10, calibrated against anchor cards) and wᵢ are category weights (e.g., phones: form .25, material .25, color .15, proportion .15, light .10, detail .10). Anchors: 0.1 Healing / 0.2 Refined / 0.4 Balanced / 0.55 Sublime / 0.62 Austere / 0.7 Avant-garde; >0.85 approaches threshold breach.
+`W(T) = Σ wᵢ · (tᵢ/10)` where tᵢ is element threat intensity (0–10, calibrated against anchor cards) and wᵢ are category weights (e.g., phones: form .25, material .25, color .15, proportion .15, light .10, detail .10). Anchor ranges: ≤0.15 Healing / 0.15–0.30 Refined / 0.30–0.48 Balanced / 0.48–0.60 Sublime (requires high-intensity single elements) / 0.60–0.66 Austere / 0.66–0.85 Avant-garde; >0.85 approaches threshold breach. Midpoints approx 0.08/0.23/0.39/0.54/0.63/0.76.
 
 ### 3.3 The golden quadrant
 Plotting tension against structural order yields four quadrants; the high-tension × high-order quadrant is the target zone. Improvement reduces to two moves: add order, or add tension.

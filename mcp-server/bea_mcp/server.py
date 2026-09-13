@@ -292,7 +292,7 @@ def bea_list_categories() -> str:
     lines = ["可用品类与维度（权重）："]
     for cat, dims in CATEGORY_WEIGHTS.items():
         lines.append(f"  {cat}: " + ", ".join(f"{k}={v}" for k, v in dims.items()))
-    lines.append("\n范式锚点：0.1 治愈｜0.2 亲和精致｜0.4 均衡典雅｜0.55 崇高｜0.62 冷峻｜0.7 先锋｜>0.85 越阈")
+    lines.append("\n范式区间：≤0.15 治愈松弛｜0.15–0.30 亲和精致｜0.30–0.48 均衡典雅｜0.48–0.60 崇高震撼｜0.60–0.66 冷峻克制｜0.66–0.85 先锋反叛｜>0.85 越阈")
     return "\n".join(lines)
 
 
@@ -478,7 +478,7 @@ def bea_prescribe(category: str, t: dict, target: float, weights: dict = None) -
     Args:
         category: 品类，phone/car/brand/ui 之一（自定义权重时随意填）
         t: 现状各维度危极强度（0-10），如 {"形状线条": 5, "质感触觉": 4, "色彩": 6, "构图比例": 6, "光影": 3, "细节线条": 4}
-        target: 目标 W(T)（必填，如 0.28）；范式锚点：0.1 治愈｜0.2 亲和精致｜0.4 均衡典雅｜0.55 崇高｜0.62 冷峻｜0.7 先锋
+        target: 目标 W(T)（必填，如 0.28）；范式区间：≤0.15 治愈｜0.15–0.30 亲和精致｜0.30–0.48 均衡典雅｜0.48–0.60 崇高｜0.60–0.66 冷峻｜0.66–0.85 先锋
         weights: 可选，自定义权重表（合计须为 1），提供时忽略 category
     """
     try:

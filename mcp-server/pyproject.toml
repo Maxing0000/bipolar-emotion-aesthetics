@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "bea-mcp"
-version = "1.3.0"
+version = "1.3.1"
 description = "双极情绪美学（BEA）MCP Server：W(T) 危极指数、A/B 对比、评分卡工具，供所有 MCP 客户端调用"
 readme = "README.md"
 license = { text = "CC-BY-4.0" }

@@ -25,3 +25,5 @@ jobs:
         run: python3 ci/check_links.py
       - name: 英文文件中英混杂检查
         run: python3 ci/check_language.py
+      - name: 范式区间一致性检查（防 P0 回归）
+        run: python3 ci/check_paradigm_sync.py
