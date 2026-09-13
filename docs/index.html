@@ -117,6 +117,48 @@
   .tour-card button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
   .tour-step{font-size:11px;color:var(--sub);margin-bottom:6px}
 </style>
+<style>
+/* BEA 通用移动端优化 */
+@media (max-width: 768px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-size: 15px; line-height: 1.7; }
+  h1 { font-size: 22px !important; }
+  h2 { font-size: 17px !important; }
+  h3 { font-size: 15px !important; }
+  p, li, td, th, label, input, select, textarea, button { font-size: 14px !important; }
+  .card, .bea-tools-portal, .result-box { padding: 16px !important; }
+  .container { padding: 12px !important; }
+  /* 确保按钮点击区域足够大 */
+  button, .btn, a.btn, input[type="submit"], input[type="button"] {
+    min-height: 44px; padding: 10px 18px !important; font-size: 14px !important;
+  }
+  /* 输入框优化 */
+  input, select, textarea {
+    min-height: 40px; padding: 10px 12px !important; font-size: 16px !important; /* 16px防止iOS缩放 */
+  }
+  /* 表格横向滚动 */
+  table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* 图片自适应 */
+  img { max-width: 100%; height: auto; }
+  /* 避免横向滚动 */
+  .wrap, .container, main { max-width: 100%; overflow-x: hidden; }
+  /* 滑块优化 */
+  input[type="range"] { height: 28px; min-height: 28px; }
+  input[type="range"]::-webkit-slider-thumb { width: 24px; height: 24px; }
+  /* 代码块优化 */
+  pre, code { font-size: 12px !important; word-break: break-word; }
+  /* 导航栏优化 */
+  .bea-nav { padding: 0 12px !important; }
+  .bea-nav-brand span { font-size: 13px !important; }
+}
+@media (max-width: 480px) {
+  h1 { font-size: 20px !important; }
+  .score-grid, .bea-tools-grid { grid-template-columns: 1fr !important; }
+  .form-row { grid-template-columns: 1fr !important; }
+  .btn-group { flex-direction: column; }
+  .btn-group .btn { width: 100%; }
+}
+</style>
 </head>
 <body>
 <!-- BEA 统一导航栏 -->
