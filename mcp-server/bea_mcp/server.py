@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
 """BEA MCP Server：把双极情绪美学的计算工具暴露给所有 MCP 客户端。
 
-提供五个工具：
+提供七个工具：
   bea_wt_calc       W(T) 危极指数计算：范式落点 + 极性画像 + 目标对照
   bea_wt_compare    A/B 双方案对比：双画像 + 差异维度 + 目标接近度裁决
   bea_prescribe     诊断处方：从现状到目标 W(T) 的维度调整方案与具体手法
   bea_scoresheet    评分卡：四维打分 + 短板定位 + 六步法修复映射
+  bea_scoring_rubric 视觉评分标尺：看图打分用的逐维度锚点描述（图像诊断第一步）
+  bea_diagnose_image 图像诊断：返回图像 + 评分标尺，模型看图打分后自行调用算分工具
   bea_list_categories  列出内置品类与维度权重表
 
-数据表与仓库 bipolar-emotion-aesthetics/scripts/ 中的 wt_calc.py、scoresheet.py 保持一致
+数据表与仓库 bipolar-emotion-aesthetics/scripts/ 中的 wt_calc.py、scoresheet.py、rubric.py 保持一致
 （tests/test_mcp_sync.py 做同步校验）。分值为协作刻度，不是心理物理常数。
 
 运行：python -m bea_mcp.server   （stdio 传输）
 """
 import json
+import os
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Image
+
+from .rubric_data import RUBRICS, format_rubric
 
 # ---------------------------------------------------------------- 数据表（与 scripts/wt_calc.py 同步）
 
@@ -197,6 +202,8 @@ mcp = FastMCP(
         "先用 bea_list_categories 查品类维度，再用 bea_wt_calc 计算落点；两方案取舍用 bea_wt_compare；"
         "有明确目标范式/W(T) 时用 bea_prescribe 直接出维度调整处方与具体手法；"
         "成稿验收用 bea_scoresheet（四维各 25 分，≥80 成熟，<15 为短板）。"
+        "图像诊断流程：用 bea_scoring_rubric 取评分标尺（或 bea_diagnose_image 直接传入图片路径），"
+        "对照图像逐维度打 t 值，再调 bea_wt_calc 与 bea_prescribe 出报告。"
         "0-10 刻度与 W(T) 为协作参照，非心理物理常数。"
     ),
 )
@@ -210,6 +217,55 @@ def bea_list_categories() -> str:
         lines.append(f"  {cat}: " + ", ".join(f"{k}={v}" for k, v in dims.items()))
     lines.append("\n范式锚点：0.1 治愈｜0.2 亲和精致｜0.4 均衡典雅｜0.55 崇高｜0.62 冷峻｜0.7 先锋｜>0.85 越阈")
     return "\n".join(lines)
+
+
+@mcp.tool()
+def bea_scoring_rubric(category: str) -> str:
+    """返回某品类的视觉评分标尺：每个维度的观察点与 t=2/5/8 锚点描述。
+
+    图像诊断第一步：拿到标尺后，由你（多模态模型）对照用户提供的图像逐维度打 t 值
+    （介于锚点之间可插值 1-10），再把结果传给 bea_wt_calc / bea_prescribe 完成诊断。
+    用户直接粘贴图片时用本工具；用户给的是图片文件路径时用 bea_diagnose_image。
+
+    Args:
+        category: 品类，phone/car/brand/ui 之一
+    """
+    try:
+        w = _resolve_weights(category, None)
+        return format_rubric(category, w)
+    except ValueError as e:
+        return f"错误：{e}"
+
+
+@mcp.tool()
+def bea_diagnose_image(category: str, image_path: str) -> list:
+    """图像诊断：传入产品图片路径，返回评分标尺 + 图像本身。
+
+    返回后由你（多模态模型）执行三步：
+    1. 查看返回的图像，对照标尺逐维度打 t 值（0-10，可插值）；
+    2. 调用 bea_wt_calc 计算 W(T) 与范式落点；
+    3. 如需改进建议，调用 bea_prescribe 传入目标 W(T) 出处方。
+    最终以「逐维打分表 + W(T) + 范式落点 + 处方」的结构回复用户。
+
+    Args:
+        category: 品类，phone/car/brand/ui 之一
+        image_path: 图片文件路径（png/jpg/jpeg/webp/gif）
+    """
+    try:
+        w = _resolve_weights(category, None)
+        rubric_text = format_rubric(category, w)
+    except ValueError as e:
+        return [f"错误：{e}"]
+    if not os.path.isfile(image_path):
+        return [f"错误：找不到图片文件 {image_path!r}"]
+    ext = os.path.splitext(image_path)[1].lower()
+    if ext not in (".png", ".jpg", ".jpeg", ".webp", ".gif"):
+        return [f"错误：不支持的图片格式 {ext!r}（支持 png/jpg/jpeg/webp/gif）"]
+    header = (
+        f"请按以下标尺为图中的{category}产品逐维度打分（0-10），"
+        f"然后调用 bea_wt_calc 汇总：\n\n{rubric_text}"
+    )
+    return [header, Image(path=image_path)]
 
 
 @mcp.tool()
