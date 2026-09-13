@@ -1,11 +1,11 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.13.0-blue)
-[![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
 [![DOI](https://img.shields.io/badge/DOI-10.6084%2Fm9.figshare.33684490-blue)](https://doi.org/10.6084/m9.figshare.33684490)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
+![Install](https://img.shields.io/badge/install-one--click-green)
 
 > 一套**可解释、可计算、可执行**的形式美学方法 / A computable framework for formal aesthetics.
 > **核心命题：美感 = 可控张力下的情绪奖赏（Aesthetic pleasure = emotional reward under controlled tension）。**
@@ -17,6 +17,44 @@
 圆润让人想靠近，尖锐让人警觉——BEA 认为，任何感官对象的「美感」都来自两类情绪元素在**秩序**之内的恰当组合：让人安全趋近的**亲极（P+）**与让人警觉唤醒的**危极（T−）**。当危极被控制在阈值之内、与亲极形成张力却不越界时，人就获得美感；一旦越界则转为恐惧、攻击、杂乱或不适。
 
 本仓库是 BEA 的**可运行技能（Agent Skill）**：把这套方法论封装为 `SKILL.md + references`，让任意支持技能机制的 AI Agent 获得专业的形式审美分析、设计创作与问题诊断能力。
+
+---
+
+## ⚡ 一键安装（5分钟搞定）
+
+### macOS / Linux
+
+```bash
+git clone https://github.com/Maxing0000/bipolar-emotion-aesthetics.git
+cd bipolar-emotion-aesthetics
+./install.sh
+```
+
+安装脚本自动检测技能目录（豆包/Claude/通用）、备份旧版本、验证安装。
+
+### Windows
+
+```powershell
+git clone https://github.com/Maxing0000/bipolar-emotion-aesthetics.git
+cd bipolar-emotion-aesthetics
+.\install.ps1
+```
+
+### Make / 手动 / 更多方式
+
+详见 [INSTALL.md](INSTALL.md) — 包含5种安装方式、故障排查、常见问题。
+
+### 安装后验证
+
+```bash
+# 测试计算工具
+python3 bipolar-emotion-aesthetics/scripts/wt_calc.py --category phone --t "形状线条=4,质感触觉=3,色彩=2,构图比例=2,光影=2,细节线条=5"
+
+# 全局命令（添加到PATH后）
+bea calc --category phone --t "形状=4,质感=3"
+bea quant --category car --t "形体=3,特征线=5"
+bea analyze --interactive
+```
 
 ---
 
@@ -271,6 +309,29 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v2.0.0（2026-09-14）— 技能包重构与安装体验革命
+
+**核心升级：从"能用"到"好用"，从"专家工具"到"人人可用"**
+
+- **技能包全面重构**：从38个文件精简为24个核心文件，删除所有冗余和历史遗留，结构清晰、职责单一
+  - `SKILL.md` 重写：AI友好的触发条件、任务类型判断、文件导航、输出规范
+  - `references/` 6份核心文档：theory/paradigms/method/playbooks/image-analysis/templates
+  - `scripts/` 3个可执行脚本：wt_calc.py（W(T)计算）、bea_quant.py（量化引擎+诊断+处方）、analyze_image.py（图片分析助手）
+  - `templates/` 3份输出模板：analysis-report/diagnosis-report/design-brief
+  - `examples/` 3个完整示例：iPhone 17 Pro分析、尊界S800分析、海报设计方案
+- **安装体验革命**：新增7个安装工具，实现"解压后3步安装"
+  - `install.sh` / `install.ps1`：macOS/Linux/Windows一键安装，自动检测技能目录
+  - `uninstall.sh` / `update.sh`：一键卸载/更新，自动备份旧版本
+  - `Makefile`：统一入口（make install/uninstall/update/check/test）
+  - `bea`：全局命令行工具（bea calc/quant/analyze/docs/examples）
+  - `INSTALL.md`：详细安装指南（5种方式+故障排查+常见问题）
+- **安装脚本核心能力**：自动检测豆包(macOS/Linux/Windows)/Claude/通用技能目录、多目录选择、自动备份、安装验证（7个核心文件+Python语法+SKILL.md格式）、彩色输出、安装后快速开始指南
+- **八范式体系完善**：治愈松弛/亲和精致/诗意朦胧/均衡典雅/崇高震撼/冷峻克制/神秘魅惑/先锋反叛
+- **量化引擎升级**：bea_quant.py 整合 W(T)计算+范式定位+四象限+四维评分+8种病症诊断+元素级处方，支持JSON输出
+- **图片分析工作流**：完整的6步图片分析流程（产品识别→六维度极性提取→W(T)计算→评分→病症诊断→报告生成），支持交互模式
+- **输出标准化**：3份专业模板确保输出质量一致，其他AI不会"自由发挥"走样
+- **版本号跳跃**：从 v1.13.0 直接升级到 v2.0.0，标志着从"功能积累"到"体验优化"的范式转变
 
 ### v1.13.0（2026-09-13）— 范式体系重大突破
 
