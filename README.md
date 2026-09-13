@@ -10,7 +10,7 @@
 > 一套**可解释、可计算、可执行**的形式美学方法 / A computable framework for formal aesthetics.
 > **核心命题：美感 = 可控张力下的情绪奖赏（Aesthetic pleasure = emotional reward under controlled tension）。**
 >
-> 🧮 [W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)　｜　⚡ [快速诊断（3步出结果）](tools/diagnostic-workbench/quick-diagnosis.html)　｜　🎯 [审美测试（测你的偏好）](tools/diagnostic-workbench/aesthetic-test.html)　｜　🔧 [完整诊断工作台](tools/diagnostic-workbench/index.html)　｜　📚 [案例库（13个经典分析）](cases/index.html)　｜　📖 [完整在线理论著作](docs/theory-book.html)　｜　🌐 [English README](README_EN.md)　｜　📚 [中英术语表](GLOSSARY.md)　｜　❓ [常见质疑 FAQ](FAQ.md)
+> 🧮 [W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)　｜　⚡ [快速诊断（3步出结果）](https://maxing0000.github.io/bipolar-emotion-aesthetics/quick-diagnosis.html)　｜　🎯 [审美测试（测你的偏好）](https://maxing0000.github.io/bipolar-emotion-aesthetics/aesthetic-test.html)　｜　🔧 [完整诊断工作台](https://maxing0000.github.io/bipolar-emotion-aesthetics/workbench.html)　｜　📚 [案例库（13个经典分析）](https://maxing0000.github.io/bipolar-emotion-aesthetics/cases.html)　｜　📖 [完整在线理论著作](https://maxing0000.github.io/bipolar-emotion-aesthetics/theory-book.html)　｜　🌐 [English README](README_EN.md)　｜　📚 [中英术语表](GLOSSARY.md)　｜　❓ [常见质疑 FAQ](FAQ.md)
 
 ![BEA 双极封面](docs/cover.png)
 
@@ -50,20 +50,20 @@ BEA 不会回答「更大气一点」，而是给出元素级、可复算的结�
 **不需要学理论，3个工具就能用起来：**
 
 ### 1️⃣ 先测测你的审美偏好（2分钟）
-👉 [BEA 审美测试](tools/diagnostic-workbench/aesthetic-test.html)
+👉 [BEA 审美测试](https://maxing0000.github.io/bipolar-emotion-aesthetics/aesthetic-test.html)
 - 10道选择题，凭第一感觉选
 - 测出你的审美类型（温柔治愈者/精致平衡者/张力追求者/先锋探索者）
 - 推荐最适合你的设计范式
 
 ### 2️⃣ 快速诊断一个设计（3分钟）
-👉 [BEA 快速诊断](tools/diagnostic-workbench/quick-diagnosis.html)
+👉 [BEA 快速诊断](https://maxing0000.github.io/bipolar-emotion-aesthetics/quick-diagnosis.html)
 - 第1步：选品类（手机/汽车/服装/建筑...）
 - 第2步：选你想要的感觉（治愈/精致/均衡/崇高/冷峻/先锋）
 - 第3步：拖3个滑块，描述这个设计给你的感觉
 - 自动生成：BEA评分、范式定位、匹配度、改进建议
 
 ### 3️⃣ 看案例学审美（随时看）
-👉 [BEA 案例库](cases/index.html)（13个经典产品深度分析）
+👉 [BEA 案例库](https://maxing0000.github.io/bipolar-emotion-aesthetics/cases.html)（13个经典产品深度分析）
 - iPhone 17 Pro、问界 M9、小米 SU7、特斯拉 Model S、戴森 V15
 - 无印良品、奔驰 S 级、Cybertruck、索尼 XM5、Vision Pro
 - 乐高、宜家、原神
@@ -77,9 +77,9 @@ BEA 不会回答「更大气一点」，而是给出元素级、可复算的结�
 - **看电影/听音乐**：用 BEA 理解为什么有些作品"高级"，有些"俗"
 
 ### 🎓 想深入学习？
-- [完整在线理论著作](docs/theory-book.html) — 系统学习 BEA 理论
-- [10分钟读懂 BEA](docs/guide.html) — 着陆页，快速了解核心概念
-- [完整诊断工作台](tools/diagnostic-workbench/index.html) — 专业版，8品类+自然语言+A-B对比+历史记录
+- [完整在线理论著作](https://maxing0000.github.io/bipolar-emotion-aesthetics/theory-book.html) — 系统学习 BEA 理论
+- [10分钟读懂 BEA](https://maxing0000.github.io/bipolar-emotion-aesthetics/guide.html) — 着陆页，快速了解核心概念
+- [完整诊断工作台](https://maxing0000.github.io/bipolar-emotion-aesthetics/workbench.html) — 专业版，8品类+自然语言+A-B对比+历史记录
 
 ---
 
@@ -206,8 +206,8 @@ git clone --depth 1 https://github.com/Maxing0000/bipolar-emotion-aesthetics && 
 
 | 页面 | 地址 | 用途 |
 | --- | --- | --- |
-| 🧮 W(T) 交互计算器 | `docs/index.html`（首页） | 拖滑块实时计算危极权重、范式落点、极性画像、四象限定位；附 iPhone 17 Pro / 问界 M9 等快捷示例 |
-| 📖 完整在线理论著作 | `docs/theory-book.html` | 十一编完整体系（本体→机制→元素→结构→阈值→范式→语境→方法→应用→诊断→评价）+ 体系图 SVG / 六范式卡 / 诊断表 / 术语表 / FAQ，暖橙冷蓝双极配色，响应式适配移动端 |
+| 🧮 W(T) 交互计算器 | `https://maxing0000.github.io/bipolar-emotion-aesthetics/index.html`（首页） | 拖滑块实时计算危极权重、范式落点、极性画像、四象限定位；附 iPhone 17 Pro / 问界 M9 等快捷示例 |
+| 📖 完整在线理论著作 | `https://maxing0000.github.io/bipolar-emotion-aesthetics/theory-book.html` | 十一编完整体系（本体→机制→元素→结构→阈值→范式→语境→方法→应用→诊断→评价）+ 体系图 SVG / 六范式卡 / 诊断表 / 术语表 / FAQ，暖橙冷蓝双极配色，响应式适配移动端 |
 
 两页互相链接：计算器页脚有「完整在线理论著作」入口，著作内有计算器引用。
 
@@ -266,7 +266,7 @@ BibTeX：
 
 ### v1.10.0（2026-09-13）
 
-- **BEA 交互式诊断工作台上线**（`tools/diagnostic-workbench/index.html`）：零门槛网页工具——8大品类（手持消费电子/汽车/平面品牌/数字界面/建筑室内/时尚服装/音乐声音/影视动画）、6维度极性滑块、四维评分卡、范式定位+W(T)实时计算、张力×秩序四象限、问题诊断+改进处方、Markdown报告导出
+- **BEA 交互式诊断工作台上线**（`https://maxing0000.github.io/bipolar-emotion-aesthetics/workbench.html`）：零门槛网页工具——8大品类（手持消费电子/汽车/平面品牌/数字界面/建筑室内/时尚服装/音乐声音/影视动画）、6维度极性滑块、四维评分卡、范式定位+W(T)实时计算、张力×秩序四象限、问题诊断+改进处方、Markdown报告导出
 - **诊断工作台五大进阶功能**：①自然语言智能解析（"圆润一点，颜色暖一点"→自动调维度，支持增量调整+6快捷标签+解析结果可视化）②历史记录（localStorage保存/回看/导出/删除，最多50条）③A-B对比分析（双方案参数对比+雷达图+四维评分对比+自动生成对比结论）④导出图片（一键生成高清PNG报告）⑤AI智能分析（上传图片生成完整BEA分析提示词，复制给任意AI助手获得标准化报告）
 - **案例库建设完成**（`cases/`，8个经典产品BEA深度分析）：iPhone 17 Pro（崇高震撼86分）、问界M9（均衡典雅88分）、小米SU7（冷峻克制84分）、特斯拉Model S（崇高震撼85分）、戴森V15（冷峻克制83分）、无印良品（亲和精致87分）、奔驰S级（均衡典雅89分）、Cybertruck（先锋反叛78分）；含案例库索引页（按范式/品类/评分三维筛选+关键词搜索+范式分布统计）
 - **README 导航升级**：顶部新增诊断工作台和案例库入口，目录结构补充 tools/ 和 cases/ 完整说明
@@ -323,7 +323,7 @@ BibTeX：
 - **新增 scoresheet.py**：BEA 评分卡脚本化——四维打分、短板自动定位、修复指引自动映射回六步法环节；
 - **CI 内容体检**（GitHub Actions）：案例算式自动复算（防数字漂移）、本地链接有效性（防幻影文件）、英文文件中英混杂检测、工具链单元测试——AI 生成内容入库前过机器门；
 - **网页计算器四增强**：分享链接（配置编码进 URL，每次分析自带传播）、案例复现扩充至 10 个、Markdown 审计报告一键导出、三步上手引导；
-- **新增 docs/guide.html**：「10 分钟读懂 BEA」着陆页——核心命题/双极谱系/四象限/六范式/真实案例/三入口；
+- **新增 https://maxing0000.github.io/bipolar-emotion-aesthetics/guide.html**：「10 分钟读懂 BEA」着陆页——核心命题/双极谱系/四象限/六范式/真实案例/三入口；
 - **安装说明升级**：一行命令 + 各平台 30 秒接入表；
 - **新增 docs/ai-art-community-kit.md**：AI 生图社区传播包（「审美控制语法」帖子模板）；
 - **新增 docs/experiment-protocol.md**：盲评实验协议——任何人可跑「BEA 预测 vs 用户投票」对照并提交数据；
@@ -342,9 +342,9 @@ BibTeX：
 ### v1.2.0（2026-09-12）
 
 - **新增 FAQ.md**：十问十答，直面「美怎么能量化」「与设计心理学何异」「W(T) 权重凭什么」「事后解释何来预测力」等最强质疑；
-- **新增网页版 W(T) 交互计算器**（docs/index.html，GitHub Pages 在线）：品类选择、维度滑块、实时 W(T) 与范式落点、极性画像、四象限定位、目标区间对照，附 iPhone 17 Pro / 问界 M9 等快捷示例；
+- **新增网页版 W(T) 交互计算器**（https://maxing0000.github.io/bipolar-emotion-aesthetics/index.html，GitHub Pages 在线）：品类选择、维度滑块、实时 W(T) 与范式落点、极性画像、四象限定位、目标区间对照，附 iPhone 17 Pro / 问界 M9 等快捷示例；
 - **新增 release.sh 三平台一键发版脚本**：版本号替换、更新日志生成、GitHub 提交/标签/Release、Gitee 直推、ModelScope SDK 同步，一条命令完成。
-- **新增完整在线理论著作**（`docs/theory-book.html`，十一编 50KB+）：本体→机制→元素→结构→阈值→范式→语境→方法→应用→诊断→评价，含体系总图 SVG、六范式配比卡、美感地图四象限、BEA 评分卡、病症处方表、术语表、FAQ，暖橙冷蓝双极配色，scrollspy 导航，响应式；
+- **新增完整在线理论著作**（`https://maxing0000.github.io/bipolar-emotion-aesthetics/theory-book.html`，十一编 50KB+）：本体→机制→元素→结构→阈值→范式→语境→方法→应用→诊断→评价，含体系总图 SVG、六范式配比卡、美感地图四象限、BEA 评分卡、病症处方表、术语表、FAQ，暖橙冷蓝双极配色，scrollspy 导航，响应式；
 - **新增 README_EN.md** 英文精简介绍（面向海外设计师）；
 - **新增 GLOSSARY.md** 中英术语表（25+ 核心术语统一译名）；
 - **新增 docs/boundary.md** 模型边界与合规声明（适用范围/量化性质/原创性声明/数据隐私/安全承诺）；

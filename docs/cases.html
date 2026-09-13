@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEA 案例库 · 双极情绪美学</title>
+<style>
+:root{
+  --bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#252540;
+  --text:#e8e8f0;--text2:#a0a0b8;--text3:#606078;
+  --border:#2a2a45;--plus:#fbbf24;--minus:#38bdf8;
+  --gold:#fbbf24;--success:#34d399;--danger:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+
+/* Header */
+.header{text-align:center;padding:40px 0 30px;border-bottom:1px solid var(--border);margin-bottom:30px}
+.header h1{font-size:32px;font-weight:900;margin-bottom:8px;background:linear-gradient(135deg,var(--plus),var(--minus));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{color:var(--text2);font-size:14px}
+.stats{display:flex;justify-content:center;gap:40px;margin-top:20px}
+.stat-item{text-align:center}
+.stat-num{font-size:28px;font-weight:900;color:var(--gold)}
+.stat-label{font-size:12px;color:var(--text3)}
+
+/* Filters */
+.filters{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px}
+.filter-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.filter-group{display:flex;align-items:center;gap:8px}
+.filter-label{font-size:12px;color:var(--text2);white-space:nowrap}
+.filter-btn{padding:6px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s;font-family:inherit}
+.filter-btn:hover{border-color:var(--minus);color:var(--text)}
+.filter-btn.active{background:var(--minus);border-color:var(--minus);color:#0f0f1a;font-weight:600}
+.search-box{flex:1;min-width:200px;position:relative}
+.search-box input{width:100%;padding:8px 14px 8px 36px;background:var(--bg);border:1px solid var(--border);border-radius:20px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .2s}
+.search-box input:focus{border-color:var(--minus)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px}
+
+/* Case Grid */
+.case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.case-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .3s;cursor:pointer}
+.case-card:hover{border-color:var(--minus);transform:translateY(-4px);box-shadow:0 8px 30px rgba(56,189,248,.1)}
+.case-image{height:180px;background:linear-gradient(135deg,var(--bg3),var(--bg2));display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.case-image-placeholder{font-size:48px;opacity:.3}
+.case-paradigm-badge{position:absolute;top:12px;right:12px;padding:4px 10px;background:rgba(0,0,0,.6);border-radius:12px;font-size:11px;font-weight:600;color:var(--gold);backdrop-filter:blur(4px)}
+.case-body{padding:16px}
+.case-title{font-size:16px;font-weight:700;margin-bottom:6px}
+.case-category{font-size:12px;color:var(--text3);margin-bottom:10px}
+.case-metrics{display:flex;gap:16px;margin-bottom:10px;padding:10px;background:var(--bg);border-radius:8px}
+.case-metric{flex:1;text-align:center}
+.case-metric-value{font-size:18px;font-weight:900}
+.case-metric-value.wt{color:var(--minus)}
+.case-metric-value.score{color:var(--gold)}
+.case-metric-label{font-size:10px;color:var(--text3);margin-top:2px}
+.case-summary{font-size:12px;color:var(--text2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.case-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.case-score-badge{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:600}
+.score-excellent{background:rgba(52,211,153,.15);color:var(--success)}
+.score-good{background:rgba(251,191,36,.15);color:var(--gold)}
+.score-fair{background:rgba(239,68,68,.15);color:var(--danger)}
+.case-link{font-size:12px;color:var(--minus);text-decoration:none;cursor:pointer}
+.case-link:hover{text-decoration:underline}
+
+/* Empty State */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty-state-icon{font-size:48px;margin-bottom:16px;opacity:.3}
+.empty-state-text{font-size:14px}
+
+/* Paradigm Distribution */
+.section-title{font-size:18px;font-weight:700;margin:40px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.paradigm-dist{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:30px}
+.paradigm-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
+.paradigm-name{font-size:13px;font-weight:600;margin-bottom:6px}
+.paradigm-count{font-size:24px;font-weight:900;color:var(--gold)}
+.paradigm-range{font-size:10px;color:var(--text3);margin-top:4px}
+
+/* Footer */
+.footer{text-align:center;padding:40px 0 20px;border-top:1px solid var(--border);margin-top:40px;color:var(--text3);font-size:12px}
+.footer a{color:var(--minus);text-decoration:none}
+
+/* Responsive */
+@media(max-width:768px){
+  .case-grid{grid-template-columns:1fr}
+  .stats{gap:20px}
+  .filter-row{flex-direction:column;align-items:stretch}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>BEA 双极情绪美学 · 案例库</h1>
+    <p>用双极情绪美学框架深度解析经典设计作品</p>
+    <div class="stats">
+      <div class="stat-item"><div class="stat-num" id="totalCases">0</div><div class="stat-label">案例总数</div></div>
+      <div class="stat-item"><div class="stat-num" id="avgScore">0</div><div class="stat-label">平均评分</div></div>
+      <div class="stat-item"><div class="stat-num" id="categories">0</div><div class="stat-label">覆盖品类</div></div>
+      <div class="stat-item"><div class="stat-num" id="paradigms">0</div><div class="stat-label">覆盖范式</div></div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="filter-row">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索案例名称、品类、范式...">
+      </div>
+    </div>
+    <div class="filter-row" style="margin-top:12px">
+      <div class="filter-group">
+        <span class="filter-label">范式：</span>
+        <button class="filter-btn active" data-filter="paradigm" data-value="all">全部</button>
+        <button class="filter-btn" data-filter="paradigm" data-value="治愈松弛">治愈松弛</button>
+        <button class="filter-btn" data-filter="paradigm" data-value="亲和精致">亲和精致</button>
+        <button class="filter-btn" data-filter="paradigm" data-value="均衡典雅">均衡典雅</button>
+        <button class="filter-btn" data-filter="paradigm" data-value="崇高震撼">崇高震撼</button>
+        <button class="filter-btn" data-filter="paradigm" data-value="冷峻克制">冷峻克制</button>
+        <button class="filter-btn" data-filter="paradigm" data-value="先锋反叛">先锋反叛</button>
+        <button class="filter-btn" data-filter="paradigm" data-value="跨范式叙事">跨范式叙事</button>
+      </div>
+    </div>
+    <div class="filter-row" style="margin-top:12px">
+      <div class="filter-group">
+        <span class="filter-label">品类：</span>
+        <button class="filter-btn active" data-filter="category" data-value="all">全部</button>
+        <button class="filter-btn" data-filter="category" data-value="手持消费电子">手持消费电子</button>
+        <button class="filter-btn" data-filter="category" data-value="汽车外形">汽车外形</button>
+        <button class="filter-btn" data-filter="category" data-value="平面/品牌">平面/品牌</button>
+        <button class="filter-btn" data-filter="category" data-value="XR/可穿戴设备">XR设备</button>
+        <button class="filter-btn" data-filter="category" data-value="玩具/创意产品">玩具</button>
+        <button class="filter-btn" data-filter="category" data-value="家居/零售品牌">家居</button>
+        <button class="filter-btn" data-filter="category" data-value="游戏/数字内容">游戏</button>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">评分：</span>
+        <button class="filter-btn active" data-filter="score" data-value="all">全部</button>
+        <button class="filter-btn" data-filter="score" data-value="85+">85分以上</button>
+        <button class="filter-btn" data-filter="score" data-value="80-85">80-85分</button>
+        <button class="filter-btn" data-filter="score" data-value="80-">80分以下</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-grid" id="caseGrid"></div>
+  <div class="empty-state" id="emptyState" style="display:none">
+    <div class="empty-state-icon">📭</div>
+    <div class="empty-state-text">没有找到匹配的案例，试试其他筛选条件</div>
+  </div>
+
+  <div class="section-title">范式分布</div>
+  <div class="paradigm-dist" id="paradigmDist"></div>
+
+  <div class="footer">
+    <p>BEA 双极情绪美学 v1.11.0 · 作者：星空本空 · CC BY 4.0 · <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank">GitHub</a> · <a href="https://gitee.com/maxing0000/bipolar-emotion-aesthetics" target="_blank">Gitee</a></p>
+    <p style="margin-top:4px">美感 = 可控张力下的情绪奖赏 · 以亲极安其心，以危极提其神，以秩序统其乱，以阈值守其界</p>
+  </div>
+</div>
+
+<script>
+// 案例数据
+const cases = [
+  {
+    id:'iphone17pro',
+    name:'iPhone 17 Pro',
+    category:'手持消费电子',
+    paradigm:'崇高震撼',
+    wt:0.48,
+    score:86,
+    summary:'微差补偿教科书案例。宏观连续曲面保证握持亲和，微观钛金属中框与精密倒角注入锐利提神，远看柔和近看精密。',
+    icon:'📱',
+    file:'../content-marketing/01-iPhone17-Pro-BEA分析.md'
+  },
+  {
+    id:'wenjiem9',
+    name:'问界 M9',
+    category:'汽车外形',
+    paradigm:'均衡典雅',
+    wt:0.525,
+    score:88,
+    summary:'大面柔+灯组锐的典范。饱满车身曲面提供安全豪华感，极锐利贯穿式灯组与特征线提供记忆点，崇高而不凶戾。',
+    icon:'🚗',
+    file:'../content-marketing/02-问界M9-BEA分析.md'
+  },
+  {
+    id:'xiaomisu7',
+    name:'小米 SU7',
+    category:'汽车外形',
+    paradigm:'冷峻克制',
+    wt:0.645,
+    score:84,
+    summary:'静态暗示运动的典范。低趴楔形姿态与锐利灯组制造前冲动势，圆润车身曲面与简洁线条维持亲和，冷峻但不攻击。',
+    icon:'🏎️',
+    file:'../content-marketing/03-小米SU7-BEA分析.md'
+  },
+  {
+    id:'teslamodels',
+    name:'特斯拉 Model S',
+    category:'汽车外形',
+    paradigm:'崇高震撼',
+    wt:0.55,
+    score:85,
+    summary:'极简崇高的代表。无格栅前脸与流畅曲面创造未来感，低趴姿态与隐藏式门把手注入科技冷峻，秩序感极强。',
+    icon:'⚡',
+    file:'04-特斯拉ModelS-BEA分析.md'
+  },
+  {
+    id:'dysonv15',
+    name:'戴森 V15 吸尘器',
+    category:'手持消费电子',
+    paradigm:'冷峻克制',
+    wt:0.62,
+    score:83,
+    summary:'科技冷峻的代表。裸露机械结构与金属质感制造专业工具感，精密工程秩序安抚危极，冷峻但不冰冷。',
+    icon:'🔧',
+    file:'05-戴森V15-BEA分析.md'
+  },
+  {
+    id:'muji',
+    name:'无印良品 MUJI',
+    category:'平面/品牌',
+    paradigm:'亲和精致',
+    wt:0.25,
+    score:87,
+    summary:'日式侘寂美学的代表。大量留白与自然材质创造治愈感，极简秩序与精密细节注入精致，柔中藏骨的典范。',
+    icon:'🏠',
+    file:'06-无印良品-BEA分析.md'
+  },
+  {
+    id:'mercedess',
+    name:'奔驰 S 级',
+    category:'汽车外形',
+    paradigm:'均衡典雅',
+    wt:0.50,
+    score:89,
+    summary:'豪华均衡的巅峰。大尺寸直瀑格栅与立标制造崇高压迫，圆润车身曲面与温润内饰安抚，均衡而不失威严。',
+    icon:'👑',
+    file:'07-奔驰S级-BEA分析.md'
+  },
+  {
+    id:'cybertruck',
+    name:'特斯拉 Cybertruck',
+    category:'汽车外形',
+    paradigm:'先锋反叛',
+    wt:0.75,
+    score:78,
+    summary:'先锋反叛的极端案例。全锐角折线车身与裸露不锈钢制造强烈冲击，极简秩序维持审美安全，越阈边缘的实验性作品。',
+    icon:'🛸',
+    file:'08-Cybertruck-BEA分析.md'
+  },
+  {
+    id:'sonywh1000xm5',
+    name:'索尼 WH-1000XM5',
+    category:'手持消费电子',
+    paradigm:'冷峻克制',
+    wt:0.60,
+    score:84,
+    summary:'冷峻克制范式的音频设备标杆。平面化耳罩与锐利切角制造精密工具感，亲肤耳垫与流畅弧线提供触觉亲和，理性专业之美。',
+    icon:'🎧',
+    file:'09-索尼WH1000XM5-BEA分析.md'
+  },
+  {
+    id:'visionpro',
+    name:'苹果 Vision Pro',
+    category:'XR/可穿戴设备',
+    paradigm:'崇高震撼',
+    wt:0.52,
+    score:87,
+    summary:'崇高范式的消费电子标杆。单片弧形玻璃与未来感设计制造敬畏，亲肤材质与自然交互提供微观亲和，远看敬畏近看舒适的微差补偿典范。',
+    icon:'🥽',
+    file:'10-苹果VisionPro-BEA分析.md'
+  },
+  {
+    id:'lego',
+    name:'乐高 LEGO',
+    category:'玩具/创意产品',
+    paradigm:'亲和精致',
+    wt:0.22,
+    score:88,
+    summary:'亲和精致范式的教科书。圆润造型与温暖色彩提供快乐，精确切角与精密结构注入挑战感，"远看快乐、近看精密"的微差补偿完美结构。',
+    icon:'🧱',
+    file:'11-乐高LEGO-BEA分析.md'
+  },
+  {
+    id:'ikea',
+    name:'宜家 IKEA',
+    category:'家居/零售品牌',
+    paradigm:'均衡典雅',
+    wt:0.38,
+    score:87,
+    summary:'均衡典雅范式的大众标杆。温暖展厅与平价策略提供可接近感，设计感产品与工业感仓库注入危极，"每个人都能拥有的好设计"的规模化奇迹。',
+    icon:'🛋️',
+    file:'12-宜家IKEA-BEA分析.md'
+  },
+  {
+    id:'genshin',
+    name:'原神 Genshin Impact',
+    category:'游戏/数字内容',
+    paradigm:'跨范式叙事',
+    wt:0.45,
+    score:89,
+    summary:'跨范式叙事的教科书。各地区独立覆盖从亲和到先锋的完整美学光谱，宏观崇高+中观多元+微观亲和的三层嵌套，游戏美学的巅峰之作。',
+    icon:'⚔️',
+    file:'13-原神Genshin-BEA分析.md'
+  }
+];
+
+// 当前筛选状态
+let currentFilters = {paradigm:'all',category:'all',score:'all',search:''};
+
+// 渲染案例卡片
+function renderCases(){
+  const grid = document.getElementById('caseGrid');
+  const empty = document.getElementById('emptyState');
+  
+  let filtered = cases.filter(c => {
+    if(currentFilters.paradigm !== 'all' && c.paradigm !== currentFilters.paradigm) return false;
+    if(currentFilters.category !== 'all' && c.category !== currentFilters.category) return false;
+    if(currentFilters.score !== 'all'){
+      if(currentFilters.score === '85+' && c.score < 85) return false;
+      if(currentFilters.score === '80-85' && (c.score < 80 || c.score >= 85)) return false;
+      if(currentFilters.score === '80-' && c.score >= 80) return false;
+    }
+    if(currentFilters.search){
+      const q = currentFilters.search.toLowerCase();
+      if(!c.name.toLowerCase().includes(q) && !c.category.toLowerCase().includes(q) && !c.paradigm.toLowerCase().includes(q) && !c.summary.toLowerCase().includes(q)) return false;
+    }
+    return true;
+  });
+  
+  if(filtered.length === 0){
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  
+  empty.style.display = 'none';
+  grid.innerHTML = filtered.map(c => {
+    const scoreClass = c.score >= 85 ? 'score-excellent' : (c.score >= 80 ? 'score-good' : 'score-fair');
+    const scoreText = c.score >= 85 ? '优秀' : (c.score >= 80 ? '良好' : '待提升');
+    return `
+      <div class="case-card" onclick="window.location.href='${c.file}'">
+        <div class="case-image">
+          <span class="case-image-placeholder">${c.icon}</span>
+          <span class="case-paradigm-badge">${c.paradigm}</span>
+        </div>
+        <div class="case-body">
+          <div class="case-title">${c.name}</div>
+          <div class="case-category">${c.category}</div>
+          <div class="case-metrics">
+            <div class="case-metric">
+              <div class="case-metric-value wt">${c.wt.toFixed(2)}</div>
+              <div class="case-metric-label">W(T) 危极权重</div>
+            </div>
+            <div class="case-metric">
+              <div class="case-metric-value score">${c.score}</div>
+              <div class="case-metric-label">BEA 评分</div>
+            </div>
+          </div>
+          <div class="case-summary">${c.summary}</div>
+          <div class="case-footer">
+            <span class="case-score-badge ${scoreClass}">${scoreText}</span>
+            <span class="case-link">查看详情 →</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// 渲染统计数据
+function renderStats(){
+  document.getElementById('totalCases').textContent = cases.length;
+  document.getElementById('avgScore').textContent = (cases.reduce((s,c) => s + c.score, 0) / cases.length).toFixed(1);
+  document.getElementById('categories').textContent = new Set(cases.map(c => c.category)).size;
+  document.getElementById('paradigms').textContent = new Set(cases.map(c => c.paradigm)).size;
+}
+
+// 渲染范式分布
+function renderParadigmDist(){
+  const paradigms = ['治愈松弛','亲和精致','均衡典雅','崇高震撼','冷峻克制','先锋反叛'];
+  const ranges = ['W(T)≤0.15','0.15-0.30','0.30-0.48','0.48-0.60','0.60-0.66','0.66-0.85'];
+  const dist = document.getElementById('paradigmDist');
+  
+  dist.innerHTML = paradigms.map((p,i) => {
+    const count = cases.filter(c => c.paradigm === p).length;
+    return `
+      <div class="paradigm-item">
+        <div class="paradigm-name">${p}</div>
+        <div class="paradigm-count">${count}</div>
+        <div class="paradigm-range">${ranges[i]}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// 筛选按钮事件
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filterType = btn.dataset.filter;
+    const value = btn.dataset.value;
+    currentFilters[filterType] = value;
+    
+    // 更新按钮状态
+    document.querySelectorAll(`.filter-btn[data-filter="${filterType}"]`).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    renderCases();
+  });
+});
+
+// 搜索事件
+document.getElementById('searchInput').addEventListener('input', e => {
+  currentFilters.search = e.target.value;
+  renderCases();
+});
+
+// 初始化
+renderStats();
+renderCases();
+renderParadigmDist();
+</script>
+</body>
+</html>
