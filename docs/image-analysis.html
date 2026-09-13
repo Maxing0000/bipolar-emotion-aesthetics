@@ -205,6 +205,13 @@ footer a { color: var(--cool); text-decoration: none; }
 .bea-nav-mobile-toggle{display:none;background:none;border:none;cursor:pointer;padding:8px;color:#555}
 @media(max-width:1024px){.bea-nav-links{display:none}.bea-nav-links.open{display:flex;flex-direction:column;position:absolute;top:54px;left:0;right:0;background:rgba(255,255,255,0.98);backdrop-filter:blur(14px);padding:12px 20px;gap:4px;border-bottom:1px solid rgba(0,0,0,0.07);box-shadow:0 4px 12px rgba(0,0,0,0.08);align-items:stretch}.bea-nav-links.open a{padding:10px 12px;font-size:14px}.bea-nav-links.open .bea-nav-divider{display:none}.bea-nav-mobile-toggle{display:block}}
 body{padding-top:54px!important}
+.preset-section{margin:16px 0;padding:14px;background:linear-gradient(135deg,rgba(232,168,124,0.06),rgba(74,144,164,0.06));border-radius:10px;border:1px dashed rgba(0,0,0,0.1)}
+.preset-label{font-size:13px;font-weight:600;color:#555;margin-bottom:10px}
+.preset-buttons{display:flex;flex-wrap:wrap;gap:8px}
+.preset-btn{padding:7px 14px;background:white;border:1.5px solid rgba(0,0,0,0.1);border-radius:18px;font-size:12.5px;font-weight:500;color:#444;cursor:pointer;transition:all 0.2s;font-family:inherit}
+.preset-btn:hover{border-color:rgba(232,168,124,0.5);background:rgba(232,168,124,0.08);color:#1a1a2e;transform:translateY(-1px)}
+.preset-btn:active{transform:translateY(0)}
+@media(max-width:600px){.preset-btn{padding:6px 12px;font-size:12px}}
 </style>
 <nav class="bea-nav">
   <a href="index.html" class="bea-nav-brand"><div class="bea-nav-logo">B</div><span>BEA 双极情绪美学</span></a>
@@ -258,6 +265,19 @@ body{padding-top:54px!important}
       <img id="previewImg" alt="预览">
       <button class="remove-btn" onclick="removeImage()">移除图片</button>
     </div>
+
+    <!-- 预设示例 -->
+    <div class="preset-section">
+      <div class="preset-label">💡 没有图片？试试预设示例：</div>
+      <div class="preset-buttons">
+        <button class="preset-btn" onclick="loadPreset('iphone')">📱 iPhone 17 Pro</button>
+        <button class="preset-btn" onclick="loadPreset('car')">🚗 问界 M9</button>
+        <button class="preset-btn" onclick="loadPreset('church')">⛪ 光之教堂</button>
+        <button class="preset-btn" onclick="loadPreset('ios')">📱 iOS 界面</button>
+        <button class="preset-btn" onclick="loadPreset('supreme')">🔥 Supreme</button>
+      </div>
+    </div>
+
     <div class="form-row" style="margin-top:20px;">
       <div class="form-group">
         <label>对象类型</label>
@@ -485,6 +505,102 @@ const PARADIGM_RANGES = [
 
 let currentStep = 1;
 let uploadedImage = null;
+
+// 预设示例数据
+const PRESETS = {
+  iphone: {
+    type: 'product',
+    desc: 'iPhone 17 Pro 产品图，钛金属中框，连续曲面背板，精密倒角，居中对称设计',
+    dimensions: { '形状线条': 3, '质感肌理': 4, '色彩色相': 3, '构图比例': 3, '明度对比': 4, '光影': 3, '细节线条': 6 },
+    scores: { tension: 22, order: 24, threshold: 23, context: 22 },
+    diagnosis: '微差补偿结构优秀，宏观柔和微观精密。可优化：色彩可更克制，细节锐度可再提升。',
+    summary: '亲和精致范式典范，W(T)=0.22，总分91/100。远看柔和近看精密，高级感手机的标准结构。'
+  },
+  car: {
+    type: 'car',
+    desc: '问界M9 汽车外形，饱满大曲面，水平稳重腰线，锐利灯组，楔形前冲姿态',
+    dimensions: { '形体曲面动势': 4, '特征线条': 6, '灯组图形': 7, '比例姿态': 5, '材质光影': 5 },
+    scores: { tension: 23, order: 23, threshold: 21, context: 22 },
+    diagnosis: '大面柔特征线锐的崇高结构。可优化：特征线可更克制，避免棱线通胀。',
+    summary: '崇高震撼范式，W(T)=0.55，总分89/100。饱满曲面托住安全豪华感，锐利灯组提供记忆点。'
+  },
+  church: {
+    type: 'architecture',
+    desc: '安藤忠雄光之教堂，清水混凝土盒体，十字形光缝，绝对对称，倾斜5度墙体',
+    dimensions: { '形状线条': 7, '质感肌理': 7, '色彩色相': 3, '构图比例': 8, '明度对比': 7, '光影': 8 },
+    scores: { tension: 24, order: 25, threshold: 22, context: 23 },
+    diagnosis: '骨中藏柔的崇高典范。可优化：声学维度可进一步分析，时间维度的光变化可做动态分析。',
+    summary: '崇高震撼范式最高典范，W(T)=0.58，总分94/100。极强秩序压住极强张力，十字光缝定义整个空间。'
+  },
+  ios: {
+    type: 'ui',
+    desc: 'iOS 17 系统界面，全面圆角卡片，低饱和系统色，缓入缓出动效，SF Pro精准字体',
+    dimensions: { '布局留白': 3, '色彩对比': 4, '组件形': 3, '动效': 3, '字体图标': 5 },
+    scores: { tension: 21, order: 25, threshold: 24, context: 24 },
+    diagnosis: '微差补偿+注意力预算的界面典范。可优化：暗色模式张力平衡，个性化张力调节。',
+    summary: '亲和精致范式界面典范，W(T)=0.22，总分94/100。宏观柔和微观精密，长期使用不疲劳。'
+  },
+  supreme: {
+    type: 'fashion',
+    desc: 'Supreme Box Logo T恤，高饱和正红，红白强对比，Futura Bold锐利字体，极简排版',
+    dimensions: { '质感肌理': 4, '形状线条': 5, '色彩色相': 8, '构图比例': 4, '明度对比': 7, '光影': 3 },
+    scores: { tension: 24, order: 22, threshold: 21, context: 24 },
+    diagnosis: '32%秩序锚点压住68%反叛的先锋典范。可优化：跨品类张力一致性，数字体验张力适配。',
+    summary: '先锋反叛范式商业典范，W(T)=0.68，总分91/100。越阈边缘的痛快，色彩即身份，稀缺性放大张力。'
+  }
+};
+
+// 加载预设示例
+function loadPreset(key) {
+  const preset = PRESETS[key];
+  if (!preset) return;
+
+  // 设置对象类型
+  document.getElementById('objType').value = preset.type;
+
+  // 设置图片描述
+  document.getElementById('imgDesc').value = preset.desc;
+
+  // 初始化维度滑块（根据类型）
+  initDimensionSliders();
+
+  // 填充维度值
+  setTimeout(() => {
+    for (const [dim, value] of Object.entries(preset.dimensions)) {
+      const slider = document.querySelector(`input[data-dim="${dim}"]`);
+      if (slider) {
+        slider.value = value;
+        slider.dispatchEvent(new Event('input'));
+      }
+    }
+    // 计算W(T)
+    calculateWT();
+    updateQuadrant();
+  }, 100);
+
+  // 填充评分
+  setTimeout(() => {
+    if (preset.scores) {
+      document.getElementById('scoreTension').value = preset.scores.tension;
+      document.getElementById('scoreOrder').value = preset.scores.order;
+      document.getElementById('scoreThreshold').value = preset.scores.threshold;
+      document.getElementById('scoreContext').value = preset.scores.context;
+      updateScores();
+    }
+    // 填充诊断和总结
+    if (preset.diagnosis) {
+      document.getElementById('diagnosisText').value = preset.diagnosis;
+    }
+    if (preset.summary) {
+      document.getElementById('summaryText').value = preset.summary;
+    }
+  }, 200);
+
+  showToast(`✨ 已加载预设：${key === 'iphone' ? 'iPhone 17 Pro' : key === 'car' ? '问界 M9' : key === 'church' ? '光之教堂' : key === 'ios' ? 'iOS 界面' : 'Supreme'}`);
+
+  // 自动跳到步骤2查看效果
+  setTimeout(() => goToStep(2), 500);
+}
 
 // 初始化维度滑块
 function initDimensionSliders() {
