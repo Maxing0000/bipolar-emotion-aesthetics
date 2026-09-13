@@ -112,13 +112,24 @@ def _target_line(total, target):
 
 def _resolve_weights(category, weights):
     if weights:
-        w = {k: float(v) for k, v in weights.items()}
+        w = _to_float_map(weights)
         if abs(sum(w.values()) - 1) > 0.001:
             raise ValueError(f"权重合计 {sum(w.values()):.3f} ≠ 1")
         return w
     if category not in CATEGORY_WEIGHTS:
         raise ValueError(f"未知品类 {category!r}，可用：{'/'.join(sorted(CATEGORY_WEIGHTS))}（或传 weights 自定义）")
     return CATEGORY_WEIGHTS[category]
+
+
+def _to_float_map(d, label=""):
+    """dict 值统一转 float，非数字给出友好报错。"""
+    out = {}
+    for k, v in d.items():
+        try:
+            out[k] = float(v)
+        except (TypeError, ValueError):
+            raise ValueError(f"{label}{k} 的值 {v!r} 不是数字")
+    return out
 
 
 def _check_tvals(weights, tvals, label=""):
@@ -213,7 +224,7 @@ def bea_wt_calc(category: str, t: dict, target: float = 0.0, weights: dict = Non
     """
     try:
         w = _resolve_weights(category, weights)
-        tv = {k: float(v) for k, v in t.items()}
+        tv = _to_float_map(t)
         _check_tvals(w, tv)
     except ValueError as e:
         return f"输入错误：{e}"
@@ -236,8 +247,8 @@ def bea_wt_compare(category: str, t_a: dict, t_b: dict, target: float = 0.0, wei
     """
     try:
         w = _resolve_weights(category, weights)
-        ta = {k: float(v) for k, v in t_a.items()}
-        tb = {k: float(v) for k, v in t_b.items()}
+        ta = _to_float_map(t_a, "A ")
+        tb = _to_float_map(t_b, "B ")
         _check_tvals(w, ta, "A ")
         _check_tvals(w, tb, "B ")
     except ValueError as e:
@@ -271,7 +282,7 @@ def bea_prescribe(category: str, t: dict, target: float, weights: dict = None) -
     """
     try:
         w = _resolve_weights(category, weights)
-        tv = {k: float(v) for k, v in t.items()}
+        tv = _to_float_map(t)
         _check_tvals(w, tv)
         if not 0 < float(target) < 1:
             raise ValueError(f"target {target} 应在 (0, 1) 区间")
@@ -289,7 +300,7 @@ def bea_scoresheet(scores: dict) -> str:
         scores: 四维得分，如 {"张力": 20, "秩序": 22, "阈值": 23, "语境": 21}
     """
     try:
-        sc = {k: float(v) for k, v in scores.items()}
+        sc = _to_float_map(scores)
         missing = [d for d in DIMENSIONS if d not in sc]
         if missing:
             raise ValueError(f"缺少维度：{'、'.join(missing)}（应为：{'/'.join(DIMENSIONS)}）")
