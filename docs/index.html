@@ -362,6 +362,172 @@ body {
     <div class="formula">美感 = 可控张力下的情绪奖赏 &nbsp;·&nbsp; W(T) = Σ wᵢ·(tᵢ/10)</div>
   </header>
 
+  <!-- BEA 核心数据展示 -->
+  <section class="bea-stats">
+    <style>
+      .bea-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin: 24px 0 32px;
+      }
+      .bea-stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px 16px;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.06);
+        transition: all 0.25s ease;
+      }
+      .bea-stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      }
+      .bea-stat-num {
+        font-size: 32px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #E8A87C, #4A90A4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 4px;
+      }
+      .bea-stat-label {
+        font-size: 12px;
+        color: #888;
+        font-weight: 500;
+      }
+      @media (max-width: 600px) {
+        .bea-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .bea-stat-card { padding: 14px 10px; }
+        .bea-stat-num { font-size: 24px; }
+      }
+    </style>
+    <div class="bea-stat-card">
+      <div class="bea-stat-num">14</div>
+      <div class="bea-stat-label">深度案例分析</div>
+    </div>
+    <div class="bea-stat-card">
+      <div class="bea-stat-num">10</div>
+      <div class="bea-stat-label">在线工具页面</div>
+    </div>
+    <div class="bea-stat-card">
+      <div class="bea-stat-num">6</div>
+      <div class="bea-stat-label">美学范式锚点</div>
+    </div>
+    <div class="bea-stat-card">
+      <div class="bea-stat-num">3</div>
+      <div class="bea-stat-label">开源平台同步</div>
+    </div>
+  </section>
+
+  <!-- BEA 3步快速上手 -->
+  <section class="bea-quickstart">
+    <style>
+      .bea-quickstart {
+        margin: 0 0 32px;
+        padding: 28px;
+        background: linear-gradient(135deg, rgba(232,168,124,0.08) 0%, rgba(74,144,164,0.08) 100%);
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,0.05);
+      }
+      .bea-quickstart-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 6px;
+        text-align: center;
+      }
+      .bea-quickstart-subtitle {
+        font-size: 13px;
+        color: #888;
+        margin: 0 0 24px;
+        text-align: center;
+      }
+      .bea-quickstart-steps {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .bea-step {
+        background: white;
+        border-radius: 12px;
+        padding: 20px 16px;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.06);
+        position: relative;
+        transition: all 0.25s ease;
+      }
+      .bea-step:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      }
+      .bea-step-num {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #E8A87C, #4A90A4);
+        color: white;
+        font-weight: 700;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 12px;
+      }
+      .bea-step h3 {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1a1a2e;
+        margin: 0 0 8px;
+      }
+      .bea-step p {
+        font-size: 12px;
+        color: #777;
+        margin: 0 0 12px;
+        line-height: 1.5;
+      }
+      .bea-step a {
+        display: inline-block;
+        padding: 6px 16px;
+        background: linear-gradient(135deg, #E8A87C, #4A90A4);
+        color: white;
+        text-decoration: none;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        transition: opacity 0.2s;
+      }
+      .bea-step a:hover { opacity: 0.9; }
+      @media (max-width: 700px) {
+        .bea-quickstart-steps { grid-template-columns: 1fr; }
+        .bea-quickstart { padding: 20px 16px; }
+      }
+    </style>
+    <h2 class="bea-quickstart-title">🚀 3步快速上手 BEA</h2>
+    <p class="bea-quickstart-subtitle">零基础也能立即体验双极情绪美学的魅力</p>
+    <div class="bea-quickstart-steps">
+      <div class="bea-step">
+        <div class="bea-step-num">1</div>
+        <h3>测一测你的审美偏好</h3>
+        <p>通过10道趣味测试，发现你属于哪种美学范式，了解你的审美DNA</p>
+        <a href="aesthetic-test.html">开始测试 →</a>
+      </div>
+      <div class="bea-step">
+        <div class="bea-step-num">2</div>
+        <h3>分析你喜欢的产品</h3>
+        <p>上传一张产品图片，BEA七步法自动生成完整分析报告和改进建议</p>
+        <a href="image-analysis.html">上传分析 →</a>
+      </div>
+      <div class="bea-step">
+        <div class="bea-step-num">3</div>
+        <h3>学习完整理论体系</h3>
+        <p>10分钟快速入门，或深入阅读完整在线理论著作，掌握BEA方法论</p>
+        <a href="guide.html">10分钟入门 →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- BEA 工具门户 -->
   <section class="bea-tools-portal">
     <style>
@@ -579,6 +745,301 @@ body {
         </div>
       </div>
     </div>
+
+    <!-- BEA 精选案例展示 -->
+    <section class="bea-featured-cases">
+      <style>
+        .bea-featured-cases {
+          margin: 40px 0 32px;
+        }
+        .bea-featured-title {
+          font-size: 20px;
+          font-weight: 700;
+          color: #1a1a2e;
+          margin: 0 0 6px;
+          text-align: center;
+        }
+        .bea-featured-subtitle {
+          font-size: 13px;
+          color: #888;
+          margin: 0 0 24px;
+          text-align: center;
+        }
+        .bea-featured-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 14px;
+        }
+        .bea-featured-card {
+          display: block;
+          background: white;
+          border-radius: 12px;
+          padding: 18px 16px;
+          text-decoration: none;
+          color: inherit;
+          border: 1px solid rgba(0,0,0,0.06);
+          transition: all 0.25s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        .bea-featured-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+          border-color: rgba(232,168,124,0.4);
+        }
+        .bea-featured-icon {
+          font-size: 28px;
+          margin-bottom: 10px;
+        }
+        .bea-featured-card h3 {
+          font-size: 14px;
+          font-weight: 600;
+          color: #1a1a2e;
+          margin: 0 0 6px;
+        }
+        .bea-featured-card p {
+          font-size: 12px;
+          color: #777;
+          margin: 0 0 10px;
+          line-height: 1.5;
+        }
+        .bea-featured-meta {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .bea-featured-tag {
+          font-size: 10px;
+          padding: 2px 8px;
+          border-radius: 10px;
+          background: linear-gradient(135deg, rgba(232,168,124,0.15), rgba(74,144,164,0.15));
+          color: #555;
+          font-weight: 500;
+        }
+        .bea-featured-score {
+          font-size: 11px;
+          font-weight: 700;
+          color: #E8A87C;
+        }
+        .bea-featured-more {
+          text-align: center;
+          margin-top: 20px;
+        }
+        .bea-featured-more a {
+          display: inline-block;
+          padding: 8px 24px;
+          border: 1.5px solid rgba(232,168,124,0.4);
+          color: #E8A87C;
+          text-decoration: none;
+          border-radius: 20px;
+          font-size: 13px;
+          font-weight: 600;
+          transition: all 0.2s;
+        }
+        .bea-featured-more a:hover {
+          background: linear-gradient(135deg, #E8A87C, #4A90A4);
+          color: white;
+          border-color: transparent;
+        }
+        @media (max-width: 700px) {
+          .bea-featured-grid { grid-template-columns: 1fr; }
+        }
+      </style>
+      <h2 class="bea-featured-title">⭐ 精选案例分析</h2>
+      <p class="bea-featured-subtitle">用BEA双极情绪美学深度拆解经典产品设计</p>
+      <div class="bea-featured-grid">
+        <a href="cases/01-iPhone17-Pro-BEA分析.html" class="bea-featured-card">
+          <div class="bea-featured-icon">📱</div>
+          <h3>iPhone 17 Pro</h3>
+          <p>为什么有人说丑有人说高级？BEA数据告诉你微差补偿的高级感公式</p>
+          <div class="bea-featured-meta">
+            <span class="bea-featured-tag">亲和精致</span>
+            <span class="bea-featured-score">88分</span>
+          </div>
+        </a>
+        <a href="cases/02-问界M9-BEA分析.html" class="bea-featured-card">
+          <div class="bea-featured-icon">🚗</div>
+          <h3>问界 M9</h3>
+          <p>百万级SUV的设计好在哪？BEA拆解崇高震撼范式的大面柔与特征线锐</p>
+          <div class="bea-featured-meta">
+            <span class="bea-featured-tag">崇高震撼</span>
+            <span class="bea-featured-score">87分</span>
+          </div>
+        </a>
+        <a href="cases/08-Cybertruck-BEA分析.html" class="bea-featured-card">
+          <div class="bea-featured-icon">⚡</div>
+          <h3>特斯拉 Cybertruck</h3>
+          <p>先锋反叛的极端案例，越阈边缘的实验性作品，全锐角折线的美学冒险</p>
+          <div class="bea-featured-meta">
+            <span class="bea-featured-tag">先锋反叛</span>
+            <span class="bea-featured-score">77分</span>
+          </div>
+        </a>
+      </div>
+      <div class="bea-featured-more">
+        <a href="cases.html">查看全部14个案例 →</a>
+      </div>
+    </section>
+
+    <!-- BEA 社交媒体分享 -->
+    <section class="bea-share">
+      <style>
+        .bea-share {
+          margin: 0 0 32px;
+          padding: 28px;
+          background: linear-gradient(135deg, rgba(232,168,124,0.1) 0%, rgba(74,144,164,0.1) 100%);
+          border-radius: 16px;
+          border: 1px solid rgba(0,0,0,0.05);
+          text-align: center;
+        }
+        .bea-share-title {
+          font-size: 18px;
+          font-weight: 700;
+          color: #1a1a2e;
+          margin: 0 0 8px;
+        }
+        .bea-share-subtitle {
+          font-size: 13px;
+          color: #888;
+          margin: 0 0 20px;
+        }
+        .bea-share-buttons {
+          display: flex;
+          gap: 12px;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .bea-share-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 10px 20px;
+          border-radius: 24px;
+          text-decoration: none;
+          font-size: 13px;
+          font-weight: 600;
+          transition: all 0.2s;
+          cursor: pointer;
+          border: none;
+        }
+        .bea-share-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .bea-share-wechat { background: #07C160; color: white; }
+        .bea-share-weibo { background: #E6162D; color: white; }
+        .bea-share-twitter { background: #1DA1F2; color: white; }
+        .bea-share-copy { background: white; color: #1a1a2e; border: 1.5px solid rgba(0,0,0,0.1); }
+        .bea-share-copy:hover { border-color: #E8A87C; color: #E8A87C; }
+        @media (max-width: 500px) {
+          .bea-share-buttons { gap: 8px; }
+          .bea-share-btn { padding: 8px 14px; font-size: 12px; }
+        }
+      </style>
+      <h2 class="bea-share-title">🔗 分享 BEA 给更多人</h2>
+      <p class="bea-share-subtitle">让更多人了解双极情绪美学，一起提升审美力</p>
+      <div class="bea-share-buttons">
+        <button class="bea-share-btn bea-share-wechat" onclick="shareToWeChat()">
+          💬 微信分享
+        </button>
+        <a class="bea-share-btn bea-share-weibo" href="https://service.weibo.com/share/share.php?url=https://maxing0000.github.io/bipolar-emotion-aesthetics/&title=BEA双极情绪美学：美感=可控张力下的情绪奖赏。一套可解释、可计算、可执行的形式美学方法。&pic=https://maxing0000.github.io/bipolar-emotion-aesthetics/cover.png" target="_blank" rel="noopener">
+          🔴 微博分享
+        </a>
+        <a class="bea-share-btn bea-share-twitter" href="https://twitter.com/intent/tweet?text=BEA%20Bipolar%20Emotion%20Aesthetics%3A%20Beauty%20%3D%20Emotional%20Reward%20under%20Controlled%20Tension.&url=https://maxing0000.github.io/bipolar-emotion-aesthetics/" target="_blank" rel="noopener">
+          🔵 Twitter/X
+        </a>
+        <button class="bea-share-btn bea-share-copy" onclick="copyShareLink()">
+          📋 复制链接
+        </button>
+      </div>
+    </section>
+
+    <!-- BEA 为什么选择 -->
+    <section class="bea-why">
+      <style>
+        .bea-why {
+          margin: 0 0 32px;
+        }
+        .bea-why-title {
+          font-size: 20px;
+          font-weight: 700;
+          color: #1a1a2e;
+          margin: 0 0 6px;
+          text-align: center;
+        }
+        .bea-why-subtitle {
+          font-size: 13px;
+          color: #888;
+          margin: 0 0 24px;
+          text-align: center;
+        }
+        .bea-why-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 14px;
+        }
+        .bea-why-item {
+          background: white;
+          border-radius: 12px;
+          padding: 18px 16px;
+          border: 1px solid rgba(0,0,0,0.06);
+          display: flex;
+          gap: 12px;
+          align-items: flex-start;
+        }
+        .bea-why-icon {
+          font-size: 24px;
+          flex-shrink: 0;
+        }
+        .bea-why-item h3 {
+          font-size: 14px;
+          font-weight: 600;
+          color: #1a1a2e;
+          margin: 0 0 4px;
+        }
+        .bea-why-item p {
+          font-size: 12px;
+          color: #777;
+          margin: 0;
+          line-height: 1.5;
+        }
+        @media (max-width: 600px) {
+          .bea-why-grid { grid-template-columns: 1fr; }
+        }
+      </style>
+      <h2 class="bea-why-title">💡 为什么选择 BEA</h2>
+      <p class="bea-why-subtitle">不止是"感觉好看"，更是可解释、可计算、可执行的美学方法</p>
+      <div class="bea-why-grid">
+        <div class="bea-why-item">
+          <div class="bea-why-icon">🎯</div>
+          <div>
+            <h3>可解释</h3>
+            <p>把"感觉不好看"拆解为具体维度的极性问题，让审美争论变成变量调整</p>
+          </div>
+        </div>
+        <div class="bea-why-item">
+          <div class="bea-why-icon">🧮</div>
+          <div>
+            <h3>可计算</h3>
+            <p>W(T)危极权重公式+四维评分卡，把模糊审美偏好转化为可量化的决策依据</p>
+          </div>
+        </div>
+        <div class="bea-why-item">
+          <div class="bea-why-icon">🛠️</div>
+          <div>
+            <h3>可执行</h3>
+            <p>六步创作法+病症诊断处方体系，给出具体到元素级的改进方案，不是空泛建议</p>
+          </div>
+        </div>
+        <div class="bea-why-item">
+          <div class="bea-why-icon">🌍</div>
+          <div>
+            <h3>跨领域</h3>
+            <p>覆盖产品/汽车/建筑/品牌/UI/时尚/声音/影视八大领域，一套方法通用</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <footer>
@@ -913,6 +1374,38 @@ document.getElementById("tourNext").onclick = ()=>{
 
 buildAnchors(); buildPresets();
 if(!decodeState()) buildDims();
+
+// 社交媒体分享功能
+function copyShareLink(){
+  const url = "https://maxing0000.github.io/bipolar-emotion-aesthetics/";
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>toast("链接已复制，快去分享吧！"));
+  } else {
+    const ta = document.createElement("textarea");
+    ta.value = url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    toast("链接已复制，快去分享吧！");
+  }
+}
+
+function shareToWeChat(){
+  // 微信分享：显示二维码或提示复制链接
+  const url = "https://maxing0000.github.io/bipolar-emotion-aesthetics/";
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>toast("链接已复制，打开微信粘贴分享给好友！"));
+  } else {
+    const ta = document.createElement("textarea");
+    ta.value = url;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    toast("链接已复制，打开微信粘贴分享给好友！");
+  }
+}
 </script>
 </body>
 </html>
