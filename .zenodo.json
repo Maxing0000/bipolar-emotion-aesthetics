@@ -1,0 +1,34 @@
+{
+  "title": "双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能",
+  "description": "一套可解释、可计算、可执行的形式美学方法。核心命题：美感=可控张力下的情绪奖赏；W(T)=Σwᵢ·(tᵢ/10)。含完整理论、六步法工作流、四品类权重表、CLI/MCP 工具链与交互计算器。",
+  "creators": [
+    {
+      "name": "星空本空",
+      "affiliation": "Independent Researcher"
+    }
+  ],
+  "keywords": [
+    "aesthetics",
+    "formal aesthetics",
+    "computational design",
+    "design methodology",
+    "agent skill",
+    "MCP",
+    "双极情绪美学"
+  ],
+  "license": "CC-BY-4.0",
+  "upload_type": "software",
+  "language": "zho",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Maxing0000/bipolar-emotion-aesthetics",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    },
+    {
+      "identifier": "https://pypi.org/project/bea-mcp/",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
