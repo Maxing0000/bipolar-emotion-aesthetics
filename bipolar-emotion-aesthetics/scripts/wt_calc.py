@@ -71,14 +71,17 @@ def paradigm_of(wt: float) -> str:
 
 def parse_t(spec: str):
     out = {}
-    for pair in spec.split(","):
+    for pair in spec.replace("，", ",").split(","):
         pair = pair.strip()
         if not pair:
             continue
         if "=" not in pair:
-            raise ValueError(f"格式错误：{pair!r}，应为 维度=强度")
+            raise ValueError(f"格式错误：{pair!r}，应为 维度=强度（维度间用英文逗号分隔）")
         k, v = pair.rsplit("=", 1)
-        t = float(v)
+        try:
+            t = float(v)
+        except ValueError:
+            raise ValueError(f"{k.strip()} 的强度 {v!r} 不是数字")
         if not 0 <= t <= 10:
             raise ValueError(f"{k} 的强度 {t} 超出 0-10")
         out[k.strip()] = t

@@ -34,6 +34,15 @@ class TestWtCalc(unittest.TestCase):
         with self.assertRaises(ValueError):
             wt_calc.parse_t("形状")
 
+    def test_parse_t_chinese_comma(self):
+        # 中文逗号应正常分隔，不得静默吞维度（debug 轮发现的真实 bug）
+        r = wt_calc.parse_t("形状=2，色彩=3")
+        self.assertEqual(r, {"形状": 2.0, "色彩": 3.0})
+
+    def test_parse_t_non_numeric_friendly_error(self):
+        with self.assertRaisesRegex(ValueError, "不是数字"):
+            wt_calc.parse_t("形状=abc")
+
 
 class TestPrescribe(unittest.TestCase):
     PHONE_T = {"形状线条": 5, "质感触觉": 4, "色彩": 6, "构图比例": 6, "光影": 3, "细节线条": 4}  # 0.475
