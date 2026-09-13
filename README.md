@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.7.1-blue)
+![Version](https://img.shields.io/badge/version-1.7.2-blue)
 [![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
@@ -202,6 +202,9 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.7.2（2026-09-13）
+- **全代码 debug 轮**（bea-mcp 1.1.1）：修复中文逗号静默吞维度的解析 bug（wt_calc / scoresheet 均受影响）；非数字输入从英文 traceback 改为中文友好报错；新增 2 项回归测试（累计 13 项）；三个网页无头浏览器运行时回归零报错；build_book 幂等性验证通过
 
 ### v1.7.1（2026-09-13）
 - **修复计算器 P0 故障**：补回丢失的引导弹窗/toast DOM 元素——JS 引用空元素中断初始化，导致滑块与预设自 v1.4.0 起完全不渲染（已用无头浏览器回归验证：22 预设、6 滑块、处方面板全正常）
