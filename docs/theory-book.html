@@ -57,6 +57,12 @@
   hr{border:none;border-top:1px solid var(--line);margin:24px 0}
   footer{text-align:center;font-size:12px;color:var(--sub);margin-top:48px}
   footer a{color:var(--qing);text-decoration:none}
+
+.page-hero-image{margin:0 0 32px 0;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.page-hero-image img{width:100%;height:auto;display:block;object-fit:cover}
+.page-hero-image.hero{border-radius:20px;margin-bottom:40px}
+@media (max-width:768px){.page-hero-image{border-radius:12px;margin-bottom:24px}.page-hero-image.hero{border-radius:16px;margin-bottom:28px}}
+
 </style>
 <style>
 /* BEA 通用移动端优化 */
@@ -99,6 +105,12 @@
   .btn-group { flex-direction: column; }
   .btn-group .btn { width: 100%; }
 }
+
+.page-hero-image{margin:0 0 32px 0;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.page-hero-image img{width:100%;height:auto;display:block;object-fit:cover}
+.page-hero-image.hero{border-radius:20px;margin-bottom:40px}
+@media (max-width:768px){.page-hero-image{border-radius:12px;margin-bottom:24px}.page-hero-image.hero{border-radius:16px;margin-bottom:28px}}
+
 </style>
 <script type="application/ld+json">
 {
@@ -265,6 +277,12 @@
 body {
   padding-top: 54px !important;
 }
+
+.page-hero-image{margin:0 0 32px 0;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.page-hero-image img{width:100%;height:auto;display:block;object-fit:cover}
+.page-hero-image.hero{border-radius:20px;margin-bottom:40px}
+@media (max-width:768px){.page-hero-image{border-radius:12px;margin-bottom:24px}.page-hero-image.hero{border-radius:16px;margin-bottom:28px}}
+
 </style>
 <nav class="bea-nav" aria-label="主导航">
   <a href="index.html" class="bea-nav-brand">
@@ -294,6 +312,10 @@ body {
     </a>
   </div>
 </nav>
+<div class="page-hero-image">
+  <img src="images/theory.jpg" alt="BEA理论著作" loading="lazy">
+</div>
+
 <script>
 (function() {
   var path = window.location.pathname;

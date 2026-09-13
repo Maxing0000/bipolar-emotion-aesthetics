@@ -392,6 +392,12 @@ body {
   .card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
   body { background: white; }
 }
+
+.page-hero-image{margin:0 0 32px 0;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.page-hero-image img{width:100%;height:auto;display:block;object-fit:cover}
+.page-hero-image.hero{border-radius:20px;margin-bottom:40px}
+@media (max-width:768px){.page-hero-image{border-radius:12px;margin-bottom:24px}.page-hero-image.hero{border-radius:16px;margin-bottom:28px}}
+
 </style>
 </head>
 <body>
@@ -415,6 +421,10 @@ body {
 </nav>
 
 <div class="container">
+<div class="page-hero-image">
+  <img src="images/cheatsheet.jpg" alt="BEA设计原则速查卡" loading="lazy">
+</div>
+
 
 <!-- Hero -->
 <div class="hero">

@@ -60,6 +60,12 @@
           padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 12px; }
   .progress { font-size: 12px; color: #999; text-align: right; margin-bottom: 8px; }
   .note { font-size: 12px; color: #999; margin-top: 16px; line-height: 1.6; }
+
+.page-hero-image{margin:0 0 32px 0;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.page-hero-image img{width:100%;height:auto;display:block;object-fit:cover}
+.page-hero-image.hero{border-radius:20px;margin-bottom:40px}
+@media (max-width:768px){.page-hero-image{border-radius:12px;margin-bottom:24px}.page-hero-image.hero{border-radius:16px;margin-bottom:28px}}
+
 </style>
 <style>
 /* BEA 通用移动端优化 */
@@ -102,6 +108,12 @@
   .btn-group { flex-direction: column; }
   .btn-group .btn { width: 100%; }
 }
+
+.page-hero-image{margin:0 0 32px 0;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.page-hero-image img{width:100%;height:auto;display:block;object-fit:cover}
+.page-hero-image.hero{border-radius:20px;margin-bottom:40px}
+@media (max-width:768px){.page-hero-image{border-radius:12px;margin-bottom:24px}.page-hero-image.hero{border-radius:16px;margin-bottom:28px}}
+
 </style>
 <script type="application/ld+json">
 {
@@ -268,6 +280,12 @@
 body {
   padding-top: 54px !important;
 }
+
+.page-hero-image{margin:0 0 32px 0;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.page-hero-image img{width:100%;height:auto;display:block;object-fit:cover}
+.page-hero-image.hero{border-radius:20px;margin-bottom:40px}
+@media (max-width:768px){.page-hero-image{border-radius:12px;margin-bottom:24px}.page-hero-image.hero{border-radius:16px;margin-bottom:28px}}
+
 </style>
 <nav class="bea-nav" aria-label="主导航">
   <a href="index.html" class="bea-nav-brand">
@@ -297,6 +315,10 @@ body {
     </a>
   </div>
 </nav>
+<div class="page-hero-image">
+  <img src="images/image-analysis.jpg" alt="BEA美学实验" loading="lazy">
+</div>
+
 <script>
 (function() {
   var path = window.location.pathname;
