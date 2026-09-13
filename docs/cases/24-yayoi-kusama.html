@@ -40,6 +40,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC','Pin
 .footer{text-align:center;padding:32px;color:var(--text2);font-size:13px;border-top:1px solid var(--border);margin-top:48px}
 .footer a{color:var(--minus);text-decoration:none}
 @media (max-width:768px){.bea-nav-links{display:none}.container{padding:24px 16px}.case-header h1{font-size:22px}}
+
+.case-hero-image {
+  margin: 0 0 32px 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,.12);
+}
+.case-hero-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+@media (max-width: 768px) {
+  .case-hero-image { border-radius: 12px; margin-bottom: 24px; }
+}
+
 </style>
 </head>
 <body>
@@ -56,6 +73,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC','Pin
 </nav>
 <div class="container">
 <div class="content">
+<div class="case-hero-image">
+  <img src="images/24-yayoi-kusama.jpg" alt="草间弥生艺术 BEA美学分析" loading="lazy">
+</div>
+
 <h1>草间弥生艺术 · BEA 双极情绪美学深度分析</h1>
 <blockquote>
 <p>分析对象：草间弥生（Yayoi Kusama）艺术作品，1929年至今，日本/美国

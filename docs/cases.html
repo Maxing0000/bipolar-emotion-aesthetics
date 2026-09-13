@@ -108,6 +108,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .stats{gap:20px}
   .filter-row{flex-direction:column;align-items:stretch}
 }
+
+.case-thumb{width:100%;height:160px;object-fit:cover;display:block}
+@media (max-width:768px){.case-thumb{height:140px}}
+
 </style>
 <style>
 /* BEA 通用移动端优化 */
@@ -150,6 +154,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .btn-group { flex-direction: column; }
   .btn-group .btn { width: 100%; }
 }
+
+.case-thumb{width:100%;height:160px;object-fit:cover;display:block}
+@media (max-width:768px){.case-thumb{height:140px}}
+
 </style>
 <script type="application/ld+json">
 {
@@ -342,6 +350,10 @@ body {
     font-size: 12px;
   }
 }
+
+.case-thumb{width:100%;height:160px;object-fit:cover;display:block}
+@media (max-width:768px){.case-thumb{height:140px}}
+
 </style>
 <nav class="bea-nav" aria-label="主导航">
   <a href="index.html" class="bea-nav-brand">
@@ -476,6 +488,7 @@ const cases = [
     score:86,
     summary:'微差补偿教科书案例。宏观连续曲面保证握持亲和，微观钛金属中框与精密倒角注入锐利提神，远看柔和近看精密。',
     icon:'📱',
+    image:'cases/images/01-iphone17-pro.jpg',
     file:'cases/01-iphone17-pro.html'
   },
   {
@@ -487,6 +500,7 @@ const cases = [
     score:88,
     summary:'大面柔+灯组锐的典范。饱满车身曲面提供安全豪华感，极锐利贯穿式灯组与特征线提供记忆点，崇高而不凶戾。',
     icon:'🚗',
+    image:'cases/images/02-aito-m9.jpg',
     file:'cases/02-aito-m9.html'
   },
   {
@@ -498,6 +512,7 @@ const cases = [
     score:84,
     summary:'静态暗示运动的典范。低趴楔形姿态与锐利灯组制造前冲动势，圆润车身曲面与简洁线条维持亲和，冷峻但不攻击。',
     icon:'🏎️',
+    image:'cases/images/03-xiaomi-su7.jpg',
     file:'cases/03-xiaomi-su7.html'
   },
   {
@@ -509,6 +524,7 @@ const cases = [
     score:85,
     summary:'极简崇高的代表。无格栅前脸与流畅曲面创造未来感，低趴姿态与隐藏式门把手注入科技冷峻，秩序感极强。',
     icon:'⚡',
+    image:'cases/images/04-tesla-models.jpg',
     file:'cases/04-tesla-models.html'
   },
   {
@@ -520,6 +536,7 @@ const cases = [
     score:83,
     summary:'科技冷峻的代表。裸露机械结构与金属质感制造专业工具感，精密工程秩序安抚危极，冷峻但不冰冷。',
     icon:'🔧',
+    image:'cases/images/05-dyson-v15.jpg',
     file:'cases/05-dyson-v15.html'
   },
   {
@@ -531,6 +548,7 @@ const cases = [
     score:87,
     summary:'日式侘寂美学的代表。大量留白与自然材质创造治愈感，极简秩序与精密细节注入精致，柔中藏骨的典范。',
     icon:'🏠',
+    image:'cases/images/06-muji.jpg',
     file:'cases/06-muji.html'
   },
   {
@@ -542,6 +560,7 @@ const cases = [
     score:89,
     summary:'豪华均衡的巅峰。大尺寸直瀑格栅与立标制造崇高压迫，圆润车身曲面与温润内饰安抚，均衡而不失威严。',
     icon:'👑',
+    image:'cases/images/07-mercedes-s-class.jpg',
     file:'cases/07-mercedes-s-class.html'
   },
   {
@@ -553,6 +572,7 @@ const cases = [
     score:78,
     summary:'先锋反叛的极端案例。全锐角折线车身与裸露不锈钢制造强烈冲击，极简秩序维持审美安全，越阈边缘的实验性作品。',
     icon:'🛸',
+    image:'cases/images/08-cybertruck.jpg',
     file:'cases/08-cybertruck.html'
   },
   {
@@ -564,6 +584,7 @@ const cases = [
     score:84,
     summary:'冷峻克制范式的音频设备标杆。平面化耳罩与锐利切角制造精密工具感，亲肤耳垫与流畅弧线提供触觉亲和，理性专业之美。',
     icon:'🎧',
+    image:'cases/images/09-sony-wh1000xm5.jpg',
     file:'cases/09-sony-wh1000xm5.html'
   },
   {
@@ -575,6 +596,7 @@ const cases = [
     score:87,
     summary:'崇高范式的消费电子标杆。单片弧形玻璃与未来感设计制造敬畏，亲肤材质与自然交互提供微观亲和，远看敬畏近看舒适的微差补偿典范。',
     icon:'🥽',
+    image:'cases/images/10-apple-vision-pro.jpg',
     file:'cases/10-apple-vision-pro.html'
   },
   {
@@ -586,6 +608,7 @@ const cases = [
     score:88,
     summary:'亲和精致范式的教科书。圆润造型与温暖色彩提供快乐，精确切角与精密结构注入挑战感，"远看快乐、近看精密"的微差补偿完美结构。',
     icon:'🧱',
+    image:'cases/images/11-lego.jpg',
     file:'cases/11-lego.html'
   },
   {
@@ -597,6 +620,7 @@ const cases = [
     score:87,
     summary:'均衡典雅范式的大众标杆。温暖展厅与平价策略提供可接近感，设计感产品与工业感仓库注入危极，"每个人都能拥有的好设计"的规模化奇迹。',
     icon:'🛋️',
+    image:'cases/images/12-ikea.jpg',
     file:'cases/12-ikea.html'
   },
   {
@@ -608,6 +632,7 @@ const cases = [
     score:89,
     summary:'跨范式叙事的教科书。各地区独立覆盖从亲和到先锋的完整美学光谱，宏观崇高+中观多元+微观亲和的三层嵌套，游戏美学的巅峰之作。',
     icon:'⚔️',
+    image:'cases/images/13-genshin-impact.jpg',
     file:'cases/13-genshin-impact.html'
   },
   {
@@ -619,6 +644,7 @@ const cases = [
     score:91,
     summary:'BEA图片分析工具示范案例。精密金属质感与锐利几何线条营造科技崇高感，圆润风筒与细腻磨砂维持亲和安全，微差补偿结构的典范。',
     icon:'🖼️',
+    image:'cases/images/image-analysis-example-dyson.jpg',
     file:'cases/image-analysis-example-dyson.html'
   },
   {
@@ -630,6 +656,7 @@ const cases = [
     score:94,
     summary:'崇高美学的最高典范。粗野清水混凝土制造冷峻压迫，十字光缝释放神圣抚慰，极强秩序压住极强张力，骨中藏柔的建筑诗。',
     icon:'⛪',
+    image:'cases/images/14-church-of-light.jpg',
     file:'cases/14-church-of-light.html'
   },
   {
@@ -641,6 +668,7 @@ const cases = [
     score:94,
     summary:'界面设计的亲和精致典范。全面圆角柔色保证长期舒适，精准字体图标注入精密提神，微差补偿+注意力预算+物理惯性动效，高级界面的标准结构。',
     icon:'📱',
+    image:'cases/images/15-ios-design.jpg',
     file:'cases/15-ios-design.html'
   },
   {
@@ -652,6 +680,7 @@ const cases = [
     score:91,
     summary:'先锋美学的最高商业典范。高饱和正红+红白强对比制造强烈攻击，极简排版秩序+基础款型维持审美安全，越阈边缘的痛快，32%秩序锚点压住68%反叛。',
     icon:'🔥',
+    image:'cases/images/16-supreme.jpg',
     file:'cases/16-supreme.html'
   },
   {
@@ -663,6 +692,7 @@ const cases = [
     score:93,
     summary:'均衡典雅的汽车最高典范。圆润车身曲线+黄金比例带来亲和优雅，锐利腰线+低趴姿态带来运动张力，60年传承的经典秩序框架承载运动张力，优雅的野兽。',
     icon:'🏎️',
+    image:'cases/images/17-porsche-911.jpg',
     file:'cases/17-porsche-911.html'
   },
   {
@@ -674,6 +704,7 @@ const cases = [
     score:96,
     summary:'均衡典雅的时尚最高典范。柔软粗花呢+收腰剪裁带来女性柔美，利落肩线+结构化肩部带来独立力量，极简秩序框架承载女性独立张力，女性的力量。',
     icon:'👗',
+    image:'cases/images/18-chanel-classic.jpg',
     file:'cases/18-chanel-classic.html'
   },
   {
@@ -685,6 +716,7 @@ const cases = [
     score:92,
     summary:'亲和精致的UI最高典范。大量留白+柔和色彩+圆角卡片带来亲和友好，精确排版+清晰层级+强大功能带来精致专业，极简秩序框架承载功能张力，简洁的力量。',
     icon:'📝',
+    image:'cases/images/19-notion-design.jpg',
     file:'cases/19-notion-design.html'
   },
   {
@@ -696,6 +728,7 @@ const cases = [
     score:95,
     summary:'跨范式叙事的游戏最高典范。广阔自然+轻柔音乐带来治愈亲和，不同区域覆盖从崇高到先锋的完整范式光谱，开放世界秩序框架承载多范式叙事张力，自由的史诗。',
     icon:'🗡️',
+    image:'cases/images/20-zelda-botw.jpg',
     file:'cases/20-zelda-botw.html'
   },
   {
@@ -707,6 +740,7 @@ const cases = [
     score:96,
     summary:'崇高震撼的品牌最高典范。简洁Swoosh+经典配色带来秩序经典，运动力量+反叛精神带来唤醒力量，极简视觉秩序框架承载运动精神张力，秩序中的力量。',
     icon:'✓',
+    image:'cases/images/21-nike-visual.jpg',
     file:'cases/21-nike-visual.html'
   },
   {
@@ -718,6 +752,7 @@ const cases = [
     score:92,
     summary:'亲和精致的家居典范。明亮柔和色彩+圆润造型+亲民价格带来亲和友好，精密工艺+现代设计+设计师合作带来精致现代，北欧设计秩序框架承载民主设计张力，民主的精致。',
     icon:'🪑',
+    image:'cases/images/22-hay-design.jpg',
     file:'cases/22-hay-design.html'
   },
   {
@@ -729,6 +764,7 @@ const cases = [
     score:92,
     summary:'崇高震撼的建筑典范。流动曲面+连续空间带来有机亲和，反传统未来造型+参数化结构+巨大尺度带来唤醒震撼，参数化秩序框架承载未来主义张力，流动的未来。',
     icon:'🏛️',
+    image:'cases/images/23-zaha-hadid.jpg',
     file:'cases/23-zaha-hadid.html'
   },
   {
@@ -740,6 +776,7 @@ const cases = [
     score:95,
     summary:'先锋反叛的艺术最高典范。无限重复波点+圆润南瓜+明亮色彩带来秩序治愈，反传统表达+无限尺度+强烈对比+深刻主题带来唤醒震撼，极致重复秩序框架承载精神张力，治愈的反叛。',
     icon:'🎨',
+    image:'cases/images/24-yayoi-kusama.jpg',
     file:'cases/24-yayoi-kusama.html'
   }
 ];
@@ -780,7 +817,7 @@ function renderCases(){
     return `
       <div class="case-card" onclick="window.location.href='${c.file}'">
         <div class="case-image">
-          <span class="case-image-placeholder">${c.icon}</span>
+          ${c.image ? `<img src="${c.image}" alt="${c.name}" loading="lazy" class="case-thumb">` : `<span class="case-image-placeholder">${c.icon}</span>`}
           <span class="case-paradigm-badge">${c.paradigm}</span>
         </div>
         <div class="case-body">
