@@ -23,12 +23,16 @@ def main():
 
     wt = load("wt_calc", os.path.join(ROOT, "bipolar-emotion-aesthetics/scripts/wt_calc.py"))
     ss = load("scoresheet", os.path.join(ROOT, "bipolar-emotion-aesthetics/scripts/scoresheet.py"))
+    rb = load("rubric", os.path.join(ROOT, "bipolar-emotion-aesthetics/scripts/rubric.py"))
 
-    mcp_path = os.path.join(ROOT, "mcp-server/bea_mcp/server.py")
+    mcp_dir = os.path.join(ROOT, "mcp-server")
+    if mcp_dir not in sys.path:
+        sys.path.insert(0, mcp_dir)
     try:
-        srv = load("bea_mcp_server", mcp_path)
+        import bea_mcp.server as srv
+        from bea_mcp.rubric_data import RUBRICS as srv_rubrics
     except ModuleNotFoundError:
-        # mcp SDK 未安装时，用文本提取方式兜底校验数据表
+        # mcp SDK 未安装时，跳过模块级校验
         print("⚠ mcp SDK 未安装，跳过模块级校验（CI 中应安装 mcp 后运行）")
         return 0
 
@@ -40,12 +44,14 @@ def main():
         failures.append("DIM_MOVES 维度手法表不一致（mcp-server vs wt_calc.py）")
     if srv.DIMENSIONS != ss.DIMENSIONS or srv.FIX_MAP != ss.FIX_MAP:
         failures.append("评分卡维度/修复映射不一致（mcp-server vs scoresheet.py）")
+    if srv_rubrics != rb.RUBRICS:
+        failures.append("RUBRICS 视觉评分标尺不一致（mcp-server/rubric_data.py vs rubric.py）")
 
     if failures:
         for f in failures:
             print(f"✗ {f}")
         return 1
-    print("✓ MCP Server 与 CLI 脚本数据表完全一致（4 项）")
+    print("✓ MCP Server 与 CLI 脚本数据表完全一致（5 项）")
     return 0
 
 
