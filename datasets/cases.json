@@ -56,25 +56,25 @@
     },
     {
       "id": "02",
-      "name": "问界 M9",
+      "name": "尊界 S800",
       "category": "汽车",
       "paradigm": "崇高震撼",
-      "wt": 0.55,
-      "score": 89,
+      "wt": 0.5,
+      "score": 94,
       "scores": {
         "tension": 23,
-        "order": 23,
-        "threshold": 21,
-        "context": 22
+        "order": 25,
+        "threshold": 23,
+        "context": 23
       },
       "key_features": [
-        "饱满大曲面",
-        "锐利灯组",
-        "楔形姿态",
-        "大面柔特征线锐"
+        "天地人和设计",
+        "纵横星瀚水晶大灯",
+        "4.5米金色腰线",
+        "东方新奢美学"
       ],
-      "summary": "崇高震撼范式，饱满曲面托住安全豪华感，锐利灯组提供记忆点。",
-      "url": "cases/02-aito-m9.html"
+      "summary": "东方新奢豪华的最高典范，天地人和设计哲学统摄全局，庄严而不沉闷。",
+      "url": "cases/02-zunjie-s800.html"
     },
     {
       "id": "03",
@@ -607,7 +607,7 @@
       "家居": 2,
       "艺术": 1
     },
-    "average_score": 91.2,
+    "average_score": 90.1,
     "score_range": {
       "min": 78,
       "max": 96
