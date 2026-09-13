@@ -117,6 +117,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <button class="filter-btn" data-filter="paradigm" data-value="崇高震撼">崇高震撼</button>
         <button class="filter-btn" data-filter="paradigm" data-value="冷峻克制">冷峻克制</button>
         <button class="filter-btn" data-filter="paradigm" data-value="先锋反叛">先锋反叛</button>
+        <button class="filter-btn" data-filter="paradigm" data-value="跨范式叙事">跨范式叙事</button>
       </div>
     </div>
     <div class="filter-row" style="margin-top:12px">
@@ -126,7 +127,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <button class="filter-btn" data-filter="category" data-value="手持消费电子">手持消费电子</button>
         <button class="filter-btn" data-filter="category" data-value="汽车外形">汽车外形</button>
         <button class="filter-btn" data-filter="category" data-value="平面/品牌">平面/品牌</button>
-        <button class="filter-btn" data-filter="category" data-value="数字界面">数字界面</button>
+        <button class="filter-btn" data-filter="category" data-value="XR/可穿戴设备">XR设备</button>
+        <button class="filter-btn" data-filter="category" data-value="玩具/创意产品">玩具</button>
+        <button class="filter-btn" data-filter="category" data-value="家居/零售品牌">家居</button>
+        <button class="filter-btn" data-filter="category" data-value="游戏/数字内容">游戏</button>
       </div>
       <div class="filter-group">
         <span class="filter-label">评分：</span>
@@ -148,7 +152,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="paradigm-dist" id="paradigmDist"></div>
 
   <div class="footer">
-    <p>BEA 双极情绪美学 v1.9.1 · 作者：星空本空 · CC BY 4.0 · <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank">GitHub</a> · <a href="https://gitee.com/maxing0000/bipolar-emotion-aesthetics" target="_blank">Gitee</a></p>
+    <p>BEA 双极情绪美学 v1.11.0 · 作者：星空本空 · CC BY 4.0 · <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank">GitHub</a> · <a href="https://gitee.com/maxing0000/bipolar-emotion-aesthetics" target="_blank">Gitee</a></p>
     <p style="margin-top:4px">美感 = 可控张力下的情绪奖赏 · 以亲极安其心，以危极提其神，以秩序统其乱，以阈值守其界</p>
   </div>
 </div>
@@ -165,7 +169,7 @@ const cases = [
     score:86,
     summary:'微差补偿教科书案例。宏观连续曲面保证握持亲和，微观钛金属中框与精密倒角注入锐利提神，远看柔和近看精密。',
     icon:'📱',
-    file:'01-iPhone17-Pro-BEA分析.md'
+    file:'../content-marketing/01-iPhone17-Pro-BEA分析.md'
   },
   {
     id:'wenjiem9',
@@ -176,7 +180,7 @@ const cases = [
     score:88,
     summary:'大面柔+灯组锐的典范。饱满车身曲面提供安全豪华感，极锐利贯穿式灯组与特征线提供记忆点，崇高而不凶戾。',
     icon:'🚗',
-    file:'02-问界M9-BEA分析.md'
+    file:'../content-marketing/02-问界M9-BEA分析.md'
   },
   {
     id:'xiaomisu7',
@@ -187,7 +191,7 @@ const cases = [
     score:84,
     summary:'静态暗示运动的典范。低趴楔形姿态与锐利灯组制造前冲动势，圆润车身曲面与简洁线条维持亲和，冷峻但不攻击。',
     icon:'🏎️',
-    file:'03-小米SU7-BEA分析.md'
+    file:'../content-marketing/03-小米SU7-BEA分析.md'
   },
   {
     id:'teslamodels',
@@ -243,6 +247,61 @@ const cases = [
     summary:'先锋反叛的极端案例。全锐角折线车身与裸露不锈钢制造强烈冲击，极简秩序维持审美安全，越阈边缘的实验性作品。',
     icon:'🛸',
     file:'08-Cybertruck-BEA分析.md'
+  },
+  {
+    id:'sonywh1000xm5',
+    name:'索尼 WH-1000XM5',
+    category:'手持消费电子',
+    paradigm:'冷峻克制',
+    wt:0.60,
+    score:84,
+    summary:'冷峻克制范式的音频设备标杆。平面化耳罩与锐利切角制造精密工具感，亲肤耳垫与流畅弧线提供触觉亲和，理性专业之美。',
+    icon:'🎧',
+    file:'09-索尼WH1000XM5-BEA分析.md'
+  },
+  {
+    id:'visionpro',
+    name:'苹果 Vision Pro',
+    category:'XR/可穿戴设备',
+    paradigm:'崇高震撼',
+    wt:0.52,
+    score:87,
+    summary:'崇高范式的消费电子标杆。单片弧形玻璃与未来感设计制造敬畏，亲肤材质与自然交互提供微观亲和，远看敬畏近看舒适的微差补偿典范。',
+    icon:'🥽',
+    file:'10-苹果VisionPro-BEA分析.md'
+  },
+  {
+    id:'lego',
+    name:'乐高 LEGO',
+    category:'玩具/创意产品',
+    paradigm:'亲和精致',
+    wt:0.22,
+    score:88,
+    summary:'亲和精致范式的教科书。圆润造型与温暖色彩提供快乐，精确切角与精密结构注入挑战感，"远看快乐、近看精密"的微差补偿完美结构。',
+    icon:'🧱',
+    file:'11-乐高LEGO-BEA分析.md'
+  },
+  {
+    id:'ikea',
+    name:'宜家 IKEA',
+    category:'家居/零售品牌',
+    paradigm:'均衡典雅',
+    wt:0.38,
+    score:87,
+    summary:'均衡典雅范式的大众标杆。温暖展厅与平价策略提供可接近感，设计感产品与工业感仓库注入危极，"每个人都能拥有的好设计"的规模化奇迹。',
+    icon:'🛋️',
+    file:'12-宜家IKEA-BEA分析.md'
+  },
+  {
+    id:'genshin',
+    name:'原神 Genshin Impact',
+    category:'游戏/数字内容',
+    paradigm:'跨范式叙事',
+    wt:0.45,
+    score:89,
+    summary:'跨范式叙事的教科书。各地区独立覆盖从亲和到先锋的完整美学光谱，宏观崇高+中观多元+微观亲和的三层嵌套，游戏美学的巅峰之作。',
+    icon:'⚔️',
+    file:'13-原神Genshin-BEA分析.md'
   }
 ];
 

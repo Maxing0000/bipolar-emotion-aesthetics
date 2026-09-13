@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.9.1-blue)
+![Version](https://img.shields.io/badge/version-1.11.0-blue)
 [![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
 [![DOI](https://img.shields.io/badge/DOI-10.6084%2Fm9.figshare.33684490-blue)](https://doi.org/10.6084/m9.figshare.33684490)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
@@ -10,7 +10,7 @@
 > 一套**可解释、可计算、可执行**的形式美学方法 / A computable framework for formal aesthetics.
 > **核心命题：美感 = 可控张力下的情绪奖赏（Aesthetic pleasure = emotional reward under controlled tension）。**
 >
-> 🧮 [W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)　｜　🔧 [BEA 诊断工作台](tools/diagnostic-workbench/index.html)　｜　📚 [案例库（8个经典分析）](cases/index.html)　｜　📖 [完整在线理论著作](docs/theory-book.html)　｜　🌐 [English README](README_EN.md)　｜　📚 [中英术语表](GLOSSARY.md)　｜　❓ [常见质疑 FAQ](FAQ.md)
+> 🧮 [W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)　｜　⚡ [快速诊断（3步出结果）](tools/diagnostic-workbench/quick-diagnosis.html)　｜　🎯 [审美测试（测你的偏好）](tools/diagnostic-workbench/aesthetic-test.html)　｜　🔧 [完整诊断工作台](tools/diagnostic-workbench/index.html)　｜　📚 [案例库（13个经典分析）](cases/index.html)　｜　📖 [完整在线理论著作](docs/theory-book.html)　｜　🌐 [English README](README_EN.md)　｜　📚 [中英术语表](GLOSSARY.md)　｜　❓ [常见质疑 FAQ](FAQ.md)
 
 ![BEA 双极封面](docs/cover.png)
 
@@ -43,6 +43,46 @@ BEA 不会回答「更大气一点」，而是给出元素级、可复算的结�
 
 完整填好的示范见技能内 `bipolar-emotion-aesthetics/references/audit-templates.md` 附录；不想装任何东西的话，直接用[网页版 W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)拖滑块体验。
 
+---
+
+## 🚀 普通人快速入门（5分钟上手）
+
+**不需要学理论，3个工具就能用起来：**
+
+### 1️⃣ 先测测你的审美偏好（2分钟）
+👉 [BEA 审美测试](tools/diagnostic-workbench/aesthetic-test.html)
+- 10道选择题，凭第一感觉选
+- 测出你的审美类型（温柔治愈者/精致平衡者/张力追求者/先锋探索者）
+- 推荐最适合你的设计范式
+
+### 2️⃣ 快速诊断一个设计（3分钟）
+👉 [BEA 快速诊断](tools/diagnostic-workbench/quick-diagnosis.html)
+- 第1步：选品类（手机/汽车/服装/建筑...）
+- 第2步：选你想要的感觉（治愈/精致/均衡/崇高/冷峻/先锋）
+- 第3步：拖3个滑块，描述这个设计给你的感觉
+- 自动生成：BEA评分、范式定位、匹配度、改进建议
+
+### 3️⃣ 看案例学审美（随时看）
+👉 [BEA 案例库](cases/index.html)（13个经典产品深度分析）
+- iPhone 17 Pro、问界 M9、小米 SU7、特斯拉 Model S、戴森 V15
+- 无印良品、奔驰 S 级、Cybertruck、索尼 XM5、Vision Pro
+- 乐高、宜家、原神
+- 按范式/品类/评分筛选，看经典设计为什么好看/不好看
+
+### 💡 日常使用场景
+- **买东西**：用快速诊断分析产品，判断值不值得买
+- **装修**：用审美测试找到自己喜欢的风格，用案例库找参考
+- **穿搭**：用范式定位找到适合自己的风格，避免踩雷
+- **做PPT/海报**：用 BEA 框架检查设计，避免"甜腻"或"杂乱"
+- **看电影/听音乐**：用 BEA 理解为什么有些作品"高级"，有些"俗"
+
+### 🎓 想深入学习？
+- [完整在线理论著作](docs/theory-book.html) — 系统学习 BEA 理论
+- [10分钟读懂 BEA](docs/guide.html) — 着陆页，快速了解核心概念
+- [完整诊断工作台](tools/diagnostic-workbench/index.html) — 专业版，8品类+自然语言+A-B对比+历史记录
+
+---
+
 ## 理论速览
 
 - **双极谱系**：亲极 P+（圆润、柔色、光滑、舒缓、对称、闭合、低对比……带来安全与趋近）；危极 T−（尖锐、强对比、坚硬、突变、倾斜、破碎、高饱和……带来警觉与唤醒）。
@@ -71,8 +111,10 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 ├── mcp-server/                           # MCP Server：bea_wt_calc / bea_wt_compare / bea_prescribe / bea_scoresheet 五工具（pip 可装）
 ├── tools/
 │   └── diagnostic-workbench/
-│       └── index.html                      # ★ BEA 交互式诊断工作台（8品类/自然语言解析/历史记录/A-B对比雷达图/导出图片/AI智能分析提示词）
-├── cases/                                  # ★ 案例库（8个经典产品BEA深度分析，含索引页+筛选+搜索）
+│       ├── index.html                      # ★ BEA 交互式诊断工作台（8品类/自然语言解析/历史记录/A-B对比雷达图/导出图片/AI智能分析提示词）
+│       ├── quick-diagnosis.html            # ⚡ BEA 快速诊断（3步出结果，普通人零门槛）
+│       └── aesthetic-test.html             # 🎯 BEA 审美测试（10道题测审美偏好+范式推荐）
+├── cases/                                  # ★ 案例库（13个经典产品BEA深度分析，含索引页+筛选+搜索）
 │   ├── index.html                          # 案例库索引页（按范式/品类/评分筛选+关键词搜索+范式分布统计）
 │   ├── 01-iPhone17-Pro-BEA分析.md         # 崇高震撼，W(T)=0.48，86分，微差补偿教科书
 │   ├── 02-问界M9-BEA分析.md               # 均衡典雅，W(T)=0.53，88分，大面柔+灯组锐
@@ -81,7 +123,12 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 │   ├── 05-戴森V15-BEA分析.md              # 冷峻克制，W(T)=0.62，83分，科技冷峻代表
 │   ├── 06-无印良品-BEA分析.md              # 亲和精致，W(T)=0.25，87分，柔中藏骨典范
 │   ├── 07-奔驰S级-BEA分析.md              # 均衡典雅，W(T)=0.50，89分，外威内温巅峰
-│   └── 08-Cybertruck-BEA分析.md           # 先锋反叛，W(T)=0.75，78分，越阈边缘实验
+│   ├── 08-Cybertruck-BEA分析.md           # 先锋反叛，W(T)=0.75，78分，越阈边缘实验
+│   ├── 09-索尼WH1000XM5-BEA分析.md        # 冷峻克制，W(T)=0.60，84分，专业工具美学
+│   ├── 10-苹果VisionPro-BEA分析.md         # 崇高震撼，W(T)=0.52，87分，未来设备标杆
+│   ├── 11-乐高LEGO-BEA分析.md              # 亲和精致，W(T)=0.22，88分，快乐精密教科书
+│   ├── 12-宜家IKEA-BEA分析.md              # 均衡典雅，W(T)=0.38，87分，大众设计标杆
+│   └── 13-原神Genshin-BEA分析.md           # 跨范式叙事，W(T)=0.45，89分，游戏美学巅峰
 ├── arxiv/
 │   └── bea-position-paper.md               # 英文学术论文草稿（position paper）
 ├── ci/                                     # 内容体检：算式复算 / 链接有效性 / 中英混杂
