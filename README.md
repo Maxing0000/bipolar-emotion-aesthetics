@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.12.0-blue)
+![Version](https://img.shields.io/badge/version-1.13.0-blue)
 [![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
 [![DOI](https://img.shields.io/badge/DOI-10.6084%2Fm9.figshare.33684490-blue)](https://doi.org/10.6084/m9.figshare.33684490)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
@@ -246,7 +246,7 @@ pip install bea-mcp   # PyPI 一键安装：https://pypi.org/project/bea-mcp/
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics(BEA)：可计算的形式美学技能》v1.9.1, 2026. CC BY 4.0. DOI: [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490).
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics(BEA)：可计算的形式美学技能》v1.13.0, 2026. CC BY 4.0. DOI: [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490).
 
 BibTeX：
 
@@ -263,6 +263,34 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.13.0（2026-09-13）— 范式体系重大突破
+
+- **范式动态演化理论**：范式从"静态锚点"进化为"时间轴上的动态曲线"，提出六段式范式叙事结构（引入→发展→高潮→转折→收束→余韵），静态作品也存在"虚拟时间轴"（观看顺序与注意力流动）
+- **范式叠加嵌套理论**：高级作品是多层范式叠加的"和弦"，三层模型（宏观0.5+中观0.3+微观0.2），四种和弦类型（同向叠加/微差补偿/对立碰撞/渐变过渡）
+- **新增2个过渡范式**（8个锚点）：🌫️ 诗意朦胧范式（W(T)=0.35，模糊/暗示/留白，危极是"不确定"而非"尖锐"）、🌑 神秘魅惑范式（W(T)=0.66，未知/诱惑/禁忌，亲极是"诱惑"而非"安全"）
+- **范式转换机制**：四种转换手法（渐变/突变/叠加/延迟），黄金分割点（61.8%）转换效果最强
+- **新增 paradigm-dynamics.md**：完整范式突破理论文档（技能 references）
+- **理论著作更新**：第二编新增第7节"范式突破"，含全部理论细节
+- **首页范式突破展示模块**：8范式可视化连续谱+四大理论突破卡片
+- **案例库新范式筛选**：诗意朦胧、神秘魅惑按钮
+- **知识测验扩容**：15→18题，新增3道范式突破专项题
+
+### v1.12.0（2026-09-13）— 内容丰富与体验优化
+
+- **新增3个跨领域案例**（案例库达17个）：安藤忠雄·光之教堂（建筑/崇高震撼94分）、Apple iOS界面设计（UI/亲和精致94分）、Supreme潮牌设计（时尚/先锋反叛91分），覆盖9大领域
+- **图片分析工具增强**：新增5个预设示例按钮（iPhone/问界M9/光之教堂/iOS/Supreme），一键体验完整分析流程
+- **新增BEA知识测验页面**：15道选择题覆盖BEA核心概念，即时反馈+详细解释+成绩评价+分享功能
+- **链接中文化为英文**：16个案例HTML文件改为英文名，所有链接无中文，SEO与跨平台兼容性提升
+- **全方位SEO优化**：sitemap.xml更新至28个URL，10个页面添加JSON-LD结构化数据，自定义404页面
+- **可访问性优化**：12个页面导航栏添加aria-label，移动端菜单添加aria-expanded，主要内容区域添加role="main"
+
+### v1.11.0（2026-09-13）— 首页大改版与SEO
+
+- **首页大改版**：新增核心数据展示（14案例/10工具/6范式/3平台）、3步快速上手引导、精选案例展示、社交媒体分享（微信/微博/Twitter/复制链接）、为什么选择BEA四大优势
+- **SEO优化**：新增sitemap.xml（24个URL）、robots.txt，案例库新增"随机探索"按钮
+- **案例库HTML化**：14个案例从.md转换为独立.html页面，套用BEA统一样式，站内相对路径访问，国内可直接打开
+- **全方位链接修复**：README版本号、导航栏、案例路径等全面修复
 
 ### v1.10.0（2026-09-13）
 
