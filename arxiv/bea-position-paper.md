@@ -75,6 +75,10 @@ Everything is open source (CC BY 4.0): CLI calculators (pure standard-library Py
 
 BEA does not claim beauty is a number. It claims that *talking about* beauty benefits from numbers — that "too sharp" becomes "form dimension t=8, reduce to 6," and that a theory earns trust by making predictions it can lose.
 
+## Code and Data Availability
+
+Source code, CLI/MCP toolchain, and the interactive calculator are archived with a permanent DOI: [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490) (Figshare). Development repository: github.com/Maxing0000/bipolar-emotion-aesthetics. The MCP server is pip-installable (`pip install bea-mcp`, PyPI: bea-mcp).
+
 ## References
 
 See `references/academic-references.md` (12 public academic sources, including Burke 1757; Kant 1790; Berlyne 1971; Zeki 1999; LeDoux 1996; Gestalt sources; and Chinese yin–yang aesthetics).
