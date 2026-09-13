@@ -4,29 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BEA 案例库 · 双极情绪美学</title>
-<meta name="description" content="13个经典产品深度 BEA 分析：iPhone 17 Pro、问界 M9、小米 SU7、特斯拉、戴森、无印良品、奔驰 S 级、Cybertruck 等。">
-<meta name="keywords" content="BEA案例,设计案例,产品分析,iPhone设计,特斯拉设计,戴森设计,汽车设计,消费电子,设计参考,经典设计">
-<meta name="author" content="星空本空">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#E8A87C">
-
-<!-- Open Graph -->
-<meta property="og:title" content="BEA 案例库 · 双极情绪美学">
-<meta property="og:description" content="13个经典产品深度 BEA 分析：iPhone 17 Pro、问界 M9、小米 SU7、特斯拉、戴森、无印良品、奔驰 S 级、Cybertruck 等。">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://maxing0000.github.io/bipolar-emotion-aesthetics/">
-<meta property="og:image" content="https://maxing0000.github.io/bipolar-emotion-aesthetics/cover.png">
-<meta property="og:site_name" content="BEA 双极情绪美学">
-<meta property="og:locale" content="zh_CN">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="BEA 案例库 · 双极情绪美学">
-<meta name="twitter:description" content="13个经典产品深度 BEA 分析：iPhone 17 Pro、问界 M9、小米 SU7、特斯拉、戴森、无印良品、奔驰 S 级、Cybertruck 等。">
-<meta name="twitter:image" content="https://maxing0000.github.io/bipolar-emotion-aesthetics/cover.png">
-
-<!-- Canonical -->
-<link rel="canonical" href="https://maxing0000.github.io/bipolar-emotion-aesthetics/">
 <style>
 :root{
   --bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#252540;
@@ -109,245 +86,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .filter-row{flex-direction:column;align-items:stretch}
 }
 </style>
-<style>
-/* BEA 通用移动端优化 */
-@media (max-width: 768px) {
-  html { -webkit-text-size-adjust: 100%; }
-  body { font-size: 15px; line-height: 1.7; }
-  h1 { font-size: 22px !important; }
-  h2 { font-size: 17px !important; }
-  h3 { font-size: 15px !important; }
-  p, li, td, th, label, input, select, textarea, button { font-size: 14px !important; }
-  .card, .bea-tools-portal, .result-box { padding: 16px !important; }
-  .container { padding: 12px !important; }
-  /* 确保按钮点击区域足够大 */
-  button, .btn, a.btn, input[type="submit"], input[type="button"] {
-    min-height: 44px; padding: 10px 18px !important; font-size: 14px !important;
-  }
-  /* 输入框优化 */
-  input, select, textarea {
-    min-height: 40px; padding: 10px 12px !important; font-size: 16px !important; /* 16px防止iOS缩放 */
-  }
-  /* 表格横向滚动 */
-  table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  /* 图片自适应 */
-  img { max-width: 100%; height: auto; }
-  /* 避免横向滚动 */
-  .wrap, .container, main { max-width: 100%; overflow-x: hidden; }
-  /* 滑块优化 */
-  input[type="range"] { height: 28px; min-height: 28px; }
-  input[type="range"]::-webkit-slider-thumb { width: 24px; height: 24px; }
-  /* 代码块优化 */
-  pre, code { font-size: 12px !important; word-break: break-word; }
-  /* 导航栏优化 */
-  .bea-nav { padding: 0 12px !important; }
-  .bea-nav-brand span { font-size: 13px !important; }
-}
-@media (max-width: 480px) {
-  h1 { font-size: 20px !important; }
-  .score-grid, .bea-tools-grid { grid-template-columns: 1fr !important; }
-  .form-row { grid-template-columns: 1fr !important; }
-  .btn-group { flex-direction: column; }
-  .btn-group .btn { width: 100%; }
-}
-</style>
 </head>
 <body>
-<!-- BEA 统一导航栏 -->
-<style>
-.bea-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 99999;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 54px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', 'PingFang SC', sans-serif;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
-}
-.bea-nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: #1a1a2e;
-  font-weight: 700;
-  font-size: 15px;
-  flex-shrink: 0;
-}
-.bea-nav-logo {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #E8A87C 0%, #4A90A4 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 900;
-  font-size: 13px;
-  box-shadow: 0 2px 6px rgba(232, 168, 124, 0.3);
-}
-.bea-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  flex: 1;
-  justify-content: center;
-}
-.bea-nav-links li {
-  list-style: none;
-}
-.bea-nav-links a {
-  text-decoration: none;
-  color: #555;
-  font-size: 12.5px;
-  font-weight: 500;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.bea-nav-links a:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #1a1a2e;
-}
-.bea-nav-links a.active {
-  background: linear-gradient(135deg, rgba(232, 168, 124, 0.18), rgba(74, 144, 164, 0.18));
-  color: #1a1a2e;
-  font-weight: 600;
-}
-.bea-nav-divider {
-  width: 1px;
-  height: 18px;
-  background: rgba(0, 0, 0, 0.1);
-  margin: 0 6px;
-}
-.bea-nav-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-.bea-nav-github {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: #555;
-  font-size: 12.5px;
-  text-decoration: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  transition: all 0.2s;
-  font-weight: 500;
-}
-.bea-nav-github:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #1a1a2e;
-}
-.bea-nav-mobile-toggle {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  color: #555;
-}
-@media (max-width: 1024px) {
-  .bea-nav-links {
-    display: none;
-  }
-  .bea-nav-links.open {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 54px;
-    left: 0;
-    right: 0;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(14px);
-    padding: 12px 20px;
-    gap: 4px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    align-items: stretch;
-  }
-  .bea-nav-links.open a {
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-  .bea-nav-links.open .bea-nav-divider {
-    display: none;
-  }
-  .bea-nav-mobile-toggle {
-    display: block;
-  }
-}
-body {
-  padding-top: 54px !important;
-}
-</style>
-<nav class="bea-nav">
-  <a href="index.html" class="bea-nav-brand">
-    <div class="bea-nav-logo">B</div>
-    <span>BEA 双极情绪美学</span>
-  </a>
-  <ul class="bea-nav-links" id="beaNavLinks">
-    <li><a href="index.html" data-page="index">🧮 计算器</a></li>
-    <li><a href="quick-diagnosis.html" data-page="quick-diagnosis">⚡ 快速诊断</a></li>
-    <li><a href="image-analysis.html" data-page="image-analysis">🖼️ 图片分析</a></li>
-    <li><a href="aesthetic-test.html" data-page="aesthetic-test">🎯 审美测试</a></li>
-    <li><a href="workbench.html" data-page="workbench">🔧 工作台</a></li>
-    <li><a href="cases.html" data-page="cases">📚 案例库</a></li>
-    <li class="bea-nav-divider"></li>
-    <li><a href="guide.html" data-page="guide">📘 入门</a></li>
-    <li><a href="theory-book.html" data-page="theory-book">📖 理论著作</a></li>
-  </ul>
-  <div class="bea-nav-right">
-    <button class="bea-nav-mobile-toggle" onclick="document.getElementById('beaNavLinks').classList.toggle('open')" aria-label="菜单">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M3 5h14v2H3V5zm0 4h14v2H3V9zm0 4h14v2H3v-2z"/></svg>
-    </button>
-    <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank" rel="noopener" class="bea-nav-github">
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-      <span>GitHub</span>
-    </a>
-  </div>
-</nav>
-<script>
-(function() {
-  var path = window.location.pathname;
-  var page = path.substring(path.lastIndexOf('/') + 1).replace('.html', '');
-  if (page === '' || page === 'bipolar-emotion-aesthetics') page = 'index';
-  var links = document.querySelectorAll('#beaNavLinks a[data-page]');
-  links.forEach(function(link) {
-    if (link.getAttribute('data-page') === page) {
-      link.classList.add('active');
-    }
-  });
-  // 点击链接后关闭移动端菜单
-  links.forEach(function(link) {
-    link.addEventListener('click', function() {
-      document.getElementById('beaNavLinks').classList.remove('open');
-    });
-  });
-})();
-</script>
-<!-- /BEA 统一导航栏 -->
-
 <div class="container">
   <div class="header">
     <h1>BEA 双极情绪美学 · 案例库</h1>
@@ -412,7 +152,7 @@ body {
   <div class="paradigm-dist" id="paradigmDist"></div>
 
   <div class="footer">
-    <p>BEA 双极情绪美学 v1.12.0 · 作者：星空本空 · CC BY 4.0 · <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank">GitHub</a> · <a href="https://gitee.com/maxing0000/bipolar-emotion-aesthetics" target="_blank">Gitee</a></p>
+    <p>BEA 双极情绪美学 v1.11.0 · 作者：星空本空 · CC BY 4.0 · <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank">GitHub</a> · <a href="https://gitee.com/maxing0000/bipolar-emotion-aesthetics" target="_blank">Gitee</a></p>
     <p style="margin-top:4px">美感 = 可控张力下的情绪奖赏 · 以亲极安其心，以危极提其神，以秩序统其乱，以阈值守其界</p>
   </div>
 </div>
@@ -429,7 +169,7 @@ const cases = [
     score:86,
     summary:'微差补偿教科书案例。宏观连续曲面保证握持亲和，微观钛金属中框与精密倒角注入锐利提神，远看柔和近看精密。',
     icon:'📱',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/01-iPhone17-Pro-BEA分析.md'
+    file:'../content-marketing/01-iPhone17-Pro-BEA分析.md'
   },
   {
     id:'wenjiem9',
@@ -440,7 +180,7 @@ const cases = [
     score:88,
     summary:'大面柔+灯组锐的典范。饱满车身曲面提供安全豪华感，极锐利贯穿式灯组与特征线提供记忆点，崇高而不凶戾。',
     icon:'🚗',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/02-问界M9-BEA分析.md'
+    file:'../content-marketing/02-问界M9-BEA分析.md'
   },
   {
     id:'xiaomisu7',
@@ -451,7 +191,7 @@ const cases = [
     score:84,
     summary:'静态暗示运动的典范。低趴楔形姿态与锐利灯组制造前冲动势，圆润车身曲面与简洁线条维持亲和，冷峻但不攻击。',
     icon:'🏎️',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/03-小米SU7-BEA分析.md'
+    file:'../content-marketing/03-小米SU7-BEA分析.md'
   },
   {
     id:'teslamodels',
@@ -462,7 +202,7 @@ const cases = [
     score:85,
     summary:'极简崇高的代表。无格栅前脸与流畅曲面创造未来感，低趴姿态与隐藏式门把手注入科技冷峻，秩序感极强。',
     icon:'⚡',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/04-特斯拉ModelS-BEA分析.md'
+    file:'04-特斯拉ModelS-BEA分析.md'
   },
   {
     id:'dysonv15',
@@ -473,7 +213,7 @@ const cases = [
     score:83,
     summary:'科技冷峻的代表。裸露机械结构与金属质感制造专业工具感，精密工程秩序安抚危极，冷峻但不冰冷。',
     icon:'🔧',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/05-戴森V15-BEA分析.md'
+    file:'05-戴森V15-BEA分析.md'
   },
   {
     id:'muji',
@@ -484,7 +224,7 @@ const cases = [
     score:87,
     summary:'日式侘寂美学的代表。大量留白与自然材质创造治愈感，极简秩序与精密细节注入精致，柔中藏骨的典范。',
     icon:'🏠',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/06-无印良品-BEA分析.md'
+    file:'06-无印良品-BEA分析.md'
   },
   {
     id:'mercedess',
@@ -495,7 +235,7 @@ const cases = [
     score:89,
     summary:'豪华均衡的巅峰。大尺寸直瀑格栅与立标制造崇高压迫，圆润车身曲面与温润内饰安抚，均衡而不失威严。',
     icon:'👑',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/07-奔驰S级-BEA分析.md'
+    file:'07-奔驰S级-BEA分析.md'
   },
   {
     id:'cybertruck',
@@ -506,7 +246,7 @@ const cases = [
     score:78,
     summary:'先锋反叛的极端案例。全锐角折线车身与裸露不锈钢制造强烈冲击，极简秩序维持审美安全，越阈边缘的实验性作品。',
     icon:'🛸',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/08-Cybertruck-BEA分析.md'
+    file:'08-Cybertruck-BEA分析.md'
   },
   {
     id:'sonywh1000xm5',
@@ -517,7 +257,7 @@ const cases = [
     score:84,
     summary:'冷峻克制范式的音频设备标杆。平面化耳罩与锐利切角制造精密工具感，亲肤耳垫与流畅弧线提供触觉亲和，理性专业之美。',
     icon:'🎧',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/09-索尼WH1000XM5-BEA分析.md'
+    file:'09-索尼WH1000XM5-BEA分析.md'
   },
   {
     id:'visionpro',
@@ -528,7 +268,7 @@ const cases = [
     score:87,
     summary:'崇高范式的消费电子标杆。单片弧形玻璃与未来感设计制造敬畏，亲肤材质与自然交互提供微观亲和，远看敬畏近看舒适的微差补偿典范。',
     icon:'🥽',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/10-苹果VisionPro-BEA分析.md'
+    file:'10-苹果VisionPro-BEA分析.md'
   },
   {
     id:'lego',
@@ -539,7 +279,7 @@ const cases = [
     score:88,
     summary:'亲和精致范式的教科书。圆润造型与温暖色彩提供快乐，精确切角与精密结构注入挑战感，"远看快乐、近看精密"的微差补偿完美结构。',
     icon:'🧱',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/11-乐高LEGO-BEA分析.md'
+    file:'11-乐高LEGO-BEA分析.md'
   },
   {
     id:'ikea',
@@ -550,7 +290,7 @@ const cases = [
     score:87,
     summary:'均衡典雅范式的大众标杆。温暖展厅与平价策略提供可接近感，设计感产品与工业感仓库注入危极，"每个人都能拥有的好设计"的规模化奇迹。',
     icon:'🛋️',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/12-宜家IKEA-BEA分析.md'
+    file:'12-宜家IKEA-BEA分析.md'
   },
   {
     id:'genshin',
@@ -561,18 +301,7 @@ const cases = [
     score:89,
     summary:'跨范式叙事的教科书。各地区独立覆盖从亲和到先锋的完整美学光谱，宏观崇高+中观多元+微观亲和的三层嵌套，游戏美学的巅峰之作。',
     icon:'⚔️',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/13-原神Genshin-BEA分析.md'
-  },
-  {
-    id:'dyson-supersonic',
-    name:'戴森 Supersonic 吹风机',
-    category:'图片分析示例',
-    paradigm:'崇高震撼（偏冷峻克制）',
-    wt:0.57,
-    score:91,
-    summary:'BEA图片分析工具示范案例。精密金属质感与锐利几何线条营造科技崇高感，圆润风筒与细腻磨砂维持亲和安全，微差补偿结构的典范。',
-    icon:'🖼️',
-    file:'https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/cases/image-analysis-example-dyson.md'
+    file:'13-原神Genshin-BEA分析.md'
   }
 ];
 
@@ -610,7 +339,7 @@ function renderCases(){
     const scoreClass = c.score >= 85 ? 'score-excellent' : (c.score >= 80 ? 'score-good' : 'score-fair');
     const scoreText = c.score >= 85 ? '优秀' : (c.score >= 80 ? '良好' : '待提升');
     return `
-      <div class="case-card" onclick="window.open('${c.file}','_blank')">
+      <div class="case-card" onclick="window.location.href='${c.file}'">
         <div class="case-image">
           <span class="case-image-placeholder">${c.icon}</span>
           <span class="case-paradigm-badge">${c.paradigm}</span>
