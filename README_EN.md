@@ -3,7 +3,8 @@
 **A computable, cross-media framework of formal aesthetics — analysis, diagnosis, and design.**
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
-[![Version](https://img.shields.io/badge/version-v1.2.0-blue.svg)]()
+[![Version](https://img.shields.io/badge/version-v1.7.3-blue.svg)]()
+[![DOI](https://img.shields.io/badge/DOI-10.6084%2Fm9.figshare.33684490-blue)](https://doi.org/10.6084/m9.figshare.33684490)
 [![Author](https://img.shields.io/badge/author-%E6%98%9F%E7%A9%BA%E6%9C%AC%E7%A9%BA-orange.svg)]()
 
 > Chinese README: [README.md](README.md) | Read online: [docs/index.html](docs/index.html) | Glossary: [GLOSSARY.md](GLOSSARY.md)
@@ -98,7 +99,8 @@ BEA evaluates **formal aesthetics only** (line, texture, color, composition, rhy
 ## Author & links
 
 - **Author:** Xingkong Benkong
-- **Version:** v1.2.0
+- **Version:** v1.7.3
+- **DOI:** [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490) (Figshare archive)
 - GitHub (international): https://github.com/Maxing0000/bipolar-emotion-aesthetics
 - Gitee (China): https://gitee.com/maxing0000/bipolar-emotion-aesthetics
 - ModelScope: https://www.modelscope.cn/datasets/xkbk0000/bipolar-emotion-aesthetics
