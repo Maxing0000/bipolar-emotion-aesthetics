@@ -19,3 +19,8 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+
+# 移动端运行时数据
+mobile/backend/data/uploads/
+mobile/backend/data/history/
+mobile/backend/__pycache__/
