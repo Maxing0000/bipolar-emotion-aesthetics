@@ -31,7 +31,7 @@ FIX_MAP = {
 
 
 def parse_scores(spec: str):
-    parts = [p.strip() for p in spec.split(",") if p.strip()]
+    parts = [p.strip() for p in spec.replace("，", ",").split(",") if p.strip()]
     scores = {}
     if all("=" in p for p in parts):
         for p in parts:
@@ -39,7 +39,10 @@ def parse_scores(spec: str):
             k = k.strip()
             if k not in DIMENSIONS:
                 sys.exit(f"未知维度 {k!r}，应为：{'/'.join(DIMENSIONS)}")
-            scores[k] = float(v)
+            try:
+                scores[k] = float(v)
+            except ValueError:
+                sys.exit(f"{FULL_NAMES[k]} 得分 {v!r} 不是数字")
     else:
         if len(parts) != 4:
             sys.exit("简写形式须按顺序给 4 个分数：张力,秩序,阈值,语境")
