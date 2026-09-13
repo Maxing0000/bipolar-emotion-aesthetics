@@ -1,4 +1,4 @@
-"""BEA 工具链单元测试：wt_calc 与 scoresheet。"""
+"""BEA 工具链单元测试：wt_calc、scoresheet 与 rubric。"""
 import os
 import sys
 import unittest
@@ -6,6 +6,7 @@ import unittest
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(REPO, "bipolar-emotion-aesthetics", "scripts"))
 
+import rubric  # noqa: E402
 import scoresheet  # noqa: E402
 import wt_calc  # noqa: E402
 
@@ -91,6 +92,30 @@ class TestScoresheet(unittest.TestCase):
     def test_total(self):
         r = scoresheet.evaluate({"张力": 25, "秩序": 25, "阈值": 25, "语境": 25})
         self.assertEqual(r["total"], 100.0)
+
+
+class TestRubric(unittest.TestCase):
+    def test_dimensions_aligned_with_weights(self):
+        for cat, wts in wt_calc.CATEGORY_WEIGHTS.items():
+            self.assertIn(cat, rubric.RUBRICS)
+            self.assertEqual(set(wts), set(rubric.RUBRICS[cat]), cat)
+
+    def test_anchor_structure(self):
+        for cat, dims in rubric.RUBRICS.items():
+            for dim, r in dims.items():
+                self.assertTrue(r["look"].strip(), f"{cat}/{dim} 缺观察点")
+                self.assertEqual(set(r["anchors"]), {2, 5, 8}, f"{cat}/{dim} 锚点档不全")
+                for t, desc in r["anchors"].items():
+                    self.assertTrue(desc.strip(), f"{cat}/{dim} t={t} 锚点为空")
+
+    def test_format_rubric(self):
+        out = rubric.format_rubric("car", wt_calc.CATEGORY_WEIGHTS["car"])
+        self.assertIn("形体曲面动势", out)
+        self.assertIn("t=2", out)
+        self.assertIn("t=8", out)
+        self.assertIn("观察点", out)
+        with self.assertRaises(ValueError):
+            rubric.format_rubric("watch", {})
 
 
 if __name__ == "__main__":
