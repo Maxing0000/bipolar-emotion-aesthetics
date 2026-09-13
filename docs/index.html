@@ -97,6 +97,200 @@
 </style>
 </head>
 <body>
+<!-- BEA 统一导航栏 -->
+<style>
+.bea-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', 'PingFang SC', sans-serif;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+}
+.bea-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #1a1a2e;
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.bea-nav-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E8A87C 0%, #4A90A4 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 900;
+  font-size: 13px;
+  box-shadow: 0 2px 6px rgba(232, 168, 124, 0.3);
+}
+.bea-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  justify-content: center;
+}
+.bea-nav-links li {
+  list-style: none;
+}
+.bea-nav-links a {
+  text-decoration: none;
+  color: #555;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.bea-nav-links a:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1a1a2e;
+}
+.bea-nav-links a.active {
+  background: linear-gradient(135deg, rgba(232, 168, 124, 0.18), rgba(74, 144, 164, 0.18));
+  color: #1a1a2e;
+  font-weight: 600;
+}
+.bea-nav-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.1);
+  margin: 0 6px;
+}
+.bea-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.bea-nav-github {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #555;
+  font-size: 12.5px;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+.bea-nav-github:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1a1a2e;
+}
+.bea-nav-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #555;
+}
+@media (max-width: 1024px) {
+  .bea-nav-links {
+    display: none;
+  }
+  .bea-nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 54px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(14px);
+    padding: 12px 20px;
+    gap: 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    align-items: stretch;
+  }
+  .bea-nav-links.open a {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .bea-nav-links.open .bea-nav-divider {
+    display: none;
+  }
+  .bea-nav-mobile-toggle {
+    display: block;
+  }
+}
+body {
+  padding-top: 54px !important;
+}
+</style>
+<nav class="bea-nav">
+  <a href="index.html" class="bea-nav-brand">
+    <div class="bea-nav-logo">B</div>
+    <span>BEA 双极情绪美学</span>
+  </a>
+  <ul class="bea-nav-links" id="beaNavLinks">
+    <li><a href="index.html" data-page="index">🧮 计算器</a></li>
+    <li><a href="quick-diagnosis.html" data-page="quick-diagnosis">⚡ 快速诊断</a></li>
+    <li><a href="aesthetic-test.html" data-page="aesthetic-test">🎯 审美测试</a></li>
+    <li><a href="workbench.html" data-page="workbench">🔧 工作台</a></li>
+    <li><a href="cases.html" data-page="cases">📚 案例库</a></li>
+    <li class="bea-nav-divider"></li>
+    <li><a href="guide.html" data-page="guide">📘 入门</a></li>
+    <li><a href="theory-book.html" data-page="theory-book">📖 理论著作</a></li>
+  </ul>
+  <div class="bea-nav-right">
+    <button class="bea-nav-mobile-toggle" onclick="document.getElementById('beaNavLinks').classList.toggle('open')" aria-label="菜单">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor"><path d="M3 5h14v2H3V5zm0 4h14v2H3V9zm0 4h14v2H3v-2z"/></svg>
+    </button>
+    <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank" rel="noopener" class="bea-nav-github">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span>GitHub</span>
+    </a>
+  </div>
+</nav>
+<script>
+(function() {
+  var path = window.location.pathname;
+  var page = path.substring(path.lastIndexOf('/') + 1).replace('.html', '');
+  if (page === '' || page === 'bipolar-emotion-aesthetics') page = 'index';
+  var links = document.querySelectorAll('#beaNavLinks a[data-page]');
+  links.forEach(function(link) {
+    if (link.getAttribute('data-page') === page) {
+      link.classList.add('active');
+    }
+  });
+  // 点击链接后关闭移动端菜单
+  links.forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.getElementById('beaNavLinks').classList.remove('open');
+    });
+  });
+})();
+</script>
+<!-- /BEA 统一导航栏 -->
+
 <div class="wrap">
   <header>
     <h1>BEA 双极情绪美学 · <span>W(T) 交互计算器</span></h1>
