@@ -98,7 +98,15 @@ BEA 不会回答「更大气一点」，而是给出元素级、可复算的结�
 bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 ├── README.md / README_EN.md / LICENSE / FAQ.md   # 中文说明 / 英文说明 / 许可 / 常见质疑回应
 ├── GLOSSARY.md                             # 中英术语表（全文统一译名，25+ 核心术语）
+├── CONTRIBUTING.md                         # 🤝 贡献指南（如何参与/案例贡献模板/提交规范）
+├── API.md                                  # 🔌 BEA API 规范（24个接口/计算/分析/诊断/设计/数据）
 ├── release.sh                              # 三平台一键发版脚本（GitHub/Gitee/ModelScope）
+├── datasets/                               # 📊 结构化数据集（API/数据分析/机器学习基础）
+│   ├── cases.json                          # 17个案例完整结构化数据（范式/W(T)/评分/特征）
+│   └── paradigms.json                      # 8个范式锚点结构化定义（区间/配比/核心/典型领域）
+├── .github/                                # GitHub 社区配置
+│   ├── ISSUE_TEMPLATE/                     # Issue 模板（Bug/功能建议/案例请求/文档问题）
+│   └── PULL_REQUEST_TEMPLATE.md            # PR 模板（类型/变更/测试/检查清单）
 ├── docs/
 │   ├── cover.png                           # 封面
 │   ├── guide.html                          # ★ 10 分钟读懂 BEA（着陆页，传播入口）
