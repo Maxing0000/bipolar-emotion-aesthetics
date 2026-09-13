@@ -10,7 +10,7 @@
 > 一套**可解释、可计算、可执行**的形式美学方法 / A computable framework for formal aesthetics.
 > **核心命题：美感 = 可控张力下的情绪奖赏（Aesthetic pleasure = emotional reward under controlled tension）。**
 >
-> 🧮 [W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)　｜　📖 [完整在线理论著作](docs/theory-book.html)　｜　🌐 [English README](README_EN.md)　｜　📚 [中英术语表](GLOSSARY.md)　｜　❓ [常见质疑 FAQ](FAQ.md)
+> 🧮 [W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)　｜　🔧 [BEA 诊断工作台](tools/diagnostic-workbench/index.html)　｜　📚 [案例库（8个经典分析）](cases/index.html)　｜　📖 [完整在线理论著作](docs/theory-book.html)　｜　🌐 [English README](README_EN.md)　｜　📚 [中英术语表](GLOSSARY.md)　｜　❓ [常见质疑 FAQ](FAQ.md)
 
 ![BEA 双极封面](docs/cover.png)
 
@@ -69,6 +69,19 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 │   ├── ai-art-community-kit.md             # AI 生图社区传播包（审美控制语法的帖子模板）
 │   └── experiment-protocol.md              # 盲评实验协议（BEA 预测 vs 用户投票，实证众包）
 ├── mcp-server/                           # MCP Server：bea_wt_calc / bea_wt_compare / bea_prescribe / bea_scoresheet 五工具（pip 可装）
+├── tools/
+│   └── diagnostic-workbench/
+│       └── index.html                      # ★ BEA 交互式诊断工作台（8品类/自然语言解析/历史记录/A-B对比雷达图/导出图片/AI智能分析提示词）
+├── cases/                                  # ★ 案例库（8个经典产品BEA深度分析，含索引页+筛选+搜索）
+│   ├── index.html                          # 案例库索引页（按范式/品类/评分筛选+关键词搜索+范式分布统计）
+│   ├── 01-iPhone17-Pro-BEA分析.md         # 崇高震撼，W(T)=0.48，86分，微差补偿教科书
+│   ├── 02-问界M9-BEA分析.md               # 均衡典雅，W(T)=0.53，88分，大面柔+灯组锐
+│   ├── 03-小米SU7-BEA分析.md              # 冷峻克制，W(T)=0.65，84分，静态暗示运动
+│   ├── 04-特斯拉ModelS-BEA分析.md         # 崇高震撼，W(T)=0.55，85分，极简崇高代表
+│   ├── 05-戴森V15-BEA分析.md              # 冷峻克制，W(T)=0.62，83分，科技冷峻代表
+│   ├── 06-无印良品-BEA分析.md              # 亲和精致，W(T)=0.25，87分，柔中藏骨典范
+│   ├── 07-奔驰S级-BEA分析.md              # 均衡典雅，W(T)=0.50，89分，外威内温巅峰
+│   └── 08-Cybertruck-BEA分析.md           # 先锋反叛，W(T)=0.75，78分，越阈边缘实验
 ├── arxiv/
 │   └── bea-position-paper.md               # 英文学术论文草稿（position paper）
 ├── ci/                                     # 内容体检：算式复算 / 链接有效性 / 中英混杂
@@ -203,6 +216,13 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.10.0（2026-09-13）
+
+- **BEA 交互式诊断工作台上线**（`tools/diagnostic-workbench/index.html`）：零门槛网页工具——8大品类（手持消费电子/汽车/平面品牌/数字界面/建筑室内/时尚服装/音乐声音/影视动画）、6维度极性滑块、四维评分卡、范式定位+W(T)实时计算、张力×秩序四象限、问题诊断+改进处方、Markdown报告导出
+- **诊断工作台五大进阶功能**：①自然语言智能解析（"圆润一点，颜色暖一点"→自动调维度，支持增量调整+6快捷标签+解析结果可视化）②历史记录（localStorage保存/回看/导出/删除，最多50条）③A-B对比分析（双方案参数对比+雷达图+四维评分对比+自动生成对比结论）④导出图片（一键生成高清PNG报告）⑤AI智能分析（上传图片生成完整BEA分析提示词，复制给任意AI助手获得标准化报告）
+- **案例库建设完成**（`cases/`，8个经典产品BEA深度分析）：iPhone 17 Pro（崇高震撼86分）、问界M9（均衡典雅88分）、小米SU7（冷峻克制84分）、特斯拉Model S（崇高震撼85分）、戴森V15（冷峻克制83分）、无印良品（亲和精致87分）、奔驰S级（均衡典雅89分）、Cybertruck（先锋反叛78分）；含案例库索引页（按范式/品类/评分三维筛选+关键词搜索+范式分布统计）
+- **README 导航升级**：顶部新增诊断工作台和案例库入口，目录结构补充 tools/ 和 cases/ 完整说明
 
 ### v1.9.1（2026-09-13）
 
