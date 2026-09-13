@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(REPO, "bipolar-emotion-aesthetics", "scripts"))
 import rubric  # noqa: E402
 import scoresheet  # noqa: E402
 import wt_calc  # noqa: E402
+import report as rp  # noqa: E402
 import analyze_experiment as ae  # noqa: E402
 
 
@@ -117,6 +118,40 @@ class TestRubric(unittest.TestCase):
         self.assertIn("观察点", out)
         with self.assertRaises(ValueError):
             rubric.format_rubric("watch", {})
+
+
+class TestReport(unittest.TestCase):
+    PHONE_T = {"形状线条": 5, "质感触觉": 4, "色彩": 6, "构图比例": 6, "光影": 3, "细节线条": 4}  # 0.475
+
+    def test_full_report_structure(self):
+        md = rp.generate_report(
+            "phone", wt_calc.CATEGORY_WEIGHTS["phone"], self.PHONE_T,
+            target=0.28, scores={"张力": 20, "秩序": 22, "阈值": 13, "语境": 21},
+            name="测试机", date_str="2026-09-13")
+        self.assertIn("# BEA 形式诊断报告：测试机", md)
+        self.assertIn("W(T) = 0.475", md)
+        self.assertIn("均衡典雅", md)
+        self.assertIn("## 2 诊断处方", md)          # 偏差超区间 → 出处方
+        self.assertIn("## 3 成稿评分卡", md)
+        self.assertIn("阈值安全", md)                 # 短板维
+        self.assertIn("76/100", md)
+        self.assertIn("2026-09-13", md)
+
+    def test_no_target_no_prescription(self):
+        md = rp.generate_report(
+            "car", wt_calc.CATEGORY_WEIGHTS["car"],
+            {"形体曲面动势": 2, "特征线条": 2, "灯组图形": 3, "比例姿态": 2, "材质光影": 3},
+            date_str="2026-09-13")
+        self.assertNotIn("诊断处方", md)
+        self.assertNotIn("评分卡", md)
+        self.assertIn("W(T) = 0.230", md)
+
+    def test_in_range_target_no_prescription(self):
+        md = rp.generate_report(
+            "phone", wt_calc.CATEGORY_WEIGHTS["phone"], self.PHONE_T,
+            target=0.47, date_str="2026-09-13")
+        self.assertIn("落入区间", md)
+        self.assertNotIn("## 2 诊断处方", md)
 
 
 class TestAnalyzeExperiment(unittest.TestCase):

@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.8.1-blue)
+![Version](https://img.shields.io/badge/version-1.9.0-blue)
 [![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
 [![DOI](https://img.shields.io/badge/DOI-10.6084%2Fm9.figshare.33684490-blue)](https://doi.org/10.6084/m9.figshare.33684490)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
@@ -153,7 +153,7 @@ git clone --depth 1 https://github.com/Maxing0000/bipolar-emotion-aesthetics && 
 
 ## MCP Server（AI 客户端直连）
 
-`mcp-server/` 把 BEA 计算工具封装为标准 MCP 服务——Claude Desktop、Cursor、WorkBuddy 等任何 MCP 客户端装上后，AI 可直接调用七个工具：`bea_list_categories`（品类权重表）、`bea_wt_calc`（W(T) 与范式落点）、`bea_wt_compare`（A/B 方案裁决）、`bea_prescribe`（诊断处方：维度调整方案与具体手法）、`bea_scoresheet`（评分卡与短板修复）、`bea_scoring_rubric`（视觉评分标尺）、`bea_diagnose_image`（图像诊断：传入产品图片，AI 看图打分并自动完成 W(T)+处方全流程）。
+`mcp-server/` 把 BEA 计算工具封装为标准 MCP 服务——Claude Desktop、Cursor、WorkBuddy 等任何 MCP 客户端装上后，AI 可直接调用九个工具：`bea_list_categories`（品类权重表）、`bea_wt_calc`（W(T) 与范式落点）、`bea_wt_compare`（A/B 方案裁决）、`bea_prescribe`（诊断处方：维度调整方案与具体手法）、`bea_scoresheet`（评分卡与短板修复）、`bea_scoring_rubric`（视觉评分标尺）、`bea_diagnose_image`（图像诊断：传入产品图片，AI 看图打分并自动完成 W(T)+处方全流程）、`bea_diagnose_compare`（双图对比诊断：两张图分别打分后裁决）、`bea_report`（一键诊断报告：打分+W(T)+处方+评分卡合成完整 Markdown）。
 
 ```bash
 pip install bea-mcp   # PyPI 一键安装：https://pypi.org/project/bea-mcp/
@@ -186,7 +186,7 @@ pip install bea-mcp   # PyPI 一键安装：https://pypi.org/project/bea-mcp/
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.8.1, 2026. CC BY 4.0. DOI: [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490).
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics(BEA)：可计算的形式美学技能》v1.9.0, 2026. CC BY 4.0. DOI: [10.6084/m9.figshare.33684490](https://doi.org/10.6084/m9.figshare.33684490).
 
 BibTeX：
 
@@ -195,7 +195,7 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.8.1},
+  version= {1.9.0},
   doi    = {10.6084/m9.figshare.33684490},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
   license= {CC BY 4.0}
@@ -203,6 +203,11 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.9.0（2026-09-13）
+
+- 能力层收官：bea_diagnose_compare 双图对比诊断 + bea_report 一键 Markdown 诊断报告（bea-mcp 1.3.0，九工具）
+
 
 ### v1.8.1（2026-09-13）
 - **盲评实验包落地**：`docs/experiment.html`（开箱即用的盲评收集页：随机顺序、匿名背景、双指标 1-7 分、localStorage 累计、JSON 导出）+ `scripts/analyze_experiment.py`（自动均值/分组峰值/判定规则/Issue 模板生成）——实测验证从「协议文档」变「30 分钟可跑的工具链」；新增 3 项分析测试（累计 19 项），全流程无头浏览器回归零报错

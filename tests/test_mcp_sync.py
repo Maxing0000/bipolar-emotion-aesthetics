@@ -47,11 +47,30 @@ def main():
     if srv_rubrics != rb.RUBRICS:
         failures.append("RUBRICS 视觉评分标尺不一致（mcp-server/rubric_data.py vs rubric.py）")
 
+    # 诊断报告：同一份输入，CLI 与 MCP 输出必须逐字一致
+    rpt = load("report", os.path.join(ROOT, "bipolar-emotion-aesthetics/scripts/report.py"))
+    cases = [
+        ("phone", wt.CATEGORY_WEIGHTS["phone"],
+         {"形状线条": 5, "质感触觉": 4, "色彩": 6, "构图比例": 6, "光影": 3, "细节线条": 4},
+         0.28, {"张力": 20, "秩序": 22, "阈值": 13, "语境": 21}, "测试机"),
+        ("car", wt.CATEGORY_WEIGHTS["car"],
+         {"形体曲面动势": 2, "特征线条": 2, "灯组图形": 3, "比例姿态": 2, "材质光影": 3},
+         0.0, None, ""),
+        ("ui", wt.CATEGORY_WEIGHTS["ui"],
+         {"布局留白": 3, "色彩对比": 2, "组件形": 2, "动效": 2, "字体图标": 3},
+         0.45, {"张力": 18, "秩序": 21, "阈值": 24, "语境": 22}, ""),
+    ]
+    for cat, wts, tv, tgt, sc, nm in cases:
+        cli_out = rpt.generate_report(cat, wts, tv, target=tgt, scores=sc, name=nm, date_str="2026-09-13")
+        mcp_out = srv.generate_report(cat, wts, tv, target=tgt, scores=sc, name=nm, date_str="2026-09-13")
+        if cli_out != mcp_out:
+            failures.append(f"generate_report 输出不一致（{cat}，target={tgt}）——同步 report.py 与 server.py")
+
     if failures:
         for f in failures:
             print(f"✗ {f}")
         return 1
-    print("✓ MCP Server 与 CLI 脚本数据表完全一致（5 项）")
+    print("✓ MCP Server 与 CLI 脚本数据表完全一致（6 项）")
     return 0
 
 

@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """BEA MCP Server：把双极情绪美学的计算工具暴露给所有 MCP 客户端。
 
-提供七个工具：
+提供九个工具：
   bea_wt_calc       W(T) 危极指数计算：范式落点 + 极性画像 + 目标对照
   bea_wt_compare    A/B 双方案对比：双画像 + 差异维度 + 目标接近度裁决
   bea_prescribe     诊断处方：从现状到目标 W(T) 的维度调整方案与具体手法
   bea_scoresheet    评分卡：四维打分 + 短板定位 + 六步法修复映射
   bea_scoring_rubric 视觉评分标尺：看图打分用的逐维度锚点描述（图像诊断第一步）
   bea_diagnose_image 图像诊断：返回图像 + 评分标尺，模型看图打分后自行调用算分工具
+  bea_diagnose_compare 双图对比诊断：返回两张图 + 对比标尺，模型分别打分后调 bea_wt_compare 裁决
+  bea_report        一键诊断报告：打分 + W(T) + 处方 + 评分卡合成完整 Markdown
   bea_list_categories  列出内置品类与维度权重表
 
 数据表与仓库 bipolar-emotion-aesthetics/scripts/ 中的 wt_calc.py、scoresheet.py、rubric.py 保持一致
@@ -17,6 +19,7 @@
 """
 import json
 import os
+import datetime
 
 from mcp.server.fastmcp import FastMCP, Image
 
@@ -192,6 +195,78 @@ def prescribe(weights, tvals, target, max_step=3):
     return lines, new_t
 
 
+# ---------------------------------------------------------------- 报告生成（与 scripts/report.py 同步）
+
+def _bar(v, vmax=10, width=10):
+    n = int(round(v / vmax * width))
+    return "█" * n + "░" * (width - n)
+
+
+def generate_report(category, weights, tvals, target=0.0, scores=None,
+                    name="", date_str=None):
+    """生成完整 Markdown 诊断报告（与 scripts/report.py 的 generate_report 输出一致）。"""
+    total, contribs = compute_wt(weights, tvals)
+    date_str = date_str or datetime.date.today().isoformat()
+    L = []
+    L.append(f"# BEA 形式诊断报告{f'：{name}' if name else ''}")
+    L.append("")
+    L.append(f"- 品类：{category}")
+    L.append(f"- 日期：{date_str}")
+    L.append("- 方法：双极情绪美学（BEA）W(T) 危极指数（分值为协作刻度，非心理物理常数）")
+    L.append("")
+    L.append("## 1 逐维打分与 W(T)")
+    L.append("")
+    L.append("| 维度 | 权重 | t 值 | 贡献 | 画像 |")
+    L.append("|---|---:|---:|---:|---|")
+    for dim, w in weights.items():
+        t = tvals[dim]
+        L.append(f"| {dim} | {w:.2f} | {t:g} | {contribs[dim]:.3f} | {_bar(t)} |")
+    L.append("")
+    L.append(f"**W(T) = {total:.3f}** ｜ 范式落点：**{paradigm_of(total)}**")
+    if target:
+        diff = total - target
+        if abs(diff) <= 0.05:
+            L.append(f"\n对照目标 {target:.2f}：落入区间（±0.05）✓")
+        else:
+            advise = "减锐增柔（降低高权重维度的 t）" if diff > 0 else "加锐减柔（提高高权重维度的 t）"
+            L.append(f"\n对照目标 {target:.2f}：偏差 {diff:+.3f}，建议{advise}")
+    if target and abs(total - target) > 0.05:
+        L.append("")
+        L.append(f"## 2 诊断处方（现状 {total:.3f} → 目标 {target:.2f}）")
+        L.append("")
+        p_lines, _ = prescribe(weights, tvals, target)
+        L.append("```")
+        L.extend(p_lines)
+        L.append("```")
+    if scores:
+        L.append("")
+        L.append("## 3 成稿评分卡")
+        L.append("")
+        L.append("| 维度 | 得分 | 画像 |")
+        L.append("|---|---:|---|")
+        sc_total = 0.0
+        shorts = []
+        for d in DIMENSIONS:
+            v = float(scores[d])
+            sc_total += v
+            flag = " ⚠️短板" if v < 15 else ""
+            L.append(f"| {FULL_NAMES[d]} | {v:g}/25{flag} | {_bar(v, 25, 25)} |")
+            if v < 15:
+                shorts.append(d)
+        verdict = "成熟作品（≥80）" if sc_total >= 80 else "未成熟（<80）"
+        L.append("")
+        L.append(f"**总分 {sc_total:g}/100 — {verdict}**")
+        if shorts:
+            L.append("")
+            L.append("短板修复指引：")
+            for d in shorts:
+                L.append(f"- **{FULL_NAMES[d]}**：{FIX_MAP[d]}")
+    L.append("")
+    L.append("---")
+    L.append("*由 BEA 工具链生成（report.py / bea_report）。改进后请复评 t 值，并回六步法第五步「校阈」复验本能/认知/文化三阈。*")
+    return "\n".join(L)
+
+
 # ---------------------------------------------------------------- MCP 服务
 
 mcp = FastMCP(
@@ -203,7 +278,9 @@ mcp = FastMCP(
         "有明确目标范式/W(T) 时用 bea_prescribe 直接出维度调整处方与具体手法；"
         "成稿验收用 bea_scoresheet（四维各 25 分，≥80 成熟，<15 为短板）。"
         "图像诊断流程：用 bea_scoring_rubric 取评分标尺（或 bea_diagnose_image 直接传入图片路径），"
-        "对照图像逐维度打 t 值，再调 bea_wt_calc 与 bea_prescribe 出报告。"
+        "对照图像逐维度打 t 值，再调 bea_wt_calc 与 bea_prescribe 出报告；双方案图对图取舍用 "
+        "bea_diagnose_compare 传两张图，分别打分后调 bea_wt_compare 裁决；"
+        "最后用 bea_report 把打分、W(T)、处方、评分卡合成一份完整 Markdown 诊断报告。"
         "0-10 刻度与 W(T) 为协作参照，非心理物理常数。"
     ),
 )
@@ -266,6 +343,74 @@ def bea_diagnose_image(category: str, image_path: str) -> list:
         f"然后调用 bea_wt_calc 汇总：\n\n{rubric_text}"
     )
     return [header, Image(path=image_path)]
+
+
+@mcp.tool()
+def bea_diagnose_compare(category: str, image_a: str, image_b: str) -> list:
+    """双图对比诊断：传入两张产品图片路径，返回对比评分标尺 + 两张图像。
+
+    返回后由你（多模态模型）执行四步：
+    1. 查看两张图像，对照标尺分别为 A、B 逐维度打 t 值（0-10，可插值）；
+    2. 调用 bea_wt_compare 传入两组 t 值，得双画像、差异维度与锐柔裁决；
+    3. 有目标范式/W(T) 时把 target 一并传入 bea_wt_compare，裁决谁更接近目标；
+    4. 如需完整成文，对胜方调用 bea_report 生成 Markdown 诊断报告。
+
+    Args:
+        category: 品类，phone/car/brand/ui 之一
+        image_a: 方案 A 图片文件路径（png/jpg/jpeg/webp/gif）
+        image_b: 方案 B 图片文件路径（png/jpg/jpeg/webp/gif）
+    """
+    try:
+        w = _resolve_weights(category, None)
+        rubric_text = format_rubric(category, w)
+    except ValueError as e:
+        return [f"错误：{e}"]
+    for label, p in (("A", image_a), ("B", image_b)):
+        if not os.path.isfile(p):
+            return [f"错误：找不到方案 {label} 的图片文件 {p!r}"]
+        ext = os.path.splitext(p)[1].lower()
+        if ext not in (".png", ".jpg", ".jpeg", ".webp", ".gif"):
+            return [f"错误：方案 {label} 图片格式 {ext!r} 不支持（支持 png/jpg/jpeg/webp/gif）"]
+    header = (
+        f"第一张图为方案 A，第二张图为方案 B。请按以下标尺分别为两图的{category}产品"
+        f"逐维度打分（0-10），然后调用 bea_wt_compare 传入两组 t 值完成对比裁决：\n\n{rubric_text}"
+    )
+    return [header, Image(path=image_a), Image(path=image_b)]
+
+
+@mcp.tool()
+def bea_report(category: str, t: dict, target: float = 0.0, scores: dict = None,
+               name: str = "", weights: dict = None) -> str:
+    """一键诊断报告：把打分、W(T)、范式落点、诊断处方、评分卡合成一份完整 Markdown，可直接存档或分享。
+
+    图像诊断收尾：rubric/diagnose_image 打分 → 本工具一次成文。
+
+    Args:
+        category: 品类，phone/car/brand/ui 之一（自定义权重时作展示名）
+        t: 各维度危极强度（0-10），如 {"形状线条": 5, "质感触觉": 4, "色彩": 6, "构图比例": 6, "光影": 3, "细节线条": 4}
+        target: 可选，目标 W(T)（如 0.28）；给出且偏差超区间时自动附诊断处方
+        scores: 可选，四维评分卡，如 {"张力": 20, "秩序": 22, "阈值": 23, "语境": 21}（各 25 分）
+        name: 可选，诊断对象名（报告标题用，如 "iPhone 17 Pro"）
+        weights: 可选，自定义权重表（合计须为 1），提供时忽略 category
+    """
+    try:
+        w = _resolve_weights(category, weights)
+        tv = _to_float_map(t)
+        _check_tvals(w, tv)
+        if target and not 0 < float(target) < 1:
+            raise ValueError(f"target {target} 应在 (0, 1) 区间")
+        sc = None
+        if scores:
+            sc = _to_float_map(scores)
+            missing = [d for d in DIMENSIONS if d not in sc]
+            if missing:
+                raise ValueError(f"评分卡缺少维度：{'、'.join(missing)}（应为：{'/'.join(DIMENSIONS)}）")
+            for d in DIMENSIONS:
+                if not 0 <= sc[d] <= 25:
+                    raise ValueError(f"{FULL_NAMES[d]} 得分 {sc[d]} 超出 0-25")
+    except ValueError as e:
+        return f"输入错误：{e}"
+    return generate_report(category, w, tv, target=float(target or 0.0), scores=sc, name=name)
 
 
 @mcp.tool()
