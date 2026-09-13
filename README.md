@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.6.0-blue)
+![Version](https://img.shields.io/badge/version-1.7.0-blue)
 [![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 ![Stack](https://img.shields.io/badge/stack-Markdown%20%2B%20Python-orange)
@@ -185,7 +185,7 @@ pip install bea-mcp   # PyPI 一键安装：https://pypi.org/project/bea-mcp/
 
 文本署名 / 引用请注明：
 
-> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.6.0, 2026. CC BY 4.0.
+> 星空本空.《双极情绪美学 Bipolar Emotion Aesthetics（BEA）：可计算的形式美学技能》v1.7.0, 2026. CC BY 4.0.
 
 BibTeX：
 
@@ -194,7 +194,7 @@ BibTeX：
   title  = {双极情绪美学 Bipolar Emotion Aesthetics (BEA)：可计算的形式美学技能},
   author = {星空本空},
   year   = {2026},
-  version= {1.6.0},
+  version= {1.7.0},
   url    = {https://github.com/Maxing0000/bipolar-emotion-aesthetics},
   license= {CC BY 4.0},
   note   = {永久 DOI 将于 Zenodo 归档后补充}
@@ -202,6 +202,10 @@ BibTeX：
 ```
 
 ## 更新日志
+
+### v1.7.0（2026-09-13）
+- **网页计算器升级「主流产品诊断」**：22 个一键载入预设——主流手机（iPhone 16/17 Pro、华为 Mate、小米 15、Nothing Phone）、主流汽车（问界 M9、小米 SU7、Model 3、理想 L9、保时捷 911、仰望 U9）、品牌/UI（苹果视觉、小米新 LOGO、iOS、特斯拉车机）+ 教学案例分组
+- **计算器内置诊断处方**：填目标 W(T) 自动输出维度调整方案与具体手法（与 `bea_prescribe` 同算法同手法表），导出审计报告含处方全文
 
 ### v1.6.0（2026-09-13）
 - **新增诊断处方工具 bea_prescribe**（bea-mcp 1.1.0）：输入现状与目标 W(T)，按权重杠杆自动给出「先动哪个维度、调几档、用什么具体手法」——内置 20 个维度 × 加锐/减锐双向手法表；BEA 从「计算器」升级为「顾问」
