@@ -186,6 +186,22 @@ footer a { color: var(--cool); text-decoration: none; }
   .btn-group .btn { width: 100%; }
 }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "BEA 双极情绪美学",
+  "url": "https://maxing0000.github.io/bipolar-emotion-aesthetics/",
+  "description": "双极情绪美学（BEA）形式美学分析、诊断与设计方法。",
+  "inLanguage": "zh-CN",
+  "author": {"@type": "Person", "name": "星空本空"},
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "BEA 双极情绪美学",
+    "url": "https://maxing0000.github.io/bipolar-emotion-aesthetics/"
+  }
+}
+</script>
 </head>
 <body>
 <!-- BEA 统一导航栏 -->
@@ -213,7 +229,7 @@ body{padding-top:54px!important}
 .preset-btn:active{transform:translateY(0)}
 @media(max-width:600px){.preset-btn{padding:6px 12px;font-size:12px}}
 </style>
-<nav class="bea-nav">
+<nav class="bea-nav" aria-label="主导航">
   <a href="index.html" class="bea-nav-brand"><div class="bea-nav-logo">B</div><span>BEA 双极情绪美学</span></a>
   <ul class="bea-nav-links" id="beaNavLinks">
     <li><a href="index.html" data-page="index">🧮 计算器</a></li>
@@ -237,7 +253,7 @@ body{padding-top:54px!important}
 </script>
 <!-- /BEA 统一导航栏 -->
 
-<div class="container">
+<div class="container" role="main">
   <header>
     <h1>BEA <span>图片分析工具</span></h1>
     <p>上传图片，按双极情绪美学七步法生成完整分析报告</p>

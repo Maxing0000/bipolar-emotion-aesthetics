@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 主页面 -->
   <url>
     <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/</loc>
     <lastmod>2026-09-13</lastmod>
@@ -43,6 +44,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/quiz.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/theory-book.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -60,80 +67,99 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <!-- 案例页面 -->
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/01-iPhone17-Pro-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/01-iphone17-pro.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/02-问界M9-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/02-aito-m9.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/03-小米SU7-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/03-xiaomi-su7.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/04-特斯拉ModelS-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/04-tesla-models.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/05-戴森V15-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/05-dyson-v15.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/06-无印良品-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/06-muji.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/07-奔驰S级-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/07-mercedes-s-class.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/08-Cybertruck-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/08-cybertruck.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/09-索尼WH1000XM5-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/09-sony-wh1000xm5.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/10-苹果VisionPro-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/10-apple-vision-pro.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/11-乐高LEGO-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/11-lego.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/12-宜家IKEA-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/12-ikea.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/13-原神Genshin-BEA分析.html</loc>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/13-genshin-impact.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/14-church-of-light.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/15-ios-design.html</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/16-supreme.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -142,6 +168,6 @@
     <loc>https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/image-analysis-example-dyson.html</loc>
     <lastmod>2026-09-13</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.5</priority>
   </url>
 </urlset>
