@@ -116,7 +116,7 @@
         <option value="ui">UI / 交互界面</option>
       </select>
       <div id="dims"></div>
-      <label>案例复现 / 快捷示例</label>
+      <label>主流产品诊断 / 教学案例（估算标定，供方法演示）</label>
       <div class="presets" id="presets"></div>
       <div class="actions">
         <button id="btnShare">🔗 复制分享链接</button>
@@ -143,6 +143,11 @@
       <div class="spectrum">
         <div class="spec-track"><div class="spec-marker" id="marker"></div></div>
         <div class="spec-anchors" id="anchors"></div>
+      </div>
+      <div id="rxCard" style="display:none;margin-bottom:20px;border:1px solid #ead5cd;background:var(--accent-soft);border-radius:10px;padding:14px 16px">
+        <h2 style="font-size:13px;margin-bottom:8px;color:var(--accent)">🩺 诊断处方（高权重维度先动，杠杆最大）</h2>
+        <div id="rxBody" style="font-size:12.5px;line-height:1.8"></div>
+        <div style="font-size:11px;color:var(--sub);margin-top:8px">t 值调整须落回具体形式决策；改后回六步法第五步「校阈」复验三阈。</div>
       </div>
       <div class="two-col">
         <div class="profile">
@@ -178,7 +183,7 @@
   </div>
 
   <footer>
-    双极情绪美学 BEA v1.2.0 · 作者 星空本空 ·
+    双极情绪美学 BEA v1.7.0 · 作者 星空本空 ·
     <a href="theory-book.html">📖 完整在线理论著作</a> ·
     <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics">GitHub 仓库</a> ·
     CC BY 4.0 · 0–10 刻度与 W(T) 为协作参照，非心理物理常数
@@ -196,17 +201,61 @@ const PARAS = [
   [0.10,"治愈松弛"],[0.20,"亲和精致"],[0.40,"均衡典雅"],[0.55,"崇高震撼"],
   [0.62,"冷峻克制"],[0.70,"先锋反叛"]
 ];
-const PRESETS = [
-  {label:"iPhone 16 Pro",cat:"phone",t:[2,4,2,3,3,3],target:0.28},
-  {label:"iPhone 17 Pro",cat:"phone",t:[5,4,6,6,3,4],target:0.28},
-  {label:"问界 M9 现状",cat:"car",t:[2,2,3,2,3],target:0.45},
-  {label:"M9 处方后",cat:"car",t:[4,6,6,4,2],target:0.45},
-  {label:"甜腻手机现状",cat:"phone",t:[2,3,4,2,3,1],target:0.28},
-  {label:"甜腻手机回调后",cat:"phone",t:[2,4,3,2,3,4],target:0.28},
-  {label:"心理咨询LOGO",cat:"brand",t:[3,3,3,3,4],target:0.28},
-  {label:"音乐节海报现状",cat:"brand",t:[8,8,7,7,6],target:0.60},
-  {label:"音乐节海报处方",cat:"brand",t:[7,6,6,5,5],target:0.60},
-  {label:"先锋海报",cat:"brand",t:[7,6,5,6,5],target:0}
+/* 维度手法表：up=加锐 / down=减锐（与 scripts/wt_calc.py DIM_MOVES 同步） */
+const MOVES = {
+  "形状线条":{up:"引入锐利轮廓转折、切割感边缘或非常规机身长宽比",down:"增大圆角、回归对称直板轮廓"},
+  "质感触觉":{up:"换冷硬材质（钛/陶瓷/磨砂金属）或强纹理表面",down:"温润涂层、细腻喷砂、亲肤材质"},
+  "色彩":{up:"提高饱和度或明暗对比，尝试撞色/非常规配色",down:"低饱和中性色、单色渐变"},
+  "构图比例":{up:"打破对称：偏心布局、放大单一模组占比",down:"居中对称、经典分段比例"},
+  "光影":{up:"强化高光反差、锐利阴影、舞台式打光",down:"柔光、低反差均匀照明"},
+  "细节线条":{up:"加装饰性刻线、锋芒倒角、外露结构细节",down:"去装饰、隐藏接缝与开孔"},
+  "形体曲面动势":{up:"肌肉感曲面、俯冲姿态、外扩轮拱",down:"平顺曲面、水平稳态轮廓"},
+  "特征线条":{up:"锋利折线、闪电式腰线、非常规分割线",down:"圆润贯穿线、减少折线数量"},
+  "灯组图形":{up:"狭长锐角灯形、非常规灯语图形",down:"圆润灯形、家族化经典布局"},
+  "比例姿态":{up:"低趴宽体、长车头等非常规比例",down:"标准比例、抬高视觉重心"},
+  "材质光影":{up:"高反差漆色、碳纤维/哑光性能材质",down:"高亮单色漆、镀铬饰条"},
+  "图形形状":{up:"锐角、断裂、非常规几何或有机形",down:"圆形/方正规整几何"},
+  "字体":{up:"非常规字重对比、锐笔定制字形",down:"经典无衬线、统一字重"},
+  "版式构图":{up:"破格出血、对角动势、高密度排布",down:"栅格对齐、大留白居中"},
+  "质感":{up:"肌理噪点、金属/全息等强材质感",down:"扁平纯色、细腻渐变"},
+  "布局留白":{up:"紧凑高密度、破格层叠布局",down:"增大留白、呼吸感栅格"},
+  "色彩对比":{up:"高对比强调色、深色模式强反差",down:"同色系低对比"},
+  "组件形":{up:"小圆角锐角、非常规组件形态",down:"大圆角、标准控件形态"},
+  "动效":{up:"快速弹性、非常规转场动效",down:"缓动淡入淡出"},
+  "字体图标":{up:"粗字重、锐利图标笔触",down:"常规字重、圆润图标笔触"}
+};
+/* 预设分组：主流产品诊断（估算标定，供方法演示）+ 教学案例 */
+const PRESET_GROUPS = [
+  {name:"📱 主流手机", items:[
+    {label:"iPhone 16 Pro",cat:"phone",t:[2,4,2,3,3,3],target:0.28},
+    {label:"iPhone 17 Pro",cat:"phone",t:[5,4,6,6,3,4],target:0.28},
+    {label:"华为 Mate 旗舰·估算",cat:"phone",t:[2,3,2,2,2,3],target:0.28},
+    {label:"小米 15·估算",cat:"phone",t:[3,4,2,3,3,4],target:0.30},
+    {label:"Nothing Phone·估算",cat:"phone",t:[6,5,4,5,4,7],target:0.50}
+  ]},
+  {name:"🚗 主流汽车", items:[
+    {label:"问界 M9",cat:"car",t:[2,2,3,2,3],target:0.45},
+    {label:"小米 SU7·估算",cat:"car",t:[5,5,4,5,4],target:0.45},
+    {label:"特斯拉 Model 3·估算",cat:"car",t:[3,2,3,3,3],target:0.30},
+    {label:"理想 L9·估算",cat:"car",t:[2,2,3,2,3],target:0.30},
+    {label:"保时捷 911·估算",cat:"car",t:[6,5,6,6,5],target:0.55},
+    {label:"仰望 U9·估算",cat:"car",t:[7,6,7,7,6],target:0.70}
+  ]},
+  {name:"🎨 品牌 / UI", items:[
+    {label:"苹果品牌视觉·估算",cat:"brand",t:[2,2,2,3,3],target:0.24},
+    {label:"小米新 LOGO·估算",cat:"brand",t:[3,2,2,3,2],target:0.24},
+    {label:"iOS 界面·估算",cat:"ui",t:[3,3,3,2,3],target:0.28},
+    {label:"特斯拉车机·估算",cat:"ui",t:[4,3,3,3,3],target:0.32}
+  ]},
+  {name:"📚 教学案例", items:[
+    {label:"M9 处方后",cat:"car",t:[4,6,6,4,2],target:0.45},
+    {label:"甜腻手机现状",cat:"phone",t:[2,3,4,2,3,1],target:0.28},
+    {label:"甜腻手机回调后",cat:"phone",t:[2,4,3,2,3,4],target:0.28},
+    {label:"心理咨询LOGO",cat:"brand",t:[3,3,3,3,4],target:0.28},
+    {label:"音乐节海报现状",cat:"brand",t:[8,8,7,7,6],target:0.60},
+    {label:"音乐节海报处方",cat:"brand",t:[7,6,6,5,5],target:0.60},
+    {label:"先锋海报",cat:"brand",t:[7,6,5,6,5],target:0}
+  ]}
 ];
 let vals = {};
 
@@ -280,6 +329,47 @@ function calc(){
   const order = +document.getElementById("order").value;
   document.getElementById("qdot").setAttribute("cx", 30 + order/10*260);
   document.getElementById("qdot").setAttribute("cy", 220 - Math.min(w,0.85)/0.85*205);
+  renderRx(w);
+}
+
+/* ---------- 诊断处方：现状 → 目标的维度调整方案（与 wt_calc.py prescribe 同步） ---------- */
+function renderRx(curW){
+  const card = document.getElementById("rxCard");
+  const body = document.getElementById("rxBody");
+  const tgt = parseFloat(document.getElementById("target").value);
+  if(isNaN(tgt)){ card.style.display = "none"; return; }
+  const cat = document.getElementById("cat").value;
+  const dims = DATA[cat].dims;
+  const gap = tgt - curW;
+  if(Math.abs(gap) <= 0.05){
+    card.style.display = "block";
+    body.innerHTML = `已落入目标区间（±0.05）——保持现状，只做细节质感精修。`;
+    return;
+  }
+  const up = gap > 0;
+  const dir = up ? "加锐" : "减锐";
+  let remaining = Math.abs(gap);
+  const steps = [];
+  const sorted = [...dims].sort((a,b)=>b[1]-a[1]);
+  for(const [n,w] of sorted){
+    if(remaining <= 0.005) break;
+    const head = up ? 10 - vals[n] : vals[n];
+    const dt = Math.floor(Math.min(3, head, remaining*10/w + 0.999));
+    if(dt < 1) continue;
+    remaining -= w*dt/10;
+    steps.push({n, from:vals[n], to: up ? vals[n]+dt : vals[n]-dt, dt,
+      covered: w*dt/10*(up?1:-1), move: (MOVES[n]||{})[up?"up":"down"] || ""});
+  }
+  let after = curW + steps.reduce((s,x)=>s+x.covered, 0);
+  let html = `<div style="margin-bottom:6px">现状 <b>${curW.toFixed(3)}</b> → 目标 <b>${tgt.toFixed(2)}</b>（${paraOf(tgt)}），方向：<b>${dir}</b></div>`;
+  steps.forEach(s=>{
+    html += `<div style="margin-bottom:6px">· <b>${s.n}</b>：${s.from} → ${s.to}（${dir} ${s.dt} 档，贡献 ${s.covered>=0?"+":""}${s.covered.toFixed(3)}）` +
+      (s.move ? `<br><span style="color:var(--sub)">　手法：${s.move}</span>` : "") + `</div>`;
+  });
+  html += `<div style="margin-top:6px">处方后 W(T) ≈ <b>${after.toFixed(3)}</b>（${paraOf(after)}）` +
+    (Math.abs(after-tgt) > 0.05 ? `　⚠ 单轮微调未到位，可分两轮执行` : `　✓ 落入目标区间`) + `</div>`;
+  body.innerHTML = html;
+  card.style.display = "block";
 }
 
 function buildAnchors(){
@@ -296,18 +386,24 @@ function buildAnchors(){
 
 function buildPresets(){
   const box = document.getElementById("presets");
-  PRESETS.forEach(p=>{
-    const b = document.createElement("button");
-    b.textContent = p.label;
-    b.onclick = ()=>{
-      document.getElementById("cat").value = p.cat;
-      buildDims();
-      const inputs = document.querySelectorAll("#dims input[type=range]");
-      p.t.forEach((t,i)=>{ if(inputs[i]){ inputs[i].value = t; inputs[i].dispatchEvent(new Event("input")); } });
-      document.getElementById("target").value = p.target || "";
-      calc();
-    };
-    box.appendChild(b);
+  PRESET_GROUPS.forEach(g=>{
+    const label = document.createElement("div");
+    label.style.cssText = "width:100%;font-size:12px;color:var(--sub);margin-top:6px";
+    label.textContent = g.name;
+    box.appendChild(label);
+    g.items.forEach(p=>{
+      const b = document.createElement("button");
+      b.textContent = p.label;
+      b.onclick = ()=>{
+        document.getElementById("cat").value = p.cat;
+        buildDims();
+        const inputs = document.querySelectorAll("#dims input[type=range]");
+        p.t.forEach((t,i)=>{ if(inputs[i]){ inputs[i].value = t; inputs[i].dispatchEvent(new Event("input")); } });
+        document.getElementById("target").value = p.target || "";
+        calc();
+      };
+      box.appendChild(b);
+    });
   });
 }
 
@@ -365,6 +461,8 @@ document.getElementById("btnExport").onclick = ()=>{
     "\n- **W(T) = " + w + "**（范式落点：" + para + "）" +
     "\n- 目标区间：" + tgt + "　对照：" + delta +
     "\n\n| 维度 | 权重 | t (0-10) | 贡献 |\n|---|---|---|---|\n" + rows +
+    (document.getElementById("rxCard").style.display !== "none" && document.getElementById("rxBody").textContent
+      ? "\n## 诊断处方\n\n" + document.getElementById("rxBody").textContent.replace(/\s+/g," ").trim() + "\n" : "") +
     "\n> 由 BEA W(T) 交互计算器生成 · 双极情绪美学 · CC BY 4.0\n> " +
     location.origin + location.pathname + encodeState() + "\n";
   const a = document.createElement("a");
