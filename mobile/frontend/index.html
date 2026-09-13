@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>BEA 美学分析 - 拍一张，看懂美</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 头部 -->
+    <div class="home-header">
+      <div class="bea-logo">B</div>
+      <h1>双极情绪美学</h1>
+      <p>拍一张照片，30秒看懂为什么美</p>
+    </div>
+
+    <!-- 拍照/上传区域 -->
+    <div class="capture-section">
+      <div class="capture-btn" onclick="document.getElementById('fileInput').click()">
+        <div class="icon">📸</div>
+        <div class="title">拍照分析</div>
+        <div class="desc">拍摄或上传图片，AI 自动分析美学构成</div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none" onchange="handleFileSelect(event)">
+
+      <div class="capture-options">
+        <div class="capture-option" onclick="document.getElementById('fileInput').click()">
+          📷 拍照
+        </div>
+        <div class="capture-option" onclick="document.getElementById('albumInput').click()">
+          🖼️ 相册
+        </div>
+        <input type="file" id="albumInput" accept="image/*" style="display:none" onchange="handleFileSelect(event)">
+      </div>
+    </div>
+
+    <!-- 最近分析 -->
+    <div class="section">
+      <div class="section-title">
+        <span>最近分析</span>
+        <span class="more" onclick="loadHistory()">查看全部</span>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="empty-state" style="width:100%">
+          <div class="icon">📊</div>
+          <div class="text">还没有分析记录，拍一张试试吧</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 精选案例 -->
+    <div class="section">
+      <div class="section-title">
+        <span>精选案例</span>
+        <span class="more">更多</span>
+      </div>
+      <div class="case-grid" id="caseGrid">
+        <!-- 案例由 JS 动态加载 -->
+      </div>
+    </div>
+
+    <!-- 底部说明 -->
+    <div class="section safe-bottom" style="text-align:center; padding-bottom:40px">
+      <p style="font-size:12px; color:var(--bea-gray); line-height:1.8">
+        BEA 双极情绪美学 · 让美可量化、可分析、可设计<br>
+        美感 = 可控张力下的情绪奖赏
+      </p>
+    </div>
+  </div>
+
+  <!-- 隐藏的分析中页面（单页应用切换） -->
+  <div id="analyzePage" class="hidden" style="position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bea-white);z-index:100;overflow-y:auto">
+    <div class="analyze-page">
+      <img id="analyzeImage" class="analyze-image" src="" alt="分析中">
+      <div class="loader"></div>
+      <div class="analyze-title">AI 正在分析中...</div>
+      <div class="analyze-desc">识别视觉元素，计算双极构成</div>
+      <div class="analyze-steps" id="analyzeSteps">
+        <div class="analyze-step active" data-step="1">
+          <div class="dot">1</div>
+          <span>图片预处理</span>
+        </div>
+        <div class="analyze-step" data-step="2">
+          <div class="dot">2</div>
+          <span>AI 识别视觉元素</span>
+        </div>
+        <div class="analyze-step" data-step="3">
+          <div class="dot">3</div>
+          <span>计算 W(T) 危极权重</span>
+        </div>
+        <div class="analyze-step" data-step="4">
+          <div class="dot">4</div>
+          <span>范式定位与评分</span>
+        </div>
+        <div class="analyze-step" data-step="5">
+          <div class="dot">5</div>
+          <span>病症诊断与处方</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

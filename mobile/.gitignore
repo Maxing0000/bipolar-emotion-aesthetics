@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# 数据
+data/uploads/
+data/history/
+*.jpg
+*.jpeg
+*.png
+!frontend/css/*.css
+!frontend/js/*.js
+
+# 配置（包含 API Key）
+config.py
+
+# 日志
+*.log
+nohup.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store

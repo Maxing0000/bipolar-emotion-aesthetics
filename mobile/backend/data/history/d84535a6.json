@@ -1,0 +1,89 @@
+{
+  "id": "d84535a6",
+  "timestamp": "2026-09-13T19:09:05.897044",
+  "image": "fa8c485c_test_image.jpg",
+  "result": {
+    "wt": 0.301,
+    "wt_percent": 30.1,
+    "paradigm": {
+      "name": "诗意朦胧",
+      "emotion": "含蓄、梦幻、留白",
+      "wt_range": [
+        0.3,
+        0.38
+      ]
+    },
+    "quadrant": {
+      "tension": 0.3,
+      "order": 0.65,
+      "name": "平庸区（低张力×高秩序）",
+      "advice": "整齐但无张力，建议加张力"
+    },
+    "scores": {
+      "tension": 20,
+      "order": 12,
+      "threshold": 20,
+      "context": 25
+    },
+    "total_score": 77,
+    "diagnoses": [
+      {
+        "name": "认知超载",
+        "desc": "复杂度超受众带宽又缺秩序引导",
+        "prescription": "降复杂度、补层级秩序，或改面向更高阈值受众"
+      }
+    ],
+    "prescriptions": [
+      "当前 W(T)=0.30 处于合理区间，保持现有配比，重点优化秩序与细节协同",
+      "【认知超载】降复杂度、补层级秩序，或改面向更高阈值受众"
+    ],
+    "elements": {
+      "positive": [
+        "形状线条：曲中带直，主体圆润细节锐利（偏亲）",
+        "色彩色相：低饱和暖调，邻近色搭配",
+        "明度对比：柔和明暗过渡，局部强对比（偏亲）",
+        "质感肌理：光滑细腻，哑光亲肤质感",
+        "构图空间：居中稳定，留白均匀，层次递进",
+        "光影：漫射柔光为主，局部硬光提神（偏亲）"
+      ],
+      "negative": []
+    },
+    "mood": "以亲和安抚为主调，0处危极细节提神，整体感受是「含蓄、梦幻、留白」",
+    "polarities": {
+      "shape": {
+        "direction": "mixed",
+        "intensity": 5,
+        "description": "曲中带直，主体圆润细节锐利"
+      },
+      "color": {
+        "direction": "P",
+        "intensity": 4,
+        "description": "低饱和暖调，邻近色搭配"
+      },
+      "brightness": {
+        "direction": "mixed",
+        "intensity": 6,
+        "description": "柔和明暗过渡，局部强对比"
+      },
+      "texture": {
+        "direction": "P",
+        "intensity": 5,
+        "description": "光滑细腻，哑光亲肤质感"
+      },
+      "composition": {
+        "direction": "P",
+        "intensity": 4,
+        "description": "居中稳定，留白均匀，层次递进"
+      },
+      "light": {
+        "direction": "mixed",
+        "intensity": 5,
+        "description": "漫射柔光为主，局部硬光提神"
+      }
+    },
+    "analysis_time": 1.51,
+    "mock": true,
+    "image_id": "fa8c485c",
+    "image_url": "/uploads/fa8c485c_test_image_compressed.jpg"
+  }
+}
