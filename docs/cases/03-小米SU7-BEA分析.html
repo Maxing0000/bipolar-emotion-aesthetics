@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小米 SU7 为什么看起来就"快"？BEA 双极情绪美学拆解 · BEA 双极情绪美学案例</title>
+<meta name="description" content="小米 SU7 为什么看起来就"快"？BEA 双极情绪美学拆解 - BEA双极情绪美学深度分析案例">
+<meta name="keywords" content="BEA,双极情绪美学,设计分析,小米 SU7 为什么看起来就"快"？BEA 双极情绪美学拆解">
+<meta name="author" content="星空本空">
+<meta name="theme-color" content="#E8A87C">
+<meta property="og:title" content="小米 SU7 为什么看起来就"快"？BEA 双极情绪美学拆解 · BEA案例">
+<meta property="og:description" content="BEA双极情绪美学深度分析案例">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://maxing0000.github.io/bipolar-emotion-aesthetics/cases/03-小米SU7-BEA分析.html">
+<style>
+:root{
+  --plus:#E8A87C;--plus-dark:#D4956A;--minus:#4A90A4;--minus-dark:#3A7A8C;
+  --bg:#FAF8F5;--bg2:#F0EDE8;--card:#FFFFFF;--text:#2C2C2C;--text2:#666;
+  --border:#E5E0D8;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;min-height:100vh}
+.bea-nav{position:sticky;top:0;z-index:100;background:rgba(250,248,245,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 24px}
+.bea-nav-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px}
+.bea-nav-brand{font-weight:700;font-size:16px;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+.bea-nav-brand .logo{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--plus),var(--minus));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px}
+.bea-nav-links{display:flex;gap:20px;list-style:none}
+.bea-nav-links a{color:var(--text2);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
+.bea-nav-links a:hover{color:var(--minus)}
+.bea-nav-links a.active{color:var(--minus);font-weight:600}
+.bea-nav-mobile-toggle{display:none;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text)}
+.container{max-width:860px;margin:0 auto;padding:40px 24px 60px}
+.case-header{margin-bottom:32px;padding-bottom:24px;border-bottom:2px solid var(--border)}
+.case-header h1{font-size:28px;font-weight:800;margin-bottom:12px;background:linear-gradient(135deg,var(--plus-dark),var(--minus-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.case-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--text2)}
+.case-meta span{background:var(--bg2);padding:4px 12px;border-radius:20px}
+.case-meta .paradigm{background:linear-gradient(135deg,var(--plus),var(--minus));color:#fff}
+.content h2{font-size:22px;font-weight:700;margin:32px 0 16px;padding-left:12px;border-left:4px solid var(--plus)}
+.content h3{font-size:18px;font-weight:600;margin:24px 0 12px;color:var(--minus-dark)}
+.content p{margin-bottom:16px;color:var(--text)}
+.content strong{color:var(--plus-dark);font-weight:600}
+.content ul,.content ol{margin:0 0 16px 24px}
+.content li{margin-bottom:8px}
+.content table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+.content th{background:linear-gradient(135deg,var(--plus),var(--minus));color:#fff;padding:10px 12px;text-align:left;font-weight:600}
+.content td{padding:10px 12px;border-bottom:1px solid var(--border)}
+.content tr:nth-child(even){background:var(--bg2)}
+.content tr:hover{background:rgba(232,168,124,.08)}
+.content blockquote{border-left:4px solid var(--minus);background:rgba(74,144,164,.06);padding:12px 20px;margin:16px 0;border-radius:0 8px 8px 0;color:var(--text2)}
+.content code{background:var(--bg2);padding:2px 6px;border-radius:4px;font-size:13px;font-family:Menlo,monospace}
+.content pre{background:#2C2C2C;color:#E8E8E8;padding:16px;border-radius:8px;overflow-x:auto;margin:16px 0}
+.content pre code{background:none;color:inherit;padding:0}
+.content hr{border:none;border-top:1px solid var(--border);margin:32px 0}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--minus);text-decoration:none;font-weight:500;margin-bottom:24px;font-size:14px}
+.back-link:hover{text-decoration:underline}
+.footer{text-align:center;padding:32px 24px;border-top:1px solid var(--border);color:var(--text2);font-size:13px}
+.footer a{color:var(--minus);text-decoration:none}
+@media(max-width:768px){
+  .bea-nav-links{display:none;position:absolute;top:56px;left:0;right:0;background:var(--card);flex-direction:column;padding:16px 24px;gap:12px;border-bottom:1px solid var(--border);box-shadow:var(--shadow)}
+  .bea-nav-links.open{display:flex}
+  .bea-nav-mobile-toggle{display:block}
+  .container{padding:24px 16px 40px}
+  .case-header h1{font-size:22px}
+  .content h2{font-size:18px}
+  .content table{font-size:12px}
+  .content th,.content td{padding:8px}
+}
+</style>
+</head>
+<body>
+<nav class="bea-nav">
+  <div class="bea-nav-inner">
+    <a href="../index.html" class="bea-nav-brand"><span class="logo">B</span>BEA 双极情绪美学</a>
+    <button class="bea-nav-mobile-toggle" onclick="document.getElementById('beaNavLinks').classList.toggle('open')" aria-label="菜单">☰</button>
+    <ul class="bea-nav-links" id="beaNavLinks">
+      <li><a href="../index.html">🧮 计算器</a></li>
+      <li><a href="../image-analysis.html">🖼️ 图片分析</a></li>
+      <li><a href="../quick-diagnosis.html">⚡ 快速诊断</a></li>
+      <li><a href="../workbench.html">🔧 工作台</a></li>
+      <li><a href="../cases.html" class="active">📚 案例库</a></li>
+      <li><a href="../theory-book.html">📖 理论著作</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <a href="../cases.html" class="back-link">← 返回案例库</a>
+  <div class="case-header">
+    <h1>小米 SU7 为什么看起来就"快"？BEA 双极情绪美学拆解</h1>
+    <div class="case-meta">
+      <span class="paradigm">BEA 双极情绪美学案例</span>
+      <span>作者：星空本空</span>
+      <span>CC BY 4.0</span>
+    </div>
+  </div>
+  <div class="content">
+<h1 id="su7-bea">小米 SU7 为什么看起来就"快"？BEA 双极情绪美学拆解</h1>
+<blockquote>
+<p>20 万级新能源轿车，为什么设计感在线？用 BEA 框架从元素级极性到范式定位，拆解小米 SU7 的设计语言。</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、先说结论</h2>
+<p>小米 SU7 在 BEA 框架下定位为 <strong>「崇高震撼偏冷峻」</strong>，危极综合权重 <strong>W(T) ≈ 0.58</strong>，处于「崇高震撼」范式的上沿，接近「冷峻克制」。</p>
+<p>这是一个非常精准的定位：对于 20-30 万级运动轿车，用户想要的就是"看起来快、有力量感、有攻击性"。SU7 把危极推到了崇高范式的上沿，但仍然在安全阈值内，没有越阈变成"凶"或"丑"。</p>
+<hr />
+<h2 id="bea-30">二、BEA 30 秒速览</h2>
+<p>BEA（双极情绪美学）的核心：
+- <strong>亲极 P+</strong>（圆润/柔色/光滑）→ 让人想接近
+- <strong>危极 T−</strong>（尖锐/强对比/突变）→ 制造唤醒与张力
+- <strong>美感 = 双极在秩序中组合，危极不越阈</strong></p>
+<p>量化公式：<strong>W(T) = Σ wᵢ · (tᵢ/10)</strong>，各维度危极强度的加权平均值。</p>
+<p>汽车外形的 BEA 权重：形体曲面/动势 30%、特征线条 25%、灯组/图形 15%、比例姿态 15%、材质光影 15%。</p>
+<hr />
+<h2 id="su7">三、小米 SU7 逐维度拆解</h2>
+<h3 id="31-t7">3.1 形体曲面/动势：T=7（危极偏强）</h3>
+<p><strong>BEA 分析</strong>：
+- 车身采用了明显的楔形姿态，前低后高——危极提神（前冲动势）
+- 车顶线条从 A 柱开始快速下滑，形成溜背造型——危极提神
+- 车尾有一个轻微的上翘尾翼，增加了运动感——危极提神
+- 车身侧面有肌肉感的曲面，但不是完全圆润，而是有张力的曲面</p>
+<p><strong>为什么这么设计</strong>：运动轿车的核心就是"看起来快"。楔形姿态、溜背造型、上翘尾翼，都是在视觉上制造"前冲动势"，让车即使静止也看起来在运动。这是 BEA 说的<strong>"静态产品暗示运动"</strong>的标准手法。</p>
+<h3 id="32-t6">3.2 特征线条：T=6（危极偏强）</h3>
+<p><strong>BEA 分析</strong>：
+- 侧身有一条贯穿前后的特征棱线，从前翼子板延伸到尾灯——危极提神
+- 这条棱线位置较高，形成了"肩线"，增加了肌肉感
+- 下包围有内凹的特征线，增加了侧面的层次感
+- 车门把手采用了隐藏式设计，保持了侧面的干净——秩序统一</p>
+<p><strong>关键</strong>：SU7 的特征线条比问界 M9 更锐利、更明显，因为运动轿车需要更强的张力。但它仍然保持了克制，没有"棱线通胀"——主特征线只有 1-2 条，其他地方保持干净。</p>
+<h3 id="33-t8">3.3 灯组/图形：T=8（危极强）</h3>
+<p><strong>BEA 分析</strong>：
+- 前脸大灯采用了锐利的"柳叶"造型，细长、尖锐——危极提神
+- 大灯内部结构精密，有明显的切面——危极提神
+- 尾灯采用了贯穿式设计，两端向上翘起，形成了"机甲感"——危极提神
+- 灯组熄灭态也有明显的造型，不是简单的黑色面板</p>
+<p><strong>这是 SU7 最锐利的元素（T=8）</strong>，也是它"看起来凶"的主要来源。但注意：T=8 还在安全阈值内（T=10 才是越阈），而且它被大面积的柔和车身曲面（亲极）包围，形成了强烈的对比。</p>
+<p><strong>BEA 诊断</strong>：灯组 T=8 是 SU7 的"提神点"，但也是它的"风险点"——对于阈值偏低的用户，这个灯组可能会显得"太凶"。</p>
+<h3 id="34-t6">3.4 比例姿态：T=6（危极偏强）</h3>
+<p><strong>BEA 分析</strong>：
+- 车长 4997mm，轴距 3000mm，中大型轿车比例——稳定（亲极）
+- 车高 1455mm，非常低趴——运动感（危极）
+- 前后悬短，车轮接近四角——运动感（危极）
+- 轮毂尺寸 19-20 寸，与车身比例协调——不夸张
+- 宽高比很大，视觉重心非常低——贴地、可控（亲极+危极叠加）</p>
+<p><strong>为什么这个比例看起来快</strong>：BEA 的"动势（静态暗示）"维度——前冲楔形、上扬攻击线、蓄势张力。SU7 的低趴+宽体+短前后悬，共同制造了"蓄势待发"的视觉感受。</p>
+<h3 id="35-t5">3.5 材质光影：T=5（中性）</h3>
+<p><strong>BEA 分析</strong>：
+- 车身漆面光泽适中，有一定的反光——中性
+- 下包围采用了黑色塑料材质，与车身形成对比——危极提神
+- 车窗边框采用了黑色装饰，形成了"悬浮车顶"的效果——秩序统一
+- 整体光影有张力，大面反光有明显的明暗过渡——不是完全柔和</p>
+<hr />
+<h2 id="wt">四、W(T) 计算与范式定位</h2>
+<h3 id="41">4.1 加权计算</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>权重</th>
+<th>危极强度 t</th>
+<th>wᵢ·(t/10)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>形体曲面/动势</td>
+<td>0.30</td>
+<td>7</td>
+<td>0.210</td>
+</tr>
+<tr>
+<td>特征线条</td>
+<td>0.25</td>
+<td>6</td>
+<td>0.150</td>
+</tr>
+<tr>
+<td>灯组/图形</td>
+<td>0.15</td>
+<td>8</td>
+<td>0.120</td>
+</tr>
+<tr>
+<td>比例姿态</td>
+<td>0.15</td>
+<td>6</td>
+<td>0.090</td>
+</tr>
+<tr>
+<td>材质光影</td>
+<td>0.15</td>
+<td>5</td>
+<td>0.075</td>
+</tr>
+<tr>
+<td><strong>合计</strong></td>
+<td><strong>1.00</strong></td>
+<td></td>
+<td><strong>W(T) = 0.645</strong></td>
+</tr>
+</tbody>
+</table>
+<p><em>注：以上为基于公开图片的估算，实际值可能因配色/选装不同而有差异。</em></p>
+<h3 id="42">4.2 范式定位</h3>
+<p>W(T)=0.645，落在 <strong>「冷峻克制」范式</strong>（0.60–0.66）的上沿，接近「先锋反叛」（0.66–0.85）。</p>
+<p>但更准确的定位是<strong>「崇高震撼偏冷峻」</strong>，因为：
+- 它的单元素强度很高（灯组 T=8），符合崇高范式的"单元素高强度"要求
+- 它有等量的秩序安抚（比例精当、特征线克制、前后呼应）
+- 整体不是"冷峻的极简"，而是"崇高的力量感"</p>
+<p>这个定位非常适合运动轿车：
+- 比纯崇高（如保时捷 Taycan）更冷峻、更有攻击性
+- 比纯冷峻（如特斯拉 Model 3）更有力量感、更有设计感
+- 刚好卡在"运动"和"攻击性"之间的甜蜜点</p>
+<hr />
+<h2 id="bea">五、BEA 四维评分卡</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>得分</th>
+<th>满分</th>
+<th>评价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>双极张力</td>
+<td>23</td>
+<td>25</td>
+<td>对立非常清晰，楔形+溜背+锐利灯组，张力十足</td>
+</tr>
+<tr>
+<td>结构秩序</td>
+<td>20</td>
+<td>25</td>
+<td>主辅分明，比例精当，但细节统一性还有提升空间</td>
+</tr>
+<tr>
+<td>阈值安全</td>
+<td>18</td>
+<td>25</td>
+<td>灯组 T=8 接近阈值，对部分用户可能显得"太凶"</td>
+</tr>
+<tr>
+<td>语境适配</td>
+<td>23</td>
+<td>25</td>
+<td>精准匹配运动轿车定位，"看起来快"的目标达成</td>
+</tr>
+<tr>
+<td><strong>总分</strong></td>
+<td><strong>84</strong></td>
+<td><strong>100</strong></td>
+<td><strong>成熟作品</strong></td>
+</tr>
+</tbody>
+</table>
+<p>84 分，属于成熟作品。扣分项主要在阈值安全（灯组偏锐）和结构秩序（细节统一性）。</p>
+<hr />
+<h2 id="su7-bea_1">六、SU7 设计的三个 BEA 亮点</h2>
+<h3 id="61">6.1 "静态暗示运动"的教科书级应用</h3>
+<p>SU7 即使停在那里，也看起来在运动。这是 BEA 说的<strong>"动势（静态暗示）"</strong>：
+- 前低后高的楔形姿态 → 前冲动势
+- 溜背造型 → 速度感
+- 上翘尾翼 → 下压力暗示
+- 低趴宽体 → 贴地飞行感</p>
+<p>这些元素共同制造了"蓄势待发"的视觉感受，是运动轿车设计的核心。</p>
+<h3 id="62">6.2 危极集中策略</h3>
+<p>SU7 把最锐利的元素（灯组 T=8）集中在车头和车尾，而车身大面保持相对柔和。这符合 BEA 的<strong>"从属极集中到高价值细节"</strong>原则：
+- 车头是用户第一眼会看的地方 → 把危极集中在这里，提神效果最大化
+- 车身大面是用户长期观看的地方 → 保持柔和，避免疲劳
+- 这种"远看凶、近看柔"的结构，比"全身都凶"更高级</p>
+<h3 id="63">6.3 比例的精准控制</h3>
+<p>SU7 的比例经过精心计算：
+- 车长/轴距比 = 4997/3000 = 1.666（接近黄金比 1.618）
+- 车高/车宽比 = 1455/1963 = 0.741（低趴感）
+- 前后悬/轴距比 = （945+1052）/3000 = 0.666（短前后悬）</p>
+<p>这些比例不是随便定的，而是在统一的模数体系内计算出来的。这符合 BEA 的<strong>"比例/模数"秩序手段</strong>：固定比例组织尺寸，消化张力。</p>
+<hr />
+<h2 id="bea_1">七、可以改进的地方（BEA 处方）</h2>
+<h3 id="71-t87">7.1 降低灯组危极（T=8→7）</h3>
+<ul>
+<li>大灯的锐利程度可以稍微降低，增加一点柔和过渡</li>
+<li>预期 W(T) 从 0.645 降到 0.63，更稳妥地落在冷峻范式内</li>
+<li>对于家庭用户，降低灯组的攻击性可以提升亲和力，扩大受众</li>
+</ul>
+<h3 id="72">7.2 增加细节统一性</h3>
+<ul>
+<li>前后灯组的内部结构可以增加更多呼应元素</li>
+<li>车门把手、车窗边框等细节可以采用更统一的设计语言</li>
+<li>提升"整体感"，让车看起来更像一个完整的设计作品</li>
+</ul>
+<h3 id="73">7.3 提供更柔和的配色选择</h3>
+<ul>
+<li>当前配色偏运动（黑/白/灰/蓝），可以增加一个更暖的配色（如"暖银"）</li>
+<li>给偏好柔和的用户一个选择，扩大受众覆盖</li>
+<li>暖配色可以天然降低 W(T)，让同一辆车有不同的范式定位</li>
+</ul>
+<hr />
+<h2 id="su7-vs-m9bea">八、SU7 vs 问界 M9：BEA 对比</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>小米 SU7</th>
+<th>问界 M9</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>范式定位</td>
+<td>崇高偏冷峻</td>
+<td>均衡偏崇高</td>
+</tr>
+<tr>
+<td>W(T)</td>
+<td>0.645</td>
+<td>0.525</td>
+</tr>
+<tr>
+<td>核心情绪</td>
+<td>速度、力量、攻击</td>
+<td>大气、稳重、豪华</td>
+</tr>
+<tr>
+<td>最锐元素</td>
+<td>灯组 T=8</td>
+<td>灯组 T=7</td>
+</tr>
+<tr>
+<td>四维评分</td>
+<td>84</td>
+<td>88</td>
+</tr>
+<tr>
+<td>目标用户</td>
+<td>年轻人、运动爱好者</td>
+<td>家庭用户、商务用户</td>
+</tr>
+</tbody>
+</table>
+<p>这两辆车的设计定位完全不同，但都在 BEA 框架下做到了"范式与受众匹配"。SU7 用更高的 W(T) 服务运动用户，M9 用更均衡的 W(T) 服务家庭用户——<strong>没有"最好的设计"，只有"最匹配目标用户的设计"</strong>。</p>
+<hr />
+<h2 id="_2">九、总结</h2>
+<p>小米 SU7 的设计是 BEA 框架下的<strong>成熟作品</strong>：
+- <strong>范式定位</strong>：崇高偏冷峻，W(T)=0.645，精准匹配运动轿车
+- <strong>核心结构</strong>：楔形+溜背+锐利灯组 = 静态暗示运动，"看起来快"
+- <strong>危极集中</strong>：把最锐利的元素集中在灯组，车身大面保持柔和
+- <strong>比例精准</strong>：车长/轴距比接近黄金比，低趴宽体制造运动感
+- <strong>四维评分</strong>：84 分，成熟作品</p>
+<p>SU7 的设计证明了：<strong>运动感不是"越锐利越好"，而是"在正确的位置用正确的极性"</strong>。把危极集中在灯组、姿态这些高价值细节，把亲极用在大面、比例这些基底，用秩序统摄全局，用阈值守住边界——这就是 BEA 的设计哲学。</p>
+<hr />
+<p><em>本文使用 BEA 双极情绪美学 v1.9.1 框架分析。BEA 是一个开源的形式美学计算框架，作者：星空本空，CC BY 4.0。</em></p>
+<p><em>GitHub: https://github.com/Maxing0000/bipolar-emotion-aesthetics</em></p>
+  </div>
+</div>
+<div class="footer">
+  <p>BEA 双极情绪美学 · 作者：星空本空 · <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank">GitHub</a> · CC BY 4.0</p>
+</div>
+</body>
+</html>
