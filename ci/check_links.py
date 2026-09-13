@@ -45,6 +45,8 @@ def main():
             ref = clean(ref)
             if not ref or ref.startswith(("mailto:", "tel:")):
                 continue
+            if "${" in ref or "{{" in ref:
+                continue  # JS 模板占位符，非真实路径
             target = ref if os.path.isabs(ref) else os.path.normpath(os.path.join(os.path.dirname(path), ref))
             # 仓库根相对路径（如 docs/x.md 写在 README 里）也接受
             alt = os.path.normpath(os.path.join(REPO, ref))

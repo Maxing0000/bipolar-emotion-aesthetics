@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(REPO, "bipolar-emotion-aesthetics", "scripts"))
 import rubric  # noqa: E402
 import scoresheet  # noqa: E402
 import wt_calc  # noqa: E402
+import analyze_experiment as ae  # noqa: E402
 
 
 class TestWtCalc(unittest.TestCase):
@@ -116,6 +117,35 @@ class TestRubric(unittest.TestCase):
         self.assertIn("观察点", out)
         with self.assertRaises(ValueError):
             rubric.format_rubric("watch", {})
+
+
+class TestAnalyzeExperiment(unittest.TestCase):
+    VERSIONS = [{"id": "V-low", "wt": 0.10}, {"id": "V-mid", "wt": 0.24}, {"id": "V-high", "wt": 0.45}]
+
+    def _resp(self, design, likes):
+        return {"background": {"age": "26-35", "design": design, "city": "二线"},
+                "ratings": {vid: {"like": l, "pay": l - 1} for vid, l in likes.items()}}
+
+    def test_verdict_support(self):
+        # 窗口内高出 0.8+，且专业组峰值右移 → 支持
+        resps = ([self._resp("no", {"V-low": 3, "V-mid": 6, "V-high": 4}) for _ in range(4)] +
+                 [self._resp("yes", {"V-low": 3, "V-mid": 5, "V-high": 6}) for _ in range(2)])
+        ok, notes = ae.verdict(self.VERSIONS, resps)
+        self.assertTrue(ok, notes)
+
+    def test_verdict_reject_when_diff_too_small(self):
+        # 窗口内对 V-high 差值 < 0.8 → 不支持
+        resps = [self._resp("no", {"V-low": 3, "V-mid": 5, "V-high": 4.5}) for _ in range(6)]
+        ok, notes = ae.verdict(self.VERSIONS, resps)
+        self.assertFalse(ok)
+
+    def test_stats_and_report(self):
+        resps = [self._resp("no", {"V-low": 2, "V-mid": 6, "V-high": 4}) for _ in range(3)]
+        s = ae.stats(self.VERSIONS, resps, "like")
+        self.assertEqual(s["V-mid"][0], 6.0)
+        out = ae.report("测试品类", self.VERSIONS, resps)
+        self.assertIn("n=3", out)
+        self.assertIn("[盲评数据]", out)
 
 
 if __name__ == "__main__":

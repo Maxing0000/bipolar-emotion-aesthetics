@@ -28,6 +28,10 @@ BEA 做出两个**可证伪的预测**：
    - 「愿意为它付费 / 转发」意愿（1–7 分）
 4. 可选项：记录首次注视点与观看时长（更细的唤醒指标）。
 
+### 工具（v1.8.1 起）
+- **`docs/experiment.html`**：盲评收集页——编辑顶部 CONFIG（品类 + 三版本图片路径 + W(T)），浏览器打开即可让被试打分；随机顺序、匿名背景三问、1–7 分双指标；数据存本机 localStorage，可累计多人后导出 JSON。
+- **`bipolar-emotion-aesthetics/scripts/analyze_experiment.py`**：分析脚本——`python3 bipolar-emotion-aesthetics/scripts/analyze_experiment.py data.json` 自动算均值、分组峰值、按判定规则给结论，并生成下方 Issue 模板全文。
+
 ### 提交数据
 按以下格式发 Issue（标题前缀 `[盲评数据]`）：
 
