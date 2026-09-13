@@ -693,6 +693,243 @@ body {
   </section>
   <!-- /BEA 工具门户 -->
 
+  <!-- BEA 范式突破展示 -->
+  <section class="bea-paradigm-breakthrough">
+    <style>
+      .bea-paradigm-breakthrough {
+        margin: 40px 0 32px;
+        padding: 32px 24px;
+        background: linear-gradient(135deg, rgba(232,168,124,0.06), rgba(74,144,164,0.06));
+        border-radius: 16px;
+        border: 1px solid rgba(0,0,0,0.06);
+      }
+      .bea-pb-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: #1a1a2e;
+        margin: 0 0 6px;
+        text-align: center;
+      }
+      .bea-pb-title .new {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(135deg, #E8A87C, #4A90A4);
+        padding: 2px 8px;
+        border-radius: 10px;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      .bea-pb-subtitle {
+        font-size: 13px;
+        color: #888;
+        margin: 0 0 24px;
+        text-align: center;
+      }
+      .bea-pb-spectrum {
+        background: white;
+        border-radius: 12px;
+        padding: 20px 16px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(0,0,0,0.05);
+      }
+      .bea-pb-spectrum-label {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 12px;
+        text-align: center;
+      }
+      .bea-pb-anchors {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 4px;
+        position: relative;
+      }
+      .bea-pb-anchors::before {
+        content: '';
+        position: absolute;
+        bottom: 28px;
+        left: 5%;
+        right: 5%;
+        height: 3px;
+        background: linear-gradient(90deg, #E8A87C, #C8A2C8, #4A90A4);
+        border-radius: 2px;
+      }
+      .bea-pb-anchor {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+      .bea-pb-anchor-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #4A90A4;
+        margin: 0 auto 8px;
+        position: relative;
+        top: 20px;
+      }
+      .bea-pb-anchor.new .bea-pb-anchor-dot {
+        background: linear-gradient(135deg, #E8A87C, #4A90A4);
+        border-color: transparent;
+        width: 14px;
+        height: 14px;
+        box-shadow: 0 0 8px rgba(232,168,124,0.5);
+      }
+      .bea-pb-anchor-name {
+        font-size: 10px;
+        font-weight: 600;
+        color: #555;
+        line-height: 1.3;
+      }
+      .bea-pb-anchor.new .bea-pb-anchor-name {
+        color: #D4956A;
+      }
+      .bea-pb-anchor-wt {
+        font-size: 9px;
+        color: #aaa;
+        margin-top: 2px;
+      }
+      .bea-pb-features {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .bea-pb-feature {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+      }
+      .bea-pb-feature:hover {
+        transform: translateY(-2px);
+      }
+      .bea-pb-feature-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+      .bea-pb-feature-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 4px;
+      }
+      .bea-pb-feature-desc {
+        font-size: 12px;
+        color: #888;
+        line-height: 1.6;
+      }
+      .bea-pb-cta {
+        text-align: center;
+      }
+      .bea-pb-cta a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 24px;
+        background: linear-gradient(135deg, #E8A87C, #4A90A4);
+        color: white;
+        text-decoration: none;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: transform 0.2s;
+      }
+      .bea-pb-cta a:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(232,168,124,0.3);
+      }
+      @media (max-width: 600px) {
+        .bea-paradigm-breakthrough { padding: 24px 16px; }
+        .bea-pb-features { grid-template-columns: 1fr; }
+        .bea-pb-anchor-name { font-size: 9px; }
+        .bea-pb-anchors::before { left: 2%; right: 2%; }
+      }
+    </style>
+    <h2 class="bea-pb-title">🎨 范式体系 v2.0 重大突破<span class="new">NEW</span></h2>
+    <p class="bea-pb-subtitle">从静态锚点到动态演化，从单一范式到叠加和弦——BEA 理论体系的革命性升级</p>
+    
+    <div class="bea-pb-spectrum">
+      <div class="bea-pb-spectrum-label">8 个范式锚点 · 完整美学光谱</div>
+      <div class="bea-pb-anchors">
+        <div class="bea-pb-anchor">
+          <div class="bea-pb-anchor-dot"></div>
+          <div class="bea-pb-anchor-name">治愈松弛</div>
+          <div class="bea-pb-anchor-wt">W(T)=0.1</div>
+        </div>
+        <div class="bea-pb-anchor">
+          <div class="bea-pb-anchor-dot"></div>
+          <div class="bea-pb-anchor-name">亲和精致</div>
+          <div class="bea-pb-anchor-wt">W(T)=0.2</div>
+        </div>
+        <div class="bea-pb-anchor new">
+          <div class="bea-pb-anchor-dot"></div>
+          <div class="bea-pb-anchor-name">🌫️ 诗意朦胧</div>
+          <div class="bea-pb-anchor-wt">W(T)=0.35</div>
+        </div>
+        <div class="bea-pb-anchor">
+          <div class="bea-pb-anchor-dot"></div>
+          <div class="bea-pb-anchor-name">均衡典雅</div>
+          <div class="bea-pb-anchor-wt">W(T)=0.4</div>
+        </div>
+        <div class="bea-pb-anchor">
+          <div class="bea-pb-anchor-dot"></div>
+          <div class="bea-pb-anchor-name">崇高震撼</div>
+          <div class="bea-pb-anchor-wt">W(T)=0.55</div>
+        </div>
+        <div class="bea-pb-anchor">
+          <div class="bea-pb-anchor-dot"></div>
+          <div class="bea-pb-anchor-name">冷峻克制</div>
+          <div class="bea-pb-anchor-wt">W(T)=0.62</div>
+        </div>
+        <div class="bea-pb-anchor new">
+          <div class="bea-pb-anchor-dot"></div>
+          <div class="bea-pb-anchor-name">🌑 神秘魅惑</div>
+          <div class="bea-pb-anchor-wt">W(T)=0.66</div>
+        </div>
+        <div class="bea-pb-anchor">
+          <div class="bea-pb-anchor-dot"></div>
+          <div class="bea-pb-anchor-name">先锋反叛</div>
+          <div class="bea-pb-anchor-wt">W(T)=0.7</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bea-pb-features">
+      <div class="bea-pb-feature">
+        <div class="bea-pb-feature-icon">📈</div>
+        <div class="bea-pb-feature-title">范式动态演化理论</div>
+        <div class="bea-pb-feature-desc">范式不是静态点，而是时间轴上的动态曲线。六段式叙事结构：引入→发展→高潮→转折→收束→余韵。</div>
+      </div>
+      <div class="bea-pb-feature">
+        <div class="bea-pb-feature-icon">🎵</div>
+        <div class="bea-pb-feature-title">范式叠加嵌套理论</div>
+        <div class="bea-pb-feature-desc">高级作品是多层范式叠加的「和弦」。宏观(0.5)+中观(0.3)+微观(0.2)，四种和弦类型。</div>
+      </div>
+      <div class="bea-pb-feature">
+        <div class="bea-pb-feature-icon">🌫️</div>
+        <div class="bea-pb-feature-title">诗意朦胧范式（新增）</div>
+        <div class="bea-pb-feature-desc">模糊、暗示、留白、诗意。危极不是「尖锐」而是「不确定」，制造好奇和想象空间。</div>
+      </div>
+      <div class="bea-pb-feature">
+        <div class="bea-pb-feature-icon">🌑</div>
+        <div class="bea-pb-feature-title">神秘魅惑范式（新增）</div>
+        <div class="bea-pb-feature-desc">未知、诱惑、禁忌、神秘。亲极不是「安全」而是「诱惑」，激活「想要」系统。</div>
+      </div>
+    </div>
+
+    <div class="bea-pb-cta">
+      <a href="theory-book.html#c2">📖 深入阅读范式突破理论 →</a>
+    </div>
+  </section>
+  <!-- /BEA 范式突破展示 -->
+
   <div class="grid">
     <!-- 左：输入 -->
     <div class="card">
