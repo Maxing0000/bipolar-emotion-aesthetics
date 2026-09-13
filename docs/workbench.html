@@ -28,7 +28,6 @@
 <!-- Canonical -->
 <link rel="canonical" href="https://maxing0000.github.io/bipolar-emotion-aesthetics/">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='%23E8A87C'/><stop offset='1' stop-color='%234A90A4'/></linearGradient></defs><circle cx='50' cy='50' r='45' fill='url(%23g)'/><text x='50' y='62' font-size='36' font-weight='900' fill='white' text-anchor='middle' font-family='sans-serif'>B</text></svg>">
-<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap">
 <style>
 :root{
   --bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#252540;--card:#1e1e35;--border:#2d2d4a;
@@ -38,7 +37,7 @@
   --radius:12px;--shadow:0 4px 24px rgba(0,0,0,.3);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Noto Sans SC',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
 .container{max-width:1600px;margin:0 auto;padding:20px}
 
 /* Header */
@@ -434,6 +433,7 @@ body {
   <ul class="bea-nav-links" id="beaNavLinks">
     <li><a href="index.html" data-page="index">🧮 计算器</a></li>
     <li><a href="quick-diagnosis.html" data-page="quick-diagnosis">⚡ 快速诊断</a></li>
+    <li><a href="image-analysis.html" data-page="image-analysis">🖼️ 图片分析</a></li>
     <li><a href="aesthetic-test.html" data-page="aesthetic-test">🎯 审美测试</a></li>
     <li><a href="workbench.html" data-page="workbench">🔧 工作台</a></li>
     <li><a href="cases.html" data-page="cases">📚 案例库</a></li>
@@ -482,7 +482,7 @@ body {
       </div>
     </div>
     <div class="header-right">
-      <span class="version-tag">v1.9.1</span>
+      <span class="version-tag">v1.12.0</span>
     </div>
   </header>
 
@@ -648,7 +648,7 @@ body {
   </div>
 
   <footer>
-    <p>BEA 双极情绪美学 v1.9.1 · 作者：星空本空 · CC BY 4.0 · <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank">GitHub</a> · <a href="https://gitee.com/maxing0000/bipolar-emotion-aesthetics" target="_blank">Gitee</a></p>
+    <p>BEA 双极情绪美学 v1.12.0 · 作者：星空本空 · CC BY 4.0 · <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank">GitHub</a> · <a href="https://gitee.com/maxing0000/bipolar-emotion-aesthetics" target="_blank">Gitee</a></p>
     <p style="margin-top:4px">美感 = 可控张力下的情绪奖赏 · 以亲极安其心，以危极提其神，以秩序统其乱，以阈值守其界</p>
   </footer>
 </div>
@@ -1320,7 +1320,7 @@ function generateReport(){
     });
     md += `\n`;
   }
-  md += `---\n*BEA 双极情绪美学 v1.9.1 · 作者：星空本空 · CC BY 4.0*\n`;
+  md += `---\n*BEA 双极情绪美学 v1.12.0 · 作者：星空本空 · CC BY 4.0*\n`;
   return md;
 }
 

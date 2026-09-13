@@ -1,7 +1,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-1.11.0-blue)
+![Version](https://img.shields.io/badge/version-1.12.0-blue)
 [![PyPI](https://img.shields.io/pypi/v/bea-mcp)](https://pypi.org/project/bea-mcp/)
 [![DOI](https://img.shields.io/badge/DOI-10.6084%2Fm9.figshare.33684490-blue)](https://doi.org/10.6084/m9.figshare.33684490)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
@@ -10,7 +10,7 @@
 > 一套**可解释、可计算、可执行**的形式美学方法 / A computable framework for formal aesthetics.
 > **核心命题：美感 = 可控张力下的情绪奖赏（Aesthetic pleasure = emotional reward under controlled tension）。**
 >
-> 🧮 [W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)　｜　⚡ [快速诊断（3步出结果）](https://maxing0000.github.io/bipolar-emotion-aesthetics/quick-diagnosis.html)　｜　🎯 [审美测试（测你的偏好）](https://maxing0000.github.io/bipolar-emotion-aesthetics/aesthetic-test.html)　｜　🔧 [完整诊断工作台](https://maxing0000.github.io/bipolar-emotion-aesthetics/workbench.html)　｜　📚 [案例库（13个经典分析）](https://maxing0000.github.io/bipolar-emotion-aesthetics/cases.html)　｜　📖 [完整在线理论著作](https://maxing0000.github.io/bipolar-emotion-aesthetics/theory-book.html)　｜　🌐 [English README](README_EN.md)　｜　📚 [中英术语表](GLOSSARY.md)　｜　❓ [常见质疑 FAQ](FAQ.md)
+> 🧮 [W(T) 交互计算器](https://maxing0000.github.io/bipolar-emotion-aesthetics/)　｜　🖼️ [图片分析（上传生成报告）](https://maxing0000.github.io/bipolar-emotion-aesthetics/image-analysis.html)　｜　⚡ [快速诊断（3步出结果）](https://maxing0000.github.io/bipolar-emotion-aesthetics/quick-diagnosis.html)　｜　🎯 [审美测试（测你的偏好）](https://maxing0000.github.io/bipolar-emotion-aesthetics/aesthetic-test.html)　｜　🔧 [完整诊断工作台](https://maxing0000.github.io/bipolar-emotion-aesthetics/workbench.html)　｜　📚 [案例库（14个经典分析）](https://maxing0000.github.io/bipolar-emotion-aesthetics/cases.html)　｜　📖 [完整在线理论著作](https://maxing0000.github.io/bipolar-emotion-aesthetics/theory-book.html)　｜　🌐 [English](https://maxing0000.github.io/bipolar-emotion-aesthetics/index_en.html)　｜　📚 [中英术语表](GLOSSARY.md)　｜　❓ [常见质疑 FAQ](FAQ.md)
 
 ![BEA 双极封面](docs/cover.png)
 
@@ -63,7 +63,7 @@ BEA 不会回答「更大气一点」，而是给出元素级、可复算的结�
 - 自动生成：BEA评分、范式定位、匹配度、改进建议
 
 ### 3️⃣ 看案例学审美（随时看）
-👉 [BEA 案例库](https://maxing0000.github.io/bipolar-emotion-aesthetics/cases.html)（13个经典产品深度分析）
+👉 [BEA 案例库](https://maxing0000.github.io/bipolar-emotion-aesthetics/cases.html)（14个经典产品深度分析）
 - iPhone 17 Pro、问界 M9、小米 SU7、特斯拉 Model S、戴森 V15
 - 无印良品、奔驰 S 级、Cybertruck、索尼 XM5、Vision Pro
 - 乐高、宜家、原神
@@ -114,7 +114,7 @@ bipolar-emotion-aesthetics/                 # ← 开源仓库根目录
 │       ├── index.html                      # ★ BEA 交互式诊断工作台（8品类/自然语言解析/历史记录/A-B对比雷达图/导出图片/AI智能分析提示词）
 │       ├── quick-diagnosis.html            # ⚡ BEA 快速诊断（3步出结果，普通人零门槛）
 │       └── aesthetic-test.html             # 🎯 BEA 审美测试（10道题测审美偏好+范式推荐）
-├── cases/                                  # ★ 案例库（13个经典产品BEA深度分析，含索引页+筛选+搜索）
+├── cases/                                  # ★ 案例库（14个经典产品BEA深度分析，含索引页+筛选+搜索）
 │   ├── index.html                          # 案例库索引页（按范式/品类/评分筛选+关键词搜索+范式分布统计）
 │   ├── 01-iPhone17-Pro-BEA分析.md         # 崇高震撼，W(T)=0.48，86分，微差补偿教科书
 │   ├── 02-问界M9-BEA分析.md               # 均衡典雅，W(T)=0.53，88分，大面柔+灯组锐
