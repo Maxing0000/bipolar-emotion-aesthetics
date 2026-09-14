@@ -847,6 +847,7 @@ img{max-width:100%;display:block}
     <button class="case-filter-btn active" data-filter="all">全部案例</button>
     <button class="case-filter-btn" data-filter="phone">手机</button>
     <button class="case-filter-btn" data-filter="car">汽车</button>
+    <button class="case-filter-btn" data-filter="building">建筑</button>
     <button class="case-filter-btn" data-filter="brand">品牌</button>
   </div>
 
@@ -1064,6 +1065,21 @@ const caseData = [
     dims: {曲面:9, 特征线:9, 灯组:7, 比例:7, 材质:8},
     sensitivity: '<span class="warning">曲面和特征线已到顶(t=9)，t+1变化为0。</span>所有维度降低都会提升评分。材质 t+1 扣3分。四维评分仅60/100，阈值安全只有10分。',
     improvement: '<span class="positive">推荐：保持先锋反叛但降低攻击性——曲面9→7，特征线9→7，材质8→6，W(T)降至0.685，评分提升到75+。</span>不建议大幅柔化（会失去核心差异化）。可在内饰上做亲极补偿，形成"外冷内热"结构。'
+  },
+  {
+    id: 'china-zun',
+    name: '中国尊',
+    category: 'building',
+    categoryLabel: '建筑',
+    subtitle: '2018 · 超高层地标 · 528米北京最高',
+    wt: 0.55,
+    paradigm: '崇高震撼',
+    disease: '轻度攻击症',
+    advantage: '超高层比例+礼器造型',
+    insight: '中国尊是案例库中第一个崇高震撼范式案例，填补了范式谱系空白。造型灵感来自古代礼器"尊"，用超高层比例制造敬畏（危极），用优雅收分和玻璃幕墙安抚（亲极），做到"张力拉满而不崩溃"。',
+    dims: {形体轮廓:5, 立面线条:6, 比例尺度:7, 材质肌理:4, 光影空间:5},
+    sensitivity: '<span class="warning">形体轮廓和光影空间 t+1 都扣7分！</span>说明当前设计已在崇高范式最佳平衡点。所有维度降低都会提升评分。比例尺度t=7是核心危极来源（超高层的崇高感）。',
+    improvement: '<span class="positive">推荐：保持崇高震撼（当前88分已很成熟）。</span>可在夜景灯光上优化：顶部灯笼光影更柔和（t=5→4）。底部入口增加温润材质，形成"外冷内热"微差补偿。室内大堂用亲极材料，形成"外崇高、内亲和"嵌套结构。'
   },
   {
     id: 'apple-brand',
