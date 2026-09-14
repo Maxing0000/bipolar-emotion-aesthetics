@@ -3,517 +3,871 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BEA 双极情绪美学 · W(T) 交互计算器</title>
-<meta name="description" content="美感 = 可控张力下的情绪奖赏。在线计算 W(T) 危极指数、范式落点与极性画像。">
+<title>BEA 双极情绪美学 | Bipolar Emotion Aesthetics</title>
+<meta name="description" content="美感是可控张力下的情绪奖赏。BEA 双极情绪美学——把审美判断从'我觉得'变成可讨论、可比较、可追踪的协作工具。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%230a0a0f'/><circle cx='35' cy='50' r='20' fill='%23f5e6d3'/><circle cx='65' cy='50' r='20' fill='%23d4a574'/></svg>">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
 <style>
-  :root{
-    --bg:#faf9f7; --card:#ffffff; --ink:#2b2a28; --sub:#6f6c66; --line:#e8e5e0;
-    --accent:#b5442c; --accent-soft:#f6ebe7; --qing:#7a9e9f; --ok:#3e7d54; --warn:#a05a1f;
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-    background:var(--bg);color:var(--ink);line-height:1.6;padding:32px 20px 60px}
-  .wrap{max-width:1060px;margin:0 auto}
-  header{margin-bottom:28px}
-  header h1{font-size:26px;font-weight:700;letter-spacing:.5px}
-  header h1 span{color:var(--accent)}
-  header p{color:var(--sub);font-size:14px;margin-top:6px}
-  header .formula{display:inline-block;margin-top:10px;padding:6px 14px;background:var(--accent-soft);
-    border-radius:8px;font-size:14px;color:var(--accent);border:1px solid #ead5cd}
-  .grid{display:grid;grid-template-columns:400px 1fr;gap:20px}
-  @media(max-width:860px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
-  .card h2{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-  .card h2::before{content:"";display:inline-block;width:4px;height:14px;background:var(--accent);border-radius:2px}
-  label{font-size:13px;color:var(--sub)}
-  select{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;
-    background:#fff;color:var(--ink);margin:6px 0 18px;outline:none}
-  select:focus{border-color:var(--qing)}
-  .dim{margin-bottom:14px}
-  .dim .row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;margin-bottom:2px}
-  .dim .row b{font-weight:600;color:var(--ink)}
-  .dim .row span{color:var(--sub)}
-  .dim .row .val{color:var(--accent);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
-  input[type=range]{width:100%;height:22px;-webkit-appearance:none;background:transparent;cursor:pointer}
-  input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:3px;
-    background:linear-gradient(90deg,#cfe0d8,#e9d8c9 55%,#d8b2a5)}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
-    background:#fff;border:2.5px solid var(--accent);margin-top:-6px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
-  input[type=range]::-moz-range-track{height:6px;border-radius:3px;
-    background:linear-gradient(90deg,#cfe0d8,#e9d8c9 55%,#d8b2a5)}
-  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:2.5px solid var(--accent)}
-  .presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-  .presets button{padding:5px 11px;font-size:12px;border:1px solid var(--line);border-radius:999px;
-    background:#fff;color:var(--sub);cursor:pointer;transition:all .15s}
-  .presets button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-  .result-top{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:18px}
-  .wt-num{font-size:52px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1}
-  .wt-num small{font-size:16px;font-weight:600;color:var(--sub)}
-  .paradigm{font-size:15px}
-  .paradigm b{display:inline-block;padding:4px 12px;border-radius:8px;background:var(--accent-soft);
-    color:var(--accent);font-weight:700}
-  .paradigm .hint{color:var(--sub);font-size:12px;margin-top:4px}
-  .target-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;font-size:13px}
-  .target-row input{width:90px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px}
-  .target-row .delta{font-weight:600}
-  .delta.ok{color:var(--ok)} .delta.bad{color:var(--warn)}
-  .spectrum{margin:10px 0 22px}
-  .spec-track{position:relative;height:10px;border-radius:5px;
-    background:linear-gradient(90deg,#cfe0d8 0%,#dcd3c0 30%,#dfb8a0 60%,#c98467 85%,#a04326 100%)}
-  .spec-marker{position:absolute;top:-7px;width:2.5px;height:24px;background:var(--ink);border-radius:2px;
-    transform:translateX(-50%);transition:left .2s}
-  .spec-marker::after{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);
-    border:6px solid transparent;border-top-color:var(--ink)}
-  .spec-anchors{position:relative;height:34px;font-size:11px;color:var(--sub)}
-  .spec-anchors span{position:absolute;transform:translateX(-50%);white-space:nowrap;text-align:center}
-  .spec-anchors span::before{content:"";display:block;width:1px;height:6px;background:var(--line);margin:0 auto 2px}
-  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-  @media(max-width:640px){.two-col{grid-template-columns:1fr}}
-  .profile .prow{display:grid;grid-template-columns:88px 1fr 30px;gap:8px;align-items:center;font-size:12px;margin-bottom:7px}
-  .profile .pbar{height:9px;background:#f0ede8;border-radius:5px;overflow:hidden}
-  .profile .pfill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--qing),var(--accent));transition:width .2s}
-  .profile .pnum{text-align:right;color:var(--sub);font-variant-numeric:tabular-nums}
-  .quad{position:relative}
-  .quad svg{width:100%;height:auto;display:block}
-  .quad .qdot{transition:cx .2s,cy .2s}
-  footer{margin-top:26px;text-align:center;font-size:12px;color:var(--sub)}
-  footer a{color:var(--qing);text-decoration:none}
-  .actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-  .actions button{padding:7px 14px;font-size:13px;border:1px solid var(--line);border-radius:8px;
-    background:#fff;color:var(--ink);cursor:pointer;transition:all .15s}
-  .actions button:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-  .toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:var(--ink);color:#fff;
-    padding:10px 20px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none}
-  .tour-mask{position:fixed;inset:0;background:rgba(43,42,40,.45);display:none;z-index:50}
-  .tour-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,90vw);
-    background:#fff;border-radius:14px;padding:26px;z-index:51;display:none;box-shadow:0 12px 40px rgba(0,0,0,.18)}
-  .tour-card h3{font-size:16px;margin-bottom:10px;color:var(--accent)}
-  .tour-card p{font-size:13.5px;color:var(--ink);margin-bottom:16px;line-height:1.7}
-  .tour-card .tour-btns{display:flex;justify-content:space-between}
-  .tour-card button{padding:7px 16px;font-size:13px;border:1px solid var(--line);border-radius:8px;
-    background:#fff;cursor:pointer}
-  .tour-card button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-  .tour-step{font-size:11px;color:var(--sub);margin-bottom:6px}
+/* ===== 基础重置 ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans SC',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#0a0a0f;
+  color:#e8e4df;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:'Noto Serif SC',serif;font-weight:700;line-height:1.3}
+a{color:#d4a574;text-decoration:none;transition:color .3s}
+a:hover{color:#f5e6d3}
+img{max-width:100%;display:block}
+
+/* ===== 导航 ===== */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1rem 2rem;
+  background:rgba(10,10,15,.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(212,165,116,.15);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.nav-logo{font-family:'Noto Serif SC',serif;font-size:1.3rem;font-weight:900;letter-spacing:.1em;color:#f5e6d3}
+.nav-logo span{color:#d4a574}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:.9rem;color:#a8a29e;transition:color .3s}
+.nav-links a:hover{color:#d4a574}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* ===== Hero ===== */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  padding:6rem 2rem 4rem;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 30% 40%, rgba(245,230,211,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 70% 60%, rgba(212,165,116,.1) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 80% at 50% 100%, rgba(139,90,43,.06) 0%, transparent 50%);
+}
+.hero-orbit{
+  position:absolute;top:50%;left:50%;
+  width:600px;height:600px;
+  transform:translate(-50%,-50%);
+  border:1px solid rgba(212,165,116,.1);
+  border-radius:50%;
+  animation:rotate 60s linear infinite;
+}
+.hero-orbit::before{
+  content:'';position:absolute;top:-4px;left:50%;
+  width:8px;height:8px;background:#d4a574;border-radius:50%;
+  box-shadow:0 0 20px #d4a574;
+}
+.hero-orbit-2{
+  position:absolute;top:50%;left:50%;
+  width:400px;height:400px;
+  transform:translate(-50%,-50%);
+  border:1px solid rgba(245,230,211,.08);
+  border-radius:50%;
+  animation:rotate 40s linear infinite reverse;
+}
+@keyframes rotate{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:900px}
+.hero-tag{
+  display:inline-block;
+  padding:.4rem 1.2rem;
+  border:1px solid rgba(212,165,116,.3);
+  border-radius:100px;
+  font-size:.8rem;letter-spacing:.2em;
+  color:#d4a574;margin-bottom:2rem;
+  text-transform:uppercase;
+}
+.hero h1{
+  font-size:clamp(2.5rem,6vw,4.5rem);
+  font-weight:900;
+  margin-bottom:1.5rem;
+  background:linear-gradient(135deg,#f5e6d3 0%,#d4a574 50%,#8b5a2b 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-subtitle{
+  font-size:clamp(1.1rem,2.5vw,1.5rem);
+  color:#a8a29e;
+  margin-bottom:2rem;
+  font-weight:300;
+}
+.hero-formula{
+  display:inline-block;
+  padding:1.5rem 2.5rem;
+  background:rgba(212,165,116,.06);
+  border:1px solid rgba(212,165,116,.2);
+  border-radius:12px;
+  font-family:'Noto Serif SC',serif;
+  font-size:clamp(1rem,2vw,1.3rem);
+  color:#f5e6d3;
+  margin-bottom:2.5rem;
+}
+.hero-formula strong{color:#d4a574;font-weight:700}
+.hero-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-block;
+  padding:.9rem 2rem;
+  border-radius:8px;
+  font-size:.95rem;
+  font-weight:500;
+  cursor:pointer;
+  transition:all .3s;
+  border:none;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#d4a574,#8b5a2b);
+  color:#0a0a0f;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(212,165,116,.3)}
+.btn-secondary{
+  background:transparent;
+  border:1px solid rgba(212,165,116,.4);
+  color:#d4a574;
+}
+.btn-secondary:hover{background:rgba(212,165,116,.1)}
+
+/* ===== 通用区块 ===== */
+.section{padding:6rem 2rem;max-width:1200px;margin:0 auto}
+.section-tag{
+  display:inline-block;
+  font-size:.75rem;letter-spacing:.25em;
+  color:#d4a574;text-transform:uppercase;
+  margin-bottom:1rem;
+}
+.section-title{
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  margin-bottom:1rem;
+  color:#f5e6d3;
+}
+.section-desc{
+  font-size:1.05rem;color:#a8a29e;
+  max-width:700px;margin-bottom:3rem;
+}
+
+/* ===== 双极模型 ===== */
+.bipolar-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3rem}
+@media(max-width:768px){.bipolar-grid{grid-template-columns:1fr}}
+.pole-card{
+  padding:2.5rem;
+  border-radius:16px;
+  position:relative;
+  overflow:hidden;
+}
+.pole-plus{
+  background:linear-gradient(135deg,rgba(245,230,211,.08),rgba(245,230,211,.02));
+  border:1px solid rgba(245,230,211,.2);
+}
+.pole-minus{
+  background:linear-gradient(135deg,rgba(212,165,116,.1),rgba(139,90,43,.03));
+  border:1px solid rgba(212,165,116,.25);
+}
+.pole-label{
+  font-size:.8rem;letter-spacing:.2em;
+  text-transform:uppercase;margin-bottom:.5rem;
+}
+.pole-plus .pole-label{color:#f5e6d3}
+.pole-minus .pole-label{color:#d4a574}
+.pole-name{font-size:1.8rem;font-weight:900;margin-bottom:1rem}
+.pole-plus .pole-name{color:#f5e6d3}
+.pole-minus .pole-name{color:#d4a574}
+.pole-desc{color:#a8a29e;margin-bottom:1.5rem;font-size:.95rem}
+.pole-tags{display:flex;flex-wrap:wrap;gap:.5rem}
+.pole-tag{
+  padding:.3rem .8rem;
+  border-radius:100px;
+  font-size:.8rem;
+}
+.pole-plus .pole-tag{background:rgba(245,230,211,.1);color:#f5e6d3}
+.pole-minus .pole-tag{background:rgba(212,165,116,.12);color:#d4a574}
+
+/* ===== 公式展示 ===== */
+.formula-block{
+  padding:2.5rem;
+  background:rgba(212,165,116,.04);
+  border:1px solid rgba(212,165,116,.15);
+  border-radius:16px;
+  text-align:center;
+  margin-bottom:2rem;
+}
+.formula-main{
+  font-family:'Noto Serif SC',serif;
+  font-size:clamp(1.3rem,3vw,2rem);
+  color:#f5e6d3;
+  margin-bottom:1rem;
+}
+.formula-main .highlight{color:#d4a574;font-weight:700}
+.formula-explain{color:#a8a29e;font-size:.9rem}
+
+/* ===== 六范式谱系 ===== */
+.paradigm-spectrum{
+  position:relative;
+  padding:3rem 0;
+  margin-bottom:3rem;
+}
+.spectrum-line{
+  position:absolute;top:50%;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,#f5e6d3 0%,#d4a574 50%,#8b5a2b 100%);
+  transform:translateY(-50%);
+}
+.spectrum-nodes{
+  display:flex;justify-content:space-between;
+  position:relative;z-index:2;
+}
+.paradigm-node{
+  text-align:center;cursor:pointer;
+  transition:transform .3s;
+  width:14%;
+}
+.paradigm-node:hover{transform:translateY(-8px)}
+.paradigm-node.active .node-dot{
+  background:#d4a574;
+  box-shadow:0 0 20px rgba(212,165,116,.6);
+  transform:scale(1.2);
+}
+.paradigm-node.active .node-name{color:#d4a574}
+.node-dot{
+  width:20px;height:20px;
+  background:#0a0a0f;
+  border:3px solid #d4a574;
+  border-radius:50%;
+  margin:0 auto 1rem;
+  transition:all .3s;
+}
+.paradigm-node:hover .node-dot{
+  background:#d4a574;
+  box-shadow:0 0 20px rgba(212,165,116,.5);
+}
+.node-name{font-size:.85rem;font-weight:600;color:#f5e6d3;margin-bottom:.3rem}
+.node-wt{font-size:.75rem;color:#a8a29e}
+@media(max-width:768px){
+  .spectrum-nodes{flex-wrap:wrap;gap:1rem}
+  .paradigm-node{width:30%}
+  .spectrum-line{display:none}
+}
+
+/* ===== 范式详情卡片 ===== */
+.paradigm-detail{
+  display:none;
+  padding:2rem;
+  background:rgba(212,165,116,.05);
+  border:1px solid rgba(212,165,116,.2);
+  border-radius:12px;
+  margin-top:1rem;
+}
+.paradigm-detail.active{display:block;animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.paradigm-detail h4{color:#d4a574;margin-bottom:.5rem;font-size:1.2rem}
+.paradigm-detail p{color:#a8a29e;font-size:.9rem;margin-bottom:.5rem}
+.paradigm-detail .ratio{color:#f5e6d3;font-weight:600}
+
+/* ===== 方法论步骤 ===== */
+.method-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+@media(max-width:900px){.method-steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.method-steps{grid-template-columns:1fr}}
+.step-card{
+  padding:2rem;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(212,165,116,.12);
+  border-radius:12px;
+  transition:all .3s;
+  position:relative;
+}
+.step-card:hover{
+  border-color:rgba(212,165,116,.4);
+  transform:translateY(-4px);
+  background:rgba(212,165,116,.05);
+}
+.step-num{
+  font-family:'Noto Serif SC',serif;
+  font-size:2.5rem;font-weight:900;
+  color:rgba(212,165,116,.3);
+  margin-bottom:.5rem;
+}
+.step-title{font-size:1.1rem;font-weight:700;color:#f5e6d3;margin-bottom:.5rem}
+.step-desc{font-size:.85rem;color:#a8a29e}
+
+/* ===== 应用领域 ===== */
+.domains-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+@media(max-width:900px){.domains-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.domains-grid{grid-template-columns:1fr}}
+.domain-card{
+  padding:1.8rem;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(212,165,116,.12);
+  border-radius:12px;
+  transition:all .3s;
+}
+.domain-card:hover{border-color:rgba(212,165,116,.4);background:rgba(212,165,116,.04)}
+.domain-icon{
+  width:48px;height:48px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(212,165,116,.1);
+  border-radius:10px;
+  margin-bottom:1rem;
+  font-size:1.3rem;
+}
+.domain-name{font-size:1.05rem;font-weight:700;color:#f5e6d3;margin-bottom:.4rem}
+.domain-desc{font-size:.85rem;color:#a8a29e}
+
+/* ===== 互动计算器 ===== */
+.calculator{
+  padding:2.5rem;
+  background:linear-gradient(135deg,rgba(212,165,116,.06),rgba(139,90,43,.03));
+  border:1px solid rgba(212,165,116,.2);
+  border-radius:16px;
+}
+.calc-title{font-size:1.3rem;font-weight:700;color:#f5e6d3;margin-bottom:1.5rem;text-align:center}
+.calc-category{margin-bottom:1.5rem}
+.calc-category label{display:block;font-size:.85rem;color:#a8a29e;margin-bottom:.5rem}
+.calc-category select{
+  width:100%;padding:.7rem 1rem;
+  background:rgba(10,10,15,.8);
+  border:1px solid rgba(212,165,116,.3);
+  border-radius:8px;
+  color:#f5e6d3;
+  font-size:.9rem;
+  cursor:pointer;
+}
+.calc-sliders{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+@media(max-width:600px){.calc-sliders{grid-template-columns:1fr}}
+.slider-group label{
+  display:flex;justify-content:space-between;
+  font-size:.8rem;color:#a8a29e;margin-bottom:.3rem;
+}
+.slider-group label span{color:#d4a574;font-weight:600}
+.slider-group input[type=range]{
+  width:100%;height:6px;
+  -webkit-appearance:none;
+  background:rgba(212,165,116,.2);
+  border-radius:3px;outline:none;
+}
+.slider-group input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:18px;height:18px;
+  background:#d4a574;border-radius:50%;
+  cursor:pointer;box-shadow:0 0 10px rgba(212,165,116,.5);
+}
+.calc-result{
+  text-align:center;padding:1.5rem;
+  background:rgba(10,10,15,.6);
+  border-radius:10px;
+  border:1px solid rgba(212,165,116,.15);
+}
+.calc-wt{
+  font-family:'Noto Serif SC',serif;
+  font-size:2.5rem;font-weight:900;
+  color:#d4a574;margin-bottom:.3rem;
+}
+.calc-paradigm{font-size:1.1rem;color:#f5e6d3;font-weight:600;margin-bottom:.5rem}
+.calc-bar{
+  height:8px;background:rgba(212,165,116,.15);
+  border-radius:4px;overflow:hidden;margin-top:1rem;
+}
+.calc-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,#f5e6d3,#d4a574,#8b5a2b);
+  border-radius:4px;
+  transition:width .5s ease;
+}
+
+/* ===== 评分卡 ===== */
+.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
+@media(max-width:768px){.score-grid{grid-template-columns:repeat(2,1fr)}}
+.score-card{
+  padding:1.5rem;text-align:center;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(212,165,116,.12);
+  border-radius:12px;
+}
+.score-value{
+  font-family:'Noto Serif SC',serif;
+  font-size:2rem;font-weight:900;
+  color:#d4a574;margin-bottom:.3rem;
+}
+.score-label{font-size:.85rem;color:#a8a29e}
+
+/* ===== 病症诊断 ===== */
+.diagnosis-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+@media(max-width:768px){.diagnosis-grid{grid-template-columns:1fr}}
+.diagnosis-item{
+  padding:1.2rem;
+  background:rgba(255,255,255,.02);
+  border-left:3px solid #d4a574;
+  border-radius:0 8px 8px 0;
+}
+.diagnosis-name{font-size:.95rem;font-weight:700;color:#f5e6d3;margin-bottom:.3rem}
+.diagnosis-symptom{font-size:.8rem;color:#a8a29e;margin-bottom:.3rem}
+.diagnosis-prescription{font-size:.8rem;color:#d4a574}
+
+/* ===== 页脚 ===== */
+.footer{
+  padding:4rem 2rem 2rem;
+  border-top:1px solid rgba(212,165,116,.15);
+  text-align:center;
+}
+.footer-logo{
+  font-family:'Noto Serif SC',serif;
+  font-size:1.5rem;font-weight:900;
+  color:#f5e6d3;margin-bottom:1rem;
+}
+.footer-logo span{color:#d4a574}
+.footer-links{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
+.footer-links a{font-size:.85rem;color:#a8a29e}
+.footer-links a:hover{color:#d4a574}
+.footer-copy{font-size:.8rem;color:#6b6560}
+
+/* ===== 滚动动画 ===== */
+.reveal{opacity:0;transform:translateY(30px);transition:all .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>BEA 双极情绪美学 · <span>W(T) 交互计算器</span></h1>
-    <p>任何感官对象的美感，都是亲极（安全趋近）与危极（警觉唤醒）在秩序之内的恰当组合。</p>
-    <div class="formula">美感 = 可控张力下的情绪奖赏 &nbsp;·&nbsp; W(T) = Σ wᵢ·(tᵢ/10)</div>
-  </header>
 
-  <div class="grid">
-    <!-- 左：输入 -->
-    <div class="card">
-      <h2>① 选择品类与各维度危极强度</h2>
-      <label for="cat">品类（决定各维度权重）</label>
-      <select id="cat">
-        <option value="phone">手机 / 手持电子</option>
-        <option value="car">汽车 / 交通工具</option>
-        <option value="brand">品牌 / 平面视觉</option>
-        <option value="ui">UI / 交互界面</option>
+<!-- ===== 导航 ===== -->
+<nav class="nav">
+  <div class="nav-logo">BEA<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#theory">核心理论</a></li>
+    <li><a href="#paradigms">六范式</a></li>
+    <li><a href="#method">方法论</a></li>
+    <li><a href="#calculator">W(T) 计算</a></li>
+    <li><a href="#diagnosis">病症诊断</a></li>
+    <li><a href="#applications">应用领域</a></li>
+  </ul>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-orbit"></div>
+  <div class="hero-orbit-2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Bipolar Emotion Aesthetics</div>
+    <h1>双极情绪美学</h1>
+    <p class="hero-subtitle">把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作工具</p>
+    <div class="hero-formula">
+      美感 = <strong>可控张力</strong>下的<strong>情绪奖赏</strong>
+    </div>
+    <div class="hero-cta">
+      <a href="#theory" class="btn btn-primary">了解理论</a>
+      <a href="#calculator" class="btn btn-secondary">体验计算</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 核心理论 ===== -->
+<section class="section" id="theory">
+  <div class="reveal">
+    <div class="section-tag">Core Theory</div>
+    <h2 class="section-title">核心理论</h2>
+    <p class="section-desc">任何感官形式都由元素构成，每一元素都在亲极与危极之间占据一个极性位置。当双极元素在可认知的秩序下被组织，且危极唤醒被约束在安全阈值内，美感便产生了。</p>
+  </div>
+
+  <div class="bipolar-grid reveal">
+    <div class="pole-card pole-plus">
+      <div class="pole-label">Pole Positive</div>
+      <div class="pole-name">亲极 P+</div>
+      <p class="pole-desc">趋近、安全、愉悦。激活奖赏回路，让人想接近、想停留、想拥有。</p>
+      <div class="pole-tags">
+        <span class="pole-tag">圆润</span>
+        <span class="pole-tag">柔色</span>
+        <span class="pole-tag">光滑</span>
+        <span class="pole-tag">舒缓</span>
+        <span class="pole-tag">对称</span>
+        <span class="pole-tag">留白</span>
+        <span class="pole-tag">稳定</span>
+      </div>
+    </div>
+    <div class="pole-card pole-minus">
+      <div class="pole-label">Pole Tension</div>
+      <div class="pole-name">危极 T−</div>
+      <p class="pole-desc">警觉、唤醒、畏惧。激活警觉回路，制造张力与能量，让人被抓住、被震撼。</p>
+      <div class="pole-tags">
+        <span class="pole-tag">尖锐</span>
+        <span class="pole-tag">强对比</span>
+        <span class="pole-tag">坚硬</span>
+        <span class="pole-tag">突变</span>
+        <span class="pole-tag">失衡</span>
+        <span class="pole-tag">拥挤</span>
+        <span class="pole-tag">冷峻</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="formula-block reveal">
+    <div class="formula-main">
+      W(T) = <span class="highlight">Σ wᵢ · (tᵢ / 10)</span>
+    </div>
+    <p class="formula-explain">整体危极权重 = 各维度权重 × 该维度危极强度(0-10) 的加权和。结果落在 0-1，对应连续谱上的范式位置。</p>
+  </div>
+
+  <div class="score-grid reveal">
+    <div class="score-card">
+      <div class="score-value">25</div>
+      <div class="score-label">双极张力</div>
+    </div>
+    <div class="score-card">
+      <div class="score-value">25</div>
+      <div class="score-label">结构秩序</div>
+    </div>
+    <div class="score-card">
+      <div class="score-value">25</div>
+      <div class="score-label">阈值安全</div>
+    </div>
+    <div class="score-card">
+      <div class="score-value">25</div>
+      <div class="score-label">语境适配</div>
+    </div>
+  </div>
+  <p class="section-desc reveal" style="text-align:center;margin:0 auto">四维评分卡，满分100分。≥80为成熟作品，任一维<15为明显短板。</p>
+</section>
+
+<!-- ===== 六范式谱系 ===== -->
+<section class="section" id="paradigms">
+  <div class="reveal">
+    <div class="section-tag">Six Paradigms</div>
+    <h2 class="section-title">六范式谱系</h2>
+    <p class="section-desc">以危极综合权重为横轴，所有风格排成一条连续谱。六大范式是被反复验证的稳定锚点，锚点间是平滑过渡的中间风格。点击节点查看详情。</p>
+  </div>
+
+  <div class="paradigm-spectrum reveal">
+    <div class="spectrum-line"></div>
+    <div class="spectrum-nodes">
+      <div class="paradigm-node" data-paradigm="0">
+        <div class="node-dot"></div>
+        <div class="node-name">治愈松弛</div>
+        <div class="node-wt">W(T)<0.15</div>
+      </div>
+      <div class="paradigm-node" data-paradigm="1">
+        <div class="node-dot"></div>
+        <div class="node-name">亲和精致</div>
+        <div class="node-wt">0.15-0.30</div>
+      </div>
+      <div class="paradigm-node" data-paradigm="2">
+        <div class="node-dot"></div>
+        <div class="node-name">均衡典雅</div>
+        <div class="node-wt">0.30-0.48</div>
+      </div>
+      <div class="paradigm-node" data-paradigm="3">
+        <div class="node-dot"></div>
+        <div class="node-name">崇高震撼</div>
+        <div class="node-wt">0.48-0.60</div>
+      </div>
+      <div class="paradigm-node" data-paradigm="4">
+        <div class="node-dot"></div>
+        <div class="node-name">冷峻克制</div>
+        <div class="node-wt">0.60-0.66</div>
+      </div>
+      <div class="paradigm-node" data-paradigm="5">
+        <div class="node-dot"></div>
+        <div class="node-name">先锋反叛</div>
+        <div class="node-wt">0.66-0.85</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="paradigm-detail" class="paradigm-detail">
+    <h4>治愈松弛范式</h4>
+    <p><span class="ratio">亲 90 : 危 10</span></p>
+    <p>核心体验：放松、舒展、无攻击性，像被温柔接住。几乎全部元素走亲极，只留约10%对立极作"质感锚点"，防止过度柔和而软塌、发腻、显廉价。</p>
+    <p>适用：母婴、疗愈空间、家居、民生服务、治愈系插画、公共/医疗空间。</p>
+  </div>
+</section>
+
+<!-- ===== 方法论 ===== -->
+<section class="section" id="method">
+  <div class="reveal">
+    <div class="section-tag">Methodology</div>
+    <h2 class="section-title">六步创作法</h2>
+    <p class="section-desc">前一步输出是后一步输入，可循环迭代而非一次性直线。把模糊的审美偏好转化为元素级可执行修改方案。</p>
+  </div>
+
+  <div class="method-steps reveal">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-title">定调</div>
+      <p class="step-desc">锁定范式锚点，产出基调卡：情绪定位、目标W(T)区间、受众阈值、使用距离。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-title">拆解</div>
+      <p class="step-desc">沿维度逐一拆开方案，为每个元素按0-10量表标方向与强度，得到极性审计表。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-title">配比</div>
+      <p class="step-desc">计算W(T)，与目标区间对照。偏高减锐增柔，偏低加锐减柔，检查主辅比≥6:4。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">04</div>
+      <div class="step-title">立序</div>
+      <p class="step-desc">选至少一条贯穿全局的秩序主线，检验层级嵌套一致性和跨模态极性协同。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">05</div>
+      <div class="step-title">校阈</div>
+      <p class="step-desc">执行阈值三问：本能红线一票否决，认知阈靠补秩序右移，文化阈靠符号审计处理。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">06</div>
+      <div class="step-title">验证</div>
+      <p class="step-desc">远观测试+近看长期测试+四维评分卡。任一维度低于15分回到对应步骤修正。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 互动计算器 ===== -->
+<section class="section" id="calculator">
+  <div class="reveal">
+    <div class="section-tag">Interactive Tool</div>
+    <h2 class="section-title">W(T) 危极权重计算器</h2>
+    <p class="section-desc">选择品类，拖动各维度危极强度滑块，实时计算整体危极权重W(T)和范式落点。</p>
+  </div>
+
+  <div class="calculator reveal">
+    <div class="calc-title">实时计算</div>
+    <div class="calc-category">
+      <label for="category-select">选择品类</label>
+      <select id="category-select">
+        <option value="phone">手持消费电子（手机）</option>
+        <option value="car">汽车外形</option>
+        <option value="brand">平面/品牌</option>
+        <option value="ui">数字界面</option>
       </select>
-      <div id="dims"></div>
-      <label>主流产品诊断 / 教学案例（估算标定，供方法演示）</label>
-      <div class="presets" id="presets"></div>
-      <div class="actions">
-        <button id="btnShare">🔗 复制分享链接</button>
-        <button id="btnExport">📄 导出审计报告</button>
-        <button id="btnTour">❓ 三步上手</button>
-      </div>
     </div>
-
-    <!-- 右：结果 -->
-    <div class="card">
-      <h2>② 计算结果</h2>
-      <div class="result-top">
-        <div class="wt-num"><span id="wt">0.000</span><small> W(T)</small></div>
-        <div class="paradigm">
-          范式落点：<b id="para">—</b>
-          <div class="hint" id="paraHint"></div>
-        </div>
-      </div>
-      <div class="target-row">
-        <label>目标区间</label>
-        <input type="number" id="target" step="0.01" min="0" max="1" placeholder="如 0.28">
-        <span class="delta" id="delta"></span>
-      </div>
-      <div class="spectrum">
-        <div class="spec-track"><div class="spec-marker" id="marker"></div></div>
-        <div class="spec-anchors" id="anchors"></div>
-      </div>
-      <div id="rxCard" style="display:none;margin-bottom:20px;border:1px solid #ead5cd;background:var(--accent-soft);border-radius:10px;padding:14px 16px">
-        <h2 style="font-size:13px;margin-bottom:8px;color:var(--accent)">🩺 诊断处方（高权重维度先动，杠杆最大）</h2>
-        <div id="rxBody" style="font-size:12.5px;line-height:1.8"></div>
-        <div style="font-size:11px;color:var(--sub);margin-top:8px">t 值调整须落回具体形式决策；改后回六步法第五步「校阈」复验三阈。</div>
-      </div>
-      <div class="two-col">
-        <div class="profile">
-          <h2 style="font-size:13px;margin-bottom:10px">极性画像</h2>
-          <div id="profile"></div>
-        </div>
-        <div class="quad">
-          <h2 style="font-size:13px;margin-bottom:10px">四象限定位（横轴：结构秩序）</h2>
-          <svg viewBox="0 0 300 240" id="quadSvg">
-            <rect x="30" y="10" width="130" height="105" fill="#f2efe9"/>
-            <rect x="160" y="10" width="130" height="105" fill="#f6ebe7"/>
-            <rect x="30" y="115" width="130" height="105" fill="#f7f6f3"/>
-            <rect x="160" y="115" width="130" height="105" fill="#f2efe9"/>
-            <text x="95" y="60" text-anchor="middle" font-size="12" fill="#a09c93">甜腻 / 松散</text>
-            <text x="225" y="56" text-anchor="middle" font-size="12" fill="#b5442c" font-weight="700">黄金区</text>
-            <text x="225" y="74" text-anchor="middle" font-size="10" fill="#c8836b">高张力 × 高秩序</text>
-            <text x="95" y="162" text-anchor="middle" font-size="12" fill="#a09c93">呆板平庸</text>
-            <text x="225" y="162" text-anchor="middle" font-size="12" fill="#a09c93">混乱 / 焦虑</text>
-            <line x1="30" y1="115" x2="290" y2="115" stroke="#d8d4cd" stroke-width="1"/>
-            <line x1="160" y1="10" x2="160" y2="220" stroke="#d8d4cd" stroke-width="1"/>
-            <text x="30" y="235" font-size="10" fill="#6f6c66">秩序低</text>
-            <text x="258" y="235" font-size="10" fill="#6f6c66">秩序高</text>
-            <circle id="qdot" class="qdot" cx="160" cy="115" r="7" fill="#b5442c" stroke="#fff" stroke-width="2"/>
-          </svg>
-          <div style="font-size:12px;color:var(--sub)">纵轴高度 = W(T)（顶 = 0.85 越阈线）。点在右上角即「柔中藏骨、险而不崩」。</div>
-          <div style="margin-top:8px">
-            <label style="margin-right:8px">结构秩序（主观 0–10）</label>
-            <input type="range" id="order" min="0" max="10" value="6" style="width:100%">
-          </div>
-        </div>
-      </div>
+    <div class="calc-sliders" id="sliders-container"></div>
+    <div class="calc-result">
+      <div class="calc-wt" id="calc-wt">0.265</div>
+      <div class="calc-paradigm" id="calc-paradigm">亲和精致</div>
+      <div class="calc-bar"><div class="calc-bar-fill" id="calc-bar-fill" style="width:26.5%"></div></div>
     </div>
   </div>
+</section>
 
-  <footer>
-    双极情绪美学 BEA v1.7.0 · 作者 星空本空 ·
-    <a href="theory-book.html">📖 完整在线理论著作</a> ·
-    <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics">GitHub 仓库</a> ·
-    CC BY 4.0 · 0–10 刻度与 W(T) 为协作参照，非心理物理常数
-  </footer>
-</div>
-
-<div class="toast" id="toast"></div>
-<div class="tour-mask" id="tourMask"></div>
-<div class="tour-card" id="tourCard">
-  <div class="tour-step" id="tourStep"></div>
-  <h3 id="tourTitle"></h3>
-  <p id="tourBody"></p>
-  <div class="tour-btns">
-    <button id="tourSkip">跳过</button>
-    <button id="tourNext" class="primary">下一步 →</button>
+<!-- ===== 病症诊断 ===== -->
+<section class="section" id="diagnosis">
+  <div class="reveal">
+    <div class="section-tag">Diagnosis</div>
+    <h2 class="section-title">审美病症诊断</h2>
+    <p class="section-desc">当设计"感觉不对"时，系统性定位问题并给出元素级处方。从"感觉哪里不对"到"具体怎么改"。</p>
   </div>
-</div>
+
+  <div class="diagnosis-grid reveal">
+    <div class="diagnosis-item">
+      <div class="diagnosis-name">甜腻症（亲极过载）</div>
+      <p class="diagnosis-symptom">全圆角、全柔色、无一处锐度，发腻幼稚廉价</p>
+      <p class="diagnosis-prescription">处方：高价值细节注入10%-20%危极，柔中藏骨</p>
+    </div>
+    <div class="diagnosis-item">
+      <div class="diagnosis-name">攻击症（危极过载）</div>
+      <p class="diagnosis-symptom">处处锐角、强对比、硬冷，令人紧张想回避</p>
+      <p class="diagnosis-prescription">处方：扩亲极基底、降危极到范式区间，用大曲面接住</p>
+    </div>
+    <div class="diagnosis-item">
+      <div class="diagnosis-name">均分症（主辅缺失）</div>
+      <p class="diagnosis-symptom">亲危各半、无主次、情绪暧昧，"说不上哪里怪"</p>
+      <p class="diagnosis-prescription">处方：确立至少6:4主辅比，先让第一印象明确</p>
+    </div>
+    <div class="diagnosis-item">
+      <div class="diagnosis-name">失序症（有立无统）</div>
+      <p class="diagnosis-symptom">单个元素都精彩，堆一起互相打架，失控焦虑</p>
+      <p class="diagnosis-prescription">处方：确立一条贯穿全局的统一主线（色板/模数/栅格）</p>
+    </div>
+    <div class="diagnosis-item">
+      <div class="diagnosis-name">层级冲突症</div>
+      <p class="diagnosis-symptom">宏观柔和却微观攻击、视觉圆润却触感硌手</p>
+      <p class="diagnosis-prescription">处方：逐层逐通道审计，选同向叠加或微差补偿</p>
+    </div>
+    <div class="diagnosis-item">
+      <div class="diagnosis-name">重点通胀症</div>
+      <p class="diagnosis-symptom">哪里都想强调，结果哪里都不突出、视觉噪音大</p>
+      <p class="diagnosis-prescription">处方：做减法，从属极压回10%-30%，建视觉等级</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 应用领域 ===== -->
+<section class="section" id="applications">
+  <div class="reveal">
+    <div class="section-tag">Applications</div>
+    <h2 class="section-title">九大应用领域</h2>
+    <p class="section-desc">BEA 适用于任何以感官形式呈现的对象，从消费电子到公共空间，从品牌视觉到影视动画。</p>
+  </div>
+
+  <div class="domains-grid reveal">
+    <div class="domain-card">
+      <div class="domain-icon">◆</div>
+      <div class="domain-name">消费电子/手机</div>
+      <p class="domain-desc">长期贴身物，锁定亲和精致范式。宏观柔和+微观锐利的微差补偿结构。</p>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">▲</div>
+      <div class="domain-name">汽车/交通工具</div>
+      <p class="domain-desc">"大面柔、特征线锐"，用静态曲面表达动态张力，崇高而不凶戾。</p>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">■</div>
+      <div class="domain-name">建筑/室内空间</div>
+      <p class="domain-desc">宏观崇高、近人治愈的嵌套结构。大尺度制造敬畏，温润材料安抚。</p>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">●</div>
+      <div class="domain-name">品牌/平面视觉</div>
+      <p class="domain-desc">版面秩序作恒定亲极安全网，个性张力通过主色饱和度、字体锐度调节。</p>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">◈</div>
+      <div class="domain-name">UI/交互界面</div>
+      <p class="domain-desc">高频长期使用，偏亲和精致。危极严格预算化，一屏内高危极元素≤2个。</p>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">✦</div>
+      <div class="domain-name">服装/时尚</div>
+      <p class="domain-desc">廓形是宏观极性，面料质感、肩线尖角是可调变量。全谱皆可。</p>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">♪</div>
+      <div class="domain-name">音乐/声音设计</div>
+      <p class="domain-desc">协和温暖为亲极基底，不协和音、音色突变制造张力，张力后必须有释放。</p>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">▶</div>
+      <div class="domain-name">影视/动画</div>
+      <p class="domain-desc">时间轴上编排双极——舒缓段积蓄安全感，跳切硬光制造冲突，回归秩序完成释放。</p>
+    </div>
+    <div class="domain-card">
+      <div class="domain-icon">✚</div>
+      <div class="domain-name">公共/医疗空间</div>
+      <p class="domain-desc">治愈松弛范式。圆角、柔色、自然材质、缓流动线，仅导视警示用少量高对比。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 页脚 ===== -->
+<footer class="footer">
+  <div class="footer-logo">BEA<span>.</span> 双极情绪美学</div>
+  <div class="footer-links">
+    <a href="https://github.com/Maxing0000/bipolar-emotion-aesthetics" target="_blank">GitHub</a>
+    <a href="https://gitee.com/maxing0000/bipolar-emotion-aesthetics" target="_blank">Gitee</a>
+    <a href="https://www.modelscope.cn/datasets/xkbk0000/bipolar-emotion-aesthetics" target="_blank">ModelScope</a>
+    <a href="https://zhuanlan.zhihu.com/p/2082453017601882066" target="_blank">知乎文章</a>
+  </div>
+  <p class="footer-copy">Bipolar Emotion Aesthetics v2.2.0 | 署名：星空本空 | CC BY-NC-SA 4.0</p>
+</footer>
 
 <script>
-const DATA = {
-  phone: {name:"手机 / 手持电子", dims:[["形状线条",.25],["质感触觉",.25],["色彩",.15],["构图比例",.15],["光影",.10],["细节线条",.10]]},
-  car:   {name:"汽车 / 交通工具", dims:[["形体曲面动势",.3],["特征线条",.25],["灯组图形",.15],["比例姿态",.15],["材质光影",.15]]},
-  brand: {name:"品牌 / 平面视觉", dims:[["图形形状",.25],["色彩",.25],["字体",.2],["版式构图",.2],["质感",.1]]},
-  ui:    {name:"UI / 交互界面", dims:[["布局留白",.25],["色彩对比",.2],["组件形",.2],["动效",.2],["字体图标",.15]]}
-};
-const PARAS = [
-  [0.10,"治愈松弛"],[0.20,"亲和精致"],[0.40,"均衡典雅"],[0.55,"崇高震撼"],
-  [0.62,"冷峻克制"],[0.70,"先锋反叛"]
+// ===== 范式详情数据 =====
+const paradigmData = [
+  {name:'治愈松弛范式', ratio:'亲 90 : 危 10', desc:'核心体验：放松、舒展、无攻击性，像被温柔接住。几乎全部元素走亲极，只留约10%对立极作"质感锚点"，防止过度柔和而软塌、发腻、显廉价。', apply:'适用：母婴、疗愈空间、家居、民生服务、治愈系插画、公共/医疗空间。'},
+  {name:'亲和精致范式', ratio:'亲 80 : 危 20', desc:'核心体验：第一眼亲和友好，细看精密有锐度，舒适而不平庸——商业世界最通用的"高级感公式"。大面积亲极托底，小剂量危极集中在用户会凑近看/反复触摸处。', apply:'适用：消费电子、高端日用品、主流品牌视觉、多数量产产品。'},
+  {name:'均衡典雅范式', ratio:'亲 60 : 危 40', desc:'核心体验：刚柔各半、以柔领刚，克制端庄、持久耐看。是经典主义、新中式、奢侈品经典线的标准配比。', apply:'适用：经典主义设计、新中式、奢侈品经典线、高端日用、文化空间。'},
+  {name:'崇高震撼范式', ratio:'亲 45 : 危 55（均高强度）', desc:'核心体验：先屏息敬畏、后沉浸沉醉的深层震撼。用大尺度、强对比、坚硬冷峻制造压迫敬畏，同时以等量甚至更强的秩序与柔和稳稳接住，做到"张力拉满而不崩溃"。', apply:'适用：大型公共建筑、豪华/旗舰产品、史诗级视觉、当代装置、豪华汽车。'},
+  {name:'冷峻克制范式', ratio:'亲 38 : 危 62', desc:'核心体验：以冷硬简为主，靠精准比例与极少暖色维持人性温度。极简主义、专业工具、德系工业设计的标准配比。', apply:'适用：极简主义、专业工具、德系工业设计、科技品牌、高端办公。'},
+  {name:'先锋反叛范式', ratio:'亲 30 : 危 70', desc:'核心体验：刺激、反叛、临界于不适的痛快，受众享受"被挑战"。放大危极制造冲突攻击性，仅保留约30%亲极作"审美安全锚"，确保停在审美窗口右缘。', apply:'适用：潮牌、亚文化、先锋艺术、概念设计、实验影像。'}
 ];
-/* 维度手法表：up=加锐 / down=减锐（与 scripts/wt_calc.py DIM_MOVES 同步） */
-const MOVES = {
-  "形状线条":{up:"引入锐利轮廓转折、切割感边缘或非常规机身长宽比",down:"增大圆角、回归对称直板轮廓"},
-  "质感触觉":{up:"换冷硬材质（钛/陶瓷/磨砂金属）或强纹理表面",down:"温润涂层、细腻喷砂、亲肤材质"},
-  "色彩":{up:"提高饱和度或明暗对比，尝试撞色/非常规配色",down:"低饱和中性色、单色渐变"},
-  "构图比例":{up:"打破对称：偏心布局、放大单一模组占比",down:"居中对称、经典分段比例"},
-  "光影":{up:"强化高光反差、锐利阴影、舞台式打光",down:"柔光、低反差均匀照明"},
-  "细节线条":{up:"加装饰性刻线、锋芒倒角、外露结构细节",down:"去装饰、隐藏接缝与开孔"},
-  "形体曲面动势":{up:"肌肉感曲面、俯冲姿态、外扩轮拱",down:"平顺曲面、水平稳态轮廓"},
-  "特征线条":{up:"锋利折线、闪电式腰线、非常规分割线",down:"圆润贯穿线、减少折线数量"},
-  "灯组图形":{up:"狭长锐角灯形、非常规灯语图形",down:"圆润灯形、家族化经典布局"},
-  "比例姿态":{up:"低趴宽体、长车头等非常规比例",down:"标准比例、抬高视觉重心"},
-  "材质光影":{up:"高反差漆色、碳纤维/哑光性能材质",down:"高亮单色漆、镀铬饰条"},
-  "图形形状":{up:"锐角、断裂、非常规几何或有机形",down:"圆形/方正规整几何"},
-  "字体":{up:"非常规字重对比、锐笔定制字形",down:"经典无衬线、统一字重"},
-  "版式构图":{up:"破格出血、对角动势、高密度排布",down:"栅格对齐、大留白居中"},
-  "质感":{up:"肌理噪点、金属/全息等强材质感",down:"扁平纯色、细腻渐变"},
-  "布局留白":{up:"紧凑高密度、破格层叠布局",down:"增大留白、呼吸感栅格"},
-  "色彩对比":{up:"高对比强调色、深色模式强反差",down:"同色系低对比"},
-  "组件形":{up:"小圆角锐角、非常规组件形态",down:"大圆角、标准控件形态"},
-  "动效":{up:"快速弹性、非常规转场动效",down:"缓动淡入淡出"},
-  "字体图标":{up:"粗字重、锐利图标笔触",down:"常规字重、圆润图标笔触"}
+
+// ===== 范式节点点击 =====
+document.querySelectorAll('.paradigm-node').forEach(node => {
+  node.addEventListener('click', () => {
+    const idx = parseInt(node.dataset.paradigm);
+    const data = paradigmData[idx];
+    const detail = document.getElementById('paradigm-detail');
+    detail.innerHTML = `<h4>${data.name}</h4><p><span class="ratio">${data.ratio}</span></p><p>${data.desc}</p><p>${data.apply}</p>`;
+    detail.classList.add('active');
+    // 高亮当前节点，移除其他节点高亮
+    document.querySelectorAll('.paradigm-node').forEach(n => n.classList.remove('active'));
+    node.classList.add('active');
+  });
+});
+
+// 初始高亮第一个节点
+document.querySelector('.paradigm-node[data-paradigm="0"]').classList.add('active');
+
+// ===== W(T) 计算器 =====
+const categoryConfigs = {
+  phone: {dims:[{name:'形状线条',w:0.25},{name:'质感触觉',w:0.25},{name:'色彩',w:0.15},{name:'构图比例',w:0.15},{name:'光影',w:0.10},{name:'细节线条',w:0.10}], defaults:[2,3,2,2,2,6]},
+  car: {dims:[{name:'形体曲面动势',w:0.30},{name:'特征线条',w:0.25},{name:'灯组图形',w:0.15},{name:'比例姿态',w:0.15},{name:'材质光影',w:0.15}], defaults:[2,6,7,4,3]},
+  brand: {dims:[{name:'图形形状',w:0.25},{name:'色彩',w:0.25},{name:'字体',w:0.20},{name:'版式构图',w:0.20},{name:'质感',w:0.10}], defaults:[3,4,5,3,2]},
+  ui: {dims:[{name:'布局留白',w:0.25},{name:'色彩对比',w:0.20},{name:'组件形',w:0.20},{name:'动效',w:0.20},{name:'字体图标',w:0.15}], defaults:[2,4,3,3,2]}
 };
-/* 预设分组：主流产品诊断（估算标定，供方法演示）+ 教学案例 */
-const PRESET_GROUPS = [
-  {name:"📱 主流手机", items:[
-    {label:"iPhone 16 Pro",cat:"phone",t:[2,4,2,3,3,3],target:0.28},
-    {label:"iPhone 17 Pro",cat:"phone",t:[5,4,6,6,3,4],target:0.28},
-    {label:"华为 Mate 旗舰·估算",cat:"phone",t:[2,3,2,2,2,3],target:0.28},
-    {label:"小米 15·估算",cat:"phone",t:[3,4,2,3,3,4],target:0.30},
-    {label:"Nothing Phone·估算",cat:"phone",t:[6,5,4,5,4,7],target:0.50}
-  ]},
-  {name:"🚗 主流汽车", items:[
-    {label:"问界 M9",cat:"car",t:[2,2,3,2,3],target:0.45},
-    {label:"小米 SU7·估算",cat:"car",t:[5,5,4,5,4],target:0.45},
-    {label:"特斯拉 Model 3·估算",cat:"car",t:[3,2,3,3,3],target:0.30},
-    {label:"理想 L9·估算",cat:"car",t:[2,2,3,2,3],target:0.30},
-    {label:"保时捷 911·估算",cat:"car",t:[6,5,6,6,5],target:0.55},
-    {label:"仰望 U9·估算",cat:"car",t:[7,6,7,7,6],target:0.70}
-  ]},
-  {name:"🎨 品牌 / UI", items:[
-    {label:"苹果品牌视觉·估算",cat:"brand",t:[2,2,2,3,3],target:0.24},
-    {label:"小米新 LOGO·估算",cat:"brand",t:[3,2,2,3,2],target:0.24},
-    {label:"iOS 界面·估算",cat:"ui",t:[3,3,3,2,3],target:0.28},
-    {label:"特斯拉车机·估算",cat:"ui",t:[4,3,3,3,3],target:0.32}
-  ]},
-  {name:"📚 教学案例", items:[
-    {label:"M9 处方后",cat:"car",t:[4,6,6,4,2],target:0.45},
-    {label:"甜腻手机现状",cat:"phone",t:[2,3,4,2,3,1],target:0.28},
-    {label:"甜腻手机回调后",cat:"phone",t:[2,4,3,2,3,4],target:0.28},
-    {label:"心理咨询LOGO",cat:"brand",t:[3,3,3,3,4],target:0.28},
-    {label:"音乐节海报现状",cat:"brand",t:[8,8,7,7,6],target:0.60},
-    {label:"音乐节海报处方",cat:"brand",t:[7,6,6,5,5],target:0.60},
-    {label:"先锋海报",cat:"brand",t:[7,6,5,6,5],target:0}
-  ]}
+
+const paradigmRanges = [
+  {max:0.15, name:'治愈松弛'},
+  {max:0.30, name:'亲和精致'},
+  {max:0.48, name:'均衡典雅'},
+  {max:0.60, name:'崇高震撼'},
+  {max:0.66, name:'冷峻克制'},
+  {max:0.85, name:'先锋反叛'},
+  {max:Infinity, name:'逼近越阈'}
 ];
-let vals = {};
 
-function paraOf(w){
-  if(w>0.85) return "越阈警告";
-  let best=PARAS[0];
-  for(const p of PARAS){ if(Math.abs(w-p[0])<=Math.abs(w-best[0])) best=p; }
-  return best[1];
-}
-function paraHint(w){
-  if(w>0.85) return "超过 0.85 警戒线：多数受众将转为焦虑 / 排斥，需回修。";
-  if(w<0.12) return "张力极低：安全但接近无聊线，适合治愈系场景。";
-  return "对照锚点：0.1 治愈 · 0.2 亲和精致 · 0.4 均衡典雅 · 0.55 崇高 · 0.62 冷峻 · 0.7 先锋 · 0.85 越阈";
-}
-
-function buildDims(){
-  const cat = document.getElementById("cat").value;
-  const box = document.getElementById("dims");
-  box.innerHTML = "";
-  vals = {};
-  DATA[cat].dims.forEach(([name,w],i)=>{
-    vals[name] = 3;
-    const d = document.createElement("div");
-    d.className = "dim";
-    d.innerHTML = `<div class="row"><b>${name}</b><span>权重 ${(w*100).toFixed(0)}%</span><span class="val" id="v${i}">3</span></div>
-      <input type="range" min="0" max="10" value="3" data-i="${i}" data-w="${w}" data-name="${name}">`;
-    box.appendChild(d);
-  });
-  box.querySelectorAll("input[type=range]").forEach(r=>{
-    r.addEventListener("input",e=>{
-      const name = e.target.dataset.name;
-      vals[name] = +e.target.value;
-      document.getElementById("v"+e.target.dataset.i).textContent = e.target.value;
-      calc();
-    });
-  });
-  calc();
-}
-
-function calc(){
-  const cat = document.getElementById("cat").value;
-  const dims = DATA[cat].dims;
-  let w = 0;
-  dims.forEach(([name],i)=>{ w += vals[name]/10 * DATA[cat].dims[i][1]; });
-  w = Math.round(w*1000)/1000;
-  document.getElementById("wt").textContent = w.toFixed(3);
-  document.getElementById("para").textContent = paraOf(w);
-  document.getElementById("paraHint").textContent = paraHint(w);
-  document.getElementById("marker").style.left = Math.min(w,1)*100/1*0.9+5+"%";
-  // 目标对照
-  const tgt = parseFloat(document.getElementById("target").value);
-  const delta = document.getElementById("delta");
-  if(!isNaN(tgt)){
-    const d = Math.round((w-tgt)*1000)/1000;
-    delta.textContent = d>0.05 ? `偏高 +${d.toFixed(3)}，建议降高权重维度` :
-                        d<-0.05 ? `偏低 ${d.toFixed(3)}，建议提细节锐度` :
-                        `落入区间（±0.05）✓`;
-    delta.className = "delta "+(Math.abs(d)<=0.05?"ok":"bad");
-  } else { delta.textContent=""; }
-  // 画像
-  const prof = document.getElementById("profile");
-  prof.innerHTML = "";
-  dims.forEach(([name],i)=>{
-    const t = vals[name];
-    const row = document.createElement("div");
-    row.className = "prow";
-    row.innerHTML = `<span>${name}</span><div class="pbar"><div class="pfill" style="width:${t*10}%"></div></div><span class="pnum">${t}</span>`;
-    prof.appendChild(row);
-  });
-  // 四象限
-  const order = +document.getElementById("order").value;
-  document.getElementById("qdot").setAttribute("cx", 30 + order/10*260);
-  document.getElementById("qdot").setAttribute("cy", 220 - Math.min(w,0.85)/0.85*205);
-  renderRx(w);
-}
-
-/* ---------- 诊断处方：现状 → 目标的维度调整方案（与 wt_calc.py prescribe 同步） ---------- */
-function renderRx(curW){
-  const card = document.getElementById("rxCard");
-  const body = document.getElementById("rxBody");
-  const tgt = parseFloat(document.getElementById("target").value);
-  if(isNaN(tgt)){ card.style.display = "none"; return; }
-  const cat = document.getElementById("cat").value;
-  const dims = DATA[cat].dims;
-  const gap = tgt - curW;
-  if(Math.abs(gap) <= 0.05){
-    card.style.display = "block";
-    body.innerHTML = `已落入目标区间（±0.05）——保持现状，只做细节质感精修。`;
-    return;
+function getParadigm(wt) {
+  for (const r of paradigmRanges) {
+    if (wt < r.max) return r.name;
   }
-  const up = gap > 0;
-  const dir = up ? "加锐" : "减锐";
-  let remaining = Math.abs(gap);
-  const steps = [];
-  const sorted = [...dims].sort((a,b)=>b[1]-a[1]);
-  for(const [n,w] of sorted){
-    if(remaining <= 0.005) break;
-    const head = up ? 10 - vals[n] : vals[n];
-    const dt = Math.floor(Math.min(3, head, remaining*10/w + 0.999));
-    if(dt < 1) continue;
-    remaining -= w*dt/10;
-    steps.push({n, from:vals[n], to: up ? vals[n]+dt : vals[n]-dt, dt,
-      covered: w*dt/10*(up?1:-1), move: (MOVES[n]||{})[up?"up":"down"] || ""});
-  }
-  let after = curW + steps.reduce((s,x)=>s+x.covered, 0);
-  let html = `<div style="margin-bottom:6px">现状 <b>${curW.toFixed(3)}</b> → 目标 <b>${tgt.toFixed(2)}</b>（${paraOf(tgt)}），方向：<b>${dir}</b></div>`;
-  steps.forEach(s=>{
-    html += `<div style="margin-bottom:6px">· <b>${s.n}</b>：${s.from} → ${s.to}（${dir} ${s.dt} 档，贡献 ${s.covered>=0?"+":""}${s.covered.toFixed(3)}）` +
-      (s.move ? `<br><span style="color:var(--sub)">　手法：${s.move}</span>` : "") + `</div>`;
+  return '逼近越阈';
+}
+
+function buildSliders(category) {
+  const config = categoryConfigs[category];
+  const container = document.getElementById('sliders-container');
+  container.innerHTML = '';
+  config.dims.forEach((dim, i) => {
+    const group = document.createElement('div');
+    group.className = 'slider-group';
+    group.innerHTML = `
+      <label>${dim.name} (权重${(dim.w*100).toFixed(0)}%) <span id="val-${i}">${config.defaults[i]}</span></label>
+      <input type="range" id="slider-${i}" min="0" max="10" step="0.5" value="${config.defaults[i]}">
+    `;
+    container.appendChild(group);
+    group.querySelector('input').addEventListener('input', () => calculateWT());
   });
-  html += `<div style="margin-top:6px">处方后 W(T) ≈ <b>${after.toFixed(3)}</b>（${paraOf(after)}）` +
-    (Math.abs(after-tgt) > 0.05 ? `　⚠ 单轮微调未到位，可分两轮执行` : `　✓ 落入目标区间`) + `</div>`;
-  body.innerHTML = html;
-  card.style.display = "block";
+  calculateWT();
 }
 
-function buildAnchors(){
-  const box = document.getElementById("anchors");
-  box.innerHTML = "";
-  const items = [...PARAS.map(p=>[p[0],p[1]]),[0.85,"越阈"]];
-  items.forEach(([v,name])=>{
-    const s = document.createElement("span");
-    s.style.left = (v*0.9*100+5)+"%";
-    s.textContent = name;
-    box.appendChild(s);
+function calculateWT() {
+  const category = document.getElementById('category-select').value;
+  const config = categoryConfigs[category];
+  let wt = 0;
+  config.dims.forEach((dim, i) => {
+    const val = parseFloat(document.getElementById(`slider-${i}`).value);
+    document.getElementById(`val-${i}`).textContent = val;
+    wt += dim.w * (val / 10);
   });
+  document.getElementById('calc-wt').textContent = wt.toFixed(3);
+  document.getElementById('calc-paradigm').textContent = getParadigm(wt);
+  document.getElementById('calc-bar-fill').style.width = (wt * 100) + '%';
 }
 
-function buildPresets(){
-  const box = document.getElementById("presets");
-  PRESET_GROUPS.forEach(g=>{
-    const label = document.createElement("div");
-    label.style.cssText = "width:100%;font-size:12px;color:var(--sub);margin-top:6px";
-    label.textContent = g.name;
-    box.appendChild(label);
-    g.items.forEach(p=>{
-      const b = document.createElement("button");
-      b.textContent = p.label;
-      b.onclick = ()=>{
-        document.getElementById("cat").value = p.cat;
-        buildDims();
-        const inputs = document.querySelectorAll("#dims input[type=range]");
-        p.t.forEach((t,i)=>{ if(inputs[i]){ inputs[i].value = t; inputs[i].dispatchEvent(new Event("input")); } });
-        document.getElementById("target").value = p.target || "";
-        calc();
-      };
-      box.appendChild(b);
-    });
+document.getElementById('category-select').addEventListener('change', (e) => {
+  buildSliders(e.target.value);
+});
+
+// 初始化
+buildSliders('phone');
+
+// ===== 滚动揭示动画 =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
   });
-}
+}, {threshold: 0.1});
 
-document.getElementById("cat").addEventListener("change",buildDims);
-document.getElementById("target").addEventListener("input",calc);
-document.getElementById("order").addEventListener("input",calc);
-
-/* ---------- 分享链接：状态编码进 URL hash ---------- */
-function encodeState(){
-  const cat = document.getElementById("cat").value;
-  const ts = DATA[cat].dims.map(([n])=>vals[n]).join(",");
-  const tgt = document.getElementById("target").value;
-  const order = document.getElementById("order").value;
-  return "#c="+cat+"&t="+ts+"&g="+tgt+"&o="+order;
-}
-function decodeState(){
-  if(!location.hash) return false;
-  const p = new URLSearchParams(location.hash.slice(1));
-  const cat = p.get("c");
-  if(!cat || !DATA[cat]) return false;
-  document.getElementById("cat").value = cat;
-  buildDims();
-  const ts = (p.get("t")||"").split(",").map(Number);
-  const inputs = document.querySelectorAll("#dims input[type=range]");
-  ts.forEach((t,i)=>{ if(inputs[i] && !isNaN(t)){ inputs[i].value=t; inputs[i].dispatchEvent(new Event("input")); } });
-  if(p.get("g")) document.getElementById("target").value = p.get("g");
-  if(p.get("o")) document.getElementById("order").value = p.get("o");
-  calc();
-  return true;
-}
-function toast(msg){
-  const el = document.getElementById("toast");
-  el.textContent = msg; el.style.opacity = 1;
-  setTimeout(()=>{ el.style.opacity = 0; }, 2200);
-}
-document.getElementById("btnShare").onclick = ()=>{
-  const url = location.origin + location.pathname + encodeState();
-  navigator.clipboard.writeText(url).then(
-    ()=>toast("分享链接已复制，对方打开即可复现你的分析"),
-    ()=>{ prompt("复制此链接：", url); });
-};
-
-/* ---------- 导出 Markdown 审计报告 ---------- */
-document.getElementById("btnExport").onclick = ()=>{
-  const cat = document.getElementById("cat").value;
-  const w = document.getElementById("wt").textContent;
-  const para = document.getElementById("para").textContent;
-  const tgt = document.getElementById("target").value || "—";
-  const delta = document.getElementById("delta").textContent || "—";
-  let rows = "";
-  DATA[cat].dims.forEach(([name,wt])=>{
-    rows += "| " + name + " | " + (wt*100).toFixed(0) + "% | " + vals[name] + " | " + (wt*vals[name]/10).toFixed(3) + " |\n";
-  });
-  const md = "# BEA 极性审计报告\n\n- 品类：" + DATA[cat].name +
-    "\n- **W(T) = " + w + "**（范式落点：" + para + "）" +
-    "\n- 目标区间：" + tgt + "　对照：" + delta +
-    "\n\n| 维度 | 权重 | t (0-10) | 贡献 |\n|---|---|---|---|\n" + rows +
-    (document.getElementById("rxCard").style.display !== "none" && document.getElementById("rxBody").textContent
-      ? "\n## 诊断处方\n\n" + document.getElementById("rxBody").textContent.replace(/\s+/g," ").trim() + "\n" : "") +
-    "\n> 由 BEA W(T) 交互计算器生成 · 双极情绪美学 · CC BY 4.0\n> " +
-    location.origin + location.pathname + encodeState() + "\n";
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([md],{type:"text/markdown"}));
-  a.download = "bea-audit.md"; a.click();
-  toast("审计报告已下载（Markdown）");
-};
-
-/* ---------- 三步上手引导 ---------- */
-const TOUR = [
-  {t:"① 拖一拖，看落点", b:"左侧选品类、拖滑块——右侧实时算出 W(T)（危极指数）并落到范式谱上。试试把某个维度拉到 8，看落点怎么往「先锋」方向移动。"},
-  {t:"② 载入一个真实案例", b:"点左侧「甜腻手机现状」——W(T)=0.255 看似达标，但危极全来自高饱和粉，细节锐度趴底：这就是「甜腻症」。问题不在总量，在张力来源错位。"},
-  {t:"③ 亲手开处方", b:"再点「甜腻手机回调后」——W(T)=0.295，质感与细节提了上来，色彩降了回去。诊断到处方的全过程，就是 BEA 的日常工作流。"}
-];
-let tourIdx = 0;
-function renderTour(){
-  document.getElementById("tourStep").textContent = (tourIdx+1) + " / " + TOUR.length;
-  document.getElementById("tourTitle").textContent = TOUR[tourIdx].t;
-  document.getElementById("tourBody").textContent = TOUR[tourIdx].b;
-  document.getElementById("tourNext").textContent = tourIdx === TOUR.length-1 ? "开始用 ✓" : "下一步 →";
-}
-function showTour(){
-  tourIdx = 0; renderTour();
-  document.getElementById("tourMask").style.display = "block";
-  document.getElementById("tourCard").style.display = "block";
-}
-function closeTour(){
-  document.getElementById("tourMask").style.display = "none";
-  document.getElementById("tourCard").style.display = "none";
-}
-document.getElementById("btnTour").onclick = showTour;
-document.getElementById("tourSkip").onclick = closeTour;
-document.getElementById("tourMask").onclick = closeTour;
-document.getElementById("tourNext").onclick = ()=>{
-  if(tourIdx < TOUR.length-1){ tourIdx++; renderTour(); } else { closeTour(); }
-};
-
-buildAnchors(); buildPresets();
-if(!decodeState()) buildDims();
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
+
 </body>
 </html>

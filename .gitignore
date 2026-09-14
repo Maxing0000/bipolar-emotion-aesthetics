@@ -7,15 +7,16 @@
 .idea/
 *.swp
 
-# 临时与备份
-_*_backup/
-*.tmp
-*.log
-__MACOSX/
-
 # Python
 __pycache__/
 *.pyc
 *.egg-info/
-dist/
-build/
+
+# 临时与备份
+*.tmp
+*.log
+_*_backup/
+
+# 专利与私有内容（不提交到公开仓库）
+专利申请-*.txt
+bipolar-emotion-aesthetics-private/
