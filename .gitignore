@@ -7,31 +7,16 @@
 .idea/
 *.swp
 
-# 临时与备份
-_*_backup/
-*.tmp
-*.log
-__MACOSX/
-
 # Python
 __pycache__/
 *.pyc
 *.egg-info/
-dist/
-build/
 
-# 移动端运行时数据
-mobile/backend/data/uploads/
-mobile/backend/data/history/
-mobile/backend/__pycache__/
+# 临时与备份
+*.tmp
+*.log
+_*_backup/
 
-# 专利申请资料（不提交到公开仓库）
+# 专利与私有内容（不提交到公开仓库）
 专利申请-*.txt
-
-# 私有版本目录
 bipolar-emotion-aesthetics-private/
-
-# 历史版本打包
-BEA-v*.zip
-bea-v*/
-*-skill.zip
