@@ -5,8 +5,21 @@
 ![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey)
 ![Version](https://img.shields.io/badge/version-2.2.0-blue)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
+![Website](https://img.shields.io/badge/website-GitHub%20Pages-orange)
 
 > 把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作工具。
+
+## 在线体验
+
+**[BEA 官方网站 →](https://maxing0000.github.io/bipolar-emotion-aesthetics/)**
+
+无需安装，直接在浏览器中体验 BEA 双极情绪美学：
+
+- **W(T) 互动计算器**：拖动滑块，实时计算危极权重与范式落点（支持手机/汽车/品牌/UI）
+- **六范式谱系**：交互式浏览治愈松弛→先锋反叛的完整风格谱
+- **核心理论**：亲极/危极双极模型、四维评分卡、六步创作法
+- **病症诊断**：6种常见审美病症及元素级改进处方
+- **九大应用领域**：从消费电子到公共空间的完整覆盖
 
 ## 核心价值
 
