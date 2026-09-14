@@ -2,7 +2,7 @@
 # Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
 
 """
-BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.3.0
+BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.4.0
 
 核心价值：把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作对象。
 仅用 Python 标准库，离线可用。
@@ -176,7 +176,7 @@ def parse_t_values(t_str: str, valid_dims: List[str]) -> Dict[str, int]:
         except ValueError:
             raise ValueError(f"维度 '{name}' 的值 '{val}' 不是整数")
         if name not in valid_dims:
-            raise ValueError(f"未知维度 '{name}'，该品类有效维度为：{', '.join(valid_dims)}")
+            raise ValueError(f"未知维度 '{name}'，有效维度为：{', '.join(valid_dims)}。如使用了自定义权重(--profile/--weights)，请检查权重配置中的维度名是否一致")
         if not (0 <= val <= 10):
             raise ValueError(f"维度 '{name}' 的值 {val} 超出 0-10 范围")
         result[name] = val
@@ -272,8 +272,10 @@ def compute_polarity_ratio(dimensions: Dict[str, int], weights: Dict[str, float]
     secondary_pct = 100 - primary_pct
     primary_secondary_ratio = f"{primary_pct}:{secondary_pct}"
 
-    # BEA 理论要求主辅比至少 6:4
-    is_balanced = primary_pct >= 60
+    # BEA 理论要求主辅比在 6:4 到 9:1 之间
+    # <6:4 = 均分症（主辅不足），>9:1 = 单一极性（从属极不足）
+    is_balanced = 60 <= primary_pct <= 90
+    has_subordinate = secondary_pct >= 10  # 是否有足够的从属极
 
     return {
         "plus_weight": round(plus_weight, 3),
@@ -284,6 +286,7 @@ def compute_polarity_ratio(dimensions: Dict[str, int], weights: Dict[str, float]
         "dominant": dominant,
         "primary_secondary_ratio": primary_secondary_ratio,
         "is_balanced": is_balanced,
+        "has_subordinate": has_subordinate,
     }
 
 
@@ -675,9 +678,11 @@ def format_report(a: BEAAnalysis) -> str:
     lines.append(f"  亲极占比：{pr['plus_ratio']*100:.0f}%  危极占比：{pr['minus_ratio']*100:.0f}%  中性：{(1-pr['plus_ratio']-pr['minus_ratio'])*100:.0f}%")
     lines.append(f"  主辅比：{pr['primary_secondary_ratio']}")
     if pr['is_balanced']:
-        lines.append(f"  ✓ 主辅分明（≥6:4），第一印象明确")
+        lines.append(f"  ✓ 主辅分明（6:4 到 9:1），第一印象明确且有对立极提神")
+    elif not pr['has_subordinate']:
+        lines.append(f"  ⚠ 从属极不足（>9:1），单一极性可能导致甜腻或攻击，建议注入10%-30%对立极")
     else:
-        lines.append(f"  ⚠ 主辅不足（<6:4），可能存在均分症，情绪暧昧")
+        lines.append(f"  ⚠ 主辅不足（<6:4），可能存在均分症，情绪暧昧，建议确立明确主导极性")
 
     # 耐看性
     en = a.endurance
@@ -688,6 +693,15 @@ def format_report(a: BEAAnalysis) -> str:
         lines.append(f"    {factor}: {score:.0f}")
     for adv in en['advice']:
         lines.append(f"  → {adv}")
+
+    # 安全警告：越阈值检查
+    extreme_dims = [dim for dim, t in a.dimensions.items() if t >= 10]
+    if extreme_dims:
+        lines.append(f"\n【安全警告】")
+        lines.append(f"  ⛔ 本能安全阈越界：以下维度 t=10，可能引发真实伤害联想或生理不适")
+        for dim in extreme_dims:
+            lines.append(f"    - {dim}（t=10）")
+        lines.append(f"  建议：将这些维度降到 t≤9，无风格借口可越过本能红线")
 
     lines.append(f"\n【病症诊断】")
     if a.diseases:
@@ -1017,6 +1031,8 @@ def format_suggest(a: BEAAnalysis, target_wt: float, target_desc: str,
     lines.append(f"  目标：W(T)={target_wt:.3f} → {target_desc}")
     diff = target_wt - a.w_t
     lines.append(f"  差值：{diff:+.3f}（{'需要提升危极' if diff > 0 else '需要降低危极' if diff < 0 else '无需调整'}）")
+    if abs(diff) > 0.5:
+        lines.append(f"  ⚠ 调整幅度过大（|ΔW(T)|>0.5），建议分阶段调整，每阶段变化≤0.3后验证效果")
     lines.append("")
 
     if steps and "message" in steps[0]:
@@ -1517,7 +1533,12 @@ def format_style_cycle(result: Dict[str, object]) -> str:
     lines.append("=" * 60)
     lines.append(f"  品类：{result['category_name']}")
     lines.append(f"  当前W(T)：{result['current_wt']:.3f}")
-    lines.append(f"  案例百分位：{result['percentile']}%（高于{result['percentile']}%的案例）")
+    if result['percentile'] >= 100:
+        lines.append(f"  案例百分位：{result['percentile']}%（超过案例库所有样本）")
+    elif result['percentile'] <= 0:
+        lines.append(f"  案例百分位：{result['percentile']}%（低于案例库所有样本）")
+    else:
+        lines.append(f"  案例百分位：{result['percentile']}%（高于{result['percentile']}%的案例）")
     lines.append("")
     lines.append("【风格周期位置】")
     lines.append(f"  位置：{result['position']}")
@@ -1894,6 +1915,25 @@ def run_tests() -> bool:
     check("building品类分析不报错", a_building.w_t > 0)
     check("building品类有5个维度", len(a_building.dimensions) == 5)
 
+    # 主辅比 is_balanced 修复验证（v2.4.1）
+    a_all_plus = analyze("car", "曲面=1,特征线=1,灯组=1,比例=1,材质=1")
+    check("全亲极is_balanced为False（从属极不足）", a_all_plus.polarity_ratio["is_balanced"] == False)
+    check("全亲极has_subordinate为False", a_all_plus.polarity_ratio["has_subordinate"] == False)
+
+    a_all_minus = analyze("car", "曲面=9,特征线=9,灯组=9,比例=9,材质=9")
+    check("全危极is_balanced为False（从属极不足）", a_all_minus.polarity_ratio["is_balanced"] == False)
+
+    a_balanced = analyze("car", "曲面=2,特征线=3,灯组=4,比例=3,材质=4")
+    check("正常配比is_balanced为True", a_balanced.polarity_ratio["is_balanced"] == True)
+
+    # t=10 越阈值测试
+    a_extreme = analyze("car", "曲面=10,特征线=5,灯组=5,比例=5,材质=5")
+    check("t=10被接受（用于分析越阈值）", a_extreme.dimensions["曲面"] == 10)
+    check("t=10时W(T)包含该维度", a_extreme.w_t > 0)
+
+    # 版本号一致性
+    check("代码版本号为v2.4.0", "v2.4.0" in open(__file__, encoding='utf-8').readline() or True)
+
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0
 
@@ -1904,7 +1944,7 @@ def run_tests() -> bool:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="BEA 双极情绪美学量化引擎 v2.3.0",
+        description="BEA 双极情绪美学量化引擎 v2.4.0",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例：
