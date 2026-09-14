@@ -24,3 +24,14 @@ build/
 mobile/backend/data/uploads/
 mobile/backend/data/history/
 mobile/backend/__pycache__/
+
+# 专利申请资料（不提交到公开仓库）
+专利申请-*.txt
+
+# 私有版本目录
+bipolar-emotion-aesthetics-private/
+
+# 历史版本打包
+BEA-v*.zip
+bea-v*/
+*-skill.zip

@@ -1,0 +1,25 @@
+# ============================================
+# BEA v3.0 保密内容 - 禁止提交到公开仓库
+# ============================================
+
+# v3.0核心理论（专利申请中）
+references/field-theory.md
+references/aesthetic-function.md
+references/dynamic-aesthetics.md
+references/design-engine.md
+
+# v3.0核心代码（专利申请中）
+scripts/bea_quant_v3.py
+
+# 专利申请资料
+patent/
+
+# 保密标识
+CONFIDENTIAL.md
+
+# 本地配置
+.env
+*.local
+.DS_Store
+__pycache__/
+*.pyc
