@@ -257,42 +257,131 @@ def diagnose_diseases(w_t: float, dims: Dict[str, int]) -> List[Dict[str, str]]:
 
 
 def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, str]]) -> Dict[str, object]:
-    tension = 20
-    order = 20
-    threshold = 22
-    context = 20
+    """
+    四维评分辅助（v2.2.1 精细化版）
 
-    spread = max(dims.values()) - min(dims.values())
+    评分逻辑：基于维度数据计算参考分，每个维度都有明确的加分/扣分项。
+    注意：这是参考分，不是最终分。语境适配尤其需要人工判断。
+
+    双极张力（25分）：W(T)区间 + 维度极差 + 明确对比 - 病症扣分
+    结构秩序（25分）：焦点数量 + 主辅清晰度 - 重点通胀/均分扣分
+    阈值安全（25分）：W(T)越界检查 + 极端值检查
+    语境适配（25分）：基础参考分 + 人工检查项提示
+    """
     disease_names = {d["name"] for d in diseases}
+    spread = max(dims.values()) - min(dims.values())
+    n_high = sum(1 for v in dims.values() if v >= 6)
+    n_low = sum(1 for v in dims.values() if v <= 4)
+    has_contrast = n_high >= 1 and n_low >= 1
 
-    # 张力：W(T)在0.35-0.60（典雅到崇高）且有维度对比时加分
-    if 0.35 <= w_t <= 0.60 and spread >= 2:
-        tension = 22
+    # ── 双极张力（25分）──
+    tension = 15  # 基础分
+    # W(T)在有张力的区间（0.25-0.70）
+    if 0.25 <= w_t <= 0.70:
+        tension += 5
+    # 维度极差
+    if spread >= 3:
+        tension += 3
+    elif spread >= 2:
+        tension += 2
+    elif spread >= 1:
+        tension += 1
+    # 明确对比（有高有低）
+    if has_contrast:
+        tension += 2
+    # 病症扣分
+    if "甜腻症" in disease_names:
+        tension -= 5
     if "张力不足症" in disease_names:
-        tension = 16
+        tension -= 4
     if "攻击症" in disease_names:
-        tension = 17
-    if "甜腻症" in disease_names:
-        tension = 15
+        tension -= 3
+    tension = max(0, min(25, tension))
 
-    # 秩序：无均分症和重点通胀症时加分；甜腻症也意味着无主次对比，扣分
-    if "均分症" not in disease_names and "重点通胀症" not in disease_names and "甜腻症" not in disease_names:
-        order = 22
-    if "重点通胀症" in disease_names:
-        order = 18
+    # ── 结构秩序（25分）──
+    order = 15  # 基础分
+    # 焦点数量：1-2个高t值维度为最佳
+    if 1 <= n_high <= 2:
+        order += 5
+    elif n_high == 0:
+        order += 0  # 无焦点
+    else:
+        order += 0  # 焦点过多（重点通胀）
+    # 无均分症（维度不都集中在中间）
+    if "均分症" not in disease_names:
+        order += 3
+    # 无重点通胀
+    if "重点通胀症" not in disease_names:
+        order += 2
+    # 甜腻症（无主次对比）扣分
     if "甜腻症" in disease_names:
-        order = 17
+        order -= 3
+    order = max(0, min(25, order))
 
-    # 阈值：W(T)<0.60 默认安全
+    # ── 阈值安全（25分）──
+    threshold = 20  # 基础分
+    # W(T)在安全区间
     if w_t < 0.60:
-        threshold = 24
+        threshold += 3
+    elif w_t < 0.70:
+        threshold += 1
+    # W(T)越界（逼近越阈）
+    if w_t >= 0.85:
+        threshold -= 10
+    elif w_t >= 0.75:
+        threshold -= 4
+    # 极端值检查
+    n_extreme_high = sum(1 for v in dims.values() if v >= 9)
+    n_extreme_low = sum(1 for v in dims.values() if v <= 1)
+    threshold -= n_extreme_high * 3  # 接近本能红线
+    threshold -= n_extreme_low * 1   # 过于柔和（不危险但单调）
+    threshold = max(0, min(25, threshold))
+
+    # ── 语境适配（25分）──
+    # 这是参考分，需人工判断。给出基础分和检查项。
+    context = 18  # 中性参考分
+    context_checklist = [
+        "目标受众的审美阈值是否匹配当前范式？（大众偏左，专业偏右）",
+        "使用场景是否需要当前的张力水平？（医疗/驾驶要克制，娱乐可刺激）",
+        "与主要竞品相比，这个定位有差异化吗？（避免挤在同一W(T)区间）",
+        "时代语境下，这个风格是领先还是过时？（判断风格钟摆位置）",
+        "价格/定位与设计语言匹配吗？（千元机用冷峻会显冷硬，旗舰用甜腻会显廉价）",
+    ]
 
     return {
         "双极张力": tension,
         "结构秩序": order,
         "阈值安全": threshold,
         "语境适配": context,
-        "说明": "以上为基于维度数据的参考分，语境适配需人工结合受众与场景判断",
+        "评分明细": {
+            "双极张力": {
+                "基础分": 15,
+                "W(T)在0.25-0.70": 5 if 0.25 <= w_t <= 0.70 else 0,
+                f"维度极差={spread}": 3 if spread >= 3 else (2 if spread >= 2 else (1 if spread >= 1 else 0)),
+                "明确对比(有高有低)": 2 if has_contrast else 0,
+                "病症扣分": (-5 if "甜腻症" in disease_names else 0) + (-4 if "张力不足症" in disease_names else 0) + (-3 if "攻击症" in disease_names else 0),
+            },
+            "结构秩序": {
+                "基础分": 15,
+                f"焦点数量={n_high}(1-2个最佳)": 5 if 1 <= n_high <= 2 else 0,
+                "无均分症": 3 if "均分症" not in disease_names else 0,
+                "无重点通胀症": 2 if "重点通胀症" not in disease_names else 0,
+                "甜腻症扣分": -3 if "甜腻症" in disease_names else 0,
+            },
+            "阈值安全": {
+                "基础分": 20,
+                f"W(T)={w_t:.2f}": 3 if w_t < 0.60 else (1 if w_t < 0.70 else 0),
+                "越界扣分": -10 if w_t >= 0.85 else (-4 if w_t >= 0.75 else 0),
+                f"极端高值(>=9)={n_extreme_high}": -3 * n_extreme_high,
+                f"极端低值(<=1)={n_extreme_low}": -1 * n_extreme_low,
+            },
+            "语境适配": {
+                "参考分": context,
+                "说明": "需人工判断，以下为检查项",
+                "检查项": context_checklist,
+            },
+        },
+        "说明": "以上为基于维度数据的参考分。语境适配尤其需要人工结合受众、场景、竞品、时代、价格定位判断。",
     }
 
 
@@ -501,58 +590,64 @@ def format_batch(results: List[Tuple[str, BEAAnalysis]]) -> str:
 
 def format_score_detail(a: BEAAnalysis) -> str:
     lines = []
-    lines.append("=" * 50)
-    lines.append("  BEA 四维评分辅助")
-    lines.append("=" * 50)
+    lines.append("=" * 60)
+    lines.append("  BEA 四维评分辅助（v2.2.1 精细化版）")
+    lines.append("=" * 60)
     lines.append(f"  W(T)={a.w_t:.3f} · {a.paradigm}")
     lines.append("")
 
     scores = a.score_suggestion
-    spread = max(a.dimensions.values()) - min(a.dimensions.values())
-    high_dims = [f"{k}={v}" for k, v in a.dimensions.items() if v >= 6]
-    low_dims = [f"{k}={v}" for k, v in a.dimensions.items() if v <= 3]
-    disease_names = {d["name"] for d in a.diseases}
+    detail = scores.get("评分明细", {})
 
-    lines.append(f"【双极张力】参考分：{scores['双极张力']}/25")
-    lines.append(f"  维度极差：{spread}（>=2为有对比，<2为张力不足）")
-    lines.append(f"  危极维度（>=6）：{', '.join(high_dims) if high_dims else '无'}")
-    lines.append(f"  亲极维度（<=3）：{', '.join(low_dims) if low_dims else '无'}")
-    if "张力不足症" in disease_names:
-        lines.append("  警告：张力不足症，建议在1-2个维度提危极至6+")
-    if "攻击症" in disease_names:
-        lines.append("  警告：攻击症，建议降危极维度")
-    lines.append("")
+    def format_dimension(name: str, key: str):
+        lines.append(f"【{name}】{scores[key]}/25")
+        if key in detail:
+            for item, value in detail[key].items():
+                if item == "检查项":
+                    lines.append(f"  {item}:")
+                    for i, check in enumerate(value, 1):
+                        lines.append(f"    {i}. {check}")
+                elif item == "说明":
+                    lines.append(f"  {item}: {value}")
+                elif isinstance(value, (int, float)) and value != 0:
+                    sign = "+" if value > 0 else ""
+                    lines.append(f"  {item}: {sign}{value}")
+        lines.append("")
 
-    n_high = sum(1 for v in a.dimensions.values() if v >= 6)
-    lines.append(f"【结构秩序】参考分：{scores['结构秩序']}/25")
-    lines.append(f"  高强调维度数：{n_high}（<=2为有主次，>=3为重点通胀）")
-    if "均分症" in disease_names:
-        lines.append("  警告：均分症，所有维度集中在3-5，无主次")
-    if "重点通胀症" in disease_names:
-        lines.append("  警告：重点通胀症，强调点过多")
-    lines.append("")
+    format_dimension("双极张力", "双极张力")
+    format_dimension("结构秩序", "结构秩序")
+    format_dimension("阈值安全", "阈值安全")
+    format_dimension("语境适配", "语境适配")
 
-    lines.append(f"【阈值安全】参考分：{scores['阈值安全']}/25")
-    if a.w_t >= 0.85:
-        lines.append("  警告：W(T)>=0.85，逼近越阈，需检查本能红线")
-    elif a.w_t >= 0.66:
-        lines.append("  W(T)在先锋反叛区间，需确认受众阈值可接受")
-    else:
-        lines.append("  W(T)在安全区间，无本能红线风险")
-    lines.append("")
-
-    lines.append(f"【语境适配】参考分：{scores['语境适配']}/25（需人工判断）")
-    lines.append("  - 目标受众的审美阈值是否匹配当前范式？")
-    lines.append("  - 使用场景是否需要当前的张力水平？")
-    lines.append("  - 与竞品相比，这个定位有差异化吗？")
-    lines.append("  - 时代语境下，这个风格是领先还是过时？")
-
-    total = sum(v for k, v in scores.items() if k != "说明")
-    lines.append("")
+    total = scores["双极张力"] + scores["结构秩序"] + scores["阈值安全"] + scores["语境适配"]
+    lines.append("-" * 60)
     lines.append(f"【合计参考】{total}/100")
+
+    # 评级
+    if total >= 80:
+        rating = "成熟作品"
+    elif total >= 65:
+        rating = "良好，有提升空间"
+    elif total >= 50:
+        rating = "中等，需重点改进短板"
+    else:
+        rating = "存在明显问题，建议回炉"
+    lines.append(f"【评级】{rating}")
+
+    # 短板提示
+    weak = []
+    if scores["双极张力"] < 15:
+        weak.append("双极张力")
+    if scores["结构秩序"] < 15:
+        weak.append("结构秩序")
+    if scores["阈值安全"] < 15:
+        weak.append("阈值安全")
+    if weak:
+        lines.append(f"【短板提示】以下维度低于15分，需优先改进：{', '.join(weak)}")
+
     lines.append(f"  注：{scores['说明']}")
     lines.append("")
-    lines.append("=" * 50)
+    lines.append("=" * 60)
     return "\n".join(lines)
 
 
@@ -834,6 +929,69 @@ def run_tests() -> bool:
     steps = suggest_adjustment(a, a.w_t)
     check("suggest_adjustment 无需调整", len(steps) == 1 and "message" in steps[0])
 
+    # suggest 降低危极时优先降高t值维度
+    a = analyze("phone", "形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6")
+    steps = suggest_adjustment(a, 0.2)
+    dim_steps = [s["dimension"] for s in steps if "dimension" in s]
+    check("suggest降低危极优先降高t值", dim_steps and dim_steps[0] in ("质感", "细节"))
+
+    # suggest 提升危极时优先升低t值维度
+    steps = suggest_adjustment(a, 0.6)
+    dim_steps = [s["dimension"] for s in steps if "dimension" in s]
+    check("suggest提升危极优先升高权重低t值", dim_steps and dim_steps[0] == "形状")
+
+    # 攻击症新条件：W(T)>=0.55 且有维度>=6
+    dims = {"形状": 6, "质感": 6, "色彩": 6, "构图": 6, "光影": 6, "细节": 6}
+    wt = compute_w_t(dims, CATEGORY_WEIGHTS["phone"])
+    diseases = diagnose_diseases(wt, dims)
+    check("全6分诊断攻击症", any(d["name"] == "攻击症" for d in diseases))
+    check("全6分诊断重点通胀症", any(d["name"] == "重点通胀症" for d in diseases))
+
+    # 攻击症边界：W(T)<0.55 即使有维度>=6也不诊断
+    dims = {"形状": 6, "质感": 5, "色彩": 5, "构图": 5, "光影": 5, "细节": 5}
+    wt = compute_w_t(dims, CATEGORY_WEIGHTS["phone"])
+    diseases = diagnose_diseases(wt, dims)
+    check("W(T)<0.55不诊断攻击症", not any(d["name"] == "攻击症" for d in diseases))
+
+    # 四维评分范围测试
+    a = analyze("phone", "形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6")
+    scores = a.score_suggestion
+    check("四维评分各维度在0-25范围", all(0 <= scores[k] <= 25 for k in ["双极张力", "结构秩序", "阈值安全", "语境适配"]))
+    total = sum(scores[k] for k in ["双极张力", "结构秩序", "阈值安全", "语境适配"])
+    check("四维评分总分在0-100范围", 0 <= total <= 100)
+    check("四维评分包含评分明细", "评分明细" in scores)
+
+    # 范式边界值测试
+    name, _, _ = locate_paradigm(0.15)
+    check("W(T)=0.15定位亲和精致", name == "亲和精致")
+    name, _, _ = locate_paradigm(0.30)
+    check("W(T)=0.30定位均衡典雅", name == "均衡典雅")
+    name, _, _ = locate_paradigm(0.48)
+    check("W(T)=0.48定位崇高震撼", name == "崇高震撼")
+    name, _, _ = locate_paradigm(0.60)
+    check("W(T)=0.60定位冷峻克制", name == "冷峻克制")
+    name, _, _ = locate_paradigm(0.66)
+    check("W(T)=0.66定位先锋反叛", name == "先锋反叛")
+
+    # compare/batch 命令不报错（通过函数调用测试）
+    try:
+        name1, dims1 = parse_compact_values("A=3,6,4,3,5,6", "phone")
+        name2, dims2 = parse_compact_values("B=形状=4,质感=4,色彩=4,构图=3,光影=3,细节=5", "phone")
+        check("compare解析两种格式", name1 == "A" and name2 == "B" and dims1["形状"] == 3 and dims2["质感"] == 4)
+    except Exception as e:
+        check(f"compare解析失败({e})", False)
+
+    # batch 多产品解析
+    try:
+        items = "A=3,6,4,3,5,6;B=形状=4,质感=4,色彩=4,构图=3,光影=3,细节=5;C=5,5,5,5,5,5"
+        results = []
+        for item in items.split(";"):
+            name, dims = parse_compact_values(item.strip(), "phone")
+            results.append((name, dims))
+        check("batch解析3个产品", len(results) == 3 and results[0][0] == "A" and results[2][0] == "C")
+    except Exception as e:
+        check(f"batch解析失败({e})", False)
+
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0
 
@@ -881,10 +1039,12 @@ def main():
     p_cmp.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_cmp.add_argument("--a", required=True, help="产品A：名称=t1,t2,... 或 名称=维度=值,...")
     p_cmp.add_argument("--b", required=True, help="产品B：名称=t1,t2,... 或 名称=维度=值,...")
+    p_cmp.add_argument("--json", action="store_true", help="输出JSON格式")
 
     p_batch = sub.add_parser("batch", help="批量分析多个产品")
     p_batch.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_batch.add_argument("--items", required=True, help="多个产品用分号分隔：名称1=...;名称2=...")
+    p_batch.add_argument("--json", action="store_true", help="输出JSON格式")
 
     p_tpl = sub.add_parser("template", help="输出打分模板（含维度顺序）")
     p_tpl.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
@@ -914,7 +1074,22 @@ def main():
             name2, dims2 = parse_compact_values(args.b, args.category)
             t_str1 = ",".join(f"{k}={v}" for k, v in dims1.items())
             t_str2 = ",".join(f"{k}={v}" for k, v in dims2.items())
-            print(format_compare(analyze(args.category, t_str1), analyze(args.category, t_str2), name1, name2))
+            a1 = analyze(args.category, t_str1)
+            a2 = analyze(args.category, t_str2)
+            if args.json:
+                output = {
+                    "category": args.category,
+                    "product_a": {"name": name1, **a1.to_dict()},
+                    "product_b": {"name": name2, **a2.to_dict()},
+                    "comparison": {
+                        "wt_diff": round(a1.w_t - a2.w_t, 3),
+                        "paradigm_diff": a1.paradigm != a2.paradigm,
+                        "dimension_diffs": {d: a1.dimensions.get(d, 0) - a2.dimensions.get(d, 0) for d in a1.dimensions},
+                    },
+                }
+                print(json.dumps(output, ensure_ascii=False, indent=2))
+            else:
+                print(format_compare(a1, a2, name1, name2))
 
         elif args.command == "batch":
             results = []
@@ -925,7 +1100,21 @@ def main():
                 name, dims = parse_compact_values(item, args.category)
                 t_str = ",".join(f"{k}={v}" for k, v in dims.items())
                 results.append((name, analyze(args.category, t_str)))
-            print(format_batch(results))
+            if args.json:
+                wt_values = [a.w_t for _, a in results]
+                output = {
+                    "category": args.category,
+                    "count": len(results),
+                    "products": [{"name": name, **a.to_dict()} for name, a in results],
+                    "statistics": {
+                        "wt_min": min(wt_values) if wt_values else 0,
+                        "wt_max": max(wt_values) if wt_values else 0,
+                        "wt_avg": round(sum(wt_values) / len(wt_values), 3) if wt_values else 0,
+                    },
+                }
+                print(json.dumps(output, ensure_ascii=False, indent=2))
+            else:
+                print(format_batch(results))
 
         elif args.command == "template":
             print(format_template(args.category))
