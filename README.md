@@ -14,11 +14,52 @@ BEA 不回答"什么是美"，而是解决"美感无法被讨论"的问题。
 
 **核心命题**：美感 = 可控张力下的情绪奖赏。亲极（圆润/柔色/对称）安其心，危极（尖锐/强对比/坚硬）提其神，秩序统其乱，阈值守其界。
 
+## 安装
+
+### 一键安装（推荐）
+
+**macOS / Linux：**
+```bash
+curl -fsSL https://raw.githubusercontent.com/Maxing0000/bipolar-emotion-aesthetics/main/install.sh | bash
+```
+
+**Windows（PowerShell）：**
+```powershell
+irm https://raw.githubusercontent.com/Maxing0000/bipolar-emotion-aesthetics/main/install.ps1 | iex
+```
+
+安装脚本会自动检测 Skill 目录、复制文件、运行自测试验证。
+
+### 手动安装
+
+```bash
+# 克隆到你的 Skill 目录
+git clone https://github.com/Maxing0000/bipolar-emotion-aesthetics.git \
+  ~/path/to/your/skills/bipolar-emotion-aesthetics
+
+# 验证
+cd ~/path/to/your/skills/bipolar-emotion-aesthetics
+python3 scripts/bea_quant.py test
+```
+
+### 环境要求
+
+- Python 3.7+（仅用标准库，无需 pip install）
+- Git（一键安装需要，手动安装可选）
+
+### 卸载 / 更新
+
+```bash
+# 卸载
+./uninstall.sh
+
+# 更新到最新版
+./update.sh
+```
+
 ## 快速开始
 
 ```bash
-cd bipolar-emotion-aesthetics
-
 # 生成分打模板（含维度顺序和锚点参考）
 python3 scripts/bea_quant.py template --category phone
 
@@ -27,9 +68,6 @@ python3 scripts/bea_quant.py report --category phone --t "形状=3,质感=6,色�
 
 # 调整建议：想达到某范式，该改哪个维度
 python3 scripts/bea_quant.py suggest --category phone --t "形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6" --target 崇高震撼
-
-# 自测试
-python3 scripts/bea_quant.py test
 ```
 
 ## 命令速查
@@ -52,6 +90,10 @@ python3 scripts/bea_quant.py test
 ```
 bipolar-emotion-aesthetics/
 ├── SKILL.md                    # 技能入口文档
+├── install.sh                  # macOS/Linux 一键安装
+├── install.ps1                 # Windows 一键安装
+├── uninstall.sh                # 卸载
+├── update.sh                   # 更新
 ├── scripts/
 │   └── bea_quant.py            # 量化引擎（仅 Python 标准库，离线可用）
 ├── references/
