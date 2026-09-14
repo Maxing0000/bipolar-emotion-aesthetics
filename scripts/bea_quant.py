@@ -2,7 +2,7 @@
 # Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
 
 """
-BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.2
+BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.3.0
 
 核心价值：把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作对象。
 仅用 Python 标准库，离线可用。
@@ -136,6 +136,7 @@ class BEAAnalysis:
     paradigm_range: Tuple[float, float]
     diseases: List[Dict[str, str]]
     score_suggestion: Dict[str, object]
+    polarity_ratio: Dict[str, object]
 
     def to_dict(self) -> dict:
         return {
@@ -148,6 +149,7 @@ class BEAAnalysis:
             "paradigm_range": list(self.paradigm_range),
             "diseases": self.diseases,
             "score_suggestion": self.score_suggestion,
+            "polarity_ratio": self.polarity_ratio,
         }
 
 
@@ -220,6 +222,66 @@ def parse_compact_values(name_vals: str, category: str) -> Tuple[str, Dict[str, 
 def compute_w_t(dimensions: Dict[str, int], weights: Dict[str, float]) -> float:
     total = sum(weights.get(d, 0) * (t / 10.0) for d, t in dimensions.items())
     return round(total, 3)
+
+
+def compute_polarity_ratio(dimensions: Dict[str, int], weights: Dict[str, float]) -> Dict[str, object]:
+    """
+    计算主辅比：亲极与危极的权重占比。
+
+    极性划分：
+    - 亲极 P+：t <= 3
+    - 中性：4 <= t <= 5
+    - 危极 T−：t >= 6
+
+    返回：
+    - plus_weight: 亲极总权重
+    - minus_weight: 危极总权重
+    - neutral_weight: 中性总权重
+    - plus_ratio: 亲极占比（0-1）
+    - minus_ratio: 危极占比（0-1）
+    - dominant: 主导极性（"亲极 P+" / "危极 T−" / "中性均衡"）
+    - primary_secondary_ratio: 主辅比（如 "72:28"）
+    - is_balanced: 是否达到主辅比 >= 6:4（BEA 理论要求）
+    """
+    plus_weight = sum(weights.get(d, 0) for d, t in dimensions.items() if t <= 3)
+    minus_weight = sum(weights.get(d, 0) for d, t in dimensions.items() if t >= 6)
+    neutral_weight = sum(weights.get(d, 0) for d, t in dimensions.items() if 4 <= t <= 5)
+
+    total = plus_weight + minus_weight + neutral_weight
+    plus_ratio = round(plus_weight / total, 3) if total > 0 else 0
+    minus_ratio = round(minus_weight / total, 3) if total > 0 else 0
+
+    # 主导极性判断（中性归入占比较高的一侧，或单独标注）
+    if plus_weight > minus_weight:
+        dominant = "亲极 P+"
+        primary = plus_weight + neutral_weight * 0.5  # 中性平分
+        secondary = minus_weight + neutral_weight * 0.5
+    elif minus_weight > plus_weight:
+        dominant = "危极 T−"
+        primary = minus_weight + neutral_weight * 0.5
+        secondary = plus_weight + neutral_weight * 0.5
+    else:
+        dominant = "中性均衡"
+        primary = plus_weight + neutral_weight * 0.5
+        secondary = minus_weight + neutral_weight * 0.5
+
+    primary_pct = round(primary / total * 100) if total > 0 else 50
+    secondary_pct = 100 - primary_pct
+    primary_secondary_ratio = f"{primary_pct}:{secondary_pct}"
+
+    # BEA 理论要求主辅比至少 6:4
+    is_balanced = primary_pct >= 60
+
+    return {
+        "plus_weight": round(plus_weight, 3),
+        "minus_weight": round(minus_weight, 3),
+        "neutral_weight": round(neutral_weight, 3),
+        "plus_ratio": plus_ratio,
+        "minus_ratio": minus_ratio,
+        "dominant": dominant,
+        "primary_secondary_ratio": primary_secondary_ratio,
+        "is_balanced": is_balanced,
+    }
 
 
 def locate_paradigm(w_t: float) -> Tuple[str, str, Tuple[float, float]]:
@@ -398,10 +460,11 @@ def analyze(category: str, t_str: str) -> BEAAnalysis:
     paradigm, paradigm_desc, p_range = locate_paradigm(w_t)
     diseases = diagnose_diseases(w_t, dimensions)
     scores = suggest_scores(w_t, dimensions, diseases)
+    polarity_ratio = compute_polarity_ratio(dimensions, weights)
     return BEAAnalysis(
         category=category, dimensions=dimensions, weights=weights, w_t=w_t,
         paradigm=paradigm, paradigm_desc=paradigm_desc, paradigm_range=p_range,
-        diseases=diseases, score_suggestion=scores,
+        diseases=diseases, score_suggestion=scores, polarity_ratio=polarity_ratio,
     )
 
 
@@ -448,6 +511,17 @@ def format_report(a: BEAAnalysis) -> str:
     lines.append(f"  距下沿：{dist_low:.3f}  距上沿：{dist_high:.3f}")
     if dist_high < 0.03 or dist_low < 0.03:
         lines.append(f"  ⚠ 接近范式边界，微调维度可能改变定位")
+
+    # 主辅比
+    pr = a.polarity_ratio
+    lines.append(f"\n【主辅比】")
+    lines.append(f"  主导极性：{pr['dominant']}")
+    lines.append(f"  亲极占比：{pr['plus_ratio']*100:.0f}%  危极占比：{pr['minus_ratio']*100:.0f}%  中性：{(1-pr['plus_ratio']-pr['minus_ratio'])*100:.0f}%")
+    lines.append(f"  主辅比：{pr['primary_secondary_ratio']}")
+    if pr['is_balanced']:
+        lines.append(f"  ✓ 主辅分明（≥6:4），第一印象明确")
+    else:
+        lines.append(f"  ⚠ 主辅不足（<6:4），可能存在均分症，情绪暧昧")
 
     lines.append(f"\n【病症诊断】")
     if a.diseases:
@@ -686,12 +760,13 @@ def suggest_adjustment(a: BEAAnalysis, target_wt: float) -> List[Dict[str, objec
     """
     计算从当前 W(T) 调整到目标 W(T) 的维度变更方案。
 
-    策略（v2.2 改进）：
+    策略（v2.3.0 改进）：
+    - 每轮只调整1级，然后重新计算优先级，避免单维度被极端调整
     - 降低危极时：优先降低当前 t 值最高的维度（高 t 维度对 W(T) 贡献最大）
     - 提升危极时：优先提升当前 t 值最低的维度（低 t 维度有最大提升空间）
     - 同时考虑权重：在 t 值相近时，优先调整权重高的维度（调整效率更高）
-    - 每次调整 ±1 后重新排序，确保动态最优
     - 避免把维度调到 0 或 10（极端值），除非目标差距过大
+    - 合并同一维度的连续调整为一步输出
 
     返回调整步骤列表。
     """
@@ -703,15 +778,17 @@ def suggest_adjustment(a: BEAAnalysis, target_wt: float) -> List[Dict[str, objec
         return [{"message": "当前W(T)已在目标范围内，无需调整"}]
 
     direction = 1 if delta > 0 else -1  # 1=提升危极，-1=降低危极
-    steps = []
     remaining = abs(delta)
     max_iterations = 100  # 安全上限
     iteration = 0
 
+    # 记录每个维度的总调整量
+    total_changes = {dim: 0 for dim in current}
+
     while remaining > 0.005 and iteration < max_iterations:
         iteration += 1
 
-        # 计算每个维度的调整优先级
+        # 计算每个维度的调整优先级（每轮重新计算）
         # 优先级 = |当前t - 目标方向| × 权重
         # 降低危极(-1)：t 值越高，优先级越高
         # 提升危极(+1)：t 值越低，优先级越高
@@ -734,33 +811,33 @@ def suggest_adjustment(a: BEAAnalysis, target_wt: float) -> List[Dict[str, objec
         if not candidates:
             break
 
-        # 按优先级排序，选最高的
+        # 按优先级排序，选最高的（本轮只调1级）
         candidates.sort(key=lambda x: x[1], reverse=True)
         best_dim = candidates[0][0]
-        old_t = current[best_dim]
         per_step = weights[best_dim] / 10.0
 
-        # 连续调整同一维度，直到达到目标或达到边界
-        actual_steps = 0
-        while remaining > 0.005:
-            # 检查是否还能继续调整
-            if direction == -1 and current[best_dim] <= 1:
-                break
-            if direction == 1 and current[best_dim] >= 9:
-                break
-            current[best_dim] += direction
-            remaining -= per_step
-            actual_steps += 1
+        # 只调整1级
+        current[best_dim] += direction
+        total_changes[best_dim] += direction
+        remaining -= per_step
 
-        if actual_steps > 0:
+    # 合并同一维度的连续调整为一步输出
+    steps = []
+    for dim, change in total_changes.items():
+        if change != 0:
+            old_t = a.dimensions[dim]
+            new_t = old_t + change
+            per_step = weights[dim] / 10.0
             steps.append({
-                "dimension": best_dim,
+                "dimension": dim,
                 "from": old_t,
-                "to": current[best_dim],
-                "change": direction * actual_steps,
-                "wt_change": round(direction * per_step * actual_steps, 3),
+                "to": new_t,
+                "change": change,
+                "wt_change": round(per_step * change, 3),
             })
 
+    # 按 W(T) 变化量绝对值排序（影响大的在前）
+    steps.sort(key=lambda x: abs(x["wt_change"]), reverse=True)
     return steps
 
 
@@ -1183,6 +1260,21 @@ def run_tests() -> bool:
     sens_edge2 = sensitivity_analysis(a_edge2)
     check("t=1时t-1变化为0", all(r["wt_minus_1"] == 0 for r in sens_edge2))
 
+    # 主辅比测试
+    a_pr1 = analyze("car", "曲面=2,特征线=3,灯组=4,比例=3,材质=4")
+    pr1 = a_pr1.polarity_ratio
+    check("主辅比包含必要字段", all(k in pr1 for k in ["plus_ratio", "minus_ratio", "dominant", "primary_secondary_ratio", "is_balanced"]))
+    check("亲极主导时dominant正确", pr1["dominant"] == "亲极 P+")
+    check("主辅比格式正确", ":" in pr1["primary_secondary_ratio"])
+
+    a_pr2 = analyze("car", "曲面=8,特征线=9,灯组=7,比例=8,材质=7")
+    pr2 = a_pr2.polarity_ratio
+    check("危极主导时dominant正确", pr2["dominant"] == "危极 T−")
+
+    a_pr3 = analyze("car", "曲面=5,特征线=5,灯组=5,比例=5,材质=5")
+    pr3 = a_pr3.polarity_ratio
+    check("全中性时is_balanced为False", pr3["is_balanced"] == False)
+
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0
 
@@ -1193,7 +1285,7 @@ def run_tests() -> bool:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="BEA 双极情绪美学量化引擎 v2.2",
+        description="BEA 双极情绪美学量化引擎 v2.3.0",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例：
@@ -1216,15 +1308,18 @@ def main():
     p_rep = sub.add_parser("report", help="分析并输出人类可读报告")
     p_rep.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_rep.add_argument("--t", required=True, help="维度t值，格式：形状=3,质感=6,...")
+    p_rep.add_argument("--json", action="store_true", help="输出JSON格式")
 
     p_score = sub.add_parser("score", help="详细四维评分辅助")
     p_score.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_score.add_argument("--t", required=True, help="维度t值，格式：形状=3,质感=6,...")
+    p_score.add_argument("--json", action="store_true", help="输出JSON格式")
 
     p_sug = sub.add_parser("suggest", help="调整建议：给定目标范式或W(T)，输出维度调整方案")
     p_sug.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_sug.add_argument("--t", required=True, help="当前维度t值，格式：形状=3,质感=6,...")
     p_sug.add_argument("--target", required=True, help="目标范式名（如'崇高震撼'）或目标W(T)值（如0.55）")
+    p_sug.add_argument("--json", action="store_true", help="输出JSON格式")
 
     p_sen = sub.add_parser("sensitivity", help="灵敏度分析：找出改动哪个维度效果最明显")
     p_sen.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
@@ -1255,16 +1350,51 @@ def main():
             print(json.dumps(analyze(args.category, args.t).to_dict(), ensure_ascii=False, indent=2))
 
         elif args.command == "report":
-            print(format_report(analyze(args.category, args.t)))
+            a = analyze(args.category, args.t)
+            if args.json:
+                print(json.dumps(a.to_dict(), ensure_ascii=False, indent=2))
+            else:
+                print(format_report(a))
 
         elif args.command == "score":
-            print(format_score_detail(analyze(args.category, args.t)))
+            a = analyze(args.category, args.t)
+            if args.json:
+                output = {
+                    "category": args.category,
+                    "w_t": a.w_t,
+                    "paradigm": a.paradigm,
+                    "scores": a.score_suggestion,
+                    "polarity_ratio": a.polarity_ratio,
+                }
+                print(json.dumps(output, ensure_ascii=False, indent=2))
+            else:
+                print(format_score_detail(a))
 
         elif args.command == "suggest":
             a = analyze(args.category, args.t)
             target_wt, target_desc = resolve_target(args.target)
             steps = suggest_adjustment(a, target_wt)
-            print(format_suggest(a, target_wt, target_desc, steps))
+            if args.json:
+                # 计算调整后的 W(T)
+                new_dims = dict(a.dimensions)
+                for step in steps:
+                    if "dimension" in step and "to" in step:
+                        new_dims[step["dimension"]] = step["to"]
+                new_wt = compute_w_t(new_dims, a.weights)
+                output = {
+                    "category": args.category,
+                    "current_wt": a.w_t,
+                    "current_paradigm": a.paradigm,
+                    "target_wt": target_wt,
+                    "target_desc": target_desc,
+                    "delta": round(target_wt - a.w_t, 3),
+                    "steps": steps,
+                    "resulting_wt": new_wt,
+                    "resulting_paradigm": locate_paradigm(new_wt)[0],
+                }
+                print(json.dumps(output, ensure_ascii=False, indent=2))
+            else:
+                print(format_suggest(a, target_wt, target_desc, steps))
 
         elif args.command == "sensitivity":
             a = analyze(args.category, args.t)
