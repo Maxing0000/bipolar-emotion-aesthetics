@@ -67,7 +67,7 @@ fetch_skill() {
     if [ -f "SKILL.md" ] && [ -f "scripts/bea_quant.py" ]; then
         info "检测到本地 skill 文件，直接复制"
         mkdir -p "$dest"
-        cp -R SKILL.md scripts references templates "$dest/"
+        cp -R SKILL.md LICENSE scripts references templates "$dest/"
         return 0
     fi
 
@@ -83,7 +83,7 @@ fetch_skill() {
     git clone --depth 1 "$REPO_URL" "$tmp/repo" >/dev/null 2>&1
 
     mkdir -p "$dest"
-    cp -R "$tmp/repo/SKILL.md" "$tmp/repo/scripts" "$tmp/repo/references" "$tmp/repo/templates" "$dest/"
+    cp -R "$tmp/repo/SKILL.md" "$tmp/repo/LICENSE" "$tmp/repo/scripts" "$tmp/repo/references" "$tmp/repo/templates" "$dest/"
     rm -rf "$tmp"
 }
 
