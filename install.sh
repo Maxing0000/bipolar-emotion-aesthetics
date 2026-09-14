@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
 
-# BEA v2.2 一键安装脚本（macOS / Linux）
+# BEA v2.3.0 一键安装脚本（macOS / Linux）
 #
 # 用法：
 #   从 GitHub 安装：  curl -fsSL https://raw.githubusercontent.com/Maxing0000/bipolar-emotion-aesthetics/main/install.sh | bash
@@ -90,7 +90,7 @@ fetch_skill() {
 # ── 主流程 ───────────────────────────────────────────
 main() {
     echo "========================================"
-    echo "  BEA v2.2 安装程序"
+    echo "  BEA v2.3.0 安装程序"
     echo "========================================"
     echo ""
 
