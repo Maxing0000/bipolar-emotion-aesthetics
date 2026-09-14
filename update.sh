@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
+
 # BEA v2.2 更新脚本（macOS / Linux）
 # 从 GitHub 拉取最新版本并覆盖安装
 set -euo pipefail

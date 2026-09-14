@@ -1,3 +1,5 @@
+> Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
+
 # BEA 设计评审记录
 
 > 每次 BEA 设计评审后填写一份，存档可追溯。复制此模板到项目文档中使用。

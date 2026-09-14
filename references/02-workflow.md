@@ -1,3 +1,5 @@
+> Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
+
 # BEA 工作流与模板
 
 > 本文档回答"BEA 具体怎么用"。所有模板均可直接复制使用。

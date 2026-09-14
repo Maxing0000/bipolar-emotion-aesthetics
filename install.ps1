@@ -1,3 +1,5 @@
+# Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
+
 # BEA v2.2 一键安装脚本（Windows PowerShell）
 #
 # 用法：

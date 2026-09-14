@@ -1,3 +1,5 @@
+> Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
+
 # BEA 核心理论
 
 > 本文档是 BEA 的理论内核。只保留对实际设计协作有用的部分，不做概念包装。

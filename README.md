@@ -1,6 +1,8 @@
+> Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
+
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
-![License](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey)
+![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey)
 ![Version](https://img.shields.io/badge/version-2.2.0-blue)
 ![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
 
@@ -115,4 +117,4 @@ bipolar-emotion-aesthetics/
 
 ## 许可证
 
-CC BY 4.0
+CC BY-NC-SA 4.0（署名-非商业性使用-相同方式共享）

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
+
 # BEA v2.2 卸载脚本（macOS / Linux）
 set -euo pipefail
 

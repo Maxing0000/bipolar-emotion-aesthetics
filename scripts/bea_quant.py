@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
+
 """
 BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.2
 

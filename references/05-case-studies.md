@@ -1,3 +1,5 @@
+> Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
+
 # BEA 真实案例库
 
 > 本文档存档已完成的 BEA 分析案例，供参考和校准。每个案例包含完整的打分理由、计算过程和结论。
