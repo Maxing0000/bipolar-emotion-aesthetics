@@ -320,6 +320,86 @@ img{max-width:100%;display:block}
 .domain-name{font-size:1.05rem;font-weight:700;color:#f5e6d3;margin-bottom:.4rem}
 .domain-desc{font-size:.85rem;color:#a8a29e}
 
+/* ===== 案例库 ===== */
+.case-filter{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:2rem}
+.case-filter-btn{
+  padding:.5rem 1.2rem;
+  background:transparent;
+  border:1px solid rgba(212,165,116,.25);
+  border-radius:100px;
+  color:#a8a29e;
+  font-size:.85rem;
+  cursor:pointer;
+  transition:all .3s;
+}
+.case-filter-btn:hover{border-color:rgba(212,165,116,.5);color:#d4a574}
+.case-filter-btn.active{background:rgba(212,165,116,.15);border-color:#d4a574;color:#d4a574}
+.case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem}
+.case-card{
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(212,165,116,.12);
+  border-radius:14px;
+  overflow:hidden;
+  transition:all .3s;
+  cursor:pointer;
+}
+.case-card:hover{border-color:rgba(212,165,116,.4);background:rgba(212,165,116,.04);transform:translateY(-4px)}
+.case-card-header{
+  padding:1.5rem 1.5rem 1rem;
+  border-bottom:1px solid rgba(212,165,116,.1);
+}
+.case-category{
+  display:inline-block;
+  padding:.2rem .7rem;
+  background:rgba(212,165,116,.1);
+  border-radius:100px;
+  font-size:.7rem;
+  color:#d4a574;
+  letter-spacing:.1em;
+  margin-bottom:.6rem;
+}
+.case-name{font-size:1.2rem;font-weight:700;color:#f5e6d3;margin-bottom:.3rem}
+.case-subtitle{font-size:.8rem;color:#6b6560}
+.case-card-body{padding:1.2rem 1.5rem}
+.case-metrics{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem}
+.case-metric{text-align:center}
+.case-metric-value{font-size:1.4rem;font-weight:900;color:#d4a574;font-family:'Noto Serif SC',serif}
+.case-metric-label{font-size:.7rem;color:#6b6560;margin-top:.2rem}
+.case-paradigm{
+  display:inline-block;
+  padding:.3rem .8rem;
+  background:rgba(245,230,211,.08);
+  border-radius:6px;
+  font-size:.8rem;
+  color:#f5e6d3;
+  margin-bottom:.8rem;
+}
+.case-insight{font-size:.82rem;color:#a8a29e;line-height:1.6}
+.case-card-detail{
+  display:none;
+  padding:1.2rem 1.5rem;
+  border-top:1px solid rgba(212,165,116,.1);
+  background:rgba(212,165,116,.02);
+}
+.case-card.expanded .case-card-detail{display:block}
+.case-detail-title{font-size:.85rem;font-weight:700;color:#d4a574;margin-bottom:.6rem;margin-top:1rem}
+.case-detail-title:first-child{margin-top:0}
+.case-dims{display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem;margin-bottom:.5rem}
+.case-dim{text-align:center}
+.case-dim-name{font-size:.65rem;color:#6b6560;margin-bottom:.2rem}
+.case-dim-value{font-size:.9rem;font-weight:700;color:#f5e6d3}
+.case-sensitivity{font-size:.78rem;color:#a8a29e;line-height:1.7}
+.case-sensitivity .warning{color:#e8a87c;font-weight:500}
+.case-sensitivity .positive{color:#a8d4a5;font-weight:500}
+.case-expand-hint{
+  text-align:center;
+  padding:.6rem;
+  font-size:.75rem;
+  color:#6b6560;
+  border-top:1px solid rgba(212,165,116,.08);
+}
+.case-card.expanded .case-expand-hint{color:#d4a574}
+
 /* ===== 互动计算器 ===== */
 .calculator{
   padding:2.5rem;
@@ -443,6 +523,7 @@ img{max-width:100%;display:block}
     <li><a href="#method">方法论</a></li>
     <li><a href="#calculator">W(T) 计算</a></li>
     <li><a href="#diagnosis">病症诊断</a></li>
+    <li><a href="#cases">案例库</a></li>
     <li><a href="#applications">应用领域</a></li>
   </ul>
 </nav>
@@ -754,6 +835,26 @@ img{max-width:100%;display:block}
   </div>
 </section>
 
+<!-- ===== 案例库 ===== -->
+<section class="section" id="cases">
+  <div class="reveal">
+    <div class="section-tag">Case Studies</div>
+    <h2 class="section-title">真实案例库</h2>
+    <p class="section-desc">用 BEA 分析真实产品，从手机到汽车，从品牌到界面。每个案例包含完整的维度打分、W(T) 计算、灵敏度分析和改进处方。点击卡片查看详情。</p>
+  </div>
+
+  <div class="case-filter reveal">
+    <button class="case-filter-btn active" data-filter="all">全部案例</button>
+    <button class="case-filter-btn" data-filter="phone">手机</button>
+    <button class="case-filter-btn" data-filter="car">汽车</button>
+    <button class="case-filter-btn" data-filter="brand">品牌</button>
+  </div>
+
+  <div class="case-grid reveal" id="case-grid">
+    <!-- 案例由 JavaScript 动态生成 -->
+  </div>
+</section>
+
 <!-- ===== 页脚 ===== -->
 <footer class="footer">
   <div class="footer-logo">BEA<span>.</span> 双极情绪美学</div>
@@ -763,7 +864,7 @@ img{max-width:100%;display:block}
     <a href="https://www.modelscope.cn/datasets/xkbk0000/bipolar-emotion-aesthetics" target="_blank">ModelScope</a>
     <a href="https://zhuanlan.zhihu.com/p/2082453017601882066" target="_blank">知乎文章</a>
   </div>
-  <p class="footer-copy">Bipolar Emotion Aesthetics v2.2.0 | 署名：星空本空 | CC BY-NC-SA 4.0</p>
+  <p class="footer-copy">Bipolar Emotion Aesthetics v2.3.0 | 署名：星空本空 | CC BY-NC-SA 4.0</p>
 </footer>
 
 <script>
@@ -856,6 +957,179 @@ document.getElementById('category-select').addEventListener('change', (e) => {
 
 // 初始化
 buildSliders('phone');
+
+// ===== 案例库数据 =====
+const caseData = [
+  {
+    id: 'iphone-duo',
+    name: 'iPhone Duo',
+    category: 'phone',
+    categoryLabel: '手机',
+    subtitle: '2026 · 折叠屏旗舰 · ￥15999起',
+    wt: 0.44,
+    paradigm: '均衡典雅',
+    disease: '轻度重点通胀',
+    advantage: '镜面钛金属的张力',
+    insight: '苹果首款折叠屏选择最稳妥的美学策略：用经典亲和语言托底，用镜面钛金属提神。但"重点通胀症"倾向明显——三个高端信号同时出现，缺少唯一视觉记忆锚点。',
+    dims: {形状:3, 质感:6, 色彩:4, 构图:3, 光影:5, 细节:6},
+    sensitivity: '形状和质感灵敏度最高（权重0.25）。光影 t+1 会扣7分——提升光影危极会引入病症，不要往这个方向改。',
+    improvement: '更亲和：质感6→5，形状3→2；更崇高：形状3→4，质感6→7。可考虑哑光钛版本，W(T)降至0.39。'
+  },
+  {
+    id: 's26-ultra',
+    name: 'Samsung S26 Ultra',
+    category: 'phone',
+    categoryLabel: '手机',
+    subtitle: '2026 · 直板旗舰 · ￥9999起',
+    wt: 0.385,
+    paradigm: '均衡典雅',
+    disease: '均分症',
+    advantage: '手感亲和、配色丰富',
+    insight: '三星这一代在做明确的"去危极化"——钛换铝、直角改圆润、全机哑光。W(T)从前代估计的0.48+降到0.385，主动从"崇高震撼"退回"均衡典雅"。代价是旗舰视觉冲击力被稀释。',
+    dims: {形状:4, 质感:4, 色彩:4, 构图:3, 光影:3, 细节:5},
+    sensitivity: '所有维度集中在3-5，无主次（均分症）。边框做高光倒角，质感t从4→6，W(T)升至0.44，进入旗舰黄金区。',
+    improvement: '边框做高光倒角（质感4→6），氛围岛模组底座改用不同材质制造视觉锚点，S Pen笔杆做撞色设计。'
+  },
+  {
+    id: 'model3',
+    name: 'Tesla Model 3',
+    category: 'car',
+    categoryLabel: '汽车',
+    subtitle: '中型纯电轿车 · 主流走量',
+    wt: 0.39,
+    paradigm: '均衡典雅',
+    disease: '无',
+    advantage: '灯组是精准提神点',
+    insight: 'Model 3 的 BEA 策略是"用圆润车身安其心，用锐利灯组提其神"。灯组是唯一的危极元素，也是它最具辨识度的设计符号——这说明1个精准的提神点胜过3个模糊的高端信号。',
+    dims: {曲面:3, 特征线:3, 灯组:6, 比例:5, 材质:4},
+    sensitivity: '灯组 t=6 是核心提神点，降低会扣5分。曲面和特征线都是3（偏亲和），提升空间大。',
+    improvement: '性能版可提升曲面3→4、特征线3→5，W(T)升至0.46，运动感更强。标准版保持当前配比即可。'
+  },
+  {
+    id: 'zunjie-s800',
+    name: '尊界 S800',
+    category: 'car',
+    categoryLabel: '汽车',
+    subtitle: '2026 · 百万级豪华行政轿车',
+    wt: 0.455,
+    paradigm: '均衡典雅',
+    disease: '无',
+    advantage: '灯组锐利+曲面力量感',
+    insight: '尊界 S800 选择"行政庄重为体、科技灯组为用"的策略。W(T)=0.455 接近范式上沿，曲面+1就会进入崇高震撼。灯组是易碎品——降低会扣8分，说明锐利灯组是核心记忆点。',
+    dims: {曲面:4, 特征线:5, 灯组:6, 比例:3, 材质:5},
+    sensitivity: '<span class="warning">灯组 t-1 扣8分！易碎品，不能降低。</span>曲面是第一杠杆（权重0.30），改曲面比改灯组效果大一倍。',
+    improvement: '更崇高（对标迈巴赫）：曲面4→5，特征线5→6；更亲和（对标宝马7系）：曲面4→3，特征线5→4。⚠灯组保持6不变。'
+  },
+  {
+    id: 'li-l9',
+    name: '理想 L9',
+    category: 'car',
+    categoryLabel: '汽车',
+    subtitle: '2022 · 家庭旗舰大型SUV · ￥45.98万',
+    wt: 0.36,
+    paradigm: '均衡典雅',
+    disease: '缺少焦点（秩序短板）',
+    advantage: '家用亲和+星环大灯',
+    insight: '理想 L9 选择"家用亲和为体、科技灯组为用"的策略。但灯组t=5还不够锐利，缺少明确视觉焦点——这是结构秩序评分只有20分的根本原因。星环大灯是标志性设计，但锐利度不足。',
+    dims: {曲面:3, 特征线:3, 灯组:5, 比例:4, 材质:4},
+    sensitivity: '<span class="positive">灯组 t+1 加8分！最大提升空间。</span>与尊界S800形成对比：同一维度在不同t值下表现完全相反。焦点数量=0，缺少视觉记忆点。',
+    improvement: '<span class="positive">推荐：只改灯组5→6，评分+8分，同时解决缺少焦点问题。</span>更崇高：曲面3→5，灯组5→6；更亲和：曲面3→2，特征线3→2。'
+  },
+  {
+    id: 'xiaomi-su7',
+    name: '小米 SU7',
+    category: 'car',
+    categoryLabel: '汽车',
+    subtitle: '2024 · 运动轿跑 · ￥21.59万起',
+    wt: 0.47,
+    paradigm: '均衡典雅（近上沿）',
+    disease: '无',
+    advantage: '运动感最强+灯组犀利',
+    insight: '小米 SU7 的 W(T)=0.47 是4款车中最高的，最接近崇高震撼范式，运动感最强。灯组t=6是易碎品（降低扣8分）。当前设计已经很精准——在大众可接受的范围内把运动感拉到最大。',
+    dims: {曲面:4, 特征线:5, 灯组:6, 比例:5, 材质:4},
+    sensitivity: '<span class="warning">灯组 t-1 扣8分！易碎品。</span>W(T)=0.47非常接近范式上沿(0.48)，曲面+1就进入崇高震撼。曲面是第一杠杆。',
+    improvement: '进入崇高震撼（对标Taycan）：曲面4→6，特征线5→6；保持均衡典雅（推荐）：当前设计已很成熟（90分）；略降亲和：曲面4→3。⚠灯组保持6不变。'
+  },
+  {
+    id: 'apple-brand',
+    name: '苹果品牌视觉',
+    category: 'brand',
+    categoryLabel: '品牌',
+    subtitle: '官网/产品页/品牌视觉系统',
+    wt: 0.31,
+    paradigm: '亲和/典雅边界',
+    disease: '无',
+    advantage: '大留白+精密光影',
+    insight: '苹果品牌视觉的 W(T)=0.31 刚好踩在亲和精致和均衡典雅的分界线上。这不是巧合——苹果要的就是"第一眼亲和，细看精密"。大留白版式(t=2)是最强亲极元素，产品图的精致光影(t=4)是提神点。',
+    dims: {图形:3, 色彩:3, 字体:4, 版式:2, 质感:4},
+    sensitivity: '版式t=2是最强亲极元素（大留白）。质感t=4是提神点（精致光影）。主辅比约7:3，非常清晰。',
+    improvement: '当前配比已非常精准，不建议大改。可在产品发布季临时提升色彩饱和度（色彩3→4），增加视觉冲击力。'
+  }
+];
+
+// ===== 案例库渲染 =====
+function renderCases(filter = 'all') {
+  const grid = document.getElementById('case-grid');
+  const filtered = filter === 'all' ? caseData : caseData.filter(c => c.category === filter);
+  
+  grid.innerHTML = filtered.map(c => `
+    <div class="case-card" data-id="${c.id}" onclick="toggleCase('${c.id}')">
+      <div class="case-card-header">
+        <span class="case-category">${c.categoryLabel}</span>
+        <div class="case-name">${c.name}</div>
+        <div class="case-subtitle">${c.subtitle}</div>
+      </div>
+      <div class="case-card-body">
+        <div class="case-metrics">
+          <div class="case-metric">
+            <div class="case-metric-value">${c.wt}</div>
+            <div class="case-metric-label">W(T)</div>
+          </div>
+          <div class="case-metric">
+            <div class="case-metric-value" style="font-size:0.9rem;padding-top:0.3rem">${c.paradigm}</div>
+            <div class="case-metric-label">范式</div>
+          </div>
+        </div>
+        <div class="case-insight">${c.insight}</div>
+      </div>
+      <div class="case-card-detail">
+        <div class="case-detail-title">维度打分</div>
+        <div class="case-dims">
+          ${Object.entries(c.dims).map(([k,v]) => `
+            <div class="case-dim">
+              <div class="case-dim-name">${k}</div>
+              <div class="case-dim-value" style="color:${v>=6?'#d4a574':v<=3?'#f5e6d3':'#a8a29e'}">${v}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="case-detail-title">灵敏度分析</div>
+        <div class="case-sensitivity">${c.sensitivity}</div>
+        <div class="case-detail-title">改进方向</div>
+        <div class="case-sensitivity">${c.improvement}</div>
+      </div>
+      <div class="case-expand-hint">点击展开详情 ▾</div>
+    </div>
+  `).join('');
+}
+
+function toggleCase(id) {
+  const card = document.querySelector(`.case-card[data-id="${id}"]`);
+  const hint = card.querySelector('.case-expand-hint');
+  card.classList.toggle('expanded');
+  hint.textContent = card.classList.contains('expanded') ? '点击收起 ▴' : '点击展开详情 ▾';
+}
+
+// 筛选按钮
+document.querySelectorAll('.case-filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.case-filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderCases(btn.dataset.filter);
+  });
+});
+
+// 初始化案例库
+renderCases();
 
 // ===== 滚动揭示动画 =====
 const observer = new IntersectionObserver((entries) => {
