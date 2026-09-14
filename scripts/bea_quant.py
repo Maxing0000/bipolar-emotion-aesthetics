@@ -70,7 +70,10 @@ def _has_sweet_tooth(w_t: float, dims: Dict[str, int]) -> bool:
     return w_t < 0.25 and all(t <= 4 for t in dims.values())
 
 def _has_aggression(w_t: float, dims: Dict[str, int]) -> bool:
-    return w_t > 0.60 and any(t >= 7 for t in dims.values())
+    # 攻击症：整体危极高(W(T)>=0.55)且有明显高强度维度(t>=6)
+    # v2.2 改进：从 W(T)>0.60 且 t>=7 降低为 W(T)>=0.55 且 t>=6，
+    # 以覆盖冷峻克制范式的高危极设计，避免漏报
+    return w_t >= 0.55 and any(t >= 6 for t in dims.values())
 
 def _has_middle_child(w_t: float, dims: Dict[str, int]) -> bool:
     # 均分症：所有维度集中在3-5且极差<2（真正的无主次），W(T)在中间区间
@@ -85,6 +88,7 @@ def _has_tension_deficit(w_t: float, dims: Dict[str, int]) -> bool:
     return w_t < 0.35 and (max(dims.values()) - min(dims.values())) < 2
 
 # (名称, 诊断函数, 处方)
+# 注意：失序症和层级冲突症无法仅通过维度值自动诊断，需人工判断，在报告中给出检查提示
 DISEASE_RULES: List[Tuple[str, Callable[[float, Dict[str, int]], bool], str]] = [
     ("甜腻症", _has_sweet_tooth,
      "全圆角全柔色、无锐度。在高价值细节处注入10%-20%危极，柔中藏骨。"),
@@ -96,6 +100,20 @@ DISEASE_RULES: List[Tuple[str, Callable[[float, Dict[str, int]], bool], str]] = 
      "哪里都想强调、视觉噪音大。做减法，强调点压回1-2个。"),
     ("张力不足症", _has_tension_deficit,
      "所有维度都温和、没有提神点。在1-2个维度提升危极强度至6+，制造对比。"),
+]
+
+# 需人工判断的病症（无法仅通过维度值自动诊断）
+MANUAL_CHECK_DISEASES = [
+    {
+        "name": "失序症",
+        "check_prompt": "单元素是否都精彩但堆在一起互相打架？是否缺少贯穿全局的统一主线（色板/模数/栅格/特征线）？",
+        "prescription": "确立一条贯穿全局的统一主线，让对立元素在同一秩序下成对出现。",
+    },
+    {
+        "name": "层级冲突症",
+        "check_prompt": "宏观（整体轮廓）与微观（细节处理）的极性是否一致？是否出现外观圆润却细节硌手、视觉柔和却声音刺耳的跨通道冲突？",
+        "prescription": "逐层逐通道审计，选择同向叠加或微差补偿策略，消除宏观/微观、跨通道的方向冲突。",
+    },
 ]
 
 
@@ -211,8 +229,8 @@ def _disease_evidence(name: str, w_t: float, dims: Dict[str, int]) -> str:
     if name == "甜腻症":
         return f"W(T)={w_t:.2f} 偏低，所有维度 t<=4，最高维度为 {max(dims, key=dims.get)}={max(dims.values())}"
     if name == "攻击症":
-        high = [f"{k}={v}" for k, v in dims.items() if v >= 7]
-        return f"W(T)={w_t:.2f} 偏高，过强维度：{', '.join(high)}"
+        high = [f"{k}={v}" for k, v in dims.items() if v >= 6]
+        return f"W(T)={w_t:.2f} 偏高（>=0.55），高强度维度（t>=6）：{', '.join(high)}"
     if name == "均分症":
         return f"W(T)={w_t:.2f}，所有维度集中在 3-5 区间，无明显主次"
     if name == "重点通胀症":
@@ -345,8 +363,15 @@ def format_report(a: BEAAnalysis) -> str:
             lines.append(f"     证据：{d['evidence']}")
             lines.append(f"     处方：{d['prescription']}")
     else:
-        lines.append("  未检测到明显病症。")
-    lines.append("  （注：层级冲突症需人工判断宏观/微观一致性，无法自动诊断）")
+        lines.append("  未检测到自动诊断病症。")
+
+    # 需人工判断的病症检查提示
+    lines.append(f"\n【需人工判断的病症】（无法仅通过维度值自动诊断，请逐项检查）")
+    for i, d in enumerate(MANUAL_CHECK_DISEASES, 1):
+        lines.append(f"  {i}. {d['name']}")
+        lines.append(f"     检查：{d['check_prompt']}")
+        lines.append(f"     处方：{d['prescription']}")
+
     lines.append("")
     lines.append("  四维评分辅助请使用 score 命令：python3 bea_quant.py score --category ... --t ...")
 
@@ -561,7 +586,14 @@ def resolve_target(target_str: str) -> Tuple[float, str]:
 def suggest_adjustment(a: BEAAnalysis, target_wt: float) -> List[Dict[str, object]]:
     """
     计算从当前 W(T) 调整到目标 W(T) 的维度变更方案。
-    策略：优先调整权重高的维度，每次±1，直到达到目标或无法继续。
+
+    策略（v2.2 改进）：
+    - 降低危极时：优先降低当前 t 值最高的维度（高 t 维度对 W(T) 贡献最大）
+    - 提升危极时：优先提升当前 t 值最低的维度（低 t 维度有最大提升空间）
+    - 同时考虑权重：在 t 值相近时，优先调整权重高的维度（调整效率更高）
+    - 每次调整 ±1 后重新排序，确保动态最优
+    - 避免把维度调到 0 或 10（极端值），除非目标差距过大
+
     返回调整步骤列表。
     """
     current = dict(a.dimensions)
@@ -574,38 +606,58 @@ def suggest_adjustment(a: BEAAnalysis, target_wt: float) -> List[Dict[str, objec
     direction = 1 if delta > 0 else -1  # 1=提升危极，-1=降低危极
     steps = []
     remaining = abs(delta)
+    max_iterations = 100  # 安全上限
+    iteration = 0
 
-    # 按权重排序维度
-    sorted_dims = sorted(weights.keys(), key=lambda d: weights[d], reverse=True)
+    while remaining > 0.005 and iteration < max_iterations:
+        iteration += 1
 
-    for dim in sorted_dims:
-        if remaining <= 0.005:
+        # 计算每个维度的调整优先级
+        # 优先级 = |当前t - 目标方向| × 权重
+        # 降低危极(-1)：t 值越高，优先级越高
+        # 提升危极(+1)：t 值越低，优先级越高
+        candidates = []
+        for dim, t in current.items():
+            w = weights[dim]
+            if direction == -1:
+                # 降低危极：优先降高 t 维度，但不能低于 1（避免极端 0）
+                if t > 1:
+                    # 优先级 = t 值 × 权重（t 越高越该降）
+                    priority = t * w
+                    candidates.append((dim, priority, t))
+            else:
+                # 提升危极：优先升低 t 维度，但不能高于 9（避免极端 10）
+                if t < 9:
+                    # 优先级 = (10 - t) × 权重（t 越低越该升）
+                    priority = (10 - t) * w
+                    candidates.append((dim, priority, t))
+
+        if not candidates:
             break
-        t = current[dim]
-        w = weights[dim]
-        # 计算这个维度最多能调多少
-        if direction == 1:
-            max_change = 10 - t
-        else:
-            max_change = t
-        if max_change <= 0:
-            continue
-        # 每次调整1的W(T)变化量
-        per_step = w / 10.0
-        needed_steps = min(max_change, int(remaining / per_step) + 1)
-        # 精确计算需要几步
+
+        # 按优先级排序，选最高的
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        best_dim = candidates[0][0]
+        old_t = current[best_dim]
+        per_step = weights[best_dim] / 10.0
+
+        # 连续调整同一维度，直到达到目标或达到边界
         actual_steps = 0
-        for i in range(needed_steps):
-            if remaining <= 0.005:
+        while remaining > 0.005:
+            # 检查是否还能继续调整
+            if direction == -1 and current[best_dim] <= 1:
                 break
-            current[dim] += direction
+            if direction == 1 and current[best_dim] >= 9:
+                break
+            current[best_dim] += direction
             remaining -= per_step
             actual_steps += 1
+
         if actual_steps > 0:
             steps.append({
-                "dimension": dim,
-                "from": t,
-                "to": current[dim],
+                "dimension": best_dim,
+                "from": old_t,
+                "to": current[best_dim],
                 "change": direction * actual_steps,
                 "wt_change": round(direction * per_step * actual_steps, 3),
             })
