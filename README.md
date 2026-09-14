@@ -105,6 +105,9 @@ python3 scripts/bea_quant.py suggest --category phone --t "形状=3,质感=6,色
 ```
 bipolar-emotion-aesthetics/
 ├── SKILL.md                    # 技能入口文档
+├── README.md                   # 项目说明（本文件）
+├── FAQ.md                      # 常见问题解答（20个高频问题）
+├── CHANGELOG.md                # 版本变更记录
 ├── install.sh                  # macOS/Linux 一键安装
 ├── install.ps1                 # Windows 一键安装
 ├── uninstall.sh                # 卸载
