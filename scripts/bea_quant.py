@@ -23,6 +23,7 @@ compare/batch 的产品值支持两种格式（自动识别）：
 
 import argparse
 import json
+import os
 import sys
 from dataclasses import dataclass
 from typing import Callable, Dict, List, Tuple
@@ -137,6 +138,7 @@ class BEAAnalysis:
     diseases: List[Dict[str, str]]
     score_suggestion: Dict[str, object]
     polarity_ratio: Dict[str, object]
+    endurance: Dict[str, object]
 
     def to_dict(self) -> dict:
         return {
@@ -150,6 +152,7 @@ class BEAAnalysis:
             "diseases": self.diseases,
             "score_suggestion": self.score_suggestion,
             "polarity_ratio": self.polarity_ratio,
+            "endurance": self.endurance,
         }
 
 
@@ -284,6 +287,130 @@ def compute_polarity_ratio(dimensions: Dict[str, int], weights: Dict[str, float]
     }
 
 
+def compute_endurance(w_t: float, dimensions: Dict[str, int], weights: Dict[str, float],
+                      category: str, diseases: List[Dict[str, str]]) -> Dict[str, object]:
+    """
+    计算耐看性指数：长期使用/观看是否容易疲劳。
+
+    BEA 理论：长期贴身物须耐看，W(T)过高、维度差异过大、有攻击症/重点通胀症都会降低耐看性。
+
+    评估维度：
+    1. W(T) 水平：W(T)越高越容易疲劳（0.3-0.45最佳）
+    2. 维度稳定性：维度之间 t 值差异越小越耐看
+    3. 病症影响：攻击症、重点通胀症、刺激疲劳降低耐看性
+    4. 品类适配：不同品类的最优 W(T) 区间不同
+
+    返回：
+    - score: 耐看性指数（0-100）
+    - level: 评级（极耐看/耐看/一般/易疲劳）
+    - factors: 各因素得分明细
+    - advice: 改进建议
+    """
+    factors = {}
+
+    # 1. W(T) 水平得分（0-30分）
+    # 不同品类的最优 W(T) 区间
+    optimal_ranges = {
+        "phone": (0.18, 0.35),    # 手机：长期贴身，偏低
+        "car": (0.30, 0.48),       # 汽车：均衡到崇高
+        "brand": (0.20, 0.45),     # 品牌：亲和到均衡
+        "ui": (0.15, 0.35),        # UI：长期使用，偏低
+        "building": (0.35, 0.55),  # 建筑：崇高区间
+    }
+    opt_low, opt_high = optimal_ranges.get(category, (0.25, 0.45))
+    if opt_low <= w_t <= opt_high:
+        wt_score = 30
+    elif w_t < opt_low:
+        # 偏低：单调，但比偏高更耐看
+        wt_score = max(15, 30 - (opt_low - w_t) * 50)
+    else:
+        # 偏高：容易疲劳
+        wt_score = max(5, 30 - (w_t - opt_high) * 80)
+    factors["W(T)水平"] = round(wt_score, 1)
+
+    # 2. 维度稳定性得分（0-25分）
+    # t 值标准差越小越耐看
+    t_values = list(dimensions.values())
+    if len(t_values) > 1:
+        mean_t = sum(t_values) / len(t_values)
+        variance = sum((t - mean_t) ** 2 for t in t_values) / len(t_values)
+        std_dev = variance ** 0.5
+        # 标准差 0-1 得满分，每增加1扣5分
+        stability_score = max(5, 25 - max(0, std_dev - 1) * 5)
+    else:
+        stability_score = 25
+    factors["维度稳定性"] = round(stability_score, 1)
+
+    # 3. 病症影响得分（0-25分）
+    disease_penalty = 0
+    disease_names = [d["name"] for d in diseases]
+    if "攻击症" in disease_names:
+        disease_penalty += 10
+    if "重点通胀症" in disease_names:
+        disease_penalty += 8
+    if "刺激疲劳" in disease_names:
+        disease_penalty += 12
+    if "均分症" in disease_names:
+        disease_penalty += 5
+    if "甜腻症" in disease_names:
+        disease_penalty += 3
+    disease_score = max(0, 25 - disease_penalty)
+    factors["病症影响"] = round(disease_score, 1)
+
+    # 4. 主辅比得分（0-20分）
+    pr = compute_polarity_ratio(dimensions, weights)
+    if pr["is_balanced"]:
+        # 主辅分明，耐看
+        primary_pct = int(pr["primary_secondary_ratio"].split(":")[0])
+        # 7:3 到 8:2 最佳
+        if 70 <= primary_pct <= 85:
+            balance_score = 20
+        elif 60 <= primary_pct < 70:
+            balance_score = 16
+        else:
+            balance_score = 12
+    else:
+        balance_score = 8  # 主辅不足，情绪暧昧，不耐看
+    factors["主辅比"] = round(balance_score, 1)
+
+    total = round(sum(factors.values()), 1)
+
+    # 评级
+    if total >= 80:
+        level = "极耐看"
+    elif total >= 65:
+        level = "耐看"
+    elif total >= 50:
+        level = "一般"
+    else:
+        level = "易疲劳"
+
+    # 改进建议
+    advice = []
+    if wt_score < 20:
+        if w_t > opt_high:
+            advice.append(f"W(T)={w_t:.2f}偏高，建议降低危极到{opt_high:.2f}以下")
+        else:
+            advice.append(f"W(T)={w_t:.2f}偏低，建议增加适度张力到{opt_low:.2f}以上")
+    if stability_score < 15:
+        advice.append("维度差异过大，建议收敛各维度 t 值到更窄区间")
+    if disease_score < 15:
+        advice.append("存在影响耐看性的病症，优先处理攻击症/重点通胀症")
+    if balance_score < 12:
+        advice.append("主辅比不足，建议确立明确的主导极性（≥7:3）")
+
+    if not advice:
+        advice.append("耐看性良好，保持当前配比")
+
+    return {
+        "score": total,
+        "level": level,
+        "factors": factors,
+        "advice": advice,
+        "optimal_range": [opt_low, opt_high],
+    }
+
+
 def locate_paradigm(w_t: float) -> Tuple[str, str, Tuple[float, float]]:
     for low, high, name, desc in PARADIGMS:
         if low <= w_t < high:
@@ -322,7 +449,8 @@ def diagnose_diseases(w_t: float, dims: Dict[str, int]) -> List[Dict[str, str]]:
     return diseases
 
 
-def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, str]]) -> Dict[str, object]:
+def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, str]],
+                   category: str = "phone") -> Dict[str, object]:
     """
     四维评分辅助（v2.2.1 精细化版）
 
@@ -404,8 +532,31 @@ def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, st
     threshold = max(0, min(25, threshold))
 
     # ── 语境适配（25分）──
-    # 这是参考分，需人工判断。给出基础分和检查项。
-    context = 18  # 中性参考分
+    # 这是参考分，需人工判断。按品类和范式给出基础参考分范围。
+    # 不同品类的语境适配基准分不同（基于使用场景和受众预期）
+    context_base_by_category = {
+        "phone": 17,    # 手机：大众消费品，语境适配要求高
+        "car": 18,      # 汽车：品类分化大，参考分中等
+        "brand": 16,    # 品牌：高度依赖定位，需更多人工判断
+        "ui": 17,       # UI：用户体验导向，语境适配要求高
+        "building": 19, # 建筑：公共性强，语境适配相对稳定
+    }
+    context_base = context_base_by_category.get(category, 17)
+
+    # 范式适配调整：主流范式（亲和精致/均衡典雅）语境适配性更高
+    paradigm_context_bonus = {
+        "治愈松弛": 1,
+        "亲和精致": 2,
+        "均衡典雅": 2,
+        "崇高震撼": 0,
+        "冷峻克制": -1,
+        "先锋反叛": -2,
+    }
+    paradigm_name = locate_paradigm(w_t)[0]
+    context_bonus = paradigm_context_bonus.get(paradigm_name, 0)
+
+    context = max(10, min(23, context_base + context_bonus))  # 限制在10-23，留出人工调整空间
+
     context_checklist = [
         "目标受众的审美阈值是否匹配当前范式？（大众偏左，专业偏右）",
         "使用场景是否需要当前的张力水平？（医疗/驾驶要克制，娱乐可刺激）",
@@ -443,7 +594,9 @@ def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, st
             },
             "语境适配": {
                 "参考分": context,
-                "说明": "需人工判断，以下为检查项",
+                "品类基准分": context_base,
+                "范式调整": context_bonus,
+                "状态": "待人工评估（参考分基于品类和范式，需结合受众/场景/竞品/时代/价格定位判断）",
                 "检查项": context_checklist,
             },
         },
@@ -451,20 +604,23 @@ def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, st
     }
 
 
-def analyze(category: str, t_str: str) -> BEAAnalysis:
+def analyze(category: str, t_str: str, weights: Dict[str, float] = None) -> BEAAnalysis:
     if category not in CATEGORY_WEIGHTS:
         raise ValueError(f"未知品类 '{category}'，支持：{', '.join(CATEGORY_WEIGHTS.keys())}")
-    weights = CATEGORY_WEIGHTS[category]
+    if weights is None:
+        weights = CATEGORY_WEIGHTS[category]
     dimensions = parse_t_values(t_str, list(weights.keys()))
     w_t = compute_w_t(dimensions, weights)
     paradigm, paradigm_desc, p_range = locate_paradigm(w_t)
     diseases = diagnose_diseases(w_t, dimensions)
-    scores = suggest_scores(w_t, dimensions, diseases)
+    scores = suggest_scores(w_t, dimensions, diseases, category)
     polarity_ratio = compute_polarity_ratio(dimensions, weights)
+    endurance = compute_endurance(w_t, dimensions, weights, category, diseases)
     return BEAAnalysis(
         category=category, dimensions=dimensions, weights=weights, w_t=w_t,
         paradigm=paradigm, paradigm_desc=paradigm_desc, paradigm_range=p_range,
         diseases=diseases, score_suggestion=scores, polarity_ratio=polarity_ratio,
+        endurance=endurance,
     )
 
 
@@ -522,6 +678,16 @@ def format_report(a: BEAAnalysis) -> str:
         lines.append(f"  ✓ 主辅分明（≥6:4），第一印象明确")
     else:
         lines.append(f"  ⚠ 主辅不足（<6:4），可能存在均分症，情绪暧昧")
+
+    # 耐看性
+    en = a.endurance
+    lines.append(f"\n【耐看性】")
+    lines.append(f"  耐看指数：{en['score']:.0f}/100  评级：{en['level']}")
+    lines.append(f"  最优W(T)区间：[{en['optimal_range'][0]:.2f}, {en['optimal_range'][1]:.2f}]")
+    for factor, score in en['factors'].items():
+        lines.append(f"    {factor}: {score:.0f}")
+    for adv in en['advice']:
+        lines.append(f"  → {adv}")
 
     lines.append(f"\n【病症诊断】")
     if a.diseases:
@@ -894,9 +1060,9 @@ def format_suggest(a: BEAAnalysis, target_wt: float, target_desc: str,
 # 灵敏度分析（v3.0 务实版核心功能）
 # ──────────────────────────────────────────────
 
-def sensitivity_analysis(a: BEAAnalysis, target_wt: float = None) -> List[Dict[str, object]]:
+def sensitivity_analysis(a: BEAAnalysis, target_wt: float = None, step: int = 1) -> List[Dict[str, object]]:
     """
-    灵敏度分析：计算每个维度 t±1 对 W(T) 和四维评分的影响。
+    灵敏度分析：计算每个维度 t±step 对 W(T) 和四维评分的影响。
 
     核心价值：找出"改动哪个维度效果最明显"，避免盲目试错。
     用有限差分法（不需要梯度下降），技术上完全可实现。
@@ -904,19 +1070,22 @@ def sensitivity_analysis(a: BEAAnalysis, target_wt: float = None) -> List[Dict[s
     参数:
         a: BEAAnalysis 对象（当前设计分析结果）
         target_wt: 目标 W(T)（可选）。如果提供，会计算朝目标方向调整的效果。
+        step: 调整步长（默认1，可选2或3）。步长越大，越能看出大幅调整的影响。
 
     返回:
         按综合灵敏度降序排列的维度列表，每个元素包含：
         - dimension: 维度名
         - weight: 该维度权重
         - current_t: 当前 t 值
-        - wt_plus_1: t+1 后 W(T) 的变化量
-        - wt_minus_1: t-1 后 W(T) 的变化量
-        - total_score_plus: t+1 后四维总分的变化量
-        - total_score_minus: t-1 后四维总分的变化量
+        - step: 调整步长
+        - wt_plus: t+step 后 W(T) 的变化量
+        - wt_minus: t-step 后 W(T) 的变化量
+        - total_score_plus: t+step 后四维总分的变化量
+        - total_score_minus: t-step 后四维总分的变化量
         - sensitivity: 综合灵敏度（|wt变化|的平均值 × 权重，越大越敏感）
         - toward_target: 如果有目标，朝目标方向调整的 W(T) 变化量（正表示朝目标靠近）
     """
+    step = max(1, min(3, step))  # 限制步长在1-3
     results = []
     weights = a.weights
     current_wt = a.w_t
@@ -927,31 +1096,33 @@ def sensitivity_analysis(a: BEAAnalysis, target_wt: float = None) -> List[Dict[s
         w = weights[dim]
         per_step = w / 10.0  # t 变化 1 对应的 W(T) 变化
 
-        # t+1 的影响（如果当前 t < 9）
-        wt_plus = per_step if current_t < 9 else 0
-        # t-1 的影响（如果当前 t > 1）
-        wt_minus = -per_step if current_t > 1 else 0
+        # t+step 的影响（如果当前 t + step <= 9）
+        can_plus = current_t + step <= 9
+        wt_plus = per_step * step if can_plus else 0
+        # t-step 的影响（如果当前 t - step >= 1）
+        can_minus = current_t - step >= 1
+        wt_minus = -per_step * step if can_minus else 0
 
-        # 计算 t+1 后的评分变化
+        # 计算 t+step 后的评分变化
         score_plus = 0
-        if current_t < 9:
+        if can_plus:
             new_dims = dict(a.dimensions)
-            new_dims[dim] = current_t + 1
+            new_dims[dim] = current_t + step
             new_wt = compute_w_t(new_dims, weights)
             new_diseases = diagnose_diseases(new_wt, new_dims)
-            new_scores = suggest_scores(new_wt, new_dims, new_diseases)
+            new_scores = suggest_scores(new_wt, new_dims, new_diseases, a.category)
             new_total = (new_scores["双极张力"] + new_scores["结构秩序"]
                          + new_scores["阈值安全"] + new_scores["语境适配"])
             score_plus = new_total - current_total_score
 
-        # 计算 t-1 后的评分变化
+        # 计算 t-step 后的评分变化
         score_minus = 0
-        if current_t > 1:
+        if can_minus:
             new_dims = dict(a.dimensions)
-            new_dims[dim] = current_t - 1
+            new_dims[dim] = current_t - step
             new_wt = compute_w_t(new_dims, weights)
             new_diseases = diagnose_diseases(new_wt, new_dims)
-            new_scores = suggest_scores(new_wt, new_dims, new_diseases)
+            new_scores = suggest_scores(new_wt, new_dims, new_diseases, a.category)
             new_total = (new_scores["双极张力"] + new_scores["结构秩序"]
                          + new_scores["阈值安全"] + new_scores["语境适配"])
             score_minus = new_total - current_total_score
@@ -965,11 +1136,11 @@ def sensitivity_analysis(a: BEAAnalysis, target_wt: float = None) -> List[Dict[s
         if target_wt is not None:
             diff = target_wt - current_wt
             if diff > 0:
-                # 需要提升危极，朝目标方向是 t+1
-                toward_target = wt_plus if current_t < 9 else 0
+                # 需要提升危极，朝目标方向是 t+step
+                toward_target = wt_plus if can_plus else 0
             elif diff < 0:
-                # 需要降低危极，朝目标方向是 t-1
-                toward_target = abs(wt_minus) if current_t > 1 else 0
+                # 需要降低危极，朝目标方向是 t-step
+                toward_target = abs(wt_minus) if can_minus else 0
             else:
                 toward_target = 0
 
@@ -977,8 +1148,11 @@ def sensitivity_analysis(a: BEAAnalysis, target_wt: float = None) -> List[Dict[s
             "dimension": dim,
             "weight": w,
             "current_t": current_t,
-            "wt_plus_1": round(wt_plus, 4),
-            "wt_minus_1": round(wt_minus, 4),
+            "step": step,
+            "wt_plus": round(wt_plus, 4),
+            "wt_minus": round(wt_minus, 4),
+            "wt_plus_1": round(wt_plus, 4),  # 向后兼容
+            "wt_minus_1": round(wt_minus, 4),  # 向后兼容
             "total_score_plus": score_plus,
             "total_score_minus": score_minus,
             "sensitivity": round(sensitivity, 2),
@@ -997,6 +1171,8 @@ def format_sensitivity(a: BEAAnalysis, results: List[Dict[str, object]],
     lines.append("=" * 70)
     lines.append("  BEA 灵敏度分析（v3.0 务实版）")
     lines.append("=" * 70)
+    step = results[0].get("step", 1) if results else 1
+    lines.append(f"  调整步长：t±{step}")
     lines.append(f"  当前：W(T)={a.w_t:.3f} → {a.paradigm}")
     if target_wt is not None:
         diff = target_wt - a.w_t
@@ -1009,32 +1185,32 @@ def format_sensitivity(a: BEAAnalysis, results: List[Dict[str, object]],
     lines.append(f"  最值得改动的维度（按灵敏度排序）：")
     for i, r in enumerate(top3, 1):
         lines.append(f"    {i}. {r['dimension']}（权重 {r['weight']:.2f}，当前 t={r['current_t']}）"
-                     f" — 改动1级，W(T)变化 ±{r['wt_plus_1']:.3f}")
+                     f" — 改动{step}级，W(T)变化 ±{abs(r['wt_plus']):.3f}")
     lines.append("")
 
     # 如果有目标，给出朝目标方向最有效的调整
     if target_wt is not None:
         diff = target_wt - a.w_t
         if abs(diff) > 0.005:
-            direction = "提升危极（t+1）" if diff > 0 else "降低危极（t-1）"
+            direction = f"提升危极（t+{step}）" if diff > 0 else f"降低危极（t-{step}）"
             lines.append(f"【朝目标方向最有效的调整】（需要{direction}）")
             # 筛选朝目标方向有效果的维度，按效果排序
             actionable = [r for r in results if r["toward_target"] and r["toward_target"] > 0]
             actionable.sort(key=lambda x: x["toward_target"], reverse=True)
             for i, r in enumerate(actionable[:3], 1):
-                new_t = r["current_t"] + (1 if diff > 0 else -1)
+                new_t = r["current_t"] + (step if diff > 0 else -step)
                 lines.append(f"    {i}. {r['dimension']}: {r['current_t']} → {new_t}"
                              f"（W(T)变化 {r['toward_target']:+.3f}）")
             lines.append("")
 
     # 详细表格
     lines.append("【详细灵敏度表】")
-    lines.append(f"  {'维度':<8} {'权重':>5} {'当前t':>5} {'t+1→W(T)':>10} {'t-1→W(T)':>10} "
-                 f"{'t+1→评分':>10} {'t-1→评分':>10} {'灵敏度':>8}")
+    lines.append(f"  {'维度':<8} {'权重':>5} {'当前t':>5} {'t+'+str(step)+'→W(T)':>10} {'t-'+str(step)+'→W(T)':>10} "
+                 f"{'t+'+str(step)+'→评分':>10} {'t-'+str(step)+'→评分':>10} {'灵敏度':>8}")
     lines.append("  " + "-" * 72)
     for r in results:
         lines.append(f"  {r['dimension']:<8} {r['weight']:>5.2f} {r['current_t']:>5} "
-                     f"{r['wt_plus_1']:>+10.4f} {r['wt_minus_1']:>+10.4f} "
+                     f"{r['wt_plus']:>+10.4f} {r['wt_minus']:>+10.4f} "
                      f"{r['total_score_plus']:>+10} {r['total_score_minus']:>+10} "
                      f"{r['sensitivity']:>8.2f}")
     lines.append("")
@@ -1048,6 +1224,381 @@ def format_sensitivity(a: BEAAnalysis, results: List[Dict[str, object]],
     lines.append("")
     lines.append("=" * 70)
     return "\n".join(lines)
+
+
+# ──────────────────────────────────────────────
+# 跨模态一致性 & 层级嵌套分析（v2.4 新增）
+# ──────────────────────────────────────────────
+
+def multigroup_analysis(category: str, groups: List[Dict[str, object]]) -> Dict[str, object]:
+    """
+    多组分析：跨模态一致性检查 + 层级嵌套分析。
+
+    输入多组维度数据（如外形、内饰、声音；或宏观、中观、微观），
+    检查各组的极性方向是否一致，判断是同向叠加还是微差补偿。
+
+    参数:
+        category: 品类
+        groups: 组列表，每组包含 name（组名）和 dimensions（维度字典）
+
+    返回:
+        - groups: 各组的分析结果
+        - cross_modal_consistency: 跨模态一致性评估
+        - hierarchy: 层级嵌套分析（如果组名包含宏观/中观/微观）
+        - overall: 综合结论
+    """
+    results = []
+    for g in groups:
+        name = g["name"]
+        dims = g["dimensions"]
+        t_str = ",".join(f"{k}={v}" for k, v in dims.items())
+        a = analyze(category, t_str)
+        results.append({
+            "name": name,
+            "w_t": a.w_t,
+            "paradigm": a.paradigm,
+            "dominant": a.polarity_ratio["dominant"],
+            "primary_secondary_ratio": a.polarity_ratio["primary_secondary_ratio"],
+            "dimensions": a.dimensions,
+            "analysis": a,
+        })
+
+    # 跨模态一致性检查
+    wt_values = [r["w_t"] for r in results]
+    wt_range = max(wt_values) - min(wt_values) if wt_values else 0
+    dominant_values = [r["dominant"] for r in results]
+    dominant_consistent = len(set(dominant_values)) == 1
+
+    if wt_range <= 0.10 and dominant_consistent:
+        consistency_level = "高度一致"
+        consistency_score = 90
+    elif wt_range <= 0.20 and dominant_consistent:
+        consistency_level = "基本一致"
+        consistency_score = 70
+    elif wt_range <= 0.30:
+        consistency_level = "存在差异"
+        consistency_score = 50
+    else:
+        consistency_level = "严重冲突"
+        consistency_score = 30
+
+    cross_modal = {
+        "wt_range": round(wt_range, 3),
+        "dominant_consistent": dominant_consistent,
+        "level": consistency_level,
+        "score": consistency_score,
+        "issues": [],
+    }
+
+    if not dominant_consistent:
+        cross_modal["issues"].append("主导极性不一致：部分组亲极主导，部分组危极主导，可能产生潜意识违和")
+    if wt_range > 0.20:
+        cross_modal["issues"].append(f"W(T)差异过大（{wt_range:.2f}）：各组张力水平不统一，整体感受割裂")
+
+    # 层级嵌套分析（检测组名是否包含宏观/中观/微观）
+    hierarchy = None
+    macro_names = ["宏观", "macro", "外形", "整体"]
+    meso_names = ["中观", "meso", "内饰", "局部"]
+    micro_names = ["微观", "micro", "细节", "按键"]
+
+    macro_group = next((r for r in results if any(n in r["name"].lower() for n in macro_names)), None)
+    meso_group = next((r for r in results if any(n in r["name"].lower() for n in meso_names)), None)
+    micro_group = next((r for r in results if any(n in r["name"].lower() for n in micro_names)), None)
+
+    if macro_group and micro_group:
+        # 判断是同向叠加还是微差补偿
+        macro_wt = macro_group["w_t"]
+        micro_wt = micro_group["w_t"]
+        wt_diff = micro_wt - macro_wt
+
+        if abs(wt_diff) < 0.08:
+            hierarchy_type = "同向叠加（强化型）"
+            hierarchy_desc = "各层方向一致、层层加码，用于需要强烈个性"
+        elif wt_diff > 0.08:
+            hierarchy_type = "微差补偿（高级型）"
+            hierarchy_desc = "宏观定基调（偏柔），微观用对立极补偿（偏锐），远观亲和、近看精密——高级感最常见结构"
+        else:
+            hierarchy_type = "反向冲突（需修正）"
+            hierarchy_desc = "宏观偏锐但微观偏柔，层级方向冲突，可能导致整体感受割裂"
+
+        hierarchy = {
+            "type": hierarchy_type,
+            "description": hierarchy_desc,
+            "macro_wt": macro_wt,
+            "micro_wt": micro_wt,
+            "wt_diff": round(wt_diff, 3),
+            "has_meso": meso_group is not None,
+        }
+
+    # 综合结论
+    overall = []
+    if consistency_score >= 70:
+        overall.append("跨模态一致性良好，各通道极性协同")
+    else:
+        overall.append("跨模态存在差异，建议统一各组的主导极性和张力水平")
+    if hierarchy:
+        if "微差补偿" in hierarchy["type"] or "同向叠加" in hierarchy["type"]:
+            overall.append(f"层级结构合理：{hierarchy['type']}")
+        else:
+            overall.append(f"层级结构需修正：{hierarchy['type']}")
+
+    return {
+        "groups": [{k: v for k, v in r.items() if k != "analysis"} for r in results],
+        "cross_modal_consistency": cross_modal,
+        "hierarchy": hierarchy,
+        "overall": overall,
+    }
+
+
+def format_multigroup(result: Dict[str, object]) -> str:
+    """格式化多组分析结果输出。"""
+    lines = []
+    lines.append("=" * 70)
+    lines.append("  BEA 多组分析（跨模态一致性 + 层级嵌套）")
+    lines.append("=" * 70)
+    lines.append("")
+
+    # 各组概览
+    lines.append("【各组概览】")
+    lines.append(f"  {'组名':<12} {'W(T)':>6} {'范式':<10} {'主导极性':<10} {'主辅比':<8}")
+    lines.append("  " + "-" * 55)
+    for g in result["groups"]:
+        lines.append(f"  {g['name']:<12} {g['w_t']:>6.3f} {g['paradigm']:<10} {g['dominant']:<10} {g['primary_secondary_ratio']:<8}")
+    lines.append("")
+
+    # 跨模态一致性
+    cm = result["cross_modal_consistency"]
+    lines.append("【跨模态一致性】")
+    lines.append(f"  一致性评级：{cm['level']}（{cm['score']}/100）")
+    lines.append(f"  W(T)范围：{cm['wt_range']:.3f}")
+    lines.append(f"  主导极性一致：{'是' if cm['dominant_consistent'] else '否'}")
+    if cm["issues"]:
+        lines.append("  问题：")
+        for issue in cm["issues"]:
+            lines.append(f"    ⚠ {issue}")
+    else:
+        lines.append("  ✓ 无明显问题")
+    lines.append("")
+
+    # 层级嵌套
+    if result["hierarchy"]:
+        h = result["hierarchy"]
+        lines.append("【层级嵌套分析】")
+        lines.append(f"  类型：{h['type']}")
+        lines.append(f"  说明：{h['description']}")
+        lines.append(f"  宏观W(T)={h['macro_wt']:.3f}，微观W(T)={h['micro_wt']:.3f}，差异={h['wt_diff']:+.3f}")
+        lines.append("")
+
+    # 综合结论
+    lines.append("【综合结论】")
+    for i, o in enumerate(result["overall"], 1):
+        lines.append(f"  {i}. {o}")
+    lines.append("")
+    lines.append("=" * 70)
+    return "\n".join(lines)
+
+
+# ──────────────────────────────────────────────
+# 风格周期律判断（v2.4 新增）
+# ──────────────────────────────────────────────
+
+# 各品类的案例 W(T) 分布参考基准（基于 BEA 案例库和市场观察）
+# 用于判断当前设计在风格周期中的位置
+STYLE_CYCLE_BENCHMARKS = {
+    "phone": {
+        "name": "手机",
+        "samples": [0.25, 0.28, 0.30, 0.32, 0.35, 0.38, 0.40, 0.42, 0.45, 0.48],
+        "mainstream_range": (0.28, 0.40),
+        "trend_direction": "当前主流偏亲和精致，锐利化趋势正在积累",
+    },
+    "car": {
+        "name": "汽车",
+        "samples": [0.30, 0.35, 0.38, 0.40, 0.42, 0.45, 0.48, 0.52, 0.55, 0.60],
+        "mainstream_range": (0.35, 0.48),
+        "trend_direction": "新能源时代偏简约科技，运动化设计回潮",
+    },
+    "brand": {
+        "name": "品牌",
+        "samples": [0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60],
+        "mainstream_range": (0.20, 0.40),
+        "trend_direction": "极简主义疲劳，个性表达和复古回潮",
+    },
+    "ui": {
+        "name": "界面",
+        "samples": [0.12, 0.15, 0.18, 0.20, 0.22, 0.25, 0.28, 0.30, 0.35, 0.40],
+        "mainstream_range": (0.15, 0.28),
+        "trend_direction": "扁平化疲劳，玻璃拟态和微动效增加张力",
+    },
+    "building": {
+        "name": "建筑",
+        "samples": [0.30, 0.35, 0.40, 0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75],
+        "mainstream_range": (0.40, 0.60),
+        "trend_direction": "参数化设计增加张力，人文关怀回归柔和",
+    },
+}
+
+
+def style_cycle_analysis(category: str, w_t: float) -> Dict[str, object]:
+    """
+    风格周期律判断：基于案例库 W(T) 分布，判断当前设计在风格周期中的位置。
+
+    BEA 理论：风格是社会整体阈值与"反熟悉化"的周期运动。
+    一种配比长期霸屏→受众唤醒递减→滑向呆板平庸→向对极摆动重造张力。
+
+    参数:
+        category: 品类
+        w_t: 当前设计的 W(T)
+
+    返回:
+        - percentile: 当前 W(T) 在案例分布中的百分位
+        - position: 风格周期位置（领先/主流/滞后）
+        - mainstream_range: 主流区间
+        - trend_direction: 当前趋势方向
+        - advice: 风格周期建议
+    """
+    benchmark = STYLE_CYCLE_BENCHMARKS.get(category, STYLE_CYCLE_BENCHMARKS["brand"])
+    samples = sorted(benchmark["samples"])
+
+    # 计算百分位
+    count_below = sum(1 for s in samples if s < w_t)
+    percentile = round(count_below / len(samples) * 100)
+
+    # 判断风格周期位置
+    low, high = benchmark["mainstream_range"]
+    if w_t < low - 0.05:
+        position = "滞后（偏保守）"
+        position_desc = "W(T)低于主流区间，风格偏保守，可能显得过时或缺乏个性"
+    elif w_t < low:
+        position = "偏保守（接近主流下沿）"
+        position_desc = "W(T)略低于主流，风格稳妥但可能缺乏记忆点"
+    elif low <= w_t <= high:
+        position = "主流（安全区）"
+        position_desc = "W(T)在主流区间内，风格符合大众预期，但差异化不足"
+    elif w_t <= high + 0.08:
+        position = "领先（适度超前）"
+        position_desc = "W(T)略高于主流，风格有个性但仍在大众接受范围内，是最佳创新区"
+    else:
+        position = "激进（高度超前）"
+        position_desc = "W(T)远高于主流，风格强烈但可能超出大众阈值，仅适合小众市场"
+
+    # 风格周期建议
+    advice = []
+    if "主流" in position:
+        advice.append("当前在主流安全区，若追求差异化可适度向趋势方向调整 0.05-0.10")
+        advice.append(f"当前趋势：{benchmark['trend_direction']}")
+    elif "领先" in position:
+        advice.append("当前在最佳创新区，保持适度超前的定位，既有个性又可被大众接受")
+        advice.append("注意监控竞品动态，避免过度超前导致曲高和寡")
+    elif "滞后" in position or "保守" in position:
+        advice.append("当前偏保守，建议向主流区间上沿或趋势方向调整，增加个性和记忆点")
+        advice.append(f"可参考趋势：{benchmark['trend_direction']}")
+    elif "激进" in position:
+        advice.append("当前高度超前，仅适合小众/先锋市场；若面向大众需回收张力到主流区间")
+        advice.append("先锋定位需要强大的秩序支撑，确保停在审美窗口内而非跌入排斥区")
+
+    return {
+        "category": category,
+        "category_name": benchmark["name"],
+        "current_wt": w_t,
+        "percentile": percentile,
+        "position": position,
+        "position_desc": position_desc,
+        "mainstream_range": [low, high],
+        "trend_direction": benchmark["trend_direction"],
+        "advice": advice,
+    }
+
+
+def format_style_cycle(result: Dict[str, object]) -> str:
+    """格式化风格周期律分析结果输出。"""
+    lines = []
+    lines.append("=" * 60)
+    lines.append("  BEA 风格周期律分析")
+    lines.append("=" * 60)
+    lines.append(f"  品类：{result['category_name']}")
+    lines.append(f"  当前W(T)：{result['current_wt']:.3f}")
+    lines.append(f"  案例百分位：{result['percentile']}%（高于{result['percentile']}%的案例）")
+    lines.append("")
+    lines.append("【风格周期位置】")
+    lines.append(f"  位置：{result['position']}")
+    lines.append(f"  说明：{result['position_desc']}")
+    lines.append(f"  主流区间：[{result['mainstream_range'][0]:.2f}, {result['mainstream_range'][1]:.2f}]")
+    lines.append(f"  当前趋势：{result['trend_direction']}")
+    lines.append("")
+    lines.append("【风格周期建议】")
+    for i, adv in enumerate(result["advice"], 1):
+        lines.append(f"  {i}. {adv}")
+    lines.append("")
+    lines.append("=" * 60)
+    return "\n".join(lines)
+
+
+# ──────────────────────────────────────────────
+# 自定义权重配置管理（v2.4 新增）
+# ──────────────────────────────────────────────
+
+PROFILE_FILE = os.path.expanduser("~/.bea_profiles.json")
+
+
+def load_profiles() -> Dict[str, Dict[str, float]]:
+    """加载所有保存的权重配置。"""
+    if not os.path.exists(PROFILE_FILE):
+        return {}
+    try:
+        with open(PROFILE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return {}
+
+
+def save_profile(name: str, weights: Dict[str, float]) -> None:
+    """保存权重配置。"""
+    profiles = load_profiles()
+    profiles[name] = weights
+    with open(PROFILE_FILE, "w", encoding="utf-8") as f:
+        json.dump(profiles, f, ensure_ascii=False, indent=2)
+
+
+def delete_profile(name: str) -> bool:
+    """删除权重配置，返回是否成功。"""
+    profiles = load_profiles()
+    if name in profiles:
+        del profiles[name]
+        with open(PROFILE_FILE, "w", encoding="utf-8") as f:
+            json.dump(profiles, f, ensure_ascii=False, indent=2)
+        return True
+    return False
+
+
+def get_profile(name: str) -> Dict[str, float]:
+    """获取指定的权重配置。"""
+    profiles = load_profiles()
+    if name not in profiles:
+        available = ", ".join(profiles.keys()) if profiles else "（无）"
+        raise ValueError(f"配置 '{name}' 不存在。可用配置：{available}")
+    return profiles[name]
+
+
+def resolve_weights(category: str, weights_str: str = None, profile: str = None) -> Dict[str, float]:
+    """
+    解析权重：优先级 profile > weights_str > 品类默认。
+
+    参数:
+        category: 品类
+        weights_str: 自定义权重 JSON 字符串
+        profile: 已保存的配置名
+
+    返回:
+        权重字典
+    """
+    if profile:
+        return get_profile(profile)
+    if weights_str:
+        weights = {k: float(v) for k, v in json.loads(weights_str).items()}
+        if abs(sum(weights.values()) - 1) > 0.001:
+            raise ValueError(f"权重合计 {sum(weights.values()):.3f} ≠ 1")
+        return weights
+    return CATEGORY_WEIGHTS[category]
 
 
 # ──────────────────────────────────────────────
@@ -1275,6 +1826,74 @@ def run_tests() -> bool:
     pr3 = a_pr3.polarity_ratio
     check("全中性时is_balanced为False", pr3["is_balanced"] == False)
 
+    # 耐看性测试
+    a_end = analyze("car", "曲面=4,特征线=5,灯组=6,比例=3,材质=5")
+    end = a_end.endurance
+    check("耐看性包含必要字段", all(k in end for k in ["score", "level", "factors", "advice"]))
+    check("耐看性分数在0-100范围", 0 <= end["score"] <= 100)
+    check("耐看性评级有效", end["level"] in ["极耐看", "耐看", "一般", "易疲劳"])
+    check("耐看性包含4个因素", len(end["factors"]) == 4)
+
+    # 高W(T)耐看性应较低
+    a_end_high = analyze("car", "曲面=9,特征线=9,灯组=8,比例=8,材质=8")
+    check("高W(T)耐看性低于中等W(T)", a_end_high.endurance["score"] < a_end.endurance["score"])
+
+    # 语境适配评分测试
+    ctx = a.score_suggestion["评分明细"]["语境适配"]
+    check("语境适配包含品类基准分", "品类基准分" in ctx)
+    check("语境适配包含范式调整", "范式调整" in ctx)
+    check("语境适配包含状态说明", "状态" in ctx)
+
+    # 灵敏度 step=2 测试
+    a_sen2 = analyze("car", "曲面=4,特征线=5,灯组=6,比例=3,材质=5")
+    sens2 = sensitivity_analysis(a_sen2, step=2)
+    check("灵敏度step=2返回所有维度", len(sens2) == len(a_sen2.dimensions))
+    check("灵敏度step=2包含step字段", all("step" in r for r in sens2))
+    check("灵敏度step=2的step值为2", all(r["step"] == 2 for r in sens2))
+    check("灵敏度step=2的wt变化是step=1的2倍", abs(sens2[0]["wt_plus"]) == abs(sensitivity_analysis(a_sen2, step=1)[0]["wt_plus"]) * 2)
+
+    # 多组分析测试
+    groups = [
+        {"name": "宏观外形", "dimensions": {"曲面": 3, "特征线": 4, "灯组": 5, "比例": 3, "材质": 4}},
+        {"name": "微观细节", "dimensions": {"曲面": 6, "特征线": 7, "灯组": 8, "比例": 5, "材质": 6}},
+    ]
+    mg = multigroup_analysis("car", groups)
+    check("多组分析包含必要字段", all(k in mg for k in ["groups", "cross_modal_consistency", "hierarchy", "overall"]))
+    check("多组分析返回2组", len(mg["groups"]) == 2)
+    check("多组分析识别层级嵌套", mg["hierarchy"] is not None)
+    check("多组分析识别微差补偿", "微差补偿" in mg["hierarchy"]["type"])
+
+    # 风格周期律测试
+    sc = style_cycle_analysis("car", 0.55)
+    check("风格周期律包含必要字段", all(k in sc for k in ["percentile", "position", "advice", "trend_direction"]))
+    check("风格周期律百分位在0-100", 0 <= sc["percentile"] <= 100)
+    check("风格周期律W(T)=0.55为领先", "领先" in sc["position"])
+
+    sc_mainstream = style_cycle_analysis("car", 0.40)
+    check("风格周期律W(T)=0.40为主流", "主流" in sc_mainstream["position"])
+
+    # 自定义权重测试
+    custom_weights = {"曲面": 0.4, "特征线": 0.3, "灯组": 0.1, "比例": 0.1, "材质": 0.1}
+    a_custom = analyze("car", "曲面=5,特征线=5,灯组=5,比例=5,材质=5", custom_weights)
+    check("自定义权重生效", a_custom.weights == custom_weights)
+    check("自定义权重W(T)=0.5", abs(a_custom.w_t - 0.5) < 0.001)
+
+    # resolve_weights 优先级测试
+    check("resolve_weights默认使用品类权重", resolve_weights("car") == CATEGORY_WEIGHTS["car"])
+    check("resolve_weights支持自定义权重", resolve_weights("car", weights_str=json.dumps(custom_weights)) == custom_weights)
+
+    # JSON 输出字段完整性测试
+    a_json = analyze("car", "曲面=4,特征线=5,灯组=6,比例=3,材质=5")
+    d = a_json.to_dict()
+    check("JSON包含polarity_ratio", "polarity_ratio" in d)
+    check("JSON包含endurance", "endurance" in d)
+    check("JSON包含所有维度", set(d["dimensions"].keys()) == set(CATEGORY_WEIGHTS["car"].keys()))
+
+    # building 品类测试
+    a_building = analyze("building", "形体轮廓=5,立面线条=6,比例尺度=4,材质肌理=5,光影空间=3")
+    check("building品类分析不报错", a_building.w_t > 0)
+    check("building品类有5个维度", len(a_building.dimensions) == 5)
+
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0
 
@@ -1304,28 +1923,39 @@ def main():
     p_an = sub.add_parser("analyze", help="分析并输出 JSON")
     p_an.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_an.add_argument("--t", required=True, help="维度t值，格式：形状=3,质感=6,...")
+    p_an.add_argument("--profile", help="使用已保存的权重配置名")
+    p_an.add_argument("--weights", help='自定义权重JSON，如 {"形状":0.3,"质感":0.3,...}')
 
     p_rep = sub.add_parser("report", help="分析并输出人类可读报告")
     p_rep.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_rep.add_argument("--t", required=True, help="维度t值，格式：形状=3,质感=6,...")
     p_rep.add_argument("--json", action="store_true", help="输出JSON格式")
+    p_rep.add_argument("--profile", help="使用已保存的权重配置名")
+    p_rep.add_argument("--weights", help='自定义权重JSON，如 {"形状":0.3,"质感":0.3,...}')
 
     p_score = sub.add_parser("score", help="详细四维评分辅助")
     p_score.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_score.add_argument("--t", required=True, help="维度t值，格式：形状=3,质感=6,...")
     p_score.add_argument("--json", action="store_true", help="输出JSON格式")
+    p_score.add_argument("--profile", help="使用已保存的权重配置名")
+    p_score.add_argument("--weights", help='自定义权重JSON，如 {"形状":0.3,"质感":0.3,...}')
 
     p_sug = sub.add_parser("suggest", help="调整建议：给定目标范式或W(T)，输出维度调整方案")
     p_sug.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_sug.add_argument("--t", required=True, help="当前维度t值，格式：形状=3,质感=6,...")
     p_sug.add_argument("--target", required=True, help="目标范式名（如'崇高震撼'）或目标W(T)值（如0.55）")
     p_sug.add_argument("--json", action="store_true", help="输出JSON格式")
+    p_sug.add_argument("--profile", help="使用已保存的权重配置名")
+    p_sug.add_argument("--weights", help='自定义权重JSON，如 {"形状":0.3,"质感":0.3,...}')
 
     p_sen = sub.add_parser("sensitivity", help="灵敏度分析：找出改动哪个维度效果最明显")
     p_sen.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_sen.add_argument("--t", required=True, help="当前维度t值，格式：形状=3,质感=6,...")
     p_sen.add_argument("--target", help="可选：目标范式名或W(T)值，计算朝目标方向最有效的调整")
+    p_sen.add_argument("--step", type=int, default=1, choices=[1, 2, 3], help="调整步长（1/2/3），默认1")
     p_sen.add_argument("--json", action="store_true", help="输出JSON格式")
+    p_sen.add_argument("--profile", help="使用已保存的权重配置名")
+    p_sen.add_argument("--weights", help='自定义权重JSON，如 {"形状":0.3,"质感":0.3,...}')
 
     p_cmp = sub.add_parser("compare", help="对比两个产品")
     p_cmp.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
@@ -1341,23 +1971,44 @@ def main():
     p_tpl = sub.add_parser("template", help="输出打分模板（含维度顺序）")
     p_tpl.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
 
+    p_mg = sub.add_parser("multigroup", help="多组分析：跨模态一致性 + 层级嵌套")
+    p_mg.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
+    p_mg.add_argument("--groups", required=True, help='多组数据，格式："组名1=维度=值,...;组名2=维度=值,..."')
+    p_mg.add_argument("--json", action="store_true", help="输出JSON格式")
+
+    p_sc = sub.add_parser("style-cycle", help="风格周期律判断：当前设计在风格周期中的位置")
+    p_sc.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
+    p_sc.add_argument("--wt", type=float, required=True, help="当前设计的W(T)值")
+    p_sc.add_argument("--json", action="store_true", help="输出JSON格式")
+
+    # 权重配置管理
+    p_lp = sub.add_parser("list-profiles", help="列出所有保存的权重配置")
+    p_sp = sub.add_parser("save-profile", help="保存自定义权重配置")
+    p_sp.add_argument("--name", required=True, help="配置名称")
+    p_sp.add_argument("--weights", required=True, help='权重JSON，如 {"曲面":0.4,"特征线":0.3,...}')
+    p_dp = sub.add_parser("delete-profile", help="删除保存的权重配置")
+    p_dp.add_argument("--name", required=True, help="配置名称")
+
     sub.add_parser("test", help="运行自测试")
 
     args = parser.parse_args()
 
     try:
         if args.command == "analyze":
-            print(json.dumps(analyze(args.category, args.t).to_dict(), ensure_ascii=False, indent=2))
+            weights = resolve_weights(args.category, getattr(args, "weights", None), getattr(args, "profile", None))
+            print(json.dumps(analyze(args.category, args.t, weights).to_dict(), ensure_ascii=False, indent=2))
 
         elif args.command == "report":
-            a = analyze(args.category, args.t)
+            weights = resolve_weights(args.category, getattr(args, "weights", None), getattr(args, "profile", None))
+            a = analyze(args.category, args.t, weights)
             if args.json:
                 print(json.dumps(a.to_dict(), ensure_ascii=False, indent=2))
             else:
                 print(format_report(a))
 
         elif args.command == "score":
-            a = analyze(args.category, args.t)
+            weights = resolve_weights(args.category, getattr(args, "weights", None), getattr(args, "profile", None))
+            a = analyze(args.category, args.t, weights)
             if args.json:
                 output = {
                     "category": args.category,
@@ -1371,7 +2022,8 @@ def main():
                 print(format_score_detail(a))
 
         elif args.command == "suggest":
-            a = analyze(args.category, args.t)
+            weights = resolve_weights(args.category, getattr(args, "weights", None), getattr(args, "profile", None))
+            a = analyze(args.category, args.t, weights)
             target_wt, target_desc = resolve_target(args.target)
             steps = suggest_adjustment(a, target_wt)
             if args.json:
@@ -1397,12 +2049,13 @@ def main():
                 print(format_suggest(a, target_wt, target_desc, steps))
 
         elif args.command == "sensitivity":
-            a = analyze(args.category, args.t)
+            weights = resolve_weights(args.category, getattr(args, "weights", None), getattr(args, "profile", None))
+            a = analyze(args.category, args.t, weights)
             target_wt = None
             target_desc = ""
             if args.target:
                 target_wt, target_desc = resolve_target(args.target)
-            results = sensitivity_analysis(a, target_wt)
+            results = sensitivity_analysis(a, target_wt, step=args.step)
             if args.json:
                 output = {
                     "category": args.category,
@@ -1465,6 +2118,57 @@ def main():
 
         elif args.command == "template":
             print(format_template(args.category))
+
+        elif args.command == "multigroup":
+            # 解析多组数据
+            groups = []
+            for item in args.groups.split(";"):
+                item = item.strip()
+                if not item:
+                    continue
+                if "=" not in item:
+                    raise ValueError(f"组数据格式错误：{item!r}，应为 组名=维度=值,...")
+                name, dims_str = item.split("=", 1)
+                dims = parse_t_values(dims_str, list(CATEGORY_WEIGHTS[args.category].keys()))
+                groups.append({"name": name.strip(), "dimensions": dims})
+            result = multigroup_analysis(args.category, groups)
+            if args.json:
+                # 移除 analysis 对象，只保留可序列化数据
+                print(json.dumps(result, ensure_ascii=False, indent=2))
+            else:
+                print(format_multigroup(result))
+
+        elif args.command == "style-cycle":
+            result = style_cycle_analysis(args.category, args.wt)
+            if args.json:
+                print(json.dumps(result, ensure_ascii=False, indent=2))
+            else:
+                print(format_style_cycle(result))
+
+        elif args.command == "list-profiles":
+            profiles = load_profiles()
+            if not profiles:
+                print("暂无保存的权重配置。使用 save-profile 命令保存。")
+            else:
+                print(f"已保存的权重配置（共{len(profiles)}个）：")
+                for name, weights in profiles.items():
+                    dims_str = ", ".join(f"{k}={v}" for k, v in weights.items())
+                    print(f"  {name}: {dims_str}")
+
+        elif args.command == "save-profile":
+            weights = {k: float(v) for k, v in json.loads(args.weights).items()}
+            if abs(sum(weights.values()) - 1) > 0.001:
+                raise ValueError(f"权重合计 {sum(weights.values()):.3f} ≠ 1")
+            save_profile(args.name, weights)
+            print(f"✓ 配置 '{args.name}' 已保存到 {PROFILE_FILE}")
+            dims_str = ", ".join(f"{k}={v}" for k, v in weights.items())
+            print(f"  权重：{dims_str}")
+
+        elif args.command == "delete-profile":
+            if delete_profile(args.name):
+                print(f"✓ 配置 '{args.name}' 已删除")
+            else:
+                print(f"✗ 配置 '{args.name}' 不存在")
 
         elif args.command == "test":
             sys.exit(0 if run_tests() else 1)
