@@ -810,6 +810,166 @@ def format_suggest(a: BEAAnalysis, target_wt: float, target_desc: str,
 
 
 # ──────────────────────────────────────────────
+# 灵敏度分析（v3.0 务实版核心功能）
+# ──────────────────────────────────────────────
+
+def sensitivity_analysis(a: BEAAnalysis, target_wt: float = None) -> List[Dict[str, object]]:
+    """
+    灵敏度分析：计算每个维度 t±1 对 W(T) 和四维评分的影响。
+
+    核心价值：找出"改动哪个维度效果最明显"，避免盲目试错。
+    用有限差分法（不需要梯度下降），技术上完全可实现。
+
+    参数:
+        a: BEAAnalysis 对象（当前设计分析结果）
+        target_wt: 目标 W(T)（可选）。如果提供，会计算朝目标方向调整的效果。
+
+    返回:
+        按综合灵敏度降序排列的维度列表，每个元素包含：
+        - dimension: 维度名
+        - weight: 该维度权重
+        - current_t: 当前 t 值
+        - wt_plus_1: t+1 后 W(T) 的变化量
+        - wt_minus_1: t-1 后 W(T) 的变化量
+        - total_score_plus: t+1 后四维总分的变化量
+        - total_score_minus: t-1 后四维总分的变化量
+        - sensitivity: 综合灵敏度（|wt变化|的平均值 × 权重，越大越敏感）
+        - toward_target: 如果有目标，朝目标方向调整的 W(T) 变化量（正表示朝目标靠近）
+    """
+    results = []
+    weights = a.weights
+    current_wt = a.w_t
+    current_total_score = (a.score_suggestion["双极张力"] + a.score_suggestion["结构秩序"]
+                            + a.score_suggestion["阈值安全"] + a.score_suggestion["语境适配"])
+
+    for dim, current_t in a.dimensions.items():
+        w = weights[dim]
+        per_step = w / 10.0  # t 变化 1 对应的 W(T) 变化
+
+        # t+1 的影响（如果当前 t < 9）
+        wt_plus = per_step if current_t < 9 else 0
+        # t-1 的影响（如果当前 t > 1）
+        wt_minus = -per_step if current_t > 1 else 0
+
+        # 计算 t+1 后的评分变化
+        score_plus = 0
+        if current_t < 9:
+            new_dims = dict(a.dimensions)
+            new_dims[dim] = current_t + 1
+            new_wt = compute_w_t(new_dims, weights)
+            new_diseases = diagnose_diseases(new_wt, new_dims)
+            new_scores = suggest_scores(new_wt, new_dims, new_diseases)
+            new_total = (new_scores["双极张力"] + new_scores["结构秩序"]
+                         + new_scores["阈值安全"] + new_scores["语境适配"])
+            score_plus = new_total - current_total_score
+
+        # 计算 t-1 后的评分变化
+        score_minus = 0
+        if current_t > 1:
+            new_dims = dict(a.dimensions)
+            new_dims[dim] = current_t - 1
+            new_wt = compute_w_t(new_dims, weights)
+            new_diseases = diagnose_diseases(new_wt, new_dims)
+            new_scores = suggest_scores(new_wt, new_dims, new_diseases)
+            new_total = (new_scores["双极张力"] + new_scores["结构秩序"]
+                         + new_scores["阈值安全"] + new_scores["语境适配"])
+            score_minus = new_total - current_total_score
+
+        # 综合灵敏度：W(T) 变化的平均绝对值 × 权重
+        avg_wt_change = (abs(wt_plus) + abs(wt_minus)) / 2
+        sensitivity = avg_wt_change * 100  # 放大到可读范围
+
+        # 朝目标方向调整的效果
+        toward_target = None
+        if target_wt is not None:
+            diff = target_wt - current_wt
+            if diff > 0:
+                # 需要提升危极，朝目标方向是 t+1
+                toward_target = wt_plus if current_t < 9 else 0
+            elif diff < 0:
+                # 需要降低危极，朝目标方向是 t-1
+                toward_target = abs(wt_minus) if current_t > 1 else 0
+            else:
+                toward_target = 0
+
+        results.append({
+            "dimension": dim,
+            "weight": w,
+            "current_t": current_t,
+            "wt_plus_1": round(wt_plus, 4),
+            "wt_minus_1": round(wt_minus, 4),
+            "total_score_plus": score_plus,
+            "total_score_minus": score_minus,
+            "sensitivity": round(sensitivity, 2),
+            "toward_target": round(toward_target, 4) if toward_target is not None else None,
+        })
+
+    # 按综合灵敏度降序排列
+    results.sort(key=lambda x: x["sensitivity"], reverse=True)
+    return results
+
+
+def format_sensitivity(a: BEAAnalysis, results: List[Dict[str, object]],
+                        target_wt: float = None, target_desc: str = "") -> str:
+    """格式化灵敏度分析结果输出。"""
+    lines = []
+    lines.append("=" * 70)
+    lines.append("  BEA 灵敏度分析（v3.0 务实版）")
+    lines.append("=" * 70)
+    lines.append(f"  当前：W(T)={a.w_t:.3f} → {a.paradigm}")
+    if target_wt is not None:
+        diff = target_wt - a.w_t
+        lines.append(f"  目标：W(T)={target_wt:.3f} → {target_desc}（差值 {diff:+.3f}）")
+    lines.append("")
+
+    lines.append("【核心结论】")
+    # 最敏感的3个维度
+    top3 = results[:3]
+    lines.append(f"  最值得改动的维度（按灵敏度排序）：")
+    for i, r in enumerate(top3, 1):
+        lines.append(f"    {i}. {r['dimension']}（权重 {r['weight']:.2f}，当前 t={r['current_t']}）"
+                     f" — 改动1级，W(T)变化 ±{r['wt_plus_1']:.3f}")
+    lines.append("")
+
+    # 如果有目标，给出朝目标方向最有效的调整
+    if target_wt is not None:
+        diff = target_wt - a.w_t
+        if abs(diff) > 0.005:
+            direction = "提升危极（t+1）" if diff > 0 else "降低危极（t-1）"
+            lines.append(f"【朝目标方向最有效的调整】（需要{direction}）")
+            # 筛选朝目标方向有效果的维度，按效果排序
+            actionable = [r for r in results if r["toward_target"] and r["toward_target"] > 0]
+            actionable.sort(key=lambda x: x["toward_target"], reverse=True)
+            for i, r in enumerate(actionable[:3], 1):
+                new_t = r["current_t"] + (1 if diff > 0 else -1)
+                lines.append(f"    {i}. {r['dimension']}: {r['current_t']} → {new_t}"
+                             f"（W(T)变化 {r['toward_target']:+.3f}）")
+            lines.append("")
+
+    # 详细表格
+    lines.append("【详细灵敏度表】")
+    lines.append(f"  {'维度':<8} {'权重':>5} {'当前t':>5} {'t+1→W(T)':>10} {'t-1→W(T)':>10} "
+                 f"{'t+1→评分':>10} {'t-1→评分':>10} {'灵敏度':>8}")
+    lines.append("  " + "-" * 72)
+    for r in results:
+        lines.append(f"  {r['dimension']:<8} {r['weight']:>5.2f} {r['current_t']:>5} "
+                     f"{r['wt_plus_1']:>+10.4f} {r['wt_minus_1']:>+10.4f} "
+                     f"{r['total_score_plus']:>+10} {r['total_score_minus']:>+10} "
+                     f"{r['sensitivity']:>8.2f}")
+    lines.append("")
+
+    # 使用建议
+    lines.append("【使用建议】")
+    lines.append("  1. 优先调整灵敏度最高的维度，用最小改动获得最大效果")
+    lines.append("  2. 注意评分变化：如果 t+1 导致评分下降，说明该维度提升会引入病症")
+    lines.append("  3. 每次只调1-2个维度，验证后再继续，避免过度调整")
+    lines.append("  4. 结合 suggest 命令使用：先看灵敏度找方向，再用 suggest 出完整方案")
+    lines.append("")
+    lines.append("=" * 70)
+    return "\n".join(lines)
+
+
+# ──────────────────────────────────────────────
 # 自测试
 # ──────────────────────────────────────────────
 
@@ -992,6 +1152,33 @@ def run_tests() -> bool:
     except Exception as e:
         check(f"batch解析失败({e})", False)
 
+    # 灵敏度分析测试
+    a = analyze("phone", "形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6")
+    sens = sensitivity_analysis(a)
+    check("灵敏度分析返回所有维度", len(sens) == len(a.dimensions))
+    check("灵敏度分析按灵敏度降序排列", all(sens[i]["sensitivity"] >= sens[i+1]["sensitivity"] for i in range(len(sens)-1)))
+    check("灵敏度分析包含必要字段", all("wt_plus_1" in r and "wt_minus_1" in r and "sensitivity" in r for r in sens))
+    # 权重最高的维度（形状/质感 0.25）灵敏度应该最高
+    top_sens = sens[0]["dimension"]
+    check("高权重维度灵敏度最高", top_sens in ("形状", "质感"))
+
+    # 灵敏度分析带目标
+    sens_target = sensitivity_analysis(a, target_wt=0.2)
+    check("灵敏度分析带目标包含toward_target", all(r["toward_target"] is not None for r in sens_target))
+    # 降低危极时，朝目标方向（t-1）的W(T)变化量与权重成正比，权重最高的维度效果最好
+    toward_sorted = sorted([r for r in sens_target if r["toward_target"] > 0], key=lambda x: x["toward_target"], reverse=True)
+    if toward_sorted:
+        check("朝目标方向最有效的是高权重维度", toward_sorted[0]["weight"] >= 0.25)
+
+    # 灵敏度分析边界值：t=9 时 t+1 应该为0
+    a_edge = analyze("phone", "形状=9,质感=9,色彩=9,构图=9,光影=9,细节=9")
+    sens_edge = sensitivity_analysis(a_edge)
+    check("t=9时t+1变化为0", all(r["wt_plus_1"] == 0 for r in sens_edge))
+    # t=1 时 t-1 应该为0
+    a_edge2 = analyze("phone", "形状=1,质感=1,色彩=1,构图=1,光影=1,细节=1")
+    sens_edge2 = sensitivity_analysis(a_edge2)
+    check("t=1时t-1变化为0", all(r["wt_minus_1"] == 0 for r in sens_edge2))
+
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0
 
@@ -1035,6 +1222,12 @@ def main():
     p_sug.add_argument("--t", required=True, help="当前维度t值，格式：形状=3,质感=6,...")
     p_sug.add_argument("--target", required=True, help="目标范式名（如'崇高震撼'）或目标W(T)值（如0.55）")
 
+    p_sen = sub.add_parser("sensitivity", help="灵敏度分析：找出改动哪个维度效果最明显")
+    p_sen.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
+    p_sen.add_argument("--t", required=True, help="当前维度t值，格式：形状=3,质感=6,...")
+    p_sen.add_argument("--target", help="可选：目标范式名或W(T)值，计算朝目标方向最有效的调整")
+    p_sen.add_argument("--json", action="store_true", help="输出JSON格式")
+
     p_cmp = sub.add_parser("compare", help="对比两个产品")
     p_cmp.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_cmp.add_argument("--a", required=True, help="产品A：名称=t1,t2,... 或 名称=维度=值,...")
@@ -1068,6 +1261,26 @@ def main():
             target_wt, target_desc = resolve_target(args.target)
             steps = suggest_adjustment(a, target_wt)
             print(format_suggest(a, target_wt, target_desc, steps))
+
+        elif args.command == "sensitivity":
+            a = analyze(args.category, args.t)
+            target_wt = None
+            target_desc = ""
+            if args.target:
+                target_wt, target_desc = resolve_target(args.target)
+            results = sensitivity_analysis(a, target_wt)
+            if args.json:
+                output = {
+                    "category": args.category,
+                    "current_wt": a.w_t,
+                    "current_paradigm": a.paradigm,
+                    "target_wt": target_wt,
+                    "target_desc": target_desc,
+                    "sensitivity_results": results,
+                }
+                print(json.dumps(output, ensure_ascii=False, indent=2))
+            else:
+                print(format_sensitivity(a, results, target_wt, target_desc))
 
         elif args.command == "compare":
             name1, dims1 = parse_compact_values(args.a, args.category)
