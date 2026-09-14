@@ -230,6 +230,12 @@ img{max-width:100%;display:block}
   width:14%;
 }
 .paradigm-node:hover{transform:translateY(-8px)}
+.paradigm-node.active .node-dot{
+  background:#d4a574;
+  box-shadow:0 0 20px rgba(212,165,116,.6);
+  transform:scale(1.2);
+}
+.paradigm-node.active .node-name{color:#d4a574}
 .node-dot{
   width:20px;height:20px;
   background:#0a0a0f;
@@ -436,6 +442,7 @@ img{max-width:100%;display:block}
     <li><a href="#paradigms">六范式</a></li>
     <li><a href="#method">方法论</a></li>
     <li><a href="#calculator">W(T) 计算</a></li>
+    <li><a href="#diagnosis">病症诊断</a></li>
     <li><a href="#applications">应用领域</a></li>
   </ul>
 </nav>
@@ -641,9 +648,9 @@ img{max-width:100%;display:block}
     </div>
     <div class="calc-sliders" id="sliders-container"></div>
     <div class="calc-result">
-      <div class="calc-wt" id="calc-wt">0.200</div>
+      <div class="calc-wt" id="calc-wt">0.265</div>
       <div class="calc-paradigm" id="calc-paradigm">亲和精致</div>
-      <div class="calc-bar"><div class="calc-bar-fill" id="calc-bar-fill" style="width:20%"></div></div>
+      <div class="calc-bar"><div class="calc-bar-fill" id="calc-bar-fill" style="width:26.5%"></div></div>
     </div>
   </div>
 </section>
@@ -725,22 +732,22 @@ img{max-width:100%;display:block}
       <p class="domain-desc">高频长期使用，偏亲和精致。危极严格预算化，一屏内高危极元素≤2个。</p>
     </div>
     <div class="domain-card">
-      <div class="domain-icon">◆</div>
+      <div class="domain-icon">✦</div>
       <div class="domain-name">服装/时尚</div>
       <p class="domain-desc">廓形是宏观极性，面料质感、肩线尖角是可调变量。全谱皆可。</p>
     </div>
     <div class="domain-card">
-      <div class="domain-icon">▲</div>
+      <div class="domain-icon">♪</div>
       <div class="domain-name">音乐/声音设计</div>
       <p class="domain-desc">协和温暖为亲极基底，不协和音、音色突变制造张力，张力后必须有释放。</p>
     </div>
     <div class="domain-card">
-      <div class="domain-icon">■</div>
+      <div class="domain-icon">▶</div>
       <div class="domain-name">影视/动画</div>
       <p class="domain-desc">时间轴上编排双极——舒缓段积蓄安全感，跳切硬光制造冲突，回归秩序完成释放。</p>
     </div>
     <div class="domain-card">
-      <div class="domain-icon">●</div>
+      <div class="domain-icon">✚</div>
       <div class="domain-name">公共/医疗空间</div>
       <p class="domain-desc">治愈松弛范式。圆角、柔色、自然材质、缓流动线，仅导视警示用少量高对比。</p>
     </div>
@@ -756,7 +763,7 @@ img{max-width:100%;display:block}
     <a href="https://www.modelscope.cn/datasets/xkbk0000/bipolar-emotion-aesthetics" target="_blank">ModelScope</a>
     <a href="https://zhuanlan.zhihu.com/p/2082453017601882066" target="_blank">知乎文章</a>
   </div>
-  <p class="footer-copy">Bipolar Emotion Aesthetics v2.1 | 署名：星空本空 | CC BY 4.0</p>
+  <p class="footer-copy">Bipolar Emotion Aesthetics v2.2.0 | 署名：星空本空 | CC BY-NC-SA 4.0</p>
 </footer>
 
 <script>
@@ -778,8 +785,14 @@ document.querySelectorAll('.paradigm-node').forEach(node => {
     const detail = document.getElementById('paradigm-detail');
     detail.innerHTML = `<h4>${data.name}</h4><p><span class="ratio">${data.ratio}</span></p><p>${data.desc}</p><p>${data.apply}</p>`;
     detail.classList.add('active');
+    // 高亮当前节点，移除其他节点高亮
+    document.querySelectorAll('.paradigm-node').forEach(n => n.classList.remove('active'));
+    node.classList.add('active');
   });
 });
+
+// 初始高亮第一个节点
+document.querySelector('.paradigm-node[data-paradigm="0"]').classList.add('active');
 
 // ===== W(T) 计算器 =====
 const categoryConfigs = {
