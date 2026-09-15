@@ -32,7 +32,8 @@ img{max-width:100%;display:block}
   border-bottom:1px solid rgba(212,165,116,.15);
   display:flex;justify-content:space-between;align-items:center;
 }
-.nav-logo{font-family:'Noto Serif SC',serif;font-size:1.3rem;font-weight:900;letter-spacing:.1em;color:#f5e6d3}
+.nav-logo{display:flex;align-items:center;gap:.6rem;font-family:'Noto Serif SC',serif;font-size:1.3rem;font-weight:900;letter-spacing:.1em;color:#f5e6d3;text-decoration:none}
+.nav-logo img{width:36px;height:36px;border-radius:8px;object-fit:cover}
 .nav-logo span{color:#d4a574}
 .nav-links{display:flex;gap:2rem;list-style:none}
 .nav-links a{font-size:.9rem;color:#a8a29e;transition:color .3s}
@@ -714,7 +715,7 @@ img{max-width:100%;display:block}
 
 <!-- ===== 导航 ===== -->
 <nav class="nav">
-  <div class="nav-logo">BEA<span>.</span></div>
+  <a href="index.html" class="nav-logo"><img src="assets/bea-logo.jpg" alt="BEA Logo">BEA<span>.</span></a>
   <ul class="nav-links">
     <li><a href="#theory">核心理论</a></li>
     <li><a href="#paradigms">六范式</a></li>

@@ -97,15 +97,14 @@
         .logo-icon {
             width: 44px;
             height: 44px;
-            background: linear-gradient(135deg, #2c3e50, #3498db);
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 0.5px;
+            overflow: hidden;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .logo-text h1 {
@@ -954,7 +953,7 @@
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo" title="返回 BEA 官网">
-                <div class="logo-icon">BEA</div>
+                <div class="logo-icon"><img src="assets/bea-logo.jpg" alt="BEA Logo"></div>
                 <div class="logo-text">
                     <h1>双极情绪美学 · 案例库</h1>
                     <p>Bipolar Emotion Aesthetics Case Library</p>
