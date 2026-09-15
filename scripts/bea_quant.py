@@ -92,13 +92,27 @@ def _has_emphasis_inflation(w_t: float, dims: Dict[str, int]) -> bool:
 def _has_tension_deficit(w_t: float, dims: Dict[str, int]) -> bool:
     return w_t < 0.35 and (max(dims.values()) - min(dims.values())) < 2
 
+def _has_stimulation_fatigue(w_t: float, dims: Dict[str, int]) -> bool:
+    # 刺激疲劳：所有维度 t>=7 且 W(T)>=0.65，全程高能无喘息
+    # 短期抓眼但长期疲惫，需要安排亲极呼吸段
+    return w_t >= 0.65 and all(t >= 7 for t in dims.values())
+
+def _has_instinct_violation(w_t: float, dims: Dict[str, int]) -> bool:
+    # 本能越界：任何维度 t>=10，触及本能安全阈
+    # BEA 理论：本能安全阈是绝对红线，越过即从审美对象变为伤害源
+    return any(t >= 10 for t in dims.values())
+
 # (名称, 诊断函数, 处方)
 # 注意：失序症和层级冲突症无法仅通过维度值自动诊断，需人工判断，在报告中给出检查提示
 DISEASE_RULES: List[Tuple[str, Callable[[float, Dict[str, int]], bool], str]] = [
+    ("本能越界", _has_instinct_violation,
+     "触及割伤/眩晕/疼痛等生理红线。一票否决，删除或钝化，无风格借口可越过本能红线。"),
     ("甜腻症", _has_sweet_tooth,
      "全圆角全柔色、无锐度。在高价值细节处注入10%-20%危极，柔中藏骨。"),
     ("攻击症", _has_aggression,
      "处处锐角强对比、令人紧张。扩大亲极基底，将过强维度降至范式区间内。"),
+    ("刺激疲劳", _has_stimulation_fatigue,
+     "全程高能无喘息，短期抓眼长期疲惫。时空上安排亲极呼吸段，控制强调点数量。"),
     ("均分症", _has_middle_child,
      "亲危各半无主次、情绪暧昧。确立>=6:4主辅比，让第一印象明确。"),
     ("重点通胀症", _has_emphasis_inflation,
@@ -332,12 +346,16 @@ def compute_endurance(w_t: float, dimensions: Dict[str, int], weights: Dict[str,
     factors["W(T)水平"] = round(wt_score, 1)
 
     # 2. 维度稳定性得分（0-25分）
-    # t 值标准差越小越耐看
+    # 使用加权标准差：高权重维度的波动对耐看性影响更大
     t_values = list(dimensions.values())
-    if len(t_values) > 1:
-        mean_t = sum(t_values) / len(t_values)
-        variance = sum((t - mean_t) ** 2 for t in t_values) / len(t_values)
-        std_dev = variance ** 0.5
+    w_values = [weights.get(d, 0) for d in dimensions]
+    total_w = sum(w_values)
+    if len(t_values) > 1 and total_w > 0:
+        # 加权均值
+        weighted_mean = sum(w * t for w, t in zip(w_values, t_values)) / total_w
+        # 加权方差
+        weighted_variance = sum(w * (t - weighted_mean) ** 2 for w, t in zip(w_values, t_values)) / total_w
+        std_dev = weighted_variance ** 0.5
         # 标准差 0-1 得满分，每增加1扣5分
         stability_score = max(5, 25 - max(0, std_dev - 1) * 5)
     else:
@@ -347,6 +365,8 @@ def compute_endurance(w_t: float, dimensions: Dict[str, int], weights: Dict[str,
     # 3. 病症影响得分（0-25分）
     disease_penalty = 0
     disease_names = [d["name"] for d in diseases]
+    if "本能越界" in disease_names:
+        disease_penalty += 25  # 一票否决，直接0分
     if "攻击症" in disease_names:
         disease_penalty += 10
     if "重点通胀症" in disease_names:
@@ -365,13 +385,13 @@ def compute_endurance(w_t: float, dimensions: Dict[str, int], weights: Dict[str,
     if pr["is_balanced"]:
         # 主辅分明，耐看
         primary_pct = int(pr["primary_secondary_ratio"].split(":")[0])
-        # 7:3 到 8:2 最佳
+        # 7:3 到 8.5:1.5 最佳（从属极充足且不过多）
         if 70 <= primary_pct <= 85:
             balance_score = 20
         elif 60 <= primary_pct < 70:
-            balance_score = 16
-        else:
-            balance_score = 12
+            balance_score = 16  # 主辅明确但从属极偏多
+        else:  # 86-90，主辅明确但从属极偏少，接近不足边缘
+            balance_score = 14
     else:
         balance_score = 8  # 主辅不足，情绪暧昧，不耐看
     factors["主辅比"] = round(balance_score, 1)
@@ -422,11 +442,16 @@ def locate_paradigm(w_t: float) -> Tuple[str, str, Tuple[float, float]]:
 
 
 def _disease_evidence(name: str, w_t: float, dims: Dict[str, int]) -> str:
+    if name == "本能越界":
+        extreme = [f"{k}={v}" for k, v in dims.items() if v >= 10]
+        return f"以下维度 t=10，触及本能安全阈：{', '.join(extreme)}"
     if name == "甜腻症":
         return f"W(T)={w_t:.2f} 偏低，所有维度 t<=4，最高维度为 {max(dims, key=dims.get)}={max(dims.values())}"
     if name == "攻击症":
         high = [f"{k}={v}" for k, v in dims.items() if v >= 6]
         return f"W(T)={w_t:.2f} 偏高（>=0.55），高强度维度（t>=6）：{', '.join(high)}"
+    if name == "刺激疲劳":
+        return f"W(T)={w_t:.2f} 偏高（>=0.65），所有维度 t>=7，全程高能无喘息"
     if name == "均分症":
         return f"W(T)={w_t:.2f}，所有维度集中在 3-5 区间，无明显主次"
     if name == "重点通胀症":
@@ -493,6 +518,8 @@ def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, st
         tension -= 4
     if "攻击症" in disease_names:
         tension -= 3
+    if "刺激疲劳" in disease_names:
+        tension -= 3  # 全程高能无喘息，张力结构不好
     tension = max(0, min(25, tension))
 
     # ── 结构秩序（25分）──
@@ -517,22 +544,26 @@ def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, st
 
     # ── 阈值安全（25分）──
     threshold = 20  # 基础分
-    # W(T)在安全区间
-    if w_t < 0.60:
-        threshold += 3
-    elif w_t < 0.70:
-        threshold += 1
-    # W(T)越界（逼近越阈）
-    if w_t >= 0.85:
-        threshold -= 10
-    elif w_t >= 0.75:
-        threshold -= 4
-    # 极端值检查
+    # 极端值检查（在本能越界判断前计算，供评分明细使用）
     n_extreme_high = sum(1 for v in dims.values() if v >= 9)
     n_extreme_low = sum(1 for v in dims.values() if v <= 1)
-    threshold -= n_extreme_high * 3  # 接近本能红线
-    threshold -= n_extreme_low * 1   # 过于柔和（不危险但单调）
-    threshold = max(0, min(25, threshold))
+    # 本能越界一票否决
+    if "本能越界" in disease_names:
+        threshold = 0
+    else:
+        # W(T)在安全区间
+        if w_t < 0.60:
+            threshold += 3
+        elif w_t < 0.70:
+            threshold += 1
+        # W(T)越界（逼近越阈）
+        if w_t >= 0.85:
+            threshold -= 10
+        elif w_t >= 0.75:
+            threshold -= 4
+        threshold -= n_extreme_high * 3  # 接近本能红线
+        threshold -= n_extreme_low * 1   # 过于柔和（不危险但单调）
+        threshold = max(0, min(25, threshold))
 
     # ── 语境适配（25分）──
     # 这是参考分，需人工判断。按品类和范式给出基础参考分范围。
@@ -579,7 +610,7 @@ def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, st
                 "W(T)在0.25-0.70": 5 if 0.25 <= w_t <= 0.70 else 0,
                 f"维度极差={spread}": 3 if spread >= 3 else (2 if spread >= 2 else (1 if spread >= 1 else 0)),
                 "明确对比(有高有低)": 2 if has_contrast else 0,
-                "病症扣分": (-5 if "甜腻症" in disease_names else 0) + (-4 if "张力不足症" in disease_names else 0) + (-3 if "攻击症" in disease_names else 0),
+                "病症扣分": (-5 if "甜腻症" in disease_names else 0) + (-4 if "张力不足症" in disease_names else 0) + (-3 if "攻击症" in disease_names else 0) + (-3 if "刺激疲劳" in disease_names else 0),
             },
             "结构秩序": {
                 "基础分": 15,
@@ -846,6 +877,141 @@ def format_batch(results: List[Tuple[str, BEAAnalysis]]) -> str:
     return "\n".join(lines)
 
 
+def format_report_markdown(a: BEAAnalysis) -> str:
+    """将分析报告导出为 Markdown 格式，方便保存到文档中。"""
+    lines = []
+    lines.append(f"# BEA 分析报告 · {a.category}")
+    lines.append("")
+    lines.append(f"**W(T) = {a.w_t:.3f}** | **范式：{a.paradigm}** | {a.paradigm_desc}")
+    lines.append("")
+
+    lines.append("## 维度极性审计")
+    lines.append("")
+    lines.append("| 维度 | 权重 | t值 | 加权 | 极性 |")
+    lines.append("|---|---|---|---|---|")
+    for dim, w in a.weights.items():
+        t = a.dimensions[dim]
+        contrib = w * t / 10
+        polarity = "P+亲极" if t <= 3 else "T−危极" if t >= 6 else "中性"
+        lines.append(f"| {dim} | {w:.2f} | {t} | {contrib:.3f} | {polarity} |")
+    lines.append("")
+
+    lines.append("## 主辅比")
+    lines.append("")
+    pr = a.polarity_ratio
+    lines.append(f"- 主导极性：{pr['dominant']}")
+    lines.append(f"- 亲极占比：{pr['plus_ratio']*100:.0f}% | 危极占比：{pr['minus_ratio']*100:.0f}%")
+    lines.append(f"- 主辅比：{pr['primary_secondary_ratio']}")
+    lines.append(f"- 主辅分明：{'✓ 是' if pr['is_balanced'] else '⚠ 否'}")
+    lines.append("")
+
+    lines.append("## 耐看性")
+    lines.append("")
+    en = a.endurance
+    lines.append(f"- 耐看指数：**{en['score']:.0f}/100** | 评级：{en['level']}")
+    lines.append(f"- 最优 W(T) 区间：[{en['optimal_range'][0]:.2f}, {en['optimal_range'][1]:.2f}]")
+    for factor, score in en['factors'].items():
+        lines.append(f"  - {factor}: {score:.0f}")
+    lines.append("")
+
+    lines.append("## 病症诊断")
+    lines.append("")
+    if a.diseases:
+        for i, d in enumerate(a.diseases, 1):
+            lines.append(f"### {i}. {d['name']}")
+            lines.append(f"- **识别**：{d['identify']}")
+            lines.append(f"- **机理**：{d['mechanism']}")
+            lines.append(f"- **处方**：{d['prescription']}")
+            lines.append("")
+    else:
+        lines.append("无明显病症 ✓")
+        lines.append("")
+
+    lines.append("## 四维评分")
+    lines.append("")
+    scores = a.score_suggestion
+    total = sum(scores[k] for k in ["双极张力", "结构秩序", "阈值安全", "语境适配"])
+    lines.append(f"| 维度 | 得分 |")
+    lines.append("|---|---|")
+    for k in ["双极张力", "结构秩序", "阈值安全", "语境适配"]:
+        lines.append(f"| {k} | {scores[k]}/25 |")
+    lines.append(f"| **总分** | **{total}/100** |")
+    lines.append("")
+
+    lines.append("---")
+    lines.append("")
+    lines.append(f"*BEA 双极情绪美学 v2.4.0 | 署名：马星 | CC BY-NC-SA 4.0*")
+    return "\n".join(lines)
+
+
+def format_report_html(a: BEAAnalysis) -> str:
+    """将分析报告导出为独立 HTML 文件，带基本样式，可直接在浏览器打开。"""
+    md_content = format_report_markdown(a)
+    # 简单的 Markdown 转 HTML（处理标题、表格、列表、粗体）
+    html_body = md_content
+    # 标题
+    for i in range(3, 0, -1):
+        import re
+        html_body = re.sub(rf'^{"#"*i} (.+)$', rf'<h{i}>\1</h{i}>', html_body, flags=re.MULTILINE)
+    # 粗体
+    html_body = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', html_body)
+    # 表格
+    html_body = re.sub(r'\|(.+)\|\n\|[-| ]+\|\n((?:\|.+\|\n?)+)', _md_table_to_html, html_body)
+    # 列表
+    html_body = re.sub(r'^- (.+)$', r'<li>\1</li>', html_body, flags=re.MULTILINE)
+    html_body = re.sub(r'(<li>.+</li>\n?)+', lambda m: '<ul>' + m.group(0) + '</ul>', html_body)
+    # 水平线
+    html_body = re.sub(r'^---$', '<hr>', html_body, flags=re.MULTILINE)
+    # 段落
+    html_body = re.sub(r'\n\n', '</p><p>', html_body)
+    html_body = '<p>' + html_body + '</p>'
+
+    return f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEA 分析报告 · {a.category}</title>
+<style>
+body{{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans SC',sans-serif;max-width:800px;margin:0 auto;padding:2rem;line-height:1.7;color:#333;background:#fafafa}}
+h1{{color:#1a1a2e;border-bottom:3px solid #d4a574;padding-bottom:.5rem}}
+h2{{color:#16213e;margin-top:2rem;border-left:4px solid #d4a574;padding-left:.8rem}}
+h3{{color:#0f3460}}
+table{{border-collapse:collapse;width:100%;margin:1rem 0}}
+th,td{{border:1px solid #ddd;padding:.6rem .8rem;text-align:left}}
+th{{background:#1a1a2e;color:#f5e6d3}}
+tr:nth-child(even){{background:#f5f5f5}}
+ul{{padding-left:1.5rem}}
+li{{margin:.3rem 0}}
+hr{{border:none;border-top:2px solid #d4a574;margin:2rem 0}}
+strong{{color:#0f3460}}
+p{{margin:.8rem 0}}
+</style>
+</head>
+<body>
+{html_body}
+</body>
+</html>"""
+
+
+def _md_table_to_html(match):
+    """将 Markdown 表格转换为 HTML 表格。"""
+    header = match.group(1).strip().split('|')
+    rows_text = match.group(2).strip()
+    rows = [r.strip().split('|') for r in rows_text.split('\n') if r.strip()]
+    html = '<table><thead><tr>'
+    for h in header:
+        html += f'<th>{h.strip()}</th>'
+    html += '</tr></thead><tbody>'
+    for row in rows:
+        html += '<tr>'
+        for cell in row:
+            html += f'<td>{cell.strip()}</td>'
+        html += '</tr>'
+    html += '</tbody></table>'
+    return html
+
+
 def format_score_detail(a: BEAAnalysis) -> str:
     lines = []
     lines.append("=" * 60)
@@ -936,12 +1102,15 @@ def resolve_target(target_str: str) -> Tuple[float, str]:
     raise ValueError(f"无法识别目标 '{target_str}'，请输入范式名（如'崇高震撼'）或W(T)数值（如0.55）")
 
 
-def suggest_adjustment(a: BEAAnalysis, target_wt: float) -> List[Dict[str, object]]:
+def suggest_adjustment(a: BEAAnalysis, target_wt: float, strategy: str = "focused") -> List[Dict[str, object]]:
     """
     计算从当前 W(T) 调整到目标 W(T) 的维度变更方案。
 
-    策略（v2.3.0 改进）：
-    - 每轮只调整1级，然后重新计算优先级，避免单维度被极端调整
+    策略：
+    - focused（集中，默认）：每轮只调整优先级最高的1个维度，改动维度少但每个维度调整量大
+    - distributed（分散）：每轮调整所有可调整维度各1级，每个维度调整量小但改动维度多
+
+    通用规则：
     - 降低危极时：优先降低当前 t 值最高的维度（高 t 维度对 W(T) 贡献最大）
     - 提升危极时：优先提升当前 t 值最低的维度（低 t 维度有最大提升空间）
     - 同时考虑权重：在 t 值相近时，优先调整权重高的维度（调整效率更高）
@@ -965,41 +1134,47 @@ def suggest_adjustment(a: BEAAnalysis, target_wt: float) -> List[Dict[str, objec
     # 记录每个维度的总调整量
     total_changes = {dim: 0 for dim in current}
 
-    while remaining > 0.005 and iteration < max_iterations:
-        iteration += 1
-
-        # 计算每个维度的调整优先级（每轮重新计算）
-        # 优先级 = |当前t - 目标方向| × 权重
-        # 降低危极(-1)：t 值越高，优先级越高
-        # 提升危极(+1)：t 值越低，优先级越高
+    def get_candidates():
+        """获取可调整的维度候选列表，按优先级排序。"""
         candidates = []
         for dim, t in current.items():
             w = weights[dim]
             if direction == -1:
-                # 降低危极：优先降高 t 维度，但不能低于 1（避免极端 0）
+                # 降低危极：优先降高 t 维度，但不能低于 1
                 if t > 1:
-                    # 优先级 = t 值 × 权重（t 越高越该降）
-                    priority = t * w
+                    priority = t * w  # t 越高越该降
                     candidates.append((dim, priority, t))
             else:
-                # 提升危极：优先升低 t 维度，但不能高于 9（避免极端 10）
+                # 提升危极：优先升低 t 维度，但不能高于 9
                 if t < 9:
-                    # 优先级 = (10 - t) × 权重（t 越低越该升）
-                    priority = (10 - t) * w
+                    priority = (10 - t) * w  # t 越低越该升
                     candidates.append((dim, priority, t))
+        candidates.sort(key=lambda x: x[1], reverse=True)
+        return candidates
+
+    while remaining > 0.005 and iteration < max_iterations:
+        iteration += 1
+        candidates = get_candidates()
 
         if not candidates:
             break
 
-        # 按优先级排序，选最高的（本轮只调1级）
-        candidates.sort(key=lambda x: x[1], reverse=True)
-        best_dim = candidates[0][0]
-        per_step = weights[best_dim] / 10.0
-
-        # 只调整1级
-        current[best_dim] += direction
-        total_changes[best_dim] += direction
-        remaining -= per_step
+        if strategy == "distributed":
+            # 分散策略：每轮调整所有可调整维度各1级
+            for dim, _, _ in candidates:
+                per_step = weights[dim] / 10.0
+                current[dim] += direction
+                total_changes[dim] += direction
+                remaining -= per_step
+                if remaining <= 0.005:
+                    break
+        else:
+            # 集中策略（默认）：每轮只调优先级最高的1个维度
+            best_dim = candidates[0][0]
+            per_step = weights[best_dim] / 10.0
+            current[best_dim] += direction
+            total_changes[best_dim] += direction
+            remaining -= per_step
 
     # 合并同一维度的连续调整为一步输出
     steps = []
@@ -1143,9 +1318,13 @@ def sensitivity_analysis(a: BEAAnalysis, target_wt: float = None, step: int = 1)
                          + new_scores["阈值安全"] + new_scores["语境适配"])
             score_minus = new_total - current_total_score
 
-        # 综合灵敏度：W(T) 变化的平均绝对值 × 权重
+        # 综合灵敏度：0.7 * W(T)灵敏度 + 0.3 * 评分灵敏度
+        # W(T)灵敏度反映调整效率，评分灵敏度反映对最终美感的影响
         avg_wt_change = (abs(wt_plus) + abs(wt_minus)) / 2
-        sensitivity = avg_wt_change * 100  # 放大到可读范围
+        avg_score_change = (abs(score_plus) + abs(score_minus)) / 2
+        wt_sensitivity = avg_wt_change * 100  # W(T)灵敏度（放大到可读范围）
+        score_sensitivity = avg_score_change * 2  # 评分灵敏度（放大到可比范围）
+        sensitivity = round(0.7 * wt_sensitivity + 0.3 * score_sensitivity, 2)
 
         # 朝目标方向调整的效果
         toward_target = None
@@ -1171,6 +1350,8 @@ def sensitivity_analysis(a: BEAAnalysis, target_wt: float = None, step: int = 1)
             "wt_minus_1": round(wt_minus, 4),  # 向后兼容
             "total_score_plus": score_plus,
             "total_score_minus": score_minus,
+            "wt_sensitivity": round(wt_sensitivity, 2),
+            "score_sensitivity": round(score_sensitivity, 2),
             "sensitivity": round(sensitivity, 2),
             "toward_target": round(toward_target, 4) if toward_target is not None else None,
         })
@@ -1811,9 +1992,10 @@ def run_tests() -> bool:
     check("灵敏度分析返回所有维度", len(sens) == len(a.dimensions))
     check("灵敏度分析按灵敏度降序排列", all(sens[i]["sensitivity"] >= sens[i+1]["sensitivity"] for i in range(len(sens)-1)))
     check("灵敏度分析包含必要字段", all("wt_plus_1" in r and "wt_minus_1" in r and "sensitivity" in r for r in sens))
-    # 权重最高的维度（形状/质感 0.25）灵敏度应该最高
-    top_sens = sens[0]["dimension"]
-    check("高权重维度灵敏度最高", top_sens in ("形状", "质感"))
+    check("灵敏度分析包含分项灵敏度", all("wt_sensitivity" in r and "score_sensitivity" in r for r in sens))
+    # W(T)灵敏度最高的维度应该是权重最高的维度（形状/质感 0.25）
+    top_wt_sens = max(sens, key=lambda x: x["wt_sensitivity"])["dimension"]
+    check("W(T)灵敏度最高为高权重维度", top_wt_sens in ("形状", "质感"))
 
     # 灵敏度分析带目标
     sens_target = sensitivity_analysis(a, target_wt=0.2)
@@ -1934,6 +2116,27 @@ def run_tests() -> bool:
     # 版本号一致性
     check("代码版本号为v2.4.0", "v2.4.0" in open(__file__, encoding='utf-8').readline() or True)
 
+    # 新病症测试（v2.4.1）
+    a_instinct = analyze("car", "曲面=10,特征线=5,灯组=5,比例=5,材质=5")
+    check("t=10诊断本能越界", any(d["name"] == "本能越界" for d in a_instinct.diseases))
+    check("本能越界时阈值安全为0", a_instinct.score_suggestion["阈值安全"] == 0)
+
+    a_fatigue = analyze("car", "曲面=8,特征线=8,灯组=7,比例=7,材质=8")
+    check("全维度>=7且W(T)>=0.65诊断刺激疲劳", any(d["name"] == "刺激疲劳" for d in a_fatigue.diseases))
+
+    # 调整建议策略测试
+    a_sug = analyze("car", "曲面=7,特征线=7,灯组=6,比例=6,材质=7")
+    steps_focused = suggest_adjustment(a_sug, 0.30, strategy="focused")
+    steps_distributed = suggest_adjustment(a_sug, 0.30, strategy="distributed")
+    check("集中策略调整维度数<=分散策略", len(steps_focused) <= len(steps_distributed))
+    check("两种策略都能达到目标", len(steps_focused) > 0 and len(steps_distributed) > 0)
+
+    # 灵敏度分项测试
+    a_sen2 = analyze("car", "曲面=4,特征线=5,灯组=6,比例=3,材质=5")
+    sens2 = sensitivity_analysis(a_sen2)
+    check("灵敏度包含wt_sensitivity", all("wt_sensitivity" in r for r in sens2))
+    check("灵敏度包含score_sensitivity", all("score_sensitivity" in r for r in sens2))
+
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0
 
@@ -1970,6 +2173,8 @@ def main():
     p_rep.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_rep.add_argument("--t", required=True, help="维度t值，格式：形状=3,质感=6,...")
     p_rep.add_argument("--json", action="store_true", help="输出JSON格式")
+    p_rep.add_argument("--format", choices=["text", "markdown", "html"], default="text", help="输出格式：text(默认)/markdown/html")
+    p_rep.add_argument("--output", help="输出到文件（配合markdown/html格式使用）")
     p_rep.add_argument("--profile", help="使用已保存的权重配置名")
     p_rep.add_argument("--weights", help='自定义权重JSON，如 {"形状":0.3,"质感":0.3,...}')
 
@@ -1984,6 +2189,7 @@ def main():
     p_sug.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
     p_sug.add_argument("--t", required=True, help="当前维度t值，格式：形状=3,质感=6,...")
     p_sug.add_argument("--target", required=True, help="目标范式名（如'崇高震撼'）或目标W(T)值（如0.55）")
+    p_sug.add_argument("--strategy", choices=["focused", "distributed"], default="focused", help="调整策略：focused=集中调整少维度(默认)，distributed=分散调整多维度")
     p_sug.add_argument("--json", action="store_true", help="输出JSON格式")
     p_sug.add_argument("--profile", help="使用已保存的权重配置名")
     p_sug.add_argument("--weights", help='自定义权重JSON，如 {"形状":0.3,"质感":0.3,...}')
@@ -2030,6 +2236,7 @@ def main():
     p_dp.add_argument("--name", required=True, help="配置名称")
 
     sub.add_parser("test", help="运行自测试")
+    sub.add_parser("interactive", help="交互式分析模式（逐步引导输入）")
 
     args = parser.parse_args()
 
@@ -2042,9 +2249,19 @@ def main():
             weights = resolve_weights(args.category, getattr(args, "weights", None), getattr(args, "profile", None))
             a = analyze(args.category, args.t, weights)
             if args.json:
-                print(json.dumps(a.to_dict(), ensure_ascii=False, indent=2))
+                output = json.dumps(a.to_dict(), ensure_ascii=False, indent=2)
+            elif args.format == "markdown":
+                output = format_report_markdown(a)
+            elif args.format == "html":
+                output = format_report_html(a)
             else:
-                print(format_report(a))
+                output = format_report(a)
+            if args.output:
+                with open(args.output, "w", encoding="utf-8") as f:
+                    f.write(output)
+                print(f"报告已保存到：{args.output}")
+            else:
+                print(output)
 
         elif args.command == "score":
             weights = resolve_weights(args.category, getattr(args, "weights", None), getattr(args, "profile", None))
@@ -2065,7 +2282,8 @@ def main():
             weights = resolve_weights(args.category, getattr(args, "weights", None), getattr(args, "profile", None))
             a = analyze(args.category, args.t, weights)
             target_wt, target_desc = resolve_target(args.target)
-            steps = suggest_adjustment(a, target_wt)
+            strategy = getattr(args, "strategy", "focused")
+            steps = suggest_adjustment(a, target_wt, strategy=strategy)
             if args.json:
                 # 计算调整后的 W(T)
                 new_dims = dict(a.dimensions)
@@ -2212,6 +2430,9 @@ def main():
 
         elif args.command == "test":
             sys.exit(0 if run_tests() else 1)
+
+        elif args.command == "interactive":
+            run_interactive()
 
     except ValueError as e:
         print(f"错误：{e}", file=sys.stderr)
