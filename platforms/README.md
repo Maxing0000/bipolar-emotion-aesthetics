@@ -7,6 +7,7 @@ BEA（双极情绪美学）技能可在多个 AI 平台使用，本目录提供�
 | 平台 | 状态 | 适配方式 | 文档 |
 |---|---|---|---|
 | **豆包 Doubao** | ✅ 原生支持 | SKILL.md + YAML frontmatter | 根目录 SKILL.md |
+| **WorkBuddy** | ✅ 原生支持 + 飞书集成 | 原生技能 + 飞书生态 | [workbuddy/](workbuddy/) |
 | **Coze 扣子** | ✅ 支持 | Bot System Prompt / 插件 | [coze/](coze/) |
 | **ChatGPT / GPTs** | ✅ 支持 | Custom Instructions / GPTs | [chatgpt/](chatgpt/) |
 | **Claude** | ✅ 支持 | Project Instructions | [claude/](claude/) |
@@ -56,7 +57,7 @@ BEA（双极情绪美学）技能可在多个 AI 平台使用，本目录提供�
 
 ## 技术规格
 
-- **版本**：v2.5.0
+- **版本**：v2.7.0
 - **许可证**：CC BY-NC-SA 4.0
 - **作者**：马星
 - **离线可用**：是（纯文本模式零依赖）

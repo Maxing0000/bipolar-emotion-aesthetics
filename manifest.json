@@ -98,6 +98,11 @@
       "format": "SKILL.md + YAML frontmatter",
       "install": "复制到 user_skills 目录"
     },
+    "workbuddy": {
+      "status": "supported",
+      "format": "原生技能 + 飞书集成",
+      "install": "技能市场搜索安装，或复制到技能目录"
+    },
     "coze": {
       "status": "supported",
       "format": "插件/技能，参考 platforms/coze/",
@@ -130,7 +135,7 @@
     "preview_images": [],
     "demo_video": "",
     "documentation": "https://maxing0000.github.io/bipolar-emotion-aesthetics/",
-    "supported_platforms": ["doubao", "coze", "chatgpt", "claude", "tongyi", "dify"],
+    "supported_platforms": ["doubao", "workbuddy", "coze", "chatgpt", "claude", "tongyi", "dify"],
     "offline_capable": true,
     "network_required": false,
     "data_privacy": "所有计算在本地完成，不上传任何数据"

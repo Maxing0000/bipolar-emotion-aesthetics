@@ -18,6 +18,7 @@ BEA 技能可在多个 AI 平台使用，详见 `platforms/` 目录：
 | 平台 | 适配方式 | 文档 | 图片分析支持 |
 |---|---|---|---|
 | 豆包 Doubao | 原生 SKILL.md | 本文件 | ✅ 上传图片直接分析 |
+| WorkBuddy | 原生技能 + 飞书集成 | `platforms/workbuddy/` | ✅ 多模态图片分析 |
 | Coze 扣子 | Bot System Prompt | `platforms/coze/` | ✅ 智能体上传图片分析 |
 | ChatGPT / GPTs | Custom Instructions | `platforms/chatgpt/` | ✅ GPT-4V 多模态分析 |
 | Claude | Project Instructions | `platforms/claude/` | ✅ Claude 3 多模态分析 |
