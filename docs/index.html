@@ -135,6 +135,12 @@ img{max-width:100%;display:block}
   color:#d4a574;
 }
 .btn-secondary:hover{background:rgba(212,165,116,.1)}
+.btn-outline{
+  background:transparent;
+  border:1px solid rgba(168,162,158,.3);
+  color:#a8a29e;
+}
+.btn-outline:hover{border-color:rgba(212,165,116,.4);color:#d4a574}
 
 /* ===== 通用区块 ===== */
 .section{padding:6rem 2rem;max-width:1200px;margin:0 auto}
@@ -619,6 +625,7 @@ img{max-width:100%;display:block}
     <li><a href="#theory">核心理论</a></li>
     <li><a href="#paradigms">六范式</a></li>
     <li><a href="#method">方法论</a></li>
+    <li><a href="#image-analysis">图片分析</a></li>
     <li><a href="#calculator">W(T) 计算</a></li>
     <li><a href="#diagnosis">病症诊断</a></li>
     <li><a href="#cases">案例库</a></li>
@@ -633,7 +640,7 @@ img{max-width:100%;display:block}
   <div class="hero-orbit"></div>
   <div class="hero-orbit-2"></div>
   <div class="hero-content">
-    <div class="hero-tag">Bipolar Emotion Aesthetics</div>
+    <div class="hero-tag">Bipolar Emotion Aesthetics · v2.6.1</div>
     <h1>双极情绪美学</h1>
     <p class="hero-subtitle">把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作工具</p>
     <div class="hero-formula">
@@ -641,7 +648,8 @@ img{max-width:100%;display:block}
     </div>
     <div class="hero-cta">
       <a href="#theory" class="btn btn-primary">了解理论</a>
-      <a href="#calculator" class="btn btn-secondary">体验计算</a>
+      <a href="#image-analysis" class="btn btn-secondary">图片分析</a>
+      <a href="#calculator" class="btn btn-outline">体验计算</a>
     </div>
   </div>
 </section>
@@ -803,6 +811,93 @@ img{max-width:100%;display:block}
       <div class="step-num">06</div>
       <div class="step-title">验证</div>
       <p class="step-desc">远观测试+近看长期测试+四维评分卡。任一维度低于15分回到对应步骤修正。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 图片分析 ===== -->
+<section class="section" id="image-analysis">
+  <div class="reveal">
+    <div class="section-tag">Image Analysis</div>
+    <h2 class="section-title">图片分析标准流程</h2>
+    <p class="section-desc">v2.6.1 新增。上传产品/设计图片，按7步标准流程分析，确保不同人/不同会话打分差异 ≤1。</p>
+  </div>
+
+  <div class="method-steps reveal">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-title">远观定调</div>
+      <p class="step-desc">把图片缩小到缩略图，10秒内判断第一情绪（放松/好感/敬畏/刺激），初步定位范式区间。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-title">识别品类</div>
+      <p class="step-desc">确定分析对象属于哪个品类（手机/汽车/品牌/UI/建筑），选择对应的维度权重表。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-title">逐维度打分</div>
+      <p class="step-desc">按维度顺序逐一打分，每个维度先找最接近的锚点，再做 ±1 微调，记录打分理由。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">04</div>
+      <div class="step-title">计算 W(T)</div>
+      <p class="step-desc">按品类权重计算 W(T) = Σ wᵢ × (tᵢ/10)，对照范式区间定位。与直觉判断差异 >0.15 时重新检查。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">05</div>
+      <div class="step-title">主辅比判断</div>
+      <p class="step-desc">统计亲极维度（t≤4）和危极维度（t≥6）的数量，计算主辅比，检查是否有明确主导极性（≥6:4）。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">06</div>
+      <div class="step-title">病症诊断</div>
+      <p class="step-desc">对照7种病症检查表，指出具体病症和证据（哪个维度的 t 值导致），按优先级排序。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">07</div>
+      <div class="step-title">输出报告</div>
+      <p class="step-desc">轻量级模式：W(T)+范式+主辅比+一句话结论。完整模式：维度拆解+病症诊断+改进处方。</p>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:3rem">
+    <h3 style="font-size:1.3rem;margin-bottom:1.5rem;color:#d4a574">评分一致性目标</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem">
+      <div style="padding:1.5rem;background:rgba(212,165,116,.05);border:1px solid rgba(212,165,116,.15);border-radius:12px">
+        <div style="font-size:2rem;font-weight:900;color:#d4a574;margin-bottom:.5rem">≤1</div>
+        <div style="font-size:.9rem;color:#a8a29e">同一张图，不同人/不同会话打分的 t 值差异</div>
+      </div>
+      <div style="padding:1.5rem;background:rgba(212,165,116,.05);border:1px solid rgba(212,165,116,.15);border-radius:12px">
+        <div style="font-size:2rem;font-weight:900;color:#d4a574;margin-bottom:.5rem">≤0.1</div>
+        <div style="font-size:.9rem;color:#a8a29e">W(T) 计算结果差异</div>
+      </div>
+      <div style="padding:1.5rem;background:rgba(212,165,116,.05);border:1px solid rgba(212,165,116,.15);border-radius:12px">
+        <div style="font-size:2rem;font-weight:900;color:#d4a574;margin-bottom:.5rem">100%</div>
+        <div style="font-size:.9rem;color:#a8a29e">范式定位和病症诊断一致性</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:3rem">
+    <h3 style="font-size:1.3rem;margin-bottom:1.5rem;color:#d4a574">常见误区与校准</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem">
+      <div style="padding:1rem;background:rgba(139,90,43,.1);border-left:3px solid #8b5a2b;border-radius:0 8px 8px 0">
+        <strong style="color:#f5e6d3">误区1：从细节开始打分</strong>
+        <p style="font-size:.85rem;color:#a8a29e;margin-top:.5rem">盯着摄像头金属环打细节分，然后反推整体。<br><strong>校准：</strong>先远观定基调，再逐维度打分，最后看细节微调。</p>
+      </div>
+      <div style="padding:1rem;background:rgba(139,90,43,.1);border-left:3px solid #8b5a2b;border-radius:0 8px 8px 0">
+        <strong style="color:#f5e6d3">误区2：把"喜欢"当成"亲极"</strong>
+        <p style="font-size:.85rem;color:#a8a29e;margin-top:.5rem">"我喜欢这个设计，所以它应该是亲极"。<br><strong>校准：</strong>亲极/危极是客观形式特征，不是主观喜好。问"让我放松还是紧张？"</p>
+      </div>
+      <div style="padding:1rem;background:rgba(139,90,43,.1);border-left:3px solid #8b5a2b;border-radius:0 8px 8px 0">
+        <strong style="color:#f5e6d3">误区3：维度之间互相影响</strong>
+        <p style="font-size:.85rem;color:#a8a29e;margin-top:.5rem">因为质感打了高分，所以光影也跟着打高分。<br><strong>校准：</strong>每个维度独立打分。质感看材质处理，光影看反光分布。</p>
+      </div>
+      <div style="padding:1rem;background:rgba(139,90,43,.1);border-left:3px solid #8b5a2b;border-radius:0 8px 8px 0">
+        <strong style="color:#f5e6d3">误区4：打分过于精细</strong>
+        <p style="font-size:.85rem;color:#a8a29e;margin-top:.5rem">纠结 t=3 还是 t=4。<br><strong>校准：</strong>t 值是协作刻度，误差带 ±1 正常。先打整数分，需要时再用 0.5 微调。</p>
+      </div>
     </div>
   </div>
 </section>
@@ -1030,6 +1125,13 @@ img{max-width:100%;display:block}
         <h3>美感生成 <span class="badge-new">v2.5</span></h3>
         <p>给定目标 W(T)/范式，<strong>自动生成最优维度配置</strong>。支持均衡/集中/分散三种策略，从分析走向生成。</p>
         <code>generate --category phone --target 亲和精致 --strategy balanced</code>
+      </div>
+
+      <div class="usage-card featured">
+        <div class="usage-icon">⚡</div>
+        <h3>轻量级快速诊断 <span class="badge-new">v2.6</span></h3>
+        <p>只输出 <strong>W(T)+范式定位+主辅比+一句话结论</strong>，省略元素级改进处方。速度快一倍，减少长上下文指令遗忘，适合快速筛选和初步判断。</p>
+        <code>触发词：快速看看、简单诊断、大概怎么样、快速分析</code>
       </div>
 
       <div class="usage-card">
