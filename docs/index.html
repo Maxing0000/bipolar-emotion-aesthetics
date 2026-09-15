@@ -334,6 +334,74 @@ img{max-width:100%;display:block}
 }
 .case-filter-btn:hover{border-color:rgba(212,165,116,.5);color:#d4a574}
 .case-filter-btn.active{background:rgba(212,165,116,.15);border-color:#d4a574;color:#d4a574}
+/* ===== 功能与使用方法 ===== */
+.usage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;margin-bottom:2.5rem}
+.usage-card{
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(212,165,116,.12);
+  border-radius:14px;
+  padding:1.5rem;
+  transition:all .3s;
+}
+.usage-card:hover{border-color:rgba(212,165,116,.4);background:rgba(212,165,116,.04);transform:translateY(-3px)}
+.usage-card.featured{border-color:rgba(212,165,116,.4);background:rgba(212,165,116,.06)}
+.usage-icon{font-size:2rem;margin-bottom:.8rem}
+.usage-card h3{font-size:1.1rem;color:#f5f0e8;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.badge-new{
+  display:inline-block;
+  padding:.15rem .5rem;
+  background:linear-gradient(135deg,#d4a574,#c4956a);
+  color:#1a1a1a;
+  border-radius:100px;
+  font-size:.65rem;
+  font-weight:700;
+}
+.usage-card p{font-size:.85rem;color:rgba(245,240,232,.6);line-height:1.6;margin-bottom:.8rem}
+.usage-card code{
+  display:block;
+  background:rgba(0,0,0,.3);
+  border:1px solid rgba(212,165,116,.15);
+  border-radius:8px;
+  padding:.6rem .8rem;
+  font-size:.72rem;
+  color:#d4a574;
+  overflow-x:auto;
+  white-space:nowrap;
+}
+.usage-quickstart{margin-bottom:2.5rem}
+.usage-quickstart h3{font-size:1.2rem;color:#f5f0e8;margin-bottom:1rem}
+.code-block{
+  background:rgba(0,0,0,.3);
+  border:1px solid rgba(212,165,116,.15);
+  border-radius:12px;
+  padding:1.2rem 1.5rem;
+  overflow-x:auto;
+}
+.code-block pre{margin:0;font-size:.8rem;line-height:1.8;color:rgba(245,240,232,.85)}
+.code-block .comment{color:rgba(212,165,116,.5)}
+.usage-categories h3{font-size:1.2rem;color:#f5f0e8;margin-bottom:1rem}
+.category-table{
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(212,165,116,.12);
+  border-radius:12px;
+  overflow:hidden;
+}
+.category-row{
+  display:grid;
+  grid-template-columns:100px 1fr;
+  padding:.8rem 1.2rem;
+  border-bottom:1px solid rgba(212,165,116,.08);
+  font-size:.82rem;
+}
+.category-row:last-child{border-bottom:none}
+.category-row.header{
+  background:rgba(212,165,116,.08);
+  font-weight:600;
+  color:#d4a574;
+}
+.category-row span:first-child{color:#f5f0e8;font-weight:500}
+.category-row span:last-child{color:rgba(245,240,232,.6)}
+
 .case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem}
 .case-card{
   background:rgba(255,255,255,.02);
@@ -524,6 +592,7 @@ img{max-width:100%;display:block}
     <li><a href="#calculator">W(T) 计算</a></li>
     <li><a href="#diagnosis">病症诊断</a></li>
     <li><a href="#cases">案例库</a></li>
+    <li><a href="#usage">功能用法</a></li>
     <li><a href="#applications">应用领域</a></li>
   </ul>
 </nav>
@@ -857,6 +926,110 @@ img{max-width:100%;display:block}
   </div>
 </section>
 
+<!-- ===== 功能与使用方法 ===== -->
+<section class="section" id="usage">
+  <div class="container">
+    <h2 class="section-title">功能与使用方法</h2>
+    <p class="section-desc">BEA 量化引擎是一个纯 Python 标准库的命令行工具，离线可用，无需安装任何依赖。支持分析、诊断、调整、生成、对比五大核心能力。</p>
+  </div>
+
+  <div class="container">
+    <div class="usage-grid reveal">
+      <div class="usage-card">
+        <div class="usage-icon">📊</div>
+        <h3>分析报告</h3>
+        <p>输入各维度危极强度，输出完整分析报告：W(T)、范式定位、主辅比、耐看性、病症诊断、四维评分卡。</p>
+        <code>report --category car --t "曲面=4,特征线=6,灯组=5,比例=3,材质=4"</code>
+      </div>
+
+      <div class="usage-card">
+        <div class="usage-icon">🎯</div>
+        <h3>调整建议</h3>
+        <p>给定目标范式或 W(T)，输出具体的维度调整方案，含调整后验证（实际W(T)、偏差、是否达到目标）。</p>
+        <code>suggest --category car --t "..." --target 崇高震撼</code>
+      </div>
+
+      <div class="usage-card featured">
+        <div class="usage-icon">✨</div>
+        <h3>美感生成 <span class="badge-new">v2.5</span></h3>
+        <p>给定目标 W(T)/范式，<strong>自动生成最优维度配置</strong>。支持均衡/集中/分散三种策略，从分析走向生成。</p>
+        <code>generate --category phone --target 亲和精致 --strategy balanced</code>
+      </div>
+
+      <div class="usage-card">
+        <div class="usage-icon">⚡</div>
+        <h3>灵敏度分析</h3>
+        <p>计算每个维度 t±1 对 W(T) 和评分的影响，找出"改动哪个维度效果最明显"，避免盲目试错。</p>
+        <code>sensitivity --category car --t "..." --target 0.55</code>
+      </div>
+
+      <div class="usage-card">
+        <div class="usage-icon">⚖️</div>
+        <h3>对比分析</h3>
+        <p>对比两个设计方案的 W(T)、范式、维度差异、病症差异，快速判断哪个方案更符合目标定位。</p>
+        <code>compare --category car --a "方案A=4,6,5,3,4" --b "方案B=7,6,5,4,4"</code>
+      </div>
+
+      <div class="usage-card">
+        <div class="usage-icon">🔗</div>
+        <h3>跨模态分析</h3>
+        <p>多组数据跨模态一致性检查 + 层级嵌套分析，检查外形/内饰/声音等各通道极性是否协同。</p>
+        <code>multigroup --category car --groups "外形=...;内饰=..."</code>
+      </div>
+    </div>
+
+    <div class="usage-quickstart reveal">
+      <h3>快速开始</h3>
+      <div class="code-block">
+<pre><span class="comment"># 1. 生成分打模板</span>
+python3 scripts/bea_quant.py template --category phone
+
+<span class="comment"># 2. 完整分析报告</span>
+python3 scripts/bea_quant.py report --category car --t "曲面=4,特征线=6,灯组=5,比例=3,材质=4"
+
+<span class="comment"># 3. 调整建议：想达到崇高震撼，该改哪个维度</span>
+python3 scripts/bea_quant.py suggest --category car --t "曲面=4,特征线=6,灯组=5,比例=3,材质=4" --target 崇高震撼
+
+<span class="comment"># 4. 美感生成：给定目标，自动生成最优配置</span>
+python3 scripts/bea_quant.py generate --category phone --target 0.30 --strategy balanced
+
+<span class="comment"># 5. 运行自测试（108项）</span>
+python3 scripts/bea_quant.py test</pre>
+      </div>
+    </div>
+
+    <div class="usage-categories reveal">
+      <h3>支持品类与维度</h3>
+      <div class="category-table">
+        <div class="category-row header">
+          <span>品类</span>
+          <span>维度（权重）</span>
+        </div>
+        <div class="category-row">
+          <span><strong>手机</strong></span>
+          <span>形状(0.25) 质感(0.25) 色彩(0.15) 构图(0.15) 光影(0.10) 细节(0.10)</span>
+        </div>
+        <div class="category-row">
+          <span><strong>汽车</strong></span>
+          <span>曲面(0.30) 特征线(0.25) 灯组(0.15) 比例(0.15) 材质(0.15)</span>
+        </div>
+        <div class="category-row">
+          <span><strong>品牌</strong></span>
+          <span>图形(0.25) 色彩(0.25) 字体(0.20) 版式(0.20) 质感(0.10)</span>
+        </div>
+        <div class="category-row">
+          <span><strong>界面</strong></span>
+          <span>布局(0.25) 色彩(0.20) 组件(0.20) 动效(0.20) 字体(0.15)</span>
+        </div>
+        <div class="category-row">
+          <span><strong>建筑</strong></span>
+          <span>形体(0.30) 立面(0.25) 比例(0.20) 材质(0.15) 光影(0.10)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== 页脚 ===== -->
 <footer class="footer">
   <div class="footer-logo">BEA<span>.</span> 双极情绪美学</div>
@@ -866,7 +1039,7 @@ img{max-width:100%;display:block}
     <a href="https://www.modelscope.cn/datasets/xkbk0000/bipolar-emotion-aesthetics" target="_blank">ModelScope</a>
     <a href="https://zhuanlan.zhihu.com/p/2082453017601882066" target="_blank">知乎文章</a>
   </div>
-  <p class="footer-copy">Bipolar Emotion Aesthetics v2.4.0 | 署名：马星 | CC BY-NC-SA 4.0</p>
+  <p class="footer-copy">Bipolar Emotion Aesthetics v2.5.0 | 署名：马星 | CC BY-NC-SA 4.0</p>
 </footer>
 
 <script>
