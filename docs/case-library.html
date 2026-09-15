@@ -2002,7 +2002,12 @@
             grid.innerHTML = filtered.map(c => `
                 <div class="case-card paradigm-${c.paradigm}" data-id="${c.id}">
                     <div class="case-image-wrapper">
-                        ${c.image ? `<img src="${c.image}" alt="${c.title}" class="case-image" loading="lazy">` : `<div class="case-image-placeholder"><span class="placeholder-icon">🎨</span><span class="placeholder-text">BEA</span></div>`}
+                        ${c.image ? `
+                            <picture>
+                                <source srcset="${c.image.replace('.jpg', '.webp')}" type="image/webp">
+                                <img src="${c.image}" alt="${c.title}" class="case-image" loading="lazy">
+                            </picture>
+                        ` : `<div class="case-image-placeholder"><span class="placeholder-icon">🎨</span><span class="placeholder-text">BEA</span></div>`}
                         <span class="case-type-badge ${typeConfig[c.type].class}">${typeConfig[c.type].name}</span>
                     </div>
                     <div class="case-content">
@@ -2041,7 +2046,10 @@
             body.innerHTML = `
                 ${c.image ? `
                 <div class="modal-hero-image">
-                    <img src="${c.image}" alt="${c.title}">
+                    <picture>
+                        <source srcset="${c.image.replace('.jpg', '.webp')}" type="image/webp">
+                        <img src="${c.image}" alt="${c.title}">
+                    </picture>
                 </div>
                 ` : ''}
                 <div class="modal-section paradigm-${c.paradigm}">
