@@ -117,10 +117,23 @@
       "install": "添加工具"
     }
   },
+  "skillhub": {
+    "category": "效率工具",
+    "tags": ["美学", "设计", "审美", "形式美", "双极情绪", "BEA", "产品设计", "汽车设计", "建筑设计", "UI设计", "品牌设计", "美感分析", "设计评审", "设计优化", "美感生成"],
+    "icon": "assets/bea-logo-mobius.png",
+    "preview_images": [],
+    "demo_video": "",
+    "documentation": "https://maxing0000.github.io/bipolar-emotion-aesthetics/",
+    "supported_platforms": ["doubao", "coze", "chatgpt", "claude", "tongyi", "dify"],
+    "offline_capable": true,
+    "network_required": false,
+    "data_privacy": "所有计算在本地完成，不上传任何数据"
+  },
   "repository": {
     "github": "https://github.com/Maxing0000/bipolar-emotion-aesthetics",
     "gitee": "https://gitee.com/maxing0000/bipolar-emotion-aesthetics",
-    "modelscope": "https://www.modelscope.cn/datasets/xkbk0000/bipolar-emotion-aesthetics"
+    "modelscope": "https://www.modelscope.cn/datasets/xkbk0000/bipolar-emotion-aesthetics",
+    "skillhub": "https://skillhub.cn/"
   },
   "website": "https://maxing0000.github.io/bipolar-emotion-aesthetics/",
   "updated": "2026-09-15"
