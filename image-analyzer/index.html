@@ -299,6 +299,7 @@
         }
 
         .preview-image {
+            position: relative;
             border-radius: 12px;
             overflow: hidden;
             background: var(--bg-tertiary);
@@ -312,6 +313,45 @@
             max-width: 100%;
             max-height: 400px;
             object-fit: contain;
+        }
+
+        .analyzing-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15,15,15,0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 10;
+        }
+
+        .analyzing-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(212,165,116,0.2);
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .analyzing-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .analyzing-subtext {
+            font-size: 12px;
+            color: var(--text-secondary);
         }
 
         .color-analysis {
@@ -483,6 +523,17 @@
             padding: 8px 12px;
             border-radius: 6px;
             border-left: 3px solid var(--accent-gold);
+        }
+
+        .dimension-reason {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            background: rgba(102,187,106,0.08);
+            padding: 6px 10px;
+            border-radius: 4px;
+            margin-top: 6px;
+            border-left: 2px solid #66bb6a;
+            line-height: 1.6;
         }
 
         /* ===== 结果展示 ===== */
@@ -911,6 +962,11 @@
             <div class="preview-content">
                 <div class="preview-image">
                     <img id="previewImage" src="" alt="预览图片">
+                    <div class="analyzing-overlay" id="analyzingOverlay" style="display: none;">
+                        <div class="analyzing-spinner"></div>
+                        <div class="analyzing-text">AI 正在分析图片特征...</div>
+                        <div class="analyzing-subtext">提取边缘、色彩、构图、光影等特征</div>
+                    </div>
                 </div>
                 <div class="color-analysis">
                     <div>
@@ -946,6 +1002,8 @@
         <div class="scoring-section" id="scoringSection">
             <h3 class="section-title">🎯 维度打分</h3>
             <p class="section-desc">根据图片内容，为每个维度的危极强度打分（0-10）。0=完全亲极（柔和安全），10=完全危极（尖锐刺激）。系统会根据你的打分自动计算 W(T) 并生成分析报告。</p>
+
+            <div id="aiHint"></div>
 
             <div class="dimension-list" id="dimensionList">
                 <!-- 维度项目由 JS 动态生成 -->
@@ -1029,6 +1087,7 @@
         // ===== 状态 =====
         let currentImage = null;
         let currentScores = {};
+        let analysisResult = null; // AI 自动分析结果
         let history = JSON.parse(localStorage.getItem('bea_history') || '[]');
 
         // ===== 初始化 =====
@@ -1085,6 +1144,10 @@
         // ===== 图片分析 =====
         function analyzeImage() {
             const img = document.getElementById('previewImage');
+            // 显示分析中遮罩
+            const overlay = document.getElementById('analyzingOverlay');
+            if (overlay) overlay.style.display = 'flex';
+
             img.onload = () => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -1096,17 +1159,26 @@
 
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const data = imageData.data;
+                const w = canvas.width;
+                const h = canvas.height;
 
-                // 计算统计数据
+                // 计算基础统计数据
                 let totalBrightness = 0;
                 let totalSaturation = 0;
                 let minBrightness = 255;
                 let maxBrightness = 0;
                 const colorCounts = {};
+                const brightnessArray = new Float32Array(w * h);
+
+                // 色彩温度统计
+                let warmCount = 0;
+                let coolCount = 0;
 
                 for (let i = 0; i < data.length; i += 4) {
                     const r = data[i], g = data[i+1], b = data[i+2];
                     const brightness = (r + g + b) / 3;
+                    const idx = i / 4;
+                    brightnessArray[idx] = brightness;
                     totalBrightness += brightness;
                     minBrightness = Math.min(minBrightness, brightness);
                     maxBrightness = Math.max(maxBrightness, brightness);
@@ -1115,6 +1187,10 @@
                     const min = Math.min(r, g, b);
                     const saturation = max === 0 ? 0 : (max - min) / max;
                     totalSaturation += saturation;
+
+                    // 色彩温度判断
+                    if (r > b + 20) warmCount++;
+                    else if (b > r + 20) coolCount++;
 
                     // 量化颜色用于调色板
                     const qr = Math.round(r / 32) * 32;
@@ -1128,6 +1204,8 @@
                 const avgBrightness = Math.round(totalBrightness / pixelCount);
                 const contrast = Math.round(maxBrightness - minBrightness);
                 const avgSaturation = Math.round((totalSaturation / pixelCount) * 100);
+                const warmRatio = warmCount / pixelCount;
+                const coolRatio = coolCount / pixelCount;
 
                 document.getElementById('avgBrightness').textContent = avgBrightness + '/255';
                 document.getElementById('contrast').textContent = contrast;
@@ -1146,32 +1224,218 @@
                     return `<div class="color-swatch" style="background: ${hex};" title="${hex}"><span class="color-hex">${hex}</span></div>`;
                 }).join('');
 
+                // ===== 高级图像特征提取 =====
+
+                // 1. 边缘锐度检测（Sobel 算子）
+                let edgeStrength = 0;
+                let edgeCount = 0;
+                for (let y = 1; y < h - 1; y++) {
+                    for (let x = 1; x < w - 1; x++) {
+                        const idx = y * w + x;
+                        const gx = brightnessArray[idx - w - 1] * -1 + brightnessArray[idx - w + 1] * 1 +
+                                   brightnessArray[idx - 1] * -2 + brightnessArray[idx + 1] * 2 +
+                                   brightnessArray[idx + w - 1] * -1 + brightnessArray[idx + w + 1] * 1;
+                        const gy = brightnessArray[idx - w - 1] * -1 + brightnessArray[idx - w] * -2 + brightnessArray[idx - w + 1] * -1 +
+                                   brightnessArray[idx + w - 1] * 1 + brightnessArray[idx + w] * 2 + brightnessArray[idx + w + 1] * 1;
+                        const mag = Math.sqrt(gx * gx + gy * gy);
+                        edgeStrength += mag;
+                        if (mag > 30) edgeCount++;
+                    }
+                }
+                const avgEdgeStrength = edgeStrength / ((w - 2) * (h - 2));
+                const edgeDensity = edgeCount / ((w - 2) * (h - 2));
+
+                // 2. 对称性分析（左右镜像相似度）
+                let symmetryDiff = 0;
+                const halfW = Math.floor(w / 2);
+                for (let y = 0; y < h; y++) {
+                    for (let x = 0; x < halfW; x++) {
+                        const leftIdx = y * w + x;
+                        const rightIdx = y * w + (w - 1 - x);
+                        symmetryDiff += Math.abs(brightnessArray[leftIdx] - brightnessArray[rightIdx]);
+                    }
+                }
+                const symmetryScore = 1 - (symmetryDiff / (halfW * h * 255));
+
+                // 3. 纹理复杂度（局部方差）
+                let textureVariance = 0;
+                const kernelSize = 3;
+                for (let y = kernelSize; y < h - kernelSize; y += 2) {
+                    for (let x = kernelSize; x < w - kernelSize; x += 2) {
+                        let localSum = 0;
+                        let localSumSq = 0;
+                        let count = 0;
+                        for (let dy = -kernelSize; dy <= kernelSize; dy++) {
+                            for (let dx = -kernelSize; dx <= kernelSize; dx++) {
+                                const idx = (y + dy) * w + (x + dx);
+                                localSum += brightnessArray[idx];
+                                localSumSq += brightnessArray[idx] * brightnessArray[idx];
+                                count++;
+                            }
+                        }
+                        const mean = localSum / count;
+                        const variance = localSumSq / count - mean * mean;
+                        textureVariance += variance;
+                    }
+                }
+                const avgTextureVariance = textureVariance / ((h - 2 * kernelSize) / 2 * (w - 2 * kernelSize) / 2);
+
+                // 4. 光影硬度（高光/阴影比例）
+                let highlightCount = 0;
+                let shadowCount = 0;
+                let midtoneCount = 0;
+                for (let i = 0; i < pixelCount; i++) {
+                    if (brightnessArray[i] > 200) highlightCount++;
+                    else if (brightnessArray[i] < 50) shadowCount++;
+                    else midtoneCount++;
+                }
+                const highlightRatio = highlightCount / pixelCount;
+                const shadowRatio = shadowCount / pixelCount;
+                const midtoneRatio = midtoneCount / pixelCount;
+                const lightHardness = (highlightRatio + shadowRatio) / (highlightRatio + shadowRatio + midtoneRatio);
+
+                // 5. 构图重心（视觉重心位置）
+                let centerX = 0, centerY = 0, totalWeight = 0;
+                for (let y = 0; y < h; y++) {
+                    for (let x = 0; x < w; x++) {
+                        const idx = y * w + x;
+                        const weight = Math.abs(brightnessArray[idx] - avgBrightness);
+                        centerX += x * weight;
+                        centerY += y * weight;
+                        totalWeight += weight;
+                    }
+                }
+                const重心X = centerX / totalWeight / w;
+                const重心Y = centerY / totalWeight / h;
+                const centerOffset = Math.sqrt(Math.pow(重心X - 0.5, 2) + Math.pow(重心Y - 0.5, 2));
+
+                // 保存分析结果
+                analysisResult = {
+                    // 基础指标
+                    avgBrightness,
+                    contrast,
+                    avgSaturation,
+                    warmRatio,
+                    coolRatio,
+                    // 高级特征
+                    avgEdgeStrength,
+                    edgeDensity,
+                    symmetryScore,
+                    avgTextureVariance,
+                    lightHardness,
+                    highlightRatio,
+                    shadowRatio,
+                    midtoneRatio,
+                    centerOffset,
+                    重心X,
+                    重心Y
+                };
+
                 // 根据图像统计自动建议分数
-                suggestScores(avgBrightness, contrast, avgSaturation);
+                suggestScores(analysisResult);
+
+                // 隐藏分析中遮罩
+                if (overlay) overlay.style.display = 'none';
             };
         }
 
-        function suggestScores(brightness, contrast, saturation) {
-            // 简单的自动建议逻辑
-            const brightnessScore = brightness < 80 ? 7 : brightness < 150 ? 5 : 3;
-            const contrastScore = contrast > 150 ? 7 : contrast > 100 ? 5 : 3;
-            const saturationScore = saturation > 60 ? 7 : saturation > 40 ? 5 : 3;
+        function suggestScores(result) {
+            // BEA 映射规则：把图像特征映射到 6 个维度的 0-10 分
+            // 每个维度的分数 = 该维度危极特征的强度（0-10）
 
-            // 更新滑块
+            const scores = {};
+            const reasons = {};
+
+            // 1. 形状线条：边缘锐度 + 边缘密度
+            // 边缘锐度高、边缘密度高 → 锐角折线多 → 危极分数高
+            const edgeScore = Math.min(10, Math.round((result.avgEdgeStrength / 50) * 5 + (result.edgeDensity * 10) * 5));
+            scores.shape = Math.max(0, Math.min(10, edgeScore));
+            reasons.shape = `边缘锐度 ${result.avgEdgeStrength.toFixed(1)}，边缘密度 ${(result.edgeDensity * 100).toFixed(1)}% → ${scores.shape < 4 ? '圆润曲线为主（亲极）' : scores.shape < 7 ? '直线中性（中性）' : '锐角折线较多（危极）'}`;
+
+            // 2. 色彩色相：饱和度 + 冷暖比例
+            // 饱和度高、冷色比例高 → 高饱和撞色 → 危极分数高
+            const saturationScore = (result.avgSaturation / 100) * 6;
+            const coolScore = result.coolRatio > result.warmRatio ? 3 : 0;
+            const colorScore = Math.min(10, Math.round(saturationScore + coolScore));
+            scores.color = Math.max(0, Math.min(10, colorScore));
+            reasons.color = `饱和度 ${result.avgSaturation}%，暖色 ${(result.warmRatio * 100).toFixed(1)}% / 冷色 ${(result.coolRatio * 100).toFixed(1)}% → ${scores.color < 4 ? '柔暖低饱和（亲极）' : scores.color < 7 ? '中性色（中性）' : '高饱和撞色（危极）'}`;
+
+            // 3. 明度对比：对比度
+            // 对比度高 → 强黑白反差 → 危极分数高
+            const brightnessScore = Math.round((result.contrast / 255) * 10);
+            scores.brightness = Math.max(0, Math.min(10, brightnessScore));
+            reasons.brightness = `对比度 ${result.contrast}/255 → ${scores.brightness < 4 ? '柔和明暗过渡（亲极）' : scores.brightness < 7 ? '中等对比（中性）' : '强黑白反差（危极）'}`;
+
+            // 4. 质感肌理：纹理复杂度
+            // 纹理复杂度高 → 粗糙坚硬 → 危极分数高
+            const textureScore = Math.min(10, Math.round(result.avgTextureVariance / 200));
+            scores.texture = Math.max(0, Math.min(10, textureScore));
+            reasons.texture = `纹理方差 ${result.avgTextureVariance.toFixed(1)} → ${scores.texture < 4 ? '光滑温润（亲极）' : scores.texture < 7 ? '中性质感（中性）' : '粗糙坚硬（危极）'}`;
+
+            // 5. 构图空间：对称性 + 重心偏移
+            // 对称性低、重心偏移大 → 失衡拥挤 → 危极分数高
+            const symmetryPenalty = (1 - result.symmetryScore) * 6;
+            const centerPenalty = result.centerOffset * 8;
+            const compositionScore = Math.min(10, Math.round(symmetryPenalty + centerPenalty));
+            scores.composition = Math.max(0, Math.min(10, compositionScore));
+            reasons.composition = `对称性 ${(result.symmetryScore * 100).toFixed(1)}%，重心偏移 ${result.centerOffset.toFixed(3)} → ${scores.composition < 4 ? '居中对称留白（亲极）' : scores.composition < 7 ? '均衡构图（中性）' : '偏移失衡（危极）'}`;
+
+            // 6. 光影：光影硬度
+            // 光影硬度高（高光阴影比例高）→ 硬光强对比 → 危极分数高
+            const lightScore = Math.round(result.lightHardness * 10);
+            scores.light = Math.max(0, Math.min(10, lightScore));
+            reasons.light = `高光 ${(result.highlightRatio * 100).toFixed(1)}% / 阴影 ${(result.shadowRatio * 100).toFixed(1)}% / 中间调 ${(result.midtoneRatio * 100).toFixed(1)}% → ${scores.light < 4 ? '漫射柔光（亲极）' : scores.light < 7 ? '自然光影（中性）' : '硬光强对比（危极）'}`;
+
+            // 更新滑块和显示
             dimensions.forEach(dim => {
-                let suggested = dim.default;
-                if (dim.key === 'brightness') suggested = brightnessScore;
-                if (dim.key === 'color') suggested = saturationScore;
-                if (dim.key === 'light') suggested = contrastScore;
-
+                const suggested = scores[dim.key];
                 const slider = document.getElementById(`slider-${dim.key}`);
                 const valueDisplay = document.getElementById(`value-${dim.key}`);
+                const polarityDisplay = document.getElementById(`polarity-${dim.key}`);
+                const reasonDisplay = document.getElementById(`reason-${dim.key}`);
                 if (slider) {
                     slider.value = suggested;
                     valueDisplay.textContent = suggested;
                     currentScores[dim.key] = suggested;
+
+                    // 更新极性标签
+                    if (polarityDisplay) {
+                        if (suggested <= 3) {
+                            polarityDisplay.textContent = '亲极';
+                            polarityDisplay.className = 'dimension-polarity polarity-p';
+                        } else if (suggested <= 5) {
+                            polarityDisplay.textContent = '中性';
+                            polarityDisplay.className = 'dimension-polarity polarity-n';
+                        } else {
+                            polarityDisplay.textContent = '危极';
+                            polarityDisplay.className = 'dimension-polarity polarity-t';
+                        }
+                    }
+
+                    // 更新分析依据
+                    if (reasonDisplay && reasons[dim.key]) {
+                        reasonDisplay.style.display = 'block';
+                        reasonDisplay.innerHTML = `🔍 AI分析：${reasons[dim.key]}`;
+                    }
                 }
             });
+
+            // 保存分析依据
+            analysisResult.scores = scores;
+            analysisResult.reasons = reasons;
+
+            // 显示 AI 分析完成提示
+            const aiHint = document.getElementById('aiHint');
+            if (aiHint) {
+                aiHint.innerHTML = `
+                    <div style="background: rgba(212,165,116,0.1); border: 1px solid rgba(212,165,116,0.3); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;">
+                        <div style="color: var(--accent-gold); font-weight: 600; margin-bottom: 8px;">✨ AI 自动分析完成</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.7;">
+                            已根据图像特征自动计算 6 个维度分数。你可以微调滑块，然后生成报告。
+                        </div>
+                    </div>
+                `;
+            }
         }
 
         // ===== 维度打分 =====
@@ -1195,6 +1459,7 @@
                         </div>
                     </div>
                     <div class="dimension-hint">💡 ${dim.hint}</div>
+                    <div class="dimension-reason" id="reason-${dim.key}" style="display: none;"></div>
                 </div>
             `).join('');
 
