@@ -7,7 +7,18 @@
     <link rel="icon" type="image/png" href="assets/favicon.png">
     <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        html {
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
+        }
 
         :root {
             --bg-primary: #0f0f0f;
@@ -40,7 +51,7 @@
             background: rgba(26,26,26,0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
-            padding: 16px 32px;
+            padding: 14px 24px;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -52,20 +63,22 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 16px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             text-decoration: none;
             color: inherit;
+            flex-shrink: 0;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
             overflow: hidden;
         }
 
@@ -76,19 +89,19 @@
         }
 
         .logo-text h1 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             font-family: 'Noto Serif SC', serif;
         }
 
         .logo-text p {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-secondary);
         }
 
         .nav-links {
             display: flex;
-            gap: 24px;
+            gap: 20px;
             list-style: none;
         }
 
@@ -99,106 +112,27 @@
             transition: color 0.3s;
         }
 
-        .nav-links a:hover { color: var(--accent-gold); }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--accent-gold);
+        }
 
         /* ===== 主内容 ===== */
         .main {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 32px;
+            padding: 24px;
         }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            background: rgba(212,165,116,0.1);
-            border: 1px solid rgba(212,165,116,0.2);
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--accent-gold);
-            margin-bottom: 16px;
-            letter-spacing: 0.05em;
-        }
-
-        .hero h2 {
-            font-size: 32px;
-            font-weight: 700;
-            font-family: 'Noto Serif SC', serif;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, var(--text-primary), var(--accent-gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 15px;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* ===== 步骤指示器 ===== */
-        .steps {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 32px;
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--text-tertiary);
-            background: var(--bg-secondary);
-            transition: all 0.3s;
-        }
-
-        .step.active {
-            background: rgba(212,165,116,0.15);
-            color: var(--accent-gold);
-            border: 1px solid rgba(212,165,116,0.3);
-        }
-
-        .step.completed {
-            background: rgba(102,187,106,0.1);
-            color: var(--paradigm-healing);
-        }
-
-        .step-num {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--bg-tertiary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .step.active .step-num { background: var(--accent-gold); color: #1a1a1a; }
-        .step.completed .step-num { background: var(--paradigm-healing); color: #1a1a1a; }
 
         /* ===== 上传区域 ===== */
         .upload-section {
             background: var(--bg-secondary);
             border: 2px dashed var(--border-color);
             border-radius: 16px;
-            padding: 48px;
+            padding: 48px 32px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .upload-section:hover, .upload-section.dragover {
@@ -206,134 +140,480 @@
             background: rgba(212,165,116,0.05);
         }
 
+        .upload-section:active {
+            transform: scale(0.99);
+        }
+
         .upload-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 16px;
-            background: rgba(212,165,116,0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 48px;
+            margin-bottom: 16px;
         }
 
         .upload-section h3 {
             font-size: 18px;
+            font-weight: 600;
             margin-bottom: 8px;
+            font-family: 'Noto Serif SC', serif;
         }
 
         .upload-section p {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-secondary);
+            margin-bottom: 12px;
         }
 
         .upload-formats {
-            margin-top: 12px;
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-tertiary);
         }
 
-        /* ===== 图片预览 ===== */
-        .preview-section {
-            display: none;
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 24px;
+        /* ===== 示例图片 ===== */
+        .examples-section {
             margin-bottom: 32px;
         }
 
-        .preview-section.active { display: block; }
-
-        .preview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 16px;
-        }
-
-        .preview-header h3 { font-size: 16px; }
-
-        .preview-actions {
             display: flex;
+            align-items: center;
             gap: 8px;
         }
 
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
+        .section-title::before {
+            content: '';
+            width: 3px;
+            height: 16px;
+            background: var(--accent-gold);
+            border-radius: 2px;
         }
 
-        .btn-secondary {
-            background: var(--bg-tertiary);
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .example-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .example-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-gold);
+        }
+
+        .example-card:active {
+            transform: scale(0.98);
+        }
+
+        .example-image {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+        }
+
+        .example-label {
+            padding: 8px 10px;
+            font-size: 12px;
+            text-align: center;
             color: var(--text-secondary);
         }
 
-        .btn-secondary:hover { background: #333; }
+        /* ===== 分析结果 ===== */
+        .result-section {
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .result-title {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 40px;
+        }
+
+        .btn:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent-gold), #b8956a);
+            background: var(--accent-gold);
             color: #1a1a1a;
+            border-color: var(--accent-gold);
             font-weight: 600;
         }
 
         .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(212,165,116,0.3);
+            background: var(--accent-gold-light);
+            color: #1a1a1a;
         }
 
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .preview-content {
+        /* ===== 分析概览 ===== */
+        .overview-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
+            gap: 20px;
+            margin-bottom: 24px;
         }
 
-        .preview-image {
-            position: relative;
+        .image-panel {
+            background: var(--bg-secondary);
             border-radius: 12px;
             overflow: hidden;
-            background: var(--bg-tertiary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 300px;
+            position: relative;
         }
 
-        .preview-image img {
-            max-width: 100%;
-            max-height: 400px;
-            object-fit: contain;
+        .analyzed-image {
+            width: 100%;
+            display: block;
         }
 
-        .analyzing-overlay {
+        .image-overlay {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(15,15,15,0.85);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            z-index: 10;
+            pointer-events: none;
         }
 
-        .analyzing-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(212,165,116,0.2);
+        .analysis-point {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            transform: translate(-50%, -50%);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+        }
+
+        .analysis-point.danger { background: #ef5350; }
+        .analysis-point.safe { background: #66bb6a; }
+
+        /* ===== W(T) 展示 ===== */
+        .wt-panel {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wt-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .wt-value {
+            font-size: 64px;
+            font-weight: 900;
+            font-family: 'Noto Serif SC', serif;
+            color: var(--accent-gold);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .wt-paradigm {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .wt-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        /* ===== 维度分析 ===== */
+        .dimensions-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .dimensions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .dimension-card {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .dimension-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .dimension-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dimension-score {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .dimension-bar {
+            height: 6px;
+            background: var(--bg-primary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .dimension-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .dimension-polarity {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .polarity-p { background: rgba(102,187,106,0.2); color: #66bb6a; }
+        .polarity-n { background: rgba(120,144,156,0.2); color: #78909c; }
+        .polarity-t { background: rgba(239,83,80,0.2); color: #ef5350; }
+
+        .dimension-reason {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        /* ===== 四维评分 ===== */
+        .scores-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .scores-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .score-card {
+            text-align: center;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .score-value {
+            font-size: 36px;
+            font-weight: 900;
+            font-family: 'Noto Serif SC', serif;
+            margin-bottom: 4px;
+        }
+
+        .score-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .score-total {
+            background: linear-gradient(135deg, rgba(212,165,116,0.2), rgba(212,165,116,0.05));
+            border: 1px solid var(--accent-gold);
+        }
+
+        .score-total .score-value {
+            color: var(--accent-gold);
+        }
+
+        /* ===== 诊断与建议 ===== */
+        .diagnosis-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .diagnosis-card, .prescription-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .diagnosis-item {
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid;
+        }
+
+        .diagnosis-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .diagnosis-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .diagnosis-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .prescription-item {
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .prescription-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .prescription-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-gold);
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .step-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===== 分析中遮罩 ===== */
+        .analyzing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15,15,15,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .analyzing-overlay.show {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
             border-top-color: var(--accent-gold);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -345,759 +625,219 @@
 
         .analyzing-text {
             font-size: 16px;
-            font-weight: 600;
-            color: var(--accent-gold);
+            color: var(--text-primary);
         }
 
-        .analyzing-subtext {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .color-analysis {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .color-palette {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .color-swatch {
-            width: 48px;
-            height: 48px;
-            border-radius: 8px;
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .color-swatch:hover { transform: scale(1.1); }
-
-        .color-swatch .color-hex {
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            color: var(--text-tertiary);
-            white-space: nowrap;
-        }
-
-        .analysis-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .stat-card {
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            padding: 12px;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: var(--text-tertiary);
-            margin-bottom: 4px;
-        }
-
-        .stat-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--accent-gold);
-        }
-
-        /* ===== 维度打分 ===== */
-        .scoring-section {
-            display: none;
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 32px;
-            margin-bottom: 32px;
-        }
-
-        .scoring-section.active { display: block; }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-            font-family: 'Noto Serif SC', serif;
-            margin-bottom: 8px;
-        }
-
-        .section-desc {
+        .analyzing-progress {
             font-size: 13px;
             color: var(--text-secondary);
-            margin-bottom: 24px;
         }
-
-        .dimension-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .dimension-item {
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            padding: 20px;
-        }
-
-        .dimension-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .dimension-name {
-            font-size: 15px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .dimension-polarity {
-            font-size: 11px;
-            padding: 3px 8px;
-            border-radius: 10px;
-        }
-
-        .polarity-t { background: rgba(255,112,67,0.15); color: var(--paradigm-sublime); }
-        .polarity-p { background: rgba(102,187,106,0.15); color: var(--paradigm-healing); }
-        .polarity-n { background: rgba(124,139,214,0.15); color: var(--paradigm-balanced); }
-
-        .dimension-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            font-family: 'Noto Serif SC', serif;
-        }
-
-        .slider-container {
-            position: relative;
-            margin-bottom: 12px;
-        }
-
-        .slider {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: linear-gradient(90deg, var(--paradigm-healing), var(--paradigm-balanced), var(--paradigm-sublime));
-            border-radius: 3px;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: var(--accent-gold);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(212,165,116,0.4);
-            transition: transform 0.2s;
-        }
-
-        .slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
-
-        .slider-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--text-tertiary);
-        }
-
-        .dimension-hint {
-            font-size: 12px;
-            color: var(--text-secondary);
-            background: rgba(212,165,116,0.05);
-            padding: 8px 12px;
-            border-radius: 6px;
-            border-left: 3px solid var(--accent-gold);
-        }
-
-        .dimension-reason {
-            font-size: 11px;
-            color: var(--text-tertiary);
-            background: rgba(102,187,106,0.08);
-            padding: 6px 10px;
-            border-radius: 4px;
-            margin-top: 6px;
-            border-left: 2px solid #66bb6a;
-            line-height: 1.6;
-        }
-
-        /* ===== 结果展示 ===== */
-        .result-section {
-            display: none;
-        }
-
-        .result-section.active { display: block; }
-
-        .result-hero {
-            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
-            border-radius: 16px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 24px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .result-hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -20%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, var(--paradigm-color, rgba(212,165,116,0.1)), transparent 70%);
-            pointer-events: none;
-        }
-
-        .wt-display {
-            font-size: 72px;
-            font-weight: 900;
-            font-family: 'Noto Serif SC', serif;
-            color: var(--paradigm-color, var(--accent-gold));
-            line-height: 1;
-            margin-bottom: 8px;
-        }
-
-        .wt-label {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-
-        .paradigm-badge {
-            display: inline-block;
-            padding: 8px 24px;
-            background: var(--paradigm-color, var(--accent-gold));
-            color: #1a1a1a;
-            border-radius: 20px;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .result-summary {
-            font-size: 15px;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.8;
-        }
-
-        .result-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        .result-card {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 24px;
-        }
-
-        .result-card h4 {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .score-bars {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .score-bar-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .score-bar-label {
-            width: 80px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .score-bar-track {
-            flex: 1;
-            height: 8px;
-            background: var(--bg-tertiary);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .score-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-
-        .score-bar-value {
-            width: 40px;
-            text-align: right;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent-gold);
-        }
-
-        .dimension-result-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .dimension-result-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 12px;
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-        }
-
-        .dimension-result-name {
-            font-size: 13px;
-        }
-
-        .dimension-result-value {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .t-indicator {
-            width: 40px;
-            height: 6px;
-            background: var(--bg-primary);
-            border-radius: 3px;
-            position: relative;
-        }
-
-        .t-indicator-fill {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            background: linear-gradient(90deg, var(--paradigm-healing), var(--paradigm-sublime));
-            border-radius: 3px;
-        }
-
-        .t-value {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--accent-gold);
-            width: 24px;
-        }
-
-        /* ===== 诊断与建议 ===== */
-        .diagnosis-section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-        }
-
-        .diagnosis-item {
-            padding: 16px;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            margin-bottom: 12px;
-            border-left: 4px solid var(--accent-gold);
-        }
-
-        .diagnosis-item.warning { border-left-color: var(--paradigm-sublime); }
-        .diagnosis-item.success { border-left-color: var(--paradigm-healing); }
-
-        .diagnosis-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .diagnosis-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-        }
-
-        .prescription-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .prescription-list li {
-            padding: 12px 16px;
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 13px;
-            position: relative;
-            padding-left: 40px;
-        }
-
-        .prescription-list li::before {
-            content: '→';
-            position: absolute;
-            left: 14px;
-            color: var(--accent-gold);
-            font-weight: 600;
-        }
-
-        /* ===== 操作按钮 ===== */
-        .action-bar {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 24px;
-            flex-wrap: wrap;
-        }
-
-        /* ===== 历史记录 ===== */
-        .history-section {
-            margin-top: 48px;
-            padding-top: 32px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .history-header h3 {
-            font-size: 18px;
-            font-family: 'Noto Serif SC', serif;
-        }
-
-        .history-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .history-item {
-            background: var(--bg-secondary);
-            border-radius: 10px;
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .history-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .history-thumb {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-bottom: 10px;
-        }
-
-        .history-wt {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            font-family: 'Noto Serif SC', serif;
-        }
-
-        .history-paradigm {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-
-        .history-date {
-            font-size: 10px;
-            color: var(--text-tertiary);
-            margin-top: 4px;
-        }
-
-        .history-delete {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 24px;
-            height: 24px;
-            background: rgba(0,0,0,0.5);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .history-item:hover .history-delete { opacity: 1; }
-
-        .empty-history {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-tertiary);
-            font-size: 13px;
-        }
-
-        /* ===== 范式颜色 ===== */
-        .paradigm-healing { --paradigm-color: var(--paradigm-healing); }
-        .paradigm-friendly { --paradigm-color: var(--paradigm-friendly); }
-        .paradigm-balanced { --paradigm-color: var(--paradigm-balanced); }
-        .paradigm-sublime { --paradigm-color: var(--paradigm-sublime); }
-        .paradigm-cold { --paradigm-color: var(--paradigm-cold); }
-        .paradigm-avant { --paradigm-color: var(--paradigm-avant); }
 
         /* ===== 响应式 ===== */
         @media (max-width: 768px) {
-            .header { padding: 12px 16px; }
-            .nav-links { display: none; }
-            .main { padding: 16px; }
-            .hero h2 { font-size: 24px; }
-            .steps { flex-wrap: wrap; }
-            .upload-section { padding: 32px 16px; }
-            .preview-content { grid-template-columns: 1fr; }
-            .result-grid { grid-template-columns: 1fr; }
-            .wt-display { font-size: 48px; }
-            .scoring-section { padding: 20px; }
-            .result-hero { padding: 24px; }
+            .header {
+                padding: 12px 16px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main {
+                padding: 16px;
+            }
+
+            .upload-section {
+                padding: 32px 20px;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .scores-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .diagnosis-section {
+                grid-template-columns: 1fr;
+            }
+
+            .wt-value {
+                font-size: 48px;
+            }
+
+            .examples-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+
+            .example-image {
+                height: 70px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .scores-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .dimensions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-actions {
+                width: 100%;
+            }
+
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- ===== 导航 ===== -->
+    <!-- ===== 顶部导航 ===== -->
     <header class="header">
         <div class="header-content">
-            <a href="index.html" class="logo">
+            <a href="index.html" class="logo" title="返回 BEA 官网">
                 <div class="logo-icon"><img src="assets/bea-logo.jpg" alt="BEA Logo"></div>
                 <div class="logo-text">
-                    <h1>图片分析助手</h1>
+                    <h1>BEA 图片分析助手</h1>
                     <p>Bipolar Emotion Aesthetics</p>
                 </div>
             </a>
-            <ul class="nav-links">
-                <li><a href="index.html">返回官网</a></li>
-                <li><a href="case-library.html">案例库</a></li>
-            </ul>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">官网</a></li>
+                    <li><a href="case-library.html">案例库</a></li>
+                    <li><a href="image-analyzer.html" class="active">图片分析</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
     <!-- ===== 主内容 ===== -->
     <main class="main">
-        <div class="hero">
-            <span class="hero-badge">✨ AI 美学分析工具</span>
-            <h2>上传一张图片，读懂它的美感</h2>
-            <p>基于双极情绪美学（BEA）理论，自动分析图片的极性构成、计算 W(T) 危极权重、定位美学范式，给出专业的诊断与改进建议。</p>
-        </div>
-
-        <!-- 步骤指示器 -->
-        <div class="steps">
-            <div class="step active" id="step1">
-                <span class="step-num">1</span>
-                <span>上传图片</span>
-            </div>
-            <div class="step" id="step2">
-                <span class="step-num">2</span>
-                <span>维度打分</span>
-            </div>
-            <div class="step" id="step3">
-                <span class="step-num">3</span>
-                <span>生成报告</span>
-            </div>
-        </div>
-
-        <!-- ===== 上传区域 ===== -->
+        <!-- 上传区域 -->
         <div class="upload-section" id="uploadSection">
-            <div class="upload-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d4a574" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                    <polyline points="17 8 12 3 7 8"/>
-                    <line x1="12" y1="3" x2="12" y2="15"/>
-                </svg>
-            </div>
-            <h3>点击或拖拽上传图片</h3>
-            <p>支持产品设计、建筑、UI界面、海报、品牌视觉等各类设计图片</p>
-            <div class="upload-formats">JPG / PNG / WebP · 建议尺寸 1000px 以上</div>
+            <div class="upload-icon">📷</div>
+            <h3>上传图片，一键分析美感</h3>
+            <p>点击或拖拽上传产品、设计、海报、建筑、UI 等图片</p>
+            <div class="upload-formats">支持 JPG / PNG / WebP · AI 自动分析 6 大维度</div>
             <input type="file" id="fileInput" accept="image/*" style="display: none;">
         </div>
 
-        <!-- ===== 图片预览 ===== -->
-        <div class="preview-section" id="previewSection">
-            <div class="preview-header">
-                <h3>📷 图片预览与自动分析</h3>
-                <div class="preview-actions">
-                    <button class="btn btn-secondary" onclick="resetAll()">重新上传</button>
-                    <button class="btn btn-primary" onclick="goToScoring()">开始维度打分 →</button>
-                </div>
-            </div>
-            <div class="preview-content">
-                <div class="preview-image">
-                    <img id="previewImage" src="" alt="预览图片">
-                    <div class="analyzing-overlay" id="analyzingOverlay" style="display: none;">
-                        <div class="analyzing-spinner"></div>
-                        <div class="analyzing-text">AI 正在分析图片特征...</div>
-                        <div class="analyzing-subtext">提取边缘、色彩、构图、光影等特征</div>
-                    </div>
-                </div>
-                <div class="color-analysis">
-                    <div>
-                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px;">🎨 主色调提取</div>
-                        <div class="color-palette" id="colorPalette"></div>
-                    </div>
-                    <div style="margin-top: 20px;">
-                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px;">📊 图像统计</div>
-                        <div class="analysis-stats">
-                            <div class="stat-card">
-                                <div class="stat-label">平均亮度</div>
-                                <div class="stat-value" id="avgBrightness">-</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">对比度</div>
-                                <div class="stat-value" id="contrast">-</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">色彩饱和度</div>
-                                <div class="stat-value" id="saturation">-</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">图片尺寸</div>
-                                <div class="stat-value" id="imageSize">-</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- 示例图片 -->
+        <div class="examples-section" id="examplesSection">
+            <div class="section-title">✨ 试试这些示例</div>
+            <div class="examples-grid" id="examplesGrid">
+                <!-- 示例图片由 JS 动态生成 -->
             </div>
         </div>
 
-        <!-- ===== 维度打分 ===== -->
-        <div class="scoring-section" id="scoringSection">
-            <h3 class="section-title">🎯 维度打分</h3>
-            <p class="section-desc">根据图片内容，为每个维度的危极强度打分（0-10）。0=完全亲极（柔和安全），10=完全危极（尖锐刺激）。系统会根据你的打分自动计算 W(T) 并生成分析报告。</p>
-
-            <div id="aiHint"></div>
-
-            <div class="dimension-list" id="dimensionList">
-                <!-- 维度项目由 JS 动态生成 -->
-            </div>
-
-            <div class="action-bar">
-                <button class="btn btn-secondary" onclick="goToPreview()">← 返回预览</button>
-                <button class="btn btn-primary" onclick="generateReport()">生成分析报告 ✨</button>
-            </div>
-        </div>
-
-        <!-- ===== 结果展示 ===== -->
+        <!-- 分析结果 -->
         <div class="result-section" id="resultSection">
-            <!-- 结果由 JS 动态生成 -->
-        </div>
-
-        <!-- ===== 历史记录 ===== -->
-        <div class="history-section">
-            <div class="history-header">
-                <h3>📚 历史分析记录</h3>
-                <button class="btn btn-secondary" onclick="clearHistory()" style="font-size: 12px;">清空记录</button>
+            <div class="result-header">
+                <div class="result-title">📊 分析报告</div>
+                <div class="result-actions">
+                    <button class="btn" onclick="copyReport()">📋 复制报告</button>
+                    <button class="btn" onclick="downloadReport()">💾 下载报告</button>
+                    <button class="btn btn-primary" onclick="resetAll()">🔄 重新分析</button>
+                </div>
             </div>
-            <div class="history-list" id="historyList">
-                <div class="empty-history">暂无历史记录，上传第一张图片开始分析吧！</div>
+
+            <!-- 分析概览 -->
+            <div class="overview-grid">
+                <div class="image-panel">
+                    <img id="analyzedImage" class="analyzed-image" alt="分析图片">
+                    <div class="image-overlay" id="imageOverlay"></div>
+                </div>
+                <div class="wt-panel">
+                    <div class="wt-label">W(T) 危极权重指数</div>
+                    <div class="wt-value" id="wtValue">0.00</div>
+                    <div class="wt-paradigm" id="wtParadigm">—</div>
+                    <div class="wt-description" id="wtDescription">—</div>
+                </div>
+            </div>
+
+            <!-- 维度分析 -->
+            <div class="dimensions-section">
+                <div class="section-title">🔍 六维极性分析</div>
+                <div class="dimensions-grid" id="dimensionsGrid"></div>
+            </div>
+
+            <!-- 四维评分 -->
+            <div class="scores-section">
+                <div class="section-title">⭐ BEA 四维评分</div>
+                <div class="scores-grid" id="scoresGrid"></div>
+            </div>
+
+            <!-- 诊断与建议 -->
+            <div class="diagnosis-section">
+                <div class="diagnosis-card">
+                    <div class="card-title">🏥 病症诊断</div>
+                    <div id="diagnosisList"></div>
+                </div>
+                <div class="prescription-card">
+                    <div class="card-title">💊 改进处方</div>
+                    <div id="prescriptionList"></div>
+                </div>
             </div>
         </div>
     </main>
 
+    <!-- 分析中遮罩 -->
+    <div class="analyzing-overlay" id="analyzingOverlay">
+        <div class="spinner"></div>
+        <div class="analyzing-text">AI 正在分析图片...</div>
+        <div class="analyzing-progress" id="analyzingProgress">提取图像特征</div>
+    </div>
+
     <script>
-        // ===== 维度配置 =====
-        const dimensions = [
-            {
-                name: '形状线条',
-                key: 'shape',
-                hint: '圆润曲线=亲极(0-3)，直线中性(4-5)，锐角折线=危极(6-10)',
-                default: 4
-            },
-            {
-                name: '色彩色相',
-                key: 'color',
-                hint: '柔暖低饱和=亲极(0-3)，中性色(4-5)，高饱和撞色=危极(6-10)',
-                default: 4
-            },
-            {
-                name: '明度对比',
-                key: 'brightness',
-                hint: '高明度柔和过渡=亲极(0-3)，中等对比(4-5)，强黑白反差=危极(6-10)',
-                default: 4
-            },
-            {
-                name: '质感肌理',
-                key: 'texture',
-                hint: '光滑温润=亲极(0-3)，中性质感(4-5)，粗糙坚硬冰冷=危极(6-10)',
-                default: 4
-            },
-            {
-                name: '构图空间',
-                key: 'composition',
-                hint: '居中对称留白=亲极(0-3)，均衡构图(4-5)，偏移拥挤失衡=危极(6-10)',
-                default: 4
-            },
-            {
-                name: '光影',
-                key: 'light',
-                hint: '漫射柔光均匀=亲极(0-3)，自然光影(4-5)，硬光强对比=危极(6-10)',
-                default: 4
-            }
-        ];
-
-        // ===== 范式配置 =====
-        const paradigms = [
-            { max: 0.15, name: '治愈松弛', class: 'paradigm-healing', desc: '放松、舒展、无攻击性，像被温柔接住' },
-            { max: 0.30, name: '亲和精致', class: 'paradigm-friendly', desc: '第一眼亲和友好，细看精密有锐度' },
-            { max: 0.48, name: '均衡典雅', class: 'paradigm-balanced', desc: '刚柔各半、以柔领刚，克制端庄、持久耐看' },
-            { max: 0.60, name: '崇高震撼', class: 'paradigm-sublime', desc: '先屏息敬畏、后沉浸沉醉的深层震撼' },
-            { max: 0.66, name: '冷峻克制', class: 'paradigm-cold', desc: '以冷硬简为主，靠精准比例维持人性温度' },
-            { max: 0.85, name: '先锋反叛', class: 'paradigm-avant', desc: '刺激、反叛、临界于不适的痛快' },
-            { max: Infinity, name: '逼近越阈', class: 'paradigm-avant', desc: '越过审美阈值，产生真实不适' }
-        ];
-
-        // ===== 状态 =====
+        // ===== 全局变量 =====
         let currentImage = null;
+        let analysisResult = null;
         let currentScores = {};
-        let analysisResult = null; // AI 自动分析结果
-        let history = JSON.parse(localStorage.getItem('bea_history') || '[]');
+
+        // ===== 维度定义 =====
+        const dimensions = [
+            { key: 'shape', name: '形状线条', icon: '📐' },
+            { key: 'color', name: '色彩色相', icon: '🎨' },
+            { key: 'brightness', name: '明度对比', icon: '☀️' },
+            { key: 'texture', name: '质感肌理', icon: '🪨' },
+            { key: 'composition', name: '构图空间', icon: '📐' },
+            { key: 'light', name: '光影', icon: '💡' }
+        ];
+
+        // ===== 范式定义 =====
+        const paradigms = [
+            { max: 0.15, name: '治愈松弛', color: '#66bb6a', desc: '极低张力，柔和放松，适合疗愈、母婴、家居' },
+            { max: 0.30, name: '亲和精致', color: '#42a5f5', desc: '低张力高细节，远看柔和近看精密，商业通用' },
+            { max: 0.48, name: '均衡典雅', color: '#7c8bd6', desc: '中等张力，刚柔并济，持久耐看，经典主义' },
+            { max: 0.60, name: '崇高震撼', color: '#ff7043', desc: '高张力高强度，敬畏与沉醉并存，旗舰/建筑' },
+            { max: 0.66, name: '冷峻克制', color: '#78909c', desc: '偏高张力，冷硬简净，专业工具/极简主义' },
+            { max: 0.85, name: '先锋反叛', color: '#ba68c8', desc: '极高张力，刺激挑战，亚文化/概念设计' },
+            { max: Infinity, name: '逼近越阈', color: '#ef5350', desc: '超过审美阈值，从美转为焦虑/排斥' }
+        ];
+
+        // ===== 示例图片 =====
+        const examples = [
+            { name: 'iPhone 17 Pro', file: 'assets/cases/iphone-17-pro.jpg' },
+            { name: '小米 SU7', file: 'assets/cases/xiaomi-su7.jpg' },
+            { name: '特斯拉 Cybertruck', file: 'assets/cases/tesla-cybertruck.jpg' },
+            { name: '中国尊', file: 'assets/cases/citic-tower.jpg' },
+            { name: '无印良品', file: 'assets/cases/muji-store.jpg' },
+            { name: '大兴机场', file: 'assets/cases/daxing-airport.jpg' }
+        ];
 
         // ===== 初始化 =====
         document.addEventListener('DOMContentLoaded', () => {
             initUpload();
-            initDimensions();
-            renderHistory();
+            initExamples();
         });
 
-        // ===== 上传功能 =====
+        // ===== 初始化上传 =====
         function initUpload() {
             const uploadSection = document.getElementById('uploadSection');
             const fileInput = document.getElementById('fileInput');
@@ -1128,638 +868,480 @@
             });
         }
 
+        // ===== 初始化示例 =====
+        function initExamples() {
+            const grid = document.getElementById('examplesGrid');
+            grid.innerHTML = examples.map((ex, i) => `
+                <div class="example-card" onclick="loadExample(${i})">
+                    <img src="${ex.file}" alt="${ex.name}" class="example-image" loading="lazy">
+                    <div class="example-label">${ex.name}</div>
+                </div>
+            `).join('');
+        }
+
+        // ===== 加载示例 =====
+        function loadExample(index) {
+            const ex = examples[index];
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+                currentImage = img;
+                document.getElementById('analyzedImage').src = ex.file;
+                analyzeImage();
+            };
+            img.src = ex.file;
+        }
+
+        // ===== 处理图片 =====
         function handleImage(file) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                currentImage = e.target.result;
-                document.getElementById('previewImage').src = currentImage;
-                document.getElementById('uploadSection').style.display = 'none';
-                document.getElementById('previewSection').classList.add('active');
-                updateStep(1, 2);
-                analyzeImage();
+                const img = new Image();
+                img.onload = () => {
+                    currentImage = img;
+                    document.getElementById('analyzedImage').src = e.target.result;
+                    analyzeImage();
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
-        // ===== 图片分析 =====
+        // ===== 分析图片 =====
         function analyzeImage() {
-            const img = document.getElementById('previewImage');
-            // 显示分析中遮罩
             const overlay = document.getElementById('analyzingOverlay');
-            if (overlay) overlay.style.display = 'flex';
+            const progress = document.getElementById('analyzingProgress');
+            overlay.classList.add('show');
 
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const maxSize = 200;
-                const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
-                canvas.width = img.width * scale;
-                canvas.height = img.height * scale;
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            const steps = ['提取图像特征', '计算边缘锐度', '分析色彩构成', '检测纹理复杂度', '评估构图对称性', '计算光影硬度', '映射 BEA 维度', '生成分析报告'];
+            let step = 0;
 
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const data = imageData.data;
-                const w = canvas.width;
-                const h = canvas.height;
-
-                // 计算基础统计数据
-                let totalBrightness = 0;
-                let totalSaturation = 0;
-                let minBrightness = 255;
-                let maxBrightness = 0;
-                const colorCounts = {};
-                const brightnessArray = new Float32Array(w * h);
-
-                // 色彩温度统计
-                let warmCount = 0;
-                let coolCount = 0;
-
-                for (let i = 0; i < data.length; i += 4) {
-                    const r = data[i], g = data[i+1], b = data[i+2];
-                    const brightness = (r + g + b) / 3;
-                    const idx = i / 4;
-                    brightnessArray[idx] = brightness;
-                    totalBrightness += brightness;
-                    minBrightness = Math.min(minBrightness, brightness);
-                    maxBrightness = Math.max(maxBrightness, brightness);
-
-                    const max = Math.max(r, g, b);
-                    const min = Math.min(r, g, b);
-                    const saturation = max === 0 ? 0 : (max - min) / max;
-                    totalSaturation += saturation;
-
-                    // 色彩温度判断
-                    if (r > b + 20) warmCount++;
-                    else if (b > r + 20) coolCount++;
-
-                    // 量化颜色用于调色板
-                    const qr = Math.round(r / 32) * 32;
-                    const qg = Math.round(g / 32) * 32;
-                    const qb = Math.round(b / 32) * 32;
-                    const key = `${qr},${qg},${qb}`;
-                    colorCounts[key] = (colorCounts[key] || 0) + 1;
+            const progressInterval = setInterval(() => {
+                if (step < steps.length) {
+                    progress.textContent = steps[step];
+                    step++;
                 }
+            }, 150);
 
-                const pixelCount = data.length / 4;
-                const avgBrightness = Math.round(totalBrightness / pixelCount);
-                const contrast = Math.round(maxBrightness - minBrightness);
-                const avgSaturation = Math.round((totalSaturation / pixelCount) * 100);
-                const warmRatio = warmCount / pixelCount;
-                const coolRatio = coolCount / pixelCount;
+            setTimeout(() => {
+                clearInterval(progressInterval);
+                const result = extractFeatures(currentImage);
+                analysisResult = result;
+                const scores = suggestScores(result);
+                currentScores = scores;
+                renderResult(result, scores);
+                overlay.classList.remove('show');
 
-                document.getElementById('avgBrightness').textContent = avgBrightness + '/255';
-                document.getElementById('contrast').textContent = contrast;
-                document.getElementById('saturation').textContent = avgSaturation + '%';
-                document.getElementById('imageSize').textContent = img.width + '×' + img.height;
+                // 隐藏上传和示例，显示结果
+                document.getElementById('uploadSection').style.display = 'none';
+                document.getElementById('examplesSection').style.display = 'none';
+                document.getElementById('resultSection').classList.add('show');
 
-                // 提取主色调
-                const sortedColors = Object.entries(colorCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 6);
+                // 滚动到结果
+                document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 1500);
+        }
 
-                const palette = document.getElementById('colorPalette');
-                palette.innerHTML = sortedColors.map(([key, count]) => {
-                    const [r, g, b] = key.split(',').map(Number);
-                    const hex = '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
-                    return `<div class="color-swatch" style="background: ${hex};" title="${hex}"><span class="color-hex">${hex}</span></div>`;
-                }).join('');
+        // ===== 提取图像特征 =====
+        function extractFeatures(img) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const maxSize = 300;
+            const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                // ===== 高级图像特征提取 =====
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            const w = canvas.width;
+            const h = canvas.height;
 
-                // 1. 边缘锐度检测（Sobel 算子）
-                let edgeStrength = 0;
-                let edgeCount = 0;
-                for (let y = 1; y < h - 1; y++) {
-                    for (let x = 1; x < w - 1; x++) {
-                        const idx = y * w + x;
-                        const gx = brightnessArray[idx - w - 1] * -1 + brightnessArray[idx - w + 1] * 1 +
-                                   brightnessArray[idx - 1] * -2 + brightnessArray[idx + 1] * 2 +
-                                   brightnessArray[idx + w - 1] * -1 + brightnessArray[idx + w + 1] * 1;
-                        const gy = brightnessArray[idx - w - 1] * -1 + brightnessArray[idx - w] * -2 + brightnessArray[idx - w + 1] * -1 +
-                                   brightnessArray[idx + w - 1] * 1 + brightnessArray[idx + w] * 2 + brightnessArray[idx + w + 1] * 1;
-                        const mag = Math.sqrt(gx * gx + gy * gy);
-                        edgeStrength += mag;
-                        if (mag > 30) edgeCount++;
-                    }
+            let totalBrightness = 0, totalSaturation = 0;
+            let minBrightness = 255, maxBrightness = 0;
+            let warmCount = 0, coolCount = 0;
+            const brightnessArray = new Float32Array(w * h);
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i], g = data[i+1], b = data[i+2];
+                const brightness = (r + g + b) / 3;
+                const idx = i / 4;
+                brightnessArray[idx] = brightness;
+                totalBrightness += brightness;
+                minBrightness = Math.min(minBrightness, brightness);
+                maxBrightness = Math.max(maxBrightness, brightness);
+
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                const saturation = max === 0 ? 0 : (max - min) / max;
+                totalSaturation += saturation;
+
+                if (r > b + 20) warmCount++;
+                else if (b > r + 20) coolCount++;
+            }
+
+            const pixelCount = data.length / 4;
+            const avgBrightness = totalBrightness / pixelCount;
+            const contrast = maxBrightness - minBrightness;
+            const avgSaturation = (totalSaturation / pixelCount) * 100;
+            const warmRatio = warmCount / pixelCount;
+            const coolRatio = coolCount / pixelCount;
+
+            // 边缘锐度（Sobel）
+            let edgeStrength = 0, edgeCount = 0;
+            for (let y = 1; y < h - 1; y++) {
+                for (let x = 1; x < w - 1; x++) {
+                    const idx = y * w + x;
+                    const gx = brightnessArray[idx - w - 1] * -1 + brightnessArray[idx - w + 1] * 1 +
+                               brightnessArray[idx - 1] * -2 + brightnessArray[idx + 1] * 2 +
+                               brightnessArray[idx + w - 1] * -1 + brightnessArray[idx + w + 1] * 1;
+                    const gy = brightnessArray[idx - w - 1] * -1 + brightnessArray[idx - w] * -2 + brightnessArray[idx - w + 1] * -1 +
+                               brightnessArray[idx + w - 1] * 1 + brightnessArray[idx + w] * 2 + brightnessArray[idx + w + 1] * 1;
+                    const mag = Math.sqrt(gx * gx + gy * gy);
+                    edgeStrength += mag;
+                    if (mag > 30) edgeCount++;
                 }
-                const avgEdgeStrength = edgeStrength / ((w - 2) * (h - 2));
-                const edgeDensity = edgeCount / ((w - 2) * (h - 2));
+            }
+            const avgEdgeStrength = edgeStrength / ((w - 2) * (h - 2));
+            const edgeDensity = edgeCount / ((w - 2) * (h - 2));
 
-                // 2. 对称性分析（左右镜像相似度）
-                let symmetryDiff = 0;
-                const halfW = Math.floor(w / 2);
-                for (let y = 0; y < h; y++) {
-                    for (let x = 0; x < halfW; x++) {
-                        const leftIdx = y * w + x;
-                        const rightIdx = y * w + (w - 1 - x);
-                        symmetryDiff += Math.abs(brightnessArray[leftIdx] - brightnessArray[rightIdx]);
-                    }
+            // 对称性
+            let symmetryDiff = 0;
+            const halfW = Math.floor(w / 2);
+            for (let y = 0; y < h; y++) {
+                for (let x = 0; x < halfW; x++) {
+                    symmetryDiff += Math.abs(brightnessArray[y * w + x] - brightnessArray[y * w + (w - 1 - x)]);
                 }
-                const symmetryScore = 1 - (symmetryDiff / (halfW * h * 255));
+            }
+            const symmetryScore = 1 - (symmetryDiff / (halfW * h * 255));
 
-                // 3. 纹理复杂度（局部方差）
-                let textureVariance = 0;
-                const kernelSize = 3;
-                for (let y = kernelSize; y < h - kernelSize; y += 2) {
-                    for (let x = kernelSize; x < w - kernelSize; x += 2) {
-                        let localSum = 0;
-                        let localSumSq = 0;
-                        let count = 0;
-                        for (let dy = -kernelSize; dy <= kernelSize; dy++) {
-                            for (let dx = -kernelSize; dx <= kernelSize; dx++) {
-                                const idx = (y + dy) * w + (x + dx);
-                                localSum += brightnessArray[idx];
-                                localSumSq += brightnessArray[idx] * brightnessArray[idx];
-                                count++;
-                            }
-                        }
-                        const mean = localSum / count;
-                        const variance = localSumSq / count - mean * mean;
-                        textureVariance += variance;
-                    }
+            // 纹理复杂度
+            let textureVariance = 0;
+            for (let y = 2; y < h - 2; y += 2) {
+                for (let x = 2; x < w - 2; x += 2) {
+                    const idx = y * w + x;
+                    const localMean = (brightnessArray[idx] + brightnessArray[idx-1] + brightnessArray[idx+1] + brightnessArray[idx-w] + brightnessArray[idx+w]) / 5;
+                    textureVariance += Math.abs(brightnessArray[idx] - localMean);
                 }
-                const avgTextureVariance = textureVariance / ((h - 2 * kernelSize) / 2 * (w - 2 * kernelSize) / 2);
+            }
+            const avgTextureVariance = textureVariance / ((h/2) * (w/2));
 
-                // 4. 光影硬度（高光/阴影比例）
-                let highlightCount = 0;
-                let shadowCount = 0;
-                let midtoneCount = 0;
-                for (let i = 0; i < pixelCount; i++) {
-                    if (brightnessArray[i] > 200) highlightCount++;
-                    else if (brightnessArray[i] < 50) shadowCount++;
-                    else midtoneCount++;
+            // 光影硬度
+            const highlightRatio = brightnessArray.filter(b => b > 200).length / pixelCount;
+            const shadowRatio = brightnessArray.filter(b => b < 50).length / pixelCount;
+            const midtoneRatio = 1 - highlightRatio - shadowRatio;
+            const lightHardness = (highlightRatio + shadowRatio);
+
+            // 构图重心
+            let centerX = 0, centerY = 0, totalWeight = 0;
+            for (let y = 0; y < h; y++) {
+                for (let x = 0; x < w; x++) {
+                    const idx = y * w + x;
+                    const weight = Math.abs(brightnessArray[idx] - avgBrightness);
+                    centerX += x * weight;
+                    centerY += y * weight;
+                    totalWeight += weight;
                 }
-                const highlightRatio = highlightCount / pixelCount;
-                const shadowRatio = shadowCount / pixelCount;
-                const midtoneRatio = midtoneCount / pixelCount;
-                const lightHardness = (highlightRatio + shadowRatio) / (highlightRatio + shadowRatio + midtoneRatio);
+            }
+            const centerOffsetX = Math.abs((centerX / totalWeight) / w - 0.5) * 2;
+            const centerOffsetY = Math.abs((centerY / totalWeight) / h - 0.5) * 2;
+            const centerOffset = Math.sqrt(centerOffsetX * centerOffsetX + centerOffsetY * centerOffsetY);
 
-                // 5. 构图重心（视觉重心位置）
-                let centerX = 0, centerY = 0, totalWeight = 0;
-                for (let y = 0; y < h; y++) {
-                    for (let x = 0; x < w; x++) {
-                        const idx = y * w + x;
-                        const weight = Math.abs(brightnessArray[idx] - avgBrightness);
-                        centerX += x * weight;
-                        centerY += y * weight;
-                        totalWeight += weight;
-                    }
-                }
-                const重心X = centerX / totalWeight / w;
-                const重心Y = centerY / totalWeight / h;
-                const centerOffset = Math.sqrt(Math.pow(重心X - 0.5, 2) + Math.pow(重心Y - 0.5, 2));
-
-                // 保存分析结果
-                analysisResult = {
-                    // 基础指标
-                    avgBrightness,
-                    contrast,
-                    avgSaturation,
-                    warmRatio,
-                    coolRatio,
-                    // 高级特征
-                    avgEdgeStrength,
-                    edgeDensity,
-                    symmetryScore,
-                    avgTextureVariance,
-                    lightHardness,
-                    highlightRatio,
-                    shadowRatio,
-                    midtoneRatio,
-                    centerOffset,
-                    重心X,
-                    重心Y
-                };
-
-                // 根据图像统计自动建议分数
-                suggestScores(analysisResult);
-
-                // 隐藏分析中遮罩
-                if (overlay) overlay.style.display = 'none';
+            return {
+                avgBrightness, contrast, avgSaturation, warmRatio, coolRatio,
+                avgEdgeStrength, edgeDensity, symmetryScore, avgTextureVariance,
+                highlightRatio, shadowRatio, midtoneRatio, lightHardness, centerOffset
             };
         }
 
+        // ===== 建议分数 =====
         function suggestScores(result) {
-            // BEA 映射规则：把图像特征映射到 6 个维度的 0-10 分
-            // 每个维度的分数 = 该维度危极特征的强度（0-10）
-
             const scores = {};
             const reasons = {};
 
-            // 1. 形状线条：边缘锐度 + 边缘密度
-            // 边缘锐度高、边缘密度高 → 锐角折线多 → 危极分数高
+            // 形状线条
             const edgeScore = Math.min(10, Math.round((result.avgEdgeStrength / 50) * 5 + (result.edgeDensity * 10) * 5));
             scores.shape = Math.max(0, Math.min(10, edgeScore));
-            reasons.shape = `边缘锐度 ${result.avgEdgeStrength.toFixed(1)}，边缘密度 ${(result.edgeDensity * 100).toFixed(1)}% → ${scores.shape < 4 ? '圆润曲线为主（亲极）' : scores.shape < 7 ? '直线中性（中性）' : '锐角折线较多（危极）'}`;
+            reasons.shape = `边缘锐度 ${result.avgEdgeStrength.toFixed(1)}，密度 ${(result.edgeDensity * 100).toFixed(1)}%`;
 
-            // 2. 色彩色相：饱和度 + 冷暖比例
-            // 饱和度高、冷色比例高 → 高饱和撞色 → 危极分数高
-            const saturationScore = (result.avgSaturation / 100) * 6;
-            const coolScore = result.coolRatio > result.warmRatio ? 3 : 0;
-            const colorScore = Math.min(10, Math.round(saturationScore + coolScore));
+            // 色彩色相
+            const colorScore = Math.min(10, Math.round((result.avgSaturation / 100) * 6 + (result.coolRatio > result.warmRatio ? 3 : 0)));
             scores.color = Math.max(0, Math.min(10, colorScore));
-            reasons.color = `饱和度 ${result.avgSaturation}%，暖色 ${(result.warmRatio * 100).toFixed(1)}% / 冷色 ${(result.coolRatio * 100).toFixed(1)}% → ${scores.color < 4 ? '柔暖低饱和（亲极）' : scores.color < 7 ? '中性色（中性）' : '高饱和撞色（危极）'}`;
+            reasons.color = `饱和度 ${result.avgSaturation.toFixed(0)}%，暖 ${(result.warmRatio * 100).toFixed(0)}% / 冷 ${(result.coolRatio * 100).toFixed(0)}%`;
 
-            // 3. 明度对比：对比度
-            // 对比度高 → 强黑白反差 → 危极分数高
-            const brightnessScore = Math.round((result.contrast / 255) * 10);
-            scores.brightness = Math.max(0, Math.min(10, brightnessScore));
-            reasons.brightness = `对比度 ${result.contrast}/255 → ${scores.brightness < 4 ? '柔和明暗过渡（亲极）' : scores.brightness < 7 ? '中等对比（中性）' : '强黑白反差（危极）'}`;
+            // 明度对比
+            scores.brightness = Math.max(0, Math.min(10, Math.round((result.contrast / 255) * 10)));
+            reasons.brightness = `对比度 ${result.contrast.toFixed(0)}/255`;
 
-            // 4. 质感肌理：纹理复杂度
-            // 纹理复杂度高 → 粗糙坚硬 → 危极分数高
-            const textureScore = Math.min(10, Math.round(result.avgTextureVariance / 200));
-            scores.texture = Math.max(0, Math.min(10, textureScore));
-            reasons.texture = `纹理方差 ${result.avgTextureVariance.toFixed(1)} → ${scores.texture < 4 ? '光滑温润（亲极）' : scores.texture < 7 ? '中性质感（中性）' : '粗糙坚硬（危极）'}`;
+            // 质感肌理
+            scores.texture = Math.max(0, Math.min(10, Math.min(10, Math.round(result.avgTextureVariance / 200))));
+            reasons.texture = `纹理方差 ${result.avgTextureVariance.toFixed(1)}`;
 
-            // 5. 构图空间：对称性 + 重心偏移
-            // 对称性低、重心偏移大 → 失衡拥挤 → 危极分数高
-            const symmetryPenalty = (1 - result.symmetryScore) * 6;
-            const centerPenalty = result.centerOffset * 8;
-            const compositionScore = Math.min(10, Math.round(symmetryPenalty + centerPenalty));
+            // 构图空间
+            const compositionScore = Math.min(10, Math.round((1 - result.symmetryScore) * 6 + result.centerOffset * 8));
             scores.composition = Math.max(0, Math.min(10, compositionScore));
-            reasons.composition = `对称性 ${(result.symmetryScore * 100).toFixed(1)}%，重心偏移 ${result.centerOffset.toFixed(3)} → ${scores.composition < 4 ? '居中对称留白（亲极）' : scores.composition < 7 ? '均衡构图（中性）' : '偏移失衡（危极）'}`;
+            reasons.composition = `对称性 ${(result.symmetryScore * 100).toFixed(0)}%，重心偏移 ${result.centerOffset.toFixed(2)}`;
 
-            // 6. 光影：光影硬度
-            // 光影硬度高（高光阴影比例高）→ 硬光强对比 → 危极分数高
-            const lightScore = Math.round(result.lightHardness * 10);
-            scores.light = Math.max(0, Math.min(10, lightScore));
-            reasons.light = `高光 ${(result.highlightRatio * 100).toFixed(1)}% / 阴影 ${(result.shadowRatio * 100).toFixed(1)}% / 中间调 ${(result.midtoneRatio * 100).toFixed(1)}% → ${scores.light < 4 ? '漫射柔光（亲极）' : scores.light < 7 ? '自然光影（中性）' : '硬光强对比（危极）'}`;
+            // 光影
+            scores.light = Math.max(0, Math.min(10, Math.round(result.lightHardness * 10)));
+            reasons.light = `高光 ${(result.highlightRatio * 100).toFixed(0)}% / 阴影 ${(result.shadowRatio * 100).toFixed(0)}%`;
 
-            // 更新滑块和显示
-            dimensions.forEach(dim => {
-                const suggested = scores[dim.key];
-                const slider = document.getElementById(`slider-${dim.key}`);
-                const valueDisplay = document.getElementById(`value-${dim.key}`);
-                const polarityDisplay = document.getElementById(`polarity-${dim.key}`);
-                const reasonDisplay = document.getElementById(`reason-${dim.key}`);
-                if (slider) {
-                    slider.value = suggested;
-                    valueDisplay.textContent = suggested;
-                    currentScores[dim.key] = suggested;
+            return { scores, reasons };
+        }
 
-                    // 更新极性标签
-                    if (polarityDisplay) {
-                        if (suggested <= 3) {
-                            polarityDisplay.textContent = '亲极';
-                            polarityDisplay.className = 'dimension-polarity polarity-p';
-                        } else if (suggested <= 5) {
-                            polarityDisplay.textContent = '中性';
-                            polarityDisplay.className = 'dimension-polarity polarity-n';
-                        } else {
-                            polarityDisplay.textContent = '危极';
-                            polarityDisplay.className = 'dimension-polarity polarity-t';
-                        }
-                    }
+        // ===== 渲染结果 =====
+        function renderResult(result, scoreData) {
+            const scores = scoreData.scores;
+            const reasons = scoreData.reasons;
 
-                    // 更新分析依据
-                    if (reasonDisplay && reasons[dim.key]) {
-                        reasonDisplay.style.display = 'block';
-                        reasonDisplay.innerHTML = `🔍 AI分析：${reasons[dim.key]}`;
-                    }
-                }
-            });
+            // 计算 W(T)
+            const weights = { shape: 0.2, color: 0.15, brightness: 0.15, texture: 0.15, composition: 0.2, light: 0.15 };
+            let wt = 0;
+            for (const key in weights) {
+                wt += weights[key] * (scores[key] / 10);
+            }
+            wt = Math.round(wt * 1000) / 1000;
 
-            // 保存分析依据
-            analysisResult.scores = scores;
-            analysisResult.reasons = reasons;
+            // 确定范式
+            const paradigm = paradigms.find(p => wt < p.max);
 
-            // 显示 AI 分析完成提示
-            const aiHint = document.getElementById('aiHint');
-            if (aiHint) {
-                aiHint.innerHTML = `
-                    <div style="background: rgba(212,165,116,0.1); border: 1px solid rgba(212,165,116,0.3); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px;">
-                        <div style="color: var(--accent-gold); font-weight: 600; margin-bottom: 8px;">✨ AI 自动分析完成</div>
-                        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.7;">
-                            已根据图像特征自动计算 6 个维度分数。你可以微调滑块，然后生成报告。
+            // 渲染 W(T)
+            document.getElementById('wtValue').textContent = wt.toFixed(3);
+            const paradigmEl = document.getElementById('wtParadigm');
+            paradigmEl.textContent = paradigm.name;
+            paradigmEl.style.background = paradigm.color + '33';
+            paradigmEl.style.color = paradigm.color;
+            document.getElementById('wtDescription').textContent = paradigm.desc;
+
+            // 渲染分析点标注
+            renderOverlay(scores);
+
+            // 渲染维度
+            renderDimensions(scores, reasons);
+
+            // 渲染评分
+            renderScores(wt, scores, paradigm);
+
+            // 渲染诊断和建议
+            renderDiagnosis(wt, paradigm, scores);
+            renderPrescription(wt, paradigm, scores);
+
+            // 保存报告数据
+            window.reportData = { wt, paradigm, scores, result };
+        }
+
+        // ===== 渲染图片标注 =====
+        function renderOverlay(scores) {
+            const overlay = document.getElementById('imageOverlay');
+            const points = [];
+
+            if (scores.shape >= 6) points.push({ x: 20, y: 30, type: 'danger', label: '锐' });
+            if (scores.color >= 6) points.push({ x: 80, y: 25, type: 'danger', label: '撞' });
+            if (scores.brightness >= 6) points.push({ x: 50, y: 20, type: 'danger', label: '反' });
+            if (scores.texture >= 6) points.push({ x: 30, y: 70, type: 'danger', label: '粗' });
+            if (scores.composition >= 6) points.push({ x: 70, y: 60, type: 'danger', label: '偏' });
+            if (scores.light >= 6) points.push({ x: 60, y: 40, type: 'danger', label: '硬' });
+
+            if (scores.shape <= 3) points.push({ x: 25, y: 35, type: 'safe', label: '圆' });
+            if (scores.color <= 3) points.push({ x: 75, y: 30, type: 'safe', label: '柔' });
+            if (scores.brightness <= 3) points.push({ x: 50, y: 25, type: 'safe', label: '和' });
+
+            overlay.innerHTML = points.map(p => `
+                <div class="analysis-point ${p.type}" style="left: ${p.x}%; top: ${p.y}%;">${p.label}</div>
+            `).join('');
+        }
+
+        // ===== 渲染维度 =====
+        function renderDimensions(scores, reasons) {
+            const grid = document.getElementById('dimensionsGrid');
+            grid.innerHTML = dimensions.map(dim => {
+                const score = scores[dim.key];
+                const polarity = score <= 3 ? 'p' : score <= 5 ? 'n' : 't';
+                const polarityText = polarity === 'p' ? '亲极' : polarity === 'n' ? '中性' : '危极';
+                const color = polarity === 'p' ? '#66bb6a' : polarity === 'n' ? '#78909c' : '#ef5350';
+                return `
+                    <div class="dimension-card">
+                        <div class="dimension-header">
+                            <div class="dimension-name">${dim.icon} ${dim.name}</div>
+                            <div class="dimension-score" style="color: ${color}">${score}</div>
                         </div>
+                        <div class="dimension-bar">
+                            <div class="dimension-fill" style="width: ${score * 10}%; background: ${color};"></div>
+                        </div>
+                        <span class="dimension-polarity polarity-${polarity}">${polarityText}</span>
+                        <div class="dimension-reason">🔍 ${reasons[dim.key]}</div>
                     </div>
                 `;
-            }
+            }).join('');
         }
 
-        // ===== 维度打分 =====
-        function initDimensions() {
-            const list = document.getElementById('dimensionList');
-            list.innerHTML = dimensions.map(dim => `
-                <div class="dimension-item">
-                    <div class="dimension-header">
-                        <div class="dimension-name">
-                            ${dim.name}
-                            <span class="dimension-polarity polarity-n" id="polarity-${dim.key}">中性</span>
-                        </div>
-                        <div class="dimension-value" id="value-${dim.key}">${dim.default}</div>
-                    </div>
-                    <div class="slider-container">
-                        <input type="range" class="slider" id="slider-${dim.key}" min="0" max="10" value="${dim.default}" step="1">
-                        <div class="slider-labels">
-                            <span>0 亲极（柔和）</span>
-                            <span>5 中性</span>
-                            <span>10 危极（刺激）</span>
-                        </div>
-                    </div>
-                    <div class="dimension-hint">💡 ${dim.hint}</div>
-                    <div class="dimension-reason" id="reason-${dim.key}" style="display: none;"></div>
+        // ===== 渲染评分 =====
+        function renderScores(wt, scores, paradigm) {
+            // 张力分
+            const tension = Math.round(25 - Math.abs(wt - 0.5) * 30);
+            // 秩序分（基于对称性和构图）
+            const order = Math.round(15 + (analysisResult.symmetryScore * 10));
+            // 阈值分
+            const threshold = wt < 0.85 ? 25 : Math.round(25 - (wt - 0.85) * 50);
+            // 语境分（默认中等）
+            const context = 18;
+            const total = Math.min(100, tension + order + threshold + context);
+
+            const scoreData = [
+                { label: '双极张力', value: tension, color: '#ff7043' },
+                { label: '结构秩序', value: order, color: '#42a5f5' },
+                { label: '阈值安全', value: threshold, color: '#66bb6a' },
+                { label: '语境适配', value: context, color: '#ba68c8' }
+            ];
+
+            const grid = document.getElementById('scoresGrid');
+            grid.innerHTML = scoreData.map(s => `
+                <div class="score-card">
+                    <div class="score-value" style="color: ${s.color}">${s}</div>
+                    <div class="score-label">${s.label}</div>
                 </div>
-            `).join('');
-
-            // 绑定滑块事件
-            dimensions.forEach(dim => {
-                const slider = document.getElementById(`slider-${dim.key}`);
-                const valueDisplay = document.getElementById(`value-${dim.key}`);
-                const polarityDisplay = document.getElementById(`polarity-${dim.key}`);
-
-                currentScores[dim.key] = dim.default;
-
-                slider.addEventListener('input', (e) => {
-                    const value = parseInt(e.target.value);
-                    currentScores[dim.key] = value;
-                    valueDisplay.textContent = value;
-
-                    // 更新极性标签
-                    if (value <= 3) {
-                        polarityDisplay.textContent = '亲极';
-                        polarityDisplay.className = 'dimension-polarity polarity-p';
-                    } else if (value >= 7) {
-                        polarityDisplay.textContent = '危极';
-                        polarityDisplay.className = 'dimension-polarity polarity-t';
-                    } else {
-                        polarityDisplay.textContent = '中性';
-                        polarityDisplay.className = 'dimension-polarity polarity-n';
-                    }
-                });
-            });
-        }
-
-        // ===== 步骤控制 =====
-        function updateStep(from, to) {
-            document.getElementById(`step${from}`).classList.remove('active');
-            document.getElementById(`step${from}`).classList.add('completed');
-            document.getElementById(`step${to}`).classList.add('active');
-        }
-
-        function goToScoring() {
-            document.getElementById('previewSection').classList.remove('active');
-            document.getElementById('scoringSection').classList.add('active');
-            updateStep(2, 3);
-            document.getElementById('scoringSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function goToPreview() {
-            document.getElementById('scoringSection').classList.remove('active');
-            document.getElementById('previewSection').classList.add('active');
-            document.getElementById('step3').classList.remove('active');
-            document.getElementById('step2').classList.add('active');
-            document.getElementById('step2').classList.remove('completed');
-        }
-
-        // ===== 生成报告 =====
-        function generateReport() {
-            // 计算 W(T) - 等权重平均
-            const scores = Object.values(currentScores);
-            const wt = scores.reduce((sum, s) => sum + s / 10, 0) / scores.length;
-            const wtRounded = Math.round(wt * 1000) / 1000;
-
-            // 定位范式
-            const paradigm = paradigms.find(p => wtRounded < p.max);
-
-            // 计算四维评分
-            const tensionScore = calculateTensionScore(wtRounded);
-            const orderScore = calculateOrderScore();
-            const thresholdScore = calculateThresholdScore(wtRounded);
-            const contextScore = 75; // 默认分
-            const totalScore = Math.round((tensionScore + orderScore + thresholdScore + contextScore) / 4);
-
-            // 诊断
-            const diagnoses = generateDiagnoses(wtRounded, paradigm);
-            const prescriptions = generatePrescriptions(wtRounded, paradigm);
-
-            // 生成摘要
-            const summary = generateSummary(wtRounded, paradigm, totalScore);
-
-            // 渲染结果
-            renderResult(wtRounded, paradigm, totalScore, summary, tensionScore, orderScore, thresholdScore, contextScore, diagnoses, prescriptions);
-
-            // 保存到历史
-            saveToHistory(wtRounded, paradigm.name);
-
-            // 滚动到结果
-            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function calculateTensionScore(wt) {
-            // 张力评分：W(T) 在 0.3-0.6 之间最佳
-            if (wt >= 0.3 && wt <= 0.6) return 22 + Math.round(Math.random() * 3);
-            if (wt >= 0.2 && wt <= 0.7) return 18 + Math.round(Math.random() * 4);
-            return 12 + Math.round(Math.random() * 6);
-        }
-
-        function calculateOrderScore() {
-            // 秩序评分：基于维度间的一致性
-            const scores = Object.values(currentScores);
-            const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-            const variance = scores.reduce((sum, s) => sum + Math.pow(s - avg, 2), 0) / scores.length;
-            const stdDev = Math.sqrt(variance);
-            // 标准差越小，秩序越好
-            return Math.max(15, Math.min(25, 25 - stdDev * 2));
-        }
-
-        function calculateThresholdScore(wt) {
-            // 阈值安全评分：W(T) 越接近越阈越低
-            if (wt < 0.7) return 22 + Math.round(Math.random() * 3);
-            if (wt < 0.85) return 15 + Math.round(Math.random() * 5);
-            return 8 + Math.round(Math.random() * 5);
-        }
-
-        function generateDiagnoses(wt, paradigm) {
-            const diagnoses = [];
-
-            if (wt < 0.15) {
-                diagnoses.push({
-                    type: 'warning',
-                    title: '⚠️ 甜腻症（亲极过载）',
-                    desc: 'W(T) 过低，全片柔和无锐度，可能显得发腻、幼稚、廉价。建议在高价值细节处注入 10%-20% 危极（利落线条、冷灰色、清晰边界），做到"柔中藏骨"。'
-                });
-            }
-
-            if (wt > 0.7 && wt < 0.85) {
-                diagnoses.push({
-                    type: 'warning',
-                    title: '⚠️ 攻击症（危极过载）',
-                    desc: 'W(T) 偏高，危极元素过多，可能令人紧张想回避。建议扩大亲极基底，用大曲面、柔光、对称接住张力，将 W(T) 降到范式区间内。'
-                });
-            }
-
-            if (wt > 0.85) {
-                diagnoses.push({
-                    type: 'warning',
-                    title: '🚨 越阈警告',
-                    desc: 'W(T) 超过 0.85，已逼近或越过审美阈值，可能产生真实不适而非审美张力。必须大幅增加亲极元素和秩序约束，否则将从"先锋"滑向"难看"。'
-                });
-            }
-
-            // 检查维度一致性
-            const scores = Object.values(currentScores);
-            const maxScore = Math.max(...scores);
-            const minScore = Math.min(...scores);
-            if (maxScore - minScore > 5) {
-                diagnoses.push({
-                    type: 'warning',
-                    title: '⚠️ 层级冲突症',
-                    desc: '各维度极性差异过大（最高分与最低分相差超过5），可能造成"宏观柔和却微观攻击"的违和感。建议逐层审计，选择同向叠加或微差补偿策略，消除方向冲突。'
-                });
-            }
-
-            if (diagnoses.length === 0) {
-                diagnoses.push({
-                    type: 'success',
-                    title: '✅ 双极配比健康',
-                    desc: `W(T)=${wt} 落在${paradigm.name}范式的健康区间内，双极配比合理，张力与秩序平衡。继续保持当前的极性配置，可在细节处做微优化。`
-                });
-            }
-
-            return diagnoses;
-        }
-
-        function generatePrescriptions(wt, paradigm) {
-            const prescriptions = [];
-
-            if (wt < 0.2) {
-                prescriptions.push('在视觉焦点处（如 logo、按钮、关键线条）注入锐利元素，将对应维度 t 值提升 2-3 级');
-                prescriptions.push('增加 1-2 个冷灰色或高对比色块，打破全柔和的单调感');
-                prescriptions.push('检查是否有"重点通胀"——确保有 1-2 个明确的视觉焦点');
-            } else if (wt > 0.6) {
-                prescriptions.push('扩大亲极基底：增加留白、柔和曲线、漫射光影，将 1-2 个维度的 t 值降低 2-3 级');
-                prescriptions.push('建立更强的秩序主线：对称、比例模数、节奏韵律，用秩序收编张力');
-                prescriptions.push('控制高危极元素数量：一屏内高危极强调点不超过 1-2 个');
-            } else {
-                prescriptions.push('保持当前的双极配比，这是最耐看的"黄金区间"');
-                prescriptions.push('可在微观细节处做微差补偿：宏观定基调，微观用对立极补偿，增加精密感');
-                prescriptions.push('尝试微调 1 个维度的 t 值（±1），观察整体感受变化，找到最精准的配比');
-            }
-
-            prescriptions.push('进行远观测试：退到真实使用距离，确认第一情绪等于目标范式');
-            prescriptions.push('进行近看/长期测试：凑近看是否有精密锚点，连续观看是否疲劳');
-
-            return prescriptions;
-        }
-
-        function generateSummary(wt, paradigm, score) {
-            let feeling = '';
-            if (wt < 0.15) feeling = '这张图片给人极度放松、治愈的感觉，像被温柔接住。';
-            else if (wt < 0.30) feeling = '这张图片亲和友好，细看有精密细节，舒适而不平庸。';
-            else if (wt < 0.48) feeling = '这张图片刚柔并济、克制端庄，持久耐看，是经典的均衡之美。';
-            else if (wt < 0.60) feeling = '这张图片先让人屏息敬畏，随后沉浸沉醉，具有深层的震撼力。';
-            else if (wt < 0.66) feeling = '这张图片冷硬简洁，靠精准比例维持人性温度，专业而克制。';
-            else if (wt < 0.85) feeling = '这张图片刺激、反叛，临界于不适的痛快，面向高阈值受众。';
-            else feeling = '这张图片张力过强，可能越过审美阈值，需要增加安抚元素。';
-
-            return `${feeling} 综合 BEA 四维评分 ${score}/100，定位为「${paradigm.name}」范式。${paradigm.desc}。`;
-        }
-
-        function renderResult(wt, paradigm, totalScore, summary, tension, order, threshold, context, diagnoses, prescriptions) {
-            const resultSection = document.getElementById('resultSection');
-            resultSection.classList.add('active');
-
-            resultSection.innerHTML = `
-                <div class="result-hero ${paradigm.class}">
-                    <div class="wt-display">${wt}</div>
-                    <div class="wt-label">W(T) 危极权重指数</div>
-                    <div class="paradigm-badge">${paradigm.name}</div>
-                    <p class="result-summary">${summary}</p>
-                </div>
-
-                <div class="result-grid">
-                    <div class="result-card">
-                        <h4>📊 四维评分卡（总分 ${totalScore}/100）</h4>
-                        <div class="score-bars">
-                            <div class="score-bar-item">
-                                <span class="score-bar-label">双极张力</span>
-                                <div class="score-bar-track"><div class="score-bar-fill" style="width: ${tension * 4}%"></div></div>
-                                <span class="score-bar-value">${tension}</span>
-                            </div>
-                            <div class="score-bar-item">
-                                <span class="score-bar-label">结构秩序</span>
-                                <div class="score-bar-track"><div class="score-bar-fill" style="width: ${order * 4}%"></div></div>
-                                <span class="score-bar-value">${Math.round(order)}</span>
-                            </div>
-                            <div class="score-bar-item">
-                                <span class="score-bar-label">阈值安全</span>
-                                <div class="score-bar-track"><div class="score-bar-fill" style="width: ${threshold * 4}%"></div></div>
-                                <span class="score-bar-value">${threshold}</span>
-                            </div>
-                            <div class="score-bar-item">
-                                <span class="score-bar-label">语境适配</span>
-                                <div class="score-bar-track"><div class="score-bar-fill" style="width: ${context * 4}%"></div></div>
-                                <span class="score-bar-value">${context}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="result-card">
-                        <h4>🎯 维度打分详情</h4>
-                        <div class="dimension-result-list">
-                            ${dimensions.map(dim => `
-                                <div class="dimension-result-item">
-                                    <span class="dimension-result-name">${dim.name}</span>
-                                    <div class="dimension-result-value">
-                                        <div class="t-indicator"><div class="t-indicator-fill" style="width: ${currentScores[dim.key] * 10}%"></div></div>
-                                        <span class="t-value">${currentScores[dim.key]}</span>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="diagnosis-section">
-                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">🔍 审美病症诊断</h4>
-                    ${diagnoses.map(d => `
-                        <div class="diagnosis-item ${d.type}">
-                            <div class="diagnosis-title">${d.title}</div>
-                            <div class="diagnosis-desc">${d.desc}</div>
-                        </div>
-                    `).join('')}
-                </div>
-
-                <div class="diagnosis-section">
-                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">💊 改进处方</h4>
-                    <ul class="prescription-list">
-                        ${prescriptions.map(p => `<li>${p}</li>`).join('')}
-                    </ul>
-                </div>
-
-                <div class="action-bar">
-                    <button class="btn btn-secondary" onclick="copyReport()">📋 复制报告</button>
-                    <button class="btn btn-secondary" onclick="downloadReport()">💾 下载报告</button>
-                    <button class="btn btn-primary" onclick="resetAll()">🔄 分析新图片</button>
+            `).join('') + `
+                <div class="score-card score-total" style="grid-column: span 4;">
+                    <div class="score-value">${total}/100</div>
+                    <div class="score-label">BEA 综合评分 · ${total >= 80 ? '成熟作品' : total >= 60 ? '有潜力' : '需改进'}</div>
                 </div>
             `;
         }
 
-        // ===== 报告操作 =====
+        // ===== 渲染诊断 =====
+        function renderDiagnosis(wt, paradigm, scores) {
+            const list = document.getElementById('diagnosisList');
+            const diagnoses = [];
+
+            if (wt < 0.15) diagnoses.push({ name: '甜腻症（亲极过载）', desc: '全柔无锐，发腻幼稚，缺少记忆点', color: '#66bb6a' });
+            if (wt > 0.7 && wt < 0.85) diagnoses.push({ name: '攻击症（危极过载）', desc: '处处锐角强对比，令人紧张想回避', color: '#ef5350' });
+            if (wt >= 0.85) diagnoses.push({ name: '越阈症', desc: '超过审美阈值，从美转为焦虑排斥', color: '#ef5350' });
+
+            const highDims = dimensions.filter(d => scores[d.key] >= 8);
+            if (highDims.length >= 3) diagnoses.push({ name: '重点通胀症', desc: '多个维度同时拉满，视觉噪音大，无重点', color: '#ff7043' });
+
+            const lowDims = dimensions.filter(d => scores[d.key] <= 2);
+            if (lowDims.length >= 3) diagnoses.push({ name: '空洞症（张力缺失）', desc: '元素都对但无记忆点，一眼到头', color: '#78909c' });
+
+            if (analysisResult.symmetryScore < 0.4) diagnoses.push({ name: '失序症', desc: '对称性低，缺少秩序主线，元素互相打架', color: '#ff7043' });
+
+            if (diagnoses.length === 0) {
+                diagnoses.push({ name: '状态良好', desc: '双极配比均衡，结构秩序清晰，处于审美黄金区', color: '#66bb6a' });
+            }
+
+            list.innerHTML = diagnoses.map(d => `
+                <div class="diagnosis-item" style="border-left-color: ${d.color};">
+                    <div class="diagnosis-name" style="color: ${d.color};">${d.name}</div>
+                    <div class="diagnosis-desc">${d.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        // ===== 渲染建议 =====
+        function renderPrescription(wt, paradigm, scores) {
+            const list = document.getElementById('prescriptionList');
+            const prescriptions = [];
+
+            if (wt < 0.2) {
+                prescriptions.push({ title: '增加危极提神点', desc: '在高价值细节（边缘、按键、logo）注入 10-20% 锐利元素，柔中藏骨' });
+            }
+            if (wt > 0.6) {
+                prescriptions.push({ title: '扩大亲极基底', desc: '增加柔和曲面、柔光、对称秩序，用强大的安抚力压住张力' });
+            }
+
+            const maxDim = dimensions.reduce((a, b) => scores[a.key] > scores[b.key] ? a : b);
+            if (scores[maxDim.key] >= 7) {
+                prescriptions.push({ title: `降低${maxDim.name}强度`, desc: `${maxDim.name}维度危极过高，建议从 ${scores[maxDim.key]}/10 降到 5-6/10` });
+            }
+
+            const minDim = dimensions.reduce((a, b) => scores[a.key] < scores[b.key] ? a : b);
+            if (scores[minDim.key] <= 2) {
+                prescriptions.push({ title: `补充${minDim.name}对立极`, desc: `${minDim.name}维度过于亲极，建议适度增加张力，从 ${scores[minDim.key]}/10 提到 3-4/10` });
+            }
+
+            if (analysisResult.symmetryScore < 0.5) {
+                prescriptions.push({ title: '建立秩序主线', desc: '增加对称/比例/节奏等秩序元素，把对立收进统一框架' });
+            }
+
+            prescriptions.push({ title: '远近距双重验证', desc: '退到真实使用距离看第一情绪，凑近看细节锚点，连续使用数日看是否疲劳' });
+
+            list.innerHTML = prescriptions.slice(0, 5).map((p, i) => `
+                <div class="prescription-item">
+                    <div class="prescription-step">
+                        <div class="step-num">${i + 1}</div>
+                        <div class="step-content">
+                            <div class="step-title">${p.title}</div>
+                            <div class="step-desc">${p.desc}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== 复制报告 =====
         function copyReport() {
-            const wt = document.querySelector('.wt-display').textContent;
-            const paradigm = document.querySelector('.paradigm-badge').textContent;
-            const summary = document.querySelector('.result-summary').textContent;
-            const report = `【BEA 双极情绪美学分析报告】\n\nW(T) 危极权重：${wt}\n美学范式：${paradigm}\n\n${summary}\n\n---\n由 BEA 图片分析助手生成`;
+            const data = window.reportData;
+            const report = `【BEA 双极情绪美学分析报告】
+
+W(T) 危极权重：${data.wt.toFixed(3)}
+美学范式：${data.paradigm.name}
+范式说明：${data.paradigm.desc}
+
+六维极性分析：
+${dimensions.map(d => `  ${d.name}：${data.scores[d.key]}/10`).join('\n')}
+
+改进建议：
+1. 参考图片标注的危极/亲极点，针对性调整
+2. 保持主辅极性比例至少 6:4
+3. 建立至少一条贯穿全局的秩序主线
+4. 远近距双重验证，确保长期耐看
+
+由 BEA 图片分析助手生成
+https://maxing0000.github.io/bipolar-emotion-aesthetics/image-analyzer.html`;
 
             navigator.clipboard.writeText(report).then(() => {
                 alert('报告已复制到剪贴板！');
+            }).catch(() => {
+                alert('复制失败，请手动选择文本复制');
             });
         }
 
+        // ===== 下载报告 =====
         function downloadReport() {
-            const wt = document.querySelector('.wt-display').textContent;
-            const paradigm = document.querySelector('.paradigm-badge').textContent;
-            const summary = document.querySelector('.result-summary').textContent;
-            const report = `BEA 双极情绪美学分析报告\n${'='.repeat(40)}\n\nW(T) 危极权重：${wt}\n美学范式：${paradigm}\n\n分析摘要：\n${summary}\n\n维度打分：\n${dimensions.map(d => `${d.name}：${currentScores[d.key]}/10`).join('\n')}\n\n${'='.repeat(40)}\n由 BEA 图片分析助手生成\nhttps://maxing0000.github.io/bipolar-emotion-aesthetics/image-analyzer.html`;
+            const data = window.reportData;
+            const report = `BEA 双极情绪美学分析报告
+${'='.repeat(50)}
+
+W(T) 危极权重：${data.wt.toFixed(3)}
+美学范式：${data.paradigm.name}
+范式说明：${data.paradigm.desc}
+
+六维极性分析：
+${dimensions.map(d => `  ${d.name}：${data.scores[d.key]}/10`).join('\n')}
+
+图像特征：
+  平均亮度：${data.result.avgBrightness.toFixed(0)}/255
+  对比度：${data.result.contrast.toFixed(0)}/255
+  饱和度：${data.result.avgSaturation.toFixed(0)}%
+  对称性：${(data.result.symmetryScore * 100).toFixed(1)}%
+  边缘锐度：${data.result.avgEdgeStrength.toFixed(1)}
+
+改进建议：
+1. 参考图片标注的危极/亲极点，针对性调整
+2. 保持主辅极性比例至少 6:4
+3. 建立至少一条贯穿全局的秩序主线
+4. 远近距双重验证，确保长期耐看
+5. 目标受众审美窗口内把张力推到尽可能靠右
+
+${'='.repeat(50)}
+由 BEA 图片分析助手生成
+https://maxing0000.github.io/bipolar-emotion-aesthetics/image-analyzer.html`;
 
             const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `BEA分析报告_${new Date().toISOString().slice(0,10)}.txt`;
+            a.download = `BEA分析报告_${data.wt.toFixed(3)}_${data.paradigm.name}.txt`;
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -1767,91 +1349,15 @@
         // ===== 重置 =====
         function resetAll() {
             currentImage = null;
+            analysisResult = null;
             currentScores = {};
+
             document.getElementById('uploadSection').style.display = 'block';
-            document.getElementById('previewSection').classList.remove('active');
-            document.getElementById('scoringSection').classList.remove('active');
-            document.getElementById('resultSection').classList.remove('active');
+            document.getElementById('examplesSection').style.display = 'block';
+            document.getElementById('resultSection').classList.remove('show');
             document.getElementById('fileInput').value = '';
 
-            // 重置步骤
-            document.querySelectorAll('.step').forEach((step, i) => {
-                step.classList.remove('active', 'completed');
-                if (i === 0) step.classList.add('active');
-            });
-
-            // 重置滑块
-            dimensions.forEach(dim => {
-                const slider = document.getElementById(`slider-${dim.key}`);
-                const valueDisplay = document.getElementById(`value-${dim.key}`);
-                if (slider) {
-                    slider.value = dim.default;
-                    valueDisplay.textContent = dim.default;
-                }
-            });
-
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ===== 历史记录 =====
-        function saveToHistory(wt, paradigm) {
-            const item = {
-                id: Date.now(),
-                image: currentImage,
-                wt: wt,
-                paradigm: paradigm,
-                date: new Date().toLocaleString('zh-CN')
-            };
-
-            history.unshift(item);
-            if (history.length > 20) history = history.slice(0, 20);
-            localStorage.setItem('bea_history', JSON.stringify(history));
-            renderHistory();
-        }
-
-        function renderHistory() {
-            const list = document.getElementById('historyList');
-            if (history.length === 0) {
-                list.innerHTML = '<div class="empty-history">暂无历史记录，上传第一张图片开始分析吧！</div>';
-                return;
-            }
-
-            list.innerHTML = history.map(item => `
-                <div class="history-item" onclick="loadHistory(${item.id})">
-                    <button class="history-delete" onclick="event.stopPropagation(); deleteHistory(${item.id})">×</button>
-                    <img src="${item.image}" class="history-thumb" alt="历史图片">
-                    <div class="history-wt">${item.wt}</div>
-                    <div class="history-paradigm">${item.paradigm}</div>
-                    <div class="history-date">${item.date}</div>
-                </div>
-            `).join('');
-        }
-
-        function loadHistory(id) {
-            const item = history.find(h => h.id === id);
-            if (!item) return;
-
-            currentImage = item.image;
-            document.getElementById('previewImage').src = currentImage;
-            document.getElementById('uploadSection').style.display = 'none';
-            document.getElementById('previewSection').classList.add('active');
-            updateStep(1, 2);
-            analyzeImage();
-            document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function deleteHistory(id) {
-            history = history.filter(h => h.id !== id);
-            localStorage.setItem('bea_history', JSON.stringify(history));
-            renderHistory();
-        }
-
-        function clearHistory() {
-            if (confirm('确定要清空所有历史记录吗？')) {
-                history = [];
-                localStorage.removeItem('bea_history');
-                renderHistory();
-            }
         }
     </script>
 </body>
