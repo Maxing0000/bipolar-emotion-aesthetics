@@ -11,6 +11,25 @@ license: "CC BY-NC-SA 4.0"
 
 # 双极情绪美学（BEA）v2.5
 
+## 多平台支持
+
+BEA 技能可在多个 AI 平台使用，详见 `platforms/` 目录：
+
+| 平台 | 适配方式 | 文档 |
+|---|---|---|
+| 豆包 Doubao | 原生 SKILL.md | 本文件 |
+| Coze 扣子 | Bot System Prompt | `platforms/coze/` |
+| ChatGPT / GPTs | Custom Instructions | `platforms/chatgpt/` |
+| Claude | Project Instructions | `platforms/claude/` |
+| 通义千问 | 智能体 System Prompt | `platforms/tongyi/` |
+| Dify | 应用系统提示词 | `platforms/dify/` |
+
+**通用 System Prompt**：`platforms/universal-system-prompt.md`，复制粘贴到任意 AI 平台即可使用。
+
+**两种模式**：
+- 纯文本模式（零依赖）：AI 按工作流程手动计算，适用于所有平台
+- 脚本增强模式（精确计算）：调用 `scripts/bea_quant.py`，需平台支持代码执行
+
 ## 核心价值
 
 **BEA 解决的根本问题不是"什么是美"，而是"美感无法被讨论"。**
