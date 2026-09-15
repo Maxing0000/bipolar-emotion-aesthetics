@@ -22,6 +22,34 @@
 - **病症诊断**：7种常见审美病症及元素级改进处方
 - **案例库**：iPhone、奔驰S级、尊界S800、光之教堂等真实案例分析
 
+## 多平台支持
+
+BEA 技能可在多个 AI 平台使用，**零依赖纯文本模式**适用于所有平台：
+
+| 平台 | 适配方式 | 文档 |
+|---|---|---|
+| **豆包 Doubao** | 原生 SKILL.md | 本文件 |
+| **Coze 扣子** | Bot System Prompt / 插件 | `platforms/coze/` |
+| **ChatGPT / GPTs** | Custom Instructions / GPTs | `platforms/chatgpt/` |
+| **Claude** | Project Instructions | `platforms/claude/` |
+| **通义千问** | 智能体 System Prompt | `platforms/tongyi/` |
+| **Dify** | 应用系统提示词 / 工具 | `platforms/dify/` |
+
+**30秒快速使用**：
+1. 复制 `platforms/universal-system-prompt.md` 中的 System Prompt
+2. 粘贴到你使用的 AI 平台的 System Prompt / 人设 / 指令中
+3. 开始对话："帮我分析这个设计怎么样"
+
+**两种使用模式**：
+- **纯文本模式（推荐）**：零依赖，AI 按工作流程手动计算 W(T)，适用于所有平台
+- **脚本增强模式**：调用 `scripts/bea_quant.py` 精确计算，需平台支持代码执行
+
+**一键打包**：
+```bash
+python3 scripts/package.py --all  # 生成所有平台的适配包
+# 输出到 dist/ 目录：core.zip / full.zip / system-prompt.txt / bea-{platform}.zip
+```
+
 ## 核心价值
 
 BEA 不回答"什么是美"，而是解决"美感无法被讨论"的问题。
@@ -359,26 +387,40 @@ python3 scripts/bea_quant.py multigroup --category car \
 
 ```
 bipolar-emotion-aesthetics/
-├── SKILL.md                    # 技能入口文档
+├── SKILL.md                    # 技能入口文档（豆包原生格式）
+├── manifest.json               # 标准化元数据（多平台识别）
 ├── README.md                   # 项目说明（本文件）
+├── QUICKSTART.md               # 1分钟快速上手指南
 ├── FAQ.md                      # 常见问题解答
 ├── CHANGELOG.md                # 版本变更记录
+├── LICENSE                     # CC BY-NC-SA 4.0
 ├── install.sh                  # macOS/Linux 一键安装
 ├── install.ps1                 # Windows 一键安装
 ├── uninstall.sh                # 卸载
 ├── update.sh                   # 更新
 ├── scripts/
-│   └── bea_quant.py            # 量化引擎（仅 Python 标准库，离线可用）
+│   ├── bea_quant.py            # 量化引擎（仅 Python 标准库，离线可用）
+│   ├── bea_guide.py            # 交互式引导脚本（不需要记命令）
+│   └── package.py              # 多平台打包工具
 ├── references/
 │   ├── 01-core-theory.md       # 核心理论、六范式、W(T)公式、病症处方
 │   ├── 02-workflow.md          # 评审流程、竞品分析、定调方法
 │   ├── 03-dimension-guide.md   # 维度定义 + 真实产品锚点
 │   ├── 04-checklist.md         # 设计自查清单
-│   └── 05-case-studies.md      # 真实案例库
+│   └── 05-case-studies.md      # 真实案例库（九大领域15个案例）
+├── platforms/                   # 多平台适配
+│   ├── README.md                # 多平台适配总索引
+│   ├── universal-system-prompt.md  # 通用 System Prompt（复制粘贴即用）
+│   ├── coze/                    # Coze 扣子适配
+│   ├── chatgpt/                 # ChatGPT / GPTs 适配
+│   ├── claude/                  # Claude 适配
+│   ├── tongyi/                  # 通义千问适配
+│   └── dify/                    # Dify 适配
 ├── docs/
 │   └── index.html              # 官方网站（GitHub Pages）
 └── templates/
-    └── review-record.md        # 评审记录标准模板
+    ├── review-record.md        # 评审记录标准模板
+    └── output-templates.md     # 标准化输出模板（4种格式）
 ```
 
 ## 重要边界

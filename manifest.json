@@ -1,0 +1,127 @@
+{
+  "name": "bipolar-emotion-aesthetics",
+  "display_name": "双极情绪美学 BEA",
+  "version": "2.5.0",
+  "description": "双极情绪美学（Bipolar Emotion Aesthetics，BEA）——把审美判断从'我觉得'变成可讨论、可比较、可追踪、可生成的协作工具。支持形式美感分析、诊断、优化和生成。",
+  "author": {
+    "name": "马星",
+    "username": "xkbk0000"
+  },
+  "license": "CC BY-NC-SA 4.0",
+  "keywords": [
+    "美学", "设计", "审美", "形式美", "双极情绪", "BEA",
+    "产品设计", "汽车设计", "建筑设计", "UI设计", "品牌设计",
+    "美感分析", "设计评审", "设计优化", "美感生成",
+    "aesthetics", "design", "beauty", "formal beauty",
+    "bipolar emotion", "product design", "car design",
+    "architecture", "UI design", "brand design"
+  ],
+  "categories": ["设计", "创意", "分析", "教育"],
+  "entry": "SKILL.md",
+  "runtime": {
+    "type": "markdown+python",
+    "python_version": ">=3.7",
+    "dependencies": [],
+    "offline_capable": true,
+    "network_required": false
+  },
+  "capabilities": [
+    {
+      "id": "analyze",
+      "name": "美感分析",
+      "description": "分析任何形式对象的美感，输出W(T)、范式、主辅比、四维评分",
+      "input": ["自然语言描述", "图片", "维度值"],
+      "output": ["分析报告", "JSON数据"]
+    },
+    {
+      "id": "diagnose",
+      "name": "病症诊断",
+      "description": "诊断7种审美病症（甜腻/攻击/均分/重点通胀等），给出元素级处方",
+      "input": ["分析对象"],
+      "output": ["病症列表", "改进处方"]
+    },
+    {
+      "id": "optimize",
+      "name": "设计优化",
+      "description": "给定目标范式，输出具体维度调整方案，含调整后验证",
+      "input": ["当前配置", "目标范式/W(T)"],
+      "output": ["调整方案", "验证结果"]
+    },
+    {
+      "id": "generate",
+      "name": "美感生成",
+      "description": "给定目标范式/W(T)，自动生成最优维度配置",
+      "input": ["目标范式/W(T)", "品类", "策略"],
+      "output": ["维度配置", "范式说明"]
+    },
+    {
+      "id": "compare",
+      "name": "方案对比",
+      "description": "对比两个或多个设计方案的W(T)、范式、维度差异",
+      "input": ["多个方案配置"],
+      "output": ["对比报告"]
+    },
+    {
+      "id": "sensitivity",
+      "name": "灵敏度分析",
+      "description": "计算各维度改动对W(T)的影响，找出最值得改的维度",
+      "input": ["当前配置", "目标"],
+      "output": ["灵敏度排序", "调整建议"]
+    }
+  ],
+  "supported_categories": [
+    "phone", "car", "brand", "ui", "building",
+    "fashion", "music", "film", "public_space", "interior"
+  ],
+  "paradigms": [
+    {"name": "治愈松弛", "wt_range": [0, 0.15]},
+    {"name": "亲和精致", "wt_range": [0.15, 0.30]},
+    {"name": "均衡典雅", "wt_range": [0.30, 0.48]},
+    {"name": "崇高震撼", "wt_range": [0.48, 0.60]},
+    {"name": "冷峻克制", "wt_range": [0.60, 0.66]},
+    {"name": "先锋反叛", "wt_range": [0.66, 0.85]}
+  ],
+  "diseases": [
+    "本能越界", "攻击症", "刺激疲劳", "重点通胀症",
+    "均分症", "甜腻症", "张力不足症"
+  ],
+  "platforms": {
+    "doubao": {
+      "status": "supported",
+      "format": "SKILL.md + YAML frontmatter",
+      "install": "复制到 user_skills 目录"
+    },
+    "coze": {
+      "status": "supported",
+      "format": "插件/技能，参考 platforms/coze/",
+      "install": "导入插件包"
+    },
+    "chatgpt": {
+      "status": "supported",
+      "format": "Custom GPT / GPTs，参考 platforms/chatgpt/",
+      "install": "创建 Custom GPT，粘贴 system prompt"
+    },
+    "claude": {
+      "status": "supported",
+      "format": "Anthropic Skill，参考 platforms/claude/",
+      "install": "添加 Skill"
+    },
+    "tongyi": {
+      "status": "supported",
+      "format": "插件，参考 platforms/tongyi/",
+      "install": "导入插件"
+    },
+    "dify": {
+      "status": "supported",
+      "format": "工具/技能，参考 platforms/dify/",
+      "install": "添加工具"
+    }
+  },
+  "repository": {
+    "github": "https://github.com/Maxing0000/bipolar-emotion-aesthetics",
+    "gitee": "https://gitee.com/maxing0000/bipolar-emotion-aesthetics",
+    "modelscope": "https://www.modelscope.cn/datasets/xkbk0000/bipolar-emotion-aesthetics"
+  },
+  "website": "https://maxing0000.github.io/bipolar-emotion-aesthetics/",
+  "updated": "2026-09-15"
+}

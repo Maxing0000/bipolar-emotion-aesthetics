@@ -20,3 +20,4 @@ _*_backup/
 # 专利与私有内容（不提交到公开仓库）
 专利申请-*.txt
 bipolar-emotion-aesthetics-private/
+dist/
