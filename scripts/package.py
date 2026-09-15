@@ -23,7 +23,7 @@ import shutil
 import zipfile
 from pathlib import Path
 
-VERSION = "2.5.0"
+VERSION = "2.6.0"
 ROOT = Path(__file__).parent.parent  # scripts/ 的上一级是项目根目录
 
 # 核心包文件（所有平台共用）
