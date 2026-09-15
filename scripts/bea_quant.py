@@ -2,7 +2,7 @@
 # Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
 
 """
-BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.4.0
+BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.5.0
 
 核心价值：把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作对象。
 仅用 Python 标准库，离线可用。
@@ -241,14 +241,41 @@ def compute_w_t(dimensions: Dict[str, int], weights: Dict[str, float]) -> float:
     return round(total, 3)
 
 
+def _polarity_membership(t: int) -> Tuple[float, float, float]:
+    """
+    计算 t 值的极性模糊隶属度（软划分）。
+
+    避免硬边界（t=3和t=4被划分为不同极性）导致的突变。
+    隶属度：(亲极, 中性, 危极)，三者之和为1。
+
+    划分逻辑：
+    - t=0-2: 100% 亲极
+    - t=3: 80% 亲极 + 20% 中性
+    - t=4: 50% 亲极 + 50% 中性
+    - t=5: 50% 中性 + 50% 危极
+    - t=6: 20% 中性 + 80% 危极
+    - t=7-10: 100% 危极
+    """
+    if t <= 2:
+        return (1.0, 0.0, 0.0)
+    elif t == 3:
+        return (0.8, 0.2, 0.0)
+    elif t == 4:
+        return (0.5, 0.5, 0.0)
+    elif t == 5:
+        return (0.0, 0.5, 0.5)
+    elif t == 6:
+        return (0.0, 0.2, 0.8)
+    else:  # t >= 7
+        return (0.0, 0.0, 1.0)
+
+
 def compute_polarity_ratio(dimensions: Dict[str, int], weights: Dict[str, float]) -> Dict[str, object]:
     """
-    计算主辅比：亲极与危极的权重占比。
+    计算主辅比：亲极与危极的权重占比（v2.5.0 软划分版）。
 
-    极性划分：
-    - 亲极 P+：t <= 3
-    - 中性：4 <= t <= 5
-    - 危极 T−：t >= 6
+    使用模糊隶属度进行软划分，避免硬边界导致的突变。
+    每个维度的权重按隶属度分配到亲极/中性/危极。
 
     返回：
     - plus_weight: 亲极总权重
@@ -259,10 +286,18 @@ def compute_polarity_ratio(dimensions: Dict[str, int], weights: Dict[str, float]
     - dominant: 主导极性（"亲极 P+" / "危极 T−" / "中性均衡"）
     - primary_secondary_ratio: 主辅比（如 "72:28"）
     - is_balanced: 是否达到主辅比 >= 6:4（BEA 理论要求）
+    - has_subordinate: 是否有足够的从属极（>=10%）
     """
-    plus_weight = sum(weights.get(d, 0) for d, t in dimensions.items() if t <= 3)
-    minus_weight = sum(weights.get(d, 0) for d, t in dimensions.items() if t >= 6)
-    neutral_weight = sum(weights.get(d, 0) for d, t in dimensions.items() if 4 <= t <= 5)
+    plus_weight = 0.0
+    minus_weight = 0.0
+    neutral_weight = 0.0
+
+    for d, t in dimensions.items():
+        w = weights.get(d, 0)
+        p_plus, p_neutral, p_minus = _polarity_membership(t)
+        plus_weight += w * p_plus
+        neutral_weight += w * p_neutral
+        minus_weight += w * p_minus
 
     total = plus_weight + minus_weight + neutral_weight
     plus_ratio = round(plus_weight / total, 3) if total > 0 else 0
@@ -462,18 +497,60 @@ def _disease_evidence(name: str, w_t: float, dims: Dict[str, int]) -> str:
     return ""
 
 
+# 病症优先级体系（v2.5.0）
+# 一级（一票否决）：本能越界
+# 二级（严重）：攻击症、刺激疲劳
+# 三级（中等）：重点通胀症、均分症
+# 四级（轻微）：甜腻症、张力不足症
+DISEASE_PRIORITY = {
+    "本能越界": 1,
+    "攻击症": 2,
+    "刺激疲劳": 2,
+    "重点通胀症": 3,
+    "均分症": 3,
+    "甜腻症": 4,
+    "张力不足症": 4,
+}
+
+# 病症互斥关系：高优先级病症覆盖低优先级病症
+DISEASE_MUTEX = {
+    "刺激疲劳": ["攻击症"],  # 刺激疲劳是更严重的攻击症
+    "甜腻症": ["张力不足症"],  # 甜腻症已涵盖无对比
+}
+
 def diagnose_diseases(w_t: float, dims: Dict[str, int]) -> List[Dict[str, str]]:
+    """
+    诊断审美病症（v2.5.0 优先级体系版）。
+
+    按优先级诊断，并处理互斥关系：
+    - 一级（一票否决）：本能越界
+    - 二级（严重）：攻击症、刺激疲劳
+    - 三级（中等）：重点通胀症、均分症
+    - 四级（轻微）：甜腻症、张力不足症
+    """
     diseases = []
     for name, check_fn, prescription in DISEASE_RULES:
         if check_fn(w_t, dims):
             diseases.append({
                 "name": name,
+                "priority": DISEASE_PRIORITY.get(name, 99),
                 "evidence": _disease_evidence(name, w_t, dims),
                 "prescription": prescription,
             })
-    # 优先级处理：甜腻症已涵盖"全维度低+无对比"，不再重复报张力不足症
-    if any(d["name"] == "甜腻症" for d in diseases):
-        diseases = [d for d in diseases if d["name"] != "张力不足症"]
+
+    # 按优先级排序
+    diseases.sort(key=lambda x: x["priority"])
+
+    # 处理互斥关系：高优先级病症覆盖低优先级病症
+    diagnosed_names = {d["name"] for d in diseases}
+    to_remove = set()
+    for high_disease, low_diseases in DISEASE_MUTEX.items():
+        if high_disease in diagnosed_names:
+            for low_disease in low_diseases:
+                if low_disease in diagnosed_names:
+                    to_remove.add(low_disease)
+    diseases = [d for d in diseases if d["name"] not in to_remove]
+
     return diseases
 
 
@@ -589,7 +666,24 @@ def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, st
     paradigm_name = locate_paradigm(w_t)[0]
     context_bonus = paradigm_context_bonus.get(paradigm_name, 0)
 
-    context = max(10, min(23, context_base + context_bonus))  # 限制在10-23，留出人工调整空间
+    # W(T) 与品类最优区间匹配度（v2.5.0 新增）
+    # 不同品类的最优 W(T) 区间不同，匹配度越高语境适配越好
+    category_optimal_ranges = {
+        "phone": (0.18, 0.35),
+        "car": (0.30, 0.48),
+        "brand": (0.20, 0.45),
+        "ui": (0.15, 0.35),
+        "building": (0.35, 0.55),
+    }
+    opt_low, opt_high = category_optimal_ranges.get(category, (0.20, 0.45))
+    if opt_low <= w_t <= opt_high:
+        wt_match_bonus = 3  # 在品类最优区间内
+    elif w_t < opt_low:
+        wt_match_bonus = max(-2, 1 - (opt_low - w_t) * 10)  # 偏低，轻微扣分
+    else:
+        wt_match_bonus = max(-3, 1 - (w_t - opt_high) * 15)  # 偏高，扣分更重
+
+    context = max(10, min(23, context_base + context_bonus + wt_match_bonus))
 
     context_checklist = [
         "目标受众的审美阈值是否匹配当前范式？（大众偏左，专业偏右）",
@@ -630,6 +724,7 @@ def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, st
                 "参考分": context,
                 "品类基准分": context_base,
                 "范式调整": context_bonus,
+                "W(T)品类匹配度": wt_match_bonus,
                 "状态": "待人工评估（参考分基于品类和范式，需结合受众/场景/竞品/时代/价格定位判断）",
                 "检查项": context_checklist,
             },
@@ -1124,7 +1219,7 @@ def suggest_adjustment(a: BEAAnalysis, target_wt: float, strategy: str = "focuse
     delta = target_wt - a.w_t
 
     if abs(delta) < 0.005:
-        return [{"message": "当前W(T)已在目标范围内，无需调整"}]
+        return [{"message": "当前W(T)已在目标范围内，无需调整"}], {"target_wt": round(target_wt, 3), "actual_wt": round(a.w_t, 3), "deviation": 0, "achieved": True}
 
     direction = 1 if delta > 0 else -1  # 1=提升危极，-1=降低危极
     remaining = abs(delta)
@@ -1193,11 +1288,32 @@ def suggest_adjustment(a: BEAAnalysis, target_wt: float, strategy: str = "focuse
 
     # 按 W(T) 变化量绝对值排序（影响大的在前）
     steps.sort(key=lambda x: abs(x["wt_change"]), reverse=True)
-    return steps
+
+    # 调整后验证（v2.5.0 新增）：计算实际达到的 W(T) 和偏差
+    if steps and "dimension" in steps[0]:
+        adjusted_dims = dict(a.dimensions)
+        for step in steps:
+            adjusted_dims[step["dimension"]] = step["to"]
+        actual_wt = compute_w_t(adjusted_dims, weights)
+        deviation = actual_wt - target_wt
+        total_change = sum(abs(s["change"]) for s in steps)
+        n_dimensions_changed = len(steps)
+        verification = {
+            "target_wt": round(target_wt, 3),
+            "actual_wt": round(actual_wt, 3),
+            "deviation": round(deviation, 3),
+            "total_levels_changed": total_change,
+            "dimensions_changed": n_dimensions_changed,
+            "achieved": abs(deviation) <= 0.02,
+        }
+    else:
+        verification = None
+
+    return steps, verification
 
 
 def format_suggest(a: BEAAnalysis, target_wt: float, target_desc: str,
-                   steps: List[Dict[str, object]]) -> str:
+                   steps: List[Dict[str, object]], verification: Dict = None) -> str:
     lines = []
     lines.append("=" * 55)
     lines.append("  BEA 调整建议")
@@ -1232,8 +1348,15 @@ def format_suggest(a: BEAAnalysis, target_wt: float, target_desc: str,
         new_t_str = ",".join(f"{k}={v}" for k, v in new_dims.items())
         lines.append("")
         lines.append("【调整后验证】")
+        if verification:
+            lines.append(f"  目标W(T)={verification['target_wt']:.3f}，实际W(T)={verification['actual_wt']:.3f}，偏差={verification['deviation']:+.3f}")
+            lines.append(f"  调整维度数={verification['dimensions_changed']}，总调整级数={verification['total_levels_changed']}")
+            if verification["achieved"]:
+                lines.append("  ✓ 已达到目标（偏差≤0.02）")
+            else:
+                lines.append("  ⚠ 未完全达到目标，建议进一步微调")
         new_a = analyze(a.category, new_t_str)
-        lines.append(f"  新W(T)={new_a.w_t:.3f} → {new_a.paradigm}")
+        lines.append(f"  新范式：{new_a.paradigm}")
         if new_a.diseases:
             lines.append(f"  新病症：{', '.join(d['name'] for d in new_a.diseases)}")
         else:
@@ -1460,24 +1583,27 @@ def multigroup_analysis(category: str, groups: List[Dict[str, object]]) -> Dict[
             "analysis": a,
         })
 
-    # 跨模态一致性检查
+    # 跨模态一致性检查（v2.5.0 精细化评分）
     wt_values = [r["w_t"] for r in results]
     wt_range = max(wt_values) - min(wt_values) if wt_values else 0
     dominant_values = [r["dominant"] for r in results]
     dominant_consistent = len(set(dominant_values)) == 1
 
-    if wt_range <= 0.10 and dominant_consistent:
+    # 精细化评分：基础分随 W(T) 差异连续变化，主导极性一致加分
+    base_score = max(0, 100 - wt_range * 180)  # wt_range=0时100分，wt_range=0.56时0分
+    consistency_score = base_score
+    if dominant_consistent:
+        consistency_score += 10  # 主导极性一致加分
+    consistency_score = max(0, min(100, round(consistency_score)))
+
+    if consistency_score >= 85:
         consistency_level = "高度一致"
-        consistency_score = 90
-    elif wt_range <= 0.20 and dominant_consistent:
+    elif consistency_score >= 65:
         consistency_level = "基本一致"
-        consistency_score = 70
-    elif wt_range <= 0.30:
+    elif consistency_score >= 45:
         consistency_level = "存在差异"
-        consistency_score = 50
     else:
         consistency_level = "严重冲突"
-        consistency_score = 30
 
     cross_modal = {
         "wt_range": round(wt_range, 3),
@@ -1633,6 +1759,139 @@ STYLE_CYCLE_BENCHMARKS = {
         "trend_direction": "参数化设计增加张力，人文关怀回归柔和",
     },
 }
+
+
+def generate_design(category: str, target_wt: float, strategy: str = "balanced") -> Dict[str, object]:
+    """
+    美感生成（v2.5.0 新增）：给定目标 W(T)，自动生成最优维度配置。
+
+    这是 BEA 的"设计辅助"核心功能：从分析走向生成。
+    给定目标范式/W(T)，自动计算各维度的最优 t 值，使：
+    1. W(T) 接近目标
+    2. 主辅比在 7:3 左右（最佳耐看性）
+    3. 维度有适度差异（避免均分症）
+    4. 避免极端值（t=0 或 t=10）
+    5. 高权重维度承担主要张力变化
+
+    参数:
+        category: 品类
+        target_wt: 目标 W(T)（0-1）
+        strategy: 生成策略
+            - "balanced"（默认）：均衡分配，各维度差异适中
+            - "focused"：集中张力，1-2个高权重维度承担主要危极
+            - "distributed"：分散张力，各维度均匀提升
+
+    返回:
+        - dimensions: 生成的维度配置
+        - w_t: 实际 W(T)
+        - paradigm: 范式
+        - analysis: 完整分析结果
+        - t_str: 可直接复制的维度字符串
+    """
+    weights = CATEGORY_WEIGHTS.get(category)
+    if not weights:
+        raise ValueError(f"未知品类: {category}")
+
+    dims = list(weights.keys())
+    n = len(dims)
+
+    # 基准：所有维度 t=3（亲极基底）
+    current = {d: 3 for d in dims}
+
+    if strategy == "focused":
+        # 集中策略：高权重维度承担主要危极
+        sorted_dims = sorted(dims, key=lambda d: weights[d], reverse=True)
+        # 前 1-2 个高权重维度提升到目标水平
+        n_focus = min(2, n)
+        focus_dims = sorted_dims[:n_focus]
+        other_dims = sorted_dims[n_focus:]
+
+        # 计算焦点维度需要的 t 值
+        # W(T) = Σ wᵢ * tᵢ / 10
+        # 其他维度保持 t=3，焦点维度均匀分配剩余 W(T)
+        other_wt = sum(weights[d] * 3 / 10 for d in other_dims)
+        remaining_wt = target_wt - other_wt
+        focus_weight_sum = sum(weights[d] for d in focus_dims)
+        if focus_weight_sum > 0:
+            avg_t = remaining_wt * 10 / focus_weight_sum
+            avg_t = max(1, min(9, round(avg_t)))
+            for d in focus_dims:
+                current[d] = avg_t
+        # 其他维度保持 3，但给最低权重维度加 1 制造微差
+        if other_dims:
+            current[other_dims[-1]] = 4
+
+    elif strategy == "distributed":
+        # 分散策略：各维度均匀提升
+        # W(T) = Σ wᵢ * tᵢ / 10，所有维度 t 相同
+        # t = target_wt * 10 / Σwᵢ = target_wt * 10（因为 Σwᵢ=1）
+        avg_t = max(1, min(9, round(target_wt * 10)))
+        for d in dims:
+            current[d] = avg_t
+        # 给高权重维度加 1，低权重维度减 1，制造适度差异
+        sorted_dims = sorted(dims, key=lambda d: weights[d], reverse=True)
+        if len(sorted_dims) >= 3:
+            current[sorted_dims[0]] = min(9, current[sorted_dims[0]] + 1)
+            current[sorted_dims[-1]] = max(1, current[sorted_dims[-1]] - 1)
+
+    else:  # balanced
+        # 均衡策略：高权重维度略高，低权重维度略低，整体 W(T) 接近目标
+        # 先计算平均 t
+        avg_t = target_wt * 10
+        avg_t = max(2, min(8, avg_t))
+
+        # 按权重分配：高权重维度 t 略高，低权重维度 t 略低
+        sorted_dims = sorted(dims, key=lambda d: weights[d], reverse=True)
+        for i, d in enumerate(sorted_dims):
+            # 高权重维度 +1，低权重维度 -1，中间不变
+            if i < n // 3:
+                current[d] = min(9, round(avg_t) + 1)
+            elif i >= 2 * n // 3:
+                current[d] = max(1, round(avg_t) - 1)
+            else:
+                current[d] = max(1, min(9, round(avg_t)))
+
+    # 微调：使 W(T) 更接近目标
+    current_wt = compute_w_t(current, weights)
+    diff = target_wt - current_wt
+
+    # 每轮调整 1 级，最多 10 轮
+    for _ in range(10):
+        if abs(diff) < 0.01:
+            break
+        if diff > 0:
+            # 需要提升 W(T)：优先提升低 t 值的高权重维度
+            candidates = [(d, weights[d]) for d in dims if current[d] < 9]
+            if not candidates:
+                break
+            candidates.sort(key=lambda x: x[1], reverse=True)
+            best = candidates[0][0]
+            current[best] += 1
+        else:
+            # 需要降低 W(T)：优先降低高 t 值的高权重维度
+            candidates = [(d, weights[d]) for d in dims if current[d] > 1]
+            if not candidates:
+                break
+            candidates.sort(key=lambda x: (current[x[0]], x[1]), reverse=True)
+            best = candidates[0][0]
+            current[best] -= 1
+        current_wt = compute_w_t(current, weights)
+        diff = target_wt - current_wt
+
+    # 生成完整分析
+    t_str = ",".join(f"{k}={v}" for k, v in current.items())
+    a = analyze(category, t_str)
+
+    return {
+        "dimensions": current,
+        "w_t": a.w_t,
+        "paradigm": a.paradigm,
+        "target_wt": round(target_wt, 3),
+        "deviation": round(a.w_t - target_wt, 3),
+        "strategy": strategy,
+        "analysis": a,
+        "t_str": t_str,
+    }
 
 
 def style_cycle_analysis(category: str, w_t: float) -> Dict[str, object]:
@@ -1842,7 +2101,8 @@ def run_tests() -> bool:
     check("低W(T)全低分诊断甜腻症", any(d["name"] == "甜腻症" for d in diagnose_diseases(0.12, dims)))
 
     dims = {"形状": 8, "质感": 8, "色彩": 7, "构图": 7, "光影": 8, "细节": 8}
-    check("高W(T)有高分诊断攻击症", any(d["name"] == "攻击症" for d in diagnose_diseases(0.76, dims)))
+    check("高W(T)全高分诊断刺激疲劳", any(d["name"] == "刺激疲劳" for d in diagnose_diseases(0.76, dims)))
+    check("刺激疲劳覆盖攻击症", not any(d["name"] == "攻击症" for d in diagnose_diseases(0.76, dims)))
 
     dims = {"形状": 7, "质感": 7, "色彩": 7, "构图": 3, "光影": 3, "细节": 3}
     check("三个>=6维度诊断重点通胀症", any(d["name"] == "重点通胀症" for d in diagnose_diseases(0.5, dims)))
@@ -1916,21 +2176,22 @@ def run_tests() -> bool:
 
     # suggest_adjustment：提升危极
     a = analyze("phone", "形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6")
-    steps = suggest_adjustment(a, 0.55)
+    steps, verification = suggest_adjustment(a, 0.55)
     check("suggest_adjustment 提升危极有输出", len(steps) > 0 and all("dimension" in s for s in steps))
+    check("suggest_adjustment 包含验证信息", verification is not None and "actual_wt" in verification)
 
     # suggest_adjustment：无需调整
-    steps = suggest_adjustment(a, a.w_t)
+    steps, verification = suggest_adjustment(a, a.w_t)
     check("suggest_adjustment 无需调整", len(steps) == 1 and "message" in steps[0])
 
     # suggest 降低危极时优先降高t值维度
     a = analyze("phone", "形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6")
-    steps = suggest_adjustment(a, 0.2)
+    steps, _ = suggest_adjustment(a, 0.2)
     dim_steps = [s["dimension"] for s in steps if "dimension" in s]
     check("suggest降低危极优先降高t值", dim_steps and dim_steps[0] in ("质感", "细节"))
 
     # suggest 提升危极时优先升低t值维度
-    steps = suggest_adjustment(a, 0.6)
+    steps, _ = suggest_adjustment(a, 0.6)
     dim_steps = [s["dimension"] for s in steps if "dimension" in s]
     check("suggest提升危极优先升高权重低t值", dim_steps and dim_steps[0] == "形状")
 
@@ -2027,7 +2288,9 @@ def run_tests() -> bool:
 
     a_pr3 = analyze("car", "曲面=5,特征线=5,灯组=5,比例=5,材质=5")
     pr3 = a_pr3.polarity_ratio
-    check("全中性时is_balanced为False", pr3["is_balanced"] == False)
+    # 软划分下 t=5 有 50% 危极隶属度，所以危极主导且主辅比平衡
+    check("全t=5时危极主导（软划分）", pr3["dominant"] == "危极 T−")
+    check("全t=5时is_balanced为True（软划分）", pr3["is_balanced"] == True)
 
     # 耐看性测试
     a_end = analyze("car", "曲面=4,特征线=5,灯组=6,比例=3,材质=5")
@@ -2126,8 +2389,8 @@ def run_tests() -> bool:
 
     # 调整建议策略测试
     a_sug = analyze("car", "曲面=7,特征线=7,灯组=6,比例=6,材质=7")
-    steps_focused = suggest_adjustment(a_sug, 0.30, strategy="focused")
-    steps_distributed = suggest_adjustment(a_sug, 0.30, strategy="distributed")
+    steps_focused, _ = suggest_adjustment(a_sug, 0.30, strategy="focused")
+    steps_distributed, _ = suggest_adjustment(a_sug, 0.30, strategy="distributed")
     check("集中策略调整维度数<=分散策略", len(steps_focused) <= len(steps_distributed))
     check("两种策略都能达到目标", len(steps_focused) > 0 and len(steps_distributed) > 0)
 
@@ -2136,6 +2399,18 @@ def run_tests() -> bool:
     sens2 = sensitivity_analysis(a_sen2)
     check("灵敏度包含wt_sensitivity", all("wt_sensitivity" in r for r in sens2))
     check("灵敏度包含score_sensitivity", all("score_sensitivity" in r for r in sens2))
+
+    # 美感生成测试（v2.5.0）
+    gen = generate_design("phone", 0.30, strategy="balanced")
+    check("美感生成返回维度配置", len(gen["dimensions"]) == 6)
+    check("美感生成W(T)接近目标", abs(gen["w_t"] - 0.30) <= 0.05)
+    check("美感生成所有t在1-9", all(1 <= v <= 9 for v in gen["dimensions"].values()))
+
+    gen_focused = generate_design("car", 0.50, strategy="focused")
+    check("集中策略生成W(T)接近目标", abs(gen_focused["w_t"] - 0.50) <= 0.05)
+
+    gen_distributed = generate_design("brand", 0.35, strategy="distributed")
+    check("分散策略生成W(T)接近目标", abs(gen_distributed["w_t"] - 0.35) <= 0.05)
 
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0
@@ -2227,6 +2502,13 @@ def main():
     p_sc.add_argument("--wt", type=float, required=True, help="当前设计的W(T)值")
     p_sc.add_argument("--json", action="store_true", help="输出JSON格式")
 
+    # 美感生成
+    p_gen = sub.add_parser("generate", help="美感生成：给定目标W(T)自动生成最优维度配置")
+    p_gen.add_argument("--category", required=True, choices=list(CATEGORY_WEIGHTS.keys()))
+    p_gen.add_argument("--target", required=True, help="目标范式名（如'崇高震撼'）或目标W(T)值（如0.55）")
+    p_gen.add_argument("--strategy", choices=["balanced", "focused", "distributed"], default="balanced", help="生成策略：balanced=均衡(默认)，focused=集中张力，distributed=分散张力")
+    p_gen.add_argument("--json", action="store_true", help="输出JSON格式")
+
     # 权重配置管理
     p_lp = sub.add_parser("list-profiles", help="列出所有保存的权重配置")
     p_sp = sub.add_parser("save-profile", help="保存自定义权重配置")
@@ -2283,14 +2565,8 @@ def main():
             a = analyze(args.category, args.t, weights)
             target_wt, target_desc = resolve_target(args.target)
             strategy = getattr(args, "strategy", "focused")
-            steps = suggest_adjustment(a, target_wt, strategy=strategy)
+            steps, verification = suggest_adjustment(a, target_wt, strategy=strategy)
             if args.json:
-                # 计算调整后的 W(T)
-                new_dims = dict(a.dimensions)
-                for step in steps:
-                    if "dimension" in step and "to" in step:
-                        new_dims[step["dimension"]] = step["to"]
-                new_wt = compute_w_t(new_dims, a.weights)
                 output = {
                     "category": args.category,
                     "current_wt": a.w_t,
@@ -2299,12 +2575,13 @@ def main():
                     "target_desc": target_desc,
                     "delta": round(target_wt - a.w_t, 3),
                     "steps": steps,
-                    "resulting_wt": new_wt,
-                    "resulting_paradigm": locate_paradigm(new_wt)[0],
+                    "verification": verification,
+                    "resulting_wt": verification["actual_wt"] if verification else a.w_t,
+                    "resulting_paradigm": locate_paradigm(verification["actual_wt"])[0] if verification else a.paradigm,
                 }
                 print(json.dumps(output, ensure_ascii=False, indent=2))
             else:
-                print(format_suggest(a, target_wt, target_desc, steps))
+                print(format_suggest(a, target_wt, target_desc, steps, verification))
 
         elif args.command == "sensitivity":
             weights = resolve_weights(args.category, getattr(args, "weights", None), getattr(args, "profile", None))
@@ -2402,6 +2679,42 @@ def main():
                 print(json.dumps(result, ensure_ascii=False, indent=2))
             else:
                 print(format_style_cycle(result))
+
+        elif args.command == "generate":
+            target_wt, target_desc = resolve_target(args.target)
+            result = generate_design(args.category, target_wt, strategy=args.strategy)
+            if args.json:
+                output = {
+                    "category": args.category,
+                    "target_wt": result["target_wt"],
+                    "target_desc": target_desc,
+                    "actual_wt": result["w_t"],
+                    "paradigm": result["paradigm"],
+                    "deviation": result["deviation"],
+                    "strategy": result["strategy"],
+                    "dimensions": result["dimensions"],
+                    "t_str": result["t_str"],
+                }
+                print(json.dumps(output, ensure_ascii=False, indent=2))
+            else:
+                print("=" * 55)
+                print("  BEA 美感生成")
+                print("=" * 55)
+                print(f"  品类：{args.category}")
+                print(f"  目标：W(T)={target_wt:.3f} → {target_desc}")
+                print(f"  策略：{args.strategy}")
+                print("")
+                print("【生成的维度配置】")
+                for dim, t in result["dimensions"].items():
+                    w = CATEGORY_WEIGHTS[args.category][dim]
+                    print(f"  {dim:<10} t={t}  (权重={w})")
+                print("")
+                print(f"  实际 W(T) = {result['w_t']:.3f} → {result['paradigm']}")
+                print(f"  与目标偏差 = {result['deviation']:+.3f}")
+                print("")
+                print("【可直接复制的命令】")
+                print(f'  python3 bea_quant.py report --category {args.category} --t "{result["t_str"]}"')
+                print("=" * 55)
 
         elif args.command == "list-profiles":
             profiles = load_profiles()
