@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
 
-# BEA v2.3.0 一键安装脚本（macOS / Linux）
+# BEA v2.5.0 一键安装脚本（macOS / Linux）
 #
 # 用法：
 #   从 GitHub 安装：  curl -fsSL https://raw.githubusercontent.com/Maxing0000/bipolar-emotion-aesthetics/main/install.sh | bash
@@ -67,30 +67,67 @@ fetch_skill() {
     if [ -f "SKILL.md" ] && [ -f "scripts/bea_quant.py" ]; then
         info "检测到本地 skill 文件，直接复制"
         mkdir -p "$dest"
-        cp -R SKILL.md LICENSE scripts references templates "$dest/"
+        cp -R SKILL.md LICENSE scripts references templates "$dest/" 2>/dev/null || true
+        cp -R docs README.md QUICKSTART.md FAQ.md CHANGELOG.md "$dest/" 2>/dev/null || true
         return 0
     fi
 
-    # 从 GitHub clone
-    if ! command -v git >/dev/null 2>&1; then
-        error "未找到 git，请先安装 git 或手动下载 zip 包"
+    # 方式1：有 git，用 git clone
+    if command -v git >/dev/null 2>&1; then
+        local tmp
+        tmp=$(mktemp -d)
+        info "从 GitHub 克隆（git）..."
+        if git clone --depth 1 "$REPO_URL" "$tmp/repo" >/dev/null 2>&1; then
+            mkdir -p "$dest"
+            cp -R "$tmp/repo/SKILL.md" "$tmp/repo/LICENSE" "$tmp/repo/scripts" "$tmp/repo/references" "$tmp/repo/templates" "$dest/" 2>/dev/null || true
+            cp -R "$tmp/repo/docs" "$tmp/repo/README.md" "$tmp/repo/QUICKSTART.md" "$tmp/repo/FAQ.md" "$tmp/repo/CHANGELOG.md" "$dest/" 2>/dev/null || true
+            rm -rf "$tmp"
+            return 0
+        fi
+        rm -rf "$tmp"
+        warn "git clone 失败，尝试下载 zip..."
+    fi
+
+    # 方式2：无 git 或 clone 失败，用 curl 下载 zip
+    if command -v curl >/dev/null 2>&1; then
+        local tmp
+        tmp=$(mktemp -d)
+        info "从 GitHub 下载 zip（curl）..."
+        if curl -fsSL -o "$tmp/bea.zip" "https://github.com/Maxing0000/bipolar-emotion-aesthetics/archive/refs/heads/main.zip" 2>/dev/null; then
+            # 解压
+            if command -v unzip >/dev/null 2>&1; then
+                unzip -q "$tmp/bea.zip" -d "$tmp" >/dev/null 2>&1
+            elif command -v tar >/dev/null 2>&1; then
+                # macOS 自带 tar 可以解压 zip
+                tar -xf "$tmp/bea.zip" -C "$tmp" >/dev/null 2>&1
+            else
+                error "未找到 unzip 或 tar，无法解压 zip"
+                rm -rf "$tmp"
+                exit 1
+            fi
+            local extracted_dir
+            extracted_dir=$(find "$tmp" -maxdepth 2 -name "SKILL.md" -exec dirname {} \; | head -1)
+            if [ -n "$extracted_dir" ] && [ -d "$extracted_dir" ]; then
+                mkdir -p "$dest"
+                cp -R "$extracted_dir/SKILL.md" "$extracted_dir/LICENSE" "$extracted_dir/scripts" "$extracted_dir/references" "$extracted_dir/templates" "$dest/" 2>/dev/null || true
+                cp -R "$extracted_dir/docs" "$extracted_dir/README.md" "$extracted_dir/QUICKSTART.md" "$extracted_dir/FAQ.md" "$extracted_dir/CHANGELOG.md" "$dest/" 2>/dev/null || true
+                rm -rf "$tmp"
+                return 0
+            fi
+        fi
+        rm -rf "$tmp"
+        error "下载失败，请检查网络连接"
         exit 1
     fi
 
-    local tmp
-    tmp=$(mktemp -d)
-    info "从 GitHub 克隆..."
-    git clone --depth 1 "$REPO_URL" "$tmp/repo" >/dev/null 2>&1
-
-    mkdir -p "$dest"
-    cp -R "$tmp/repo/SKILL.md" "$tmp/repo/LICENSE" "$tmp/repo/scripts" "$tmp/repo/references" "$tmp/repo/templates" "$dest/"
-    rm -rf "$tmp"
+    error "未找到 git 或 curl，请先安装其中一个"
+    exit 1
 }
 
 # ── 主流程 ───────────────────────────────────────────
 main() {
     echo "========================================"
-    echo "  BEA v2.3.0 安装程序"
+    echo "  BEA v2.5.0 安装程序"
     echo "========================================"
     echo ""
 
@@ -148,10 +185,13 @@ main() {
     echo ""
     echo "  位置: $dest"
     echo ""
-    echo "  快速开始："
-    echo "    cd $dest"
-    echo "    python3 scripts/bea_quant.py template --category phone"
-    echo "    python3 scripts/bea_quant.py report --category phone --t \"形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6\""
+    echo "  🚀 立即使用（在豆包里直接说）："
+    echo "    \"帮我分析这个手机设计怎么样\""
+    echo "    \"这个汽车造型有什么问题？\""
+    echo "    \"怎么改能让它更高级？\""
+    echo ""
+    echo "  📖 快速上手指南: $dest/QUICKSTART.md"
+    echo "  🌐 官方网站: https://maxing0000.github.io/bipolar-emotion-aesthetics/"
     echo ""
 }
 
