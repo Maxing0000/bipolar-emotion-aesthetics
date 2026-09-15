@@ -423,6 +423,70 @@
         .type-compare { background: #e3f2fd; color: #1565c0; }
         .type-cross { background: #f3e5f5; color: #7b1fa2; }
 
+        /* ===== 案例卡片图片 ===== */
+        .case-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 160px;
+            overflow: hidden;
+            background: var(--bg-tertiary);
+        }
+
+        .case-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .case-card:hover .case-image {
+            transform: scale(1.05);
+        }
+
+        .case-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            gap: 8px;
+        }
+
+        .placeholder-icon {
+            font-size: 32px;
+            opacity: 0.5;
+        }
+
+        .placeholder-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            letter-spacing: 2px;
+        }
+
+        .case-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* ===== 详情页大图 ===== */
+        .modal-hero-image {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: var(--bg-tertiary);
+        }
+
+        .modal-hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* ===== 范式颜色 ===== */
         .paradigm-healing { --paradigm-color: #66bb6a; --paradigm-color-light: #81c784; }
         .paradigm-friendly { --paradigm-color: #42a5f5; --paradigm-color-light: #64b5f6; }
@@ -1716,6 +1780,21 @@
             }
         ];
 
+        // ===== 案例图片映射 =====
+        const caseImages = {
+            1: 'assets/cases/iphone-17-pro.jpg',
+            6: 'assets/cases/xiaomi-su7.jpg',
+            7: 'assets/cases/tesla-cybertruck.jpg',
+            8: 'assets/cases/citic-tower.jpg',
+            10: 'assets/cases/ios-18.jpg',
+            11: 'assets/cases/muji-store.jpg',
+            13: 'assets/cases/blade-runner-2049.jpg',
+            14: 'assets/cases/daxing-airport.jpg',
+            15: 'assets/cases/aman-hotel.jpg',
+            26: 'assets/cases/huawei-mate60.jpg'
+        };
+        cases.forEach(c => { if (caseImages[c.id]) c.image = caseImages[c.id]; });
+
         // ===== 状态管理 =====
         let state = {
             search: '',
@@ -1902,16 +1981,21 @@
 
             grid.innerHTML = filtered.map(c => `
                 <div class="case-card paradigm-${c.paradigm}" data-id="${c.id}">
-                    <span class="case-type-badge ${typeConfig[c.type].class}">${typeConfig[c.type].name}</span>
-                    <span class="case-category">${c.category}</span>
-                    <h3 class="case-title">${c.title}</h3>
-                    <p class="case-brand">${c.brand} · ${c.year}</p>
-                    <div class="case-meta">
-                        <div class="wt-value">
-                            <span class="wt-number">${c.wt}</span>
-                            <span class="wt-label">W(T)</span>
+                    <div class="case-image-wrapper">
+                        ${c.image ? `<img src="${c.image}" alt="${c.title}" class="case-image" loading="lazy">` : `<div class="case-image-placeholder"><span class="placeholder-icon">🎨</span><span class="placeholder-text">BEA</span></div>`}
+                        <span class="case-type-badge ${typeConfig[c.type].class}">${typeConfig[c.type].name}</span>
+                    </div>
+                    <div class="case-content">
+                        <span class="case-category">${c.category}</span>
+                        <h3 class="case-title">${c.title}</h3>
+                        <p class="case-brand">${c.brand} · ${c.year}</p>
+                        <div class="case-meta">
+                            <div class="wt-value">
+                                <span class="wt-number">${c.wt}</span>
+                                <span class="wt-label">W(T)</span>
+                            </div>
+                            <span class="paradigm-badge">${c.paradigmName}</span>
                         </div>
-                        <span class="paradigm-badge">${c.paradigmName}</span>
                     </div>
                 </div>
             `).join('');
@@ -1935,6 +2019,11 @@
 
             const body = document.getElementById('modalBody');
             body.innerHTML = `
+                ${c.image ? `
+                <div class="modal-hero-image">
+                    <img src="${c.image}" alt="${c.title}">
+                </div>
+                ` : ''}
                 <div class="modal-section paradigm-${c.paradigm}">
                     <div class="wt-display">
                         <div class="wt-big">${c.wt}</div>
