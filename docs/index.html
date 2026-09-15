@@ -989,6 +989,12 @@ img{max-width:100%;display:block}
     <button class="case-filter-btn" data-filter="car">汽车</button>
     <button class="case-filter-btn" data-filter="building">建筑</button>
     <button class="case-filter-btn" data-filter="brand">品牌</button>
+    <button class="case-filter-btn" data-filter="ui">UI</button>
+    <button class="case-filter-btn" data-filter="fashion">服装</button>
+    <button class="case-filter-btn" data-filter="music">音乐</button>
+    <button class="case-filter-btn" data-filter="film">影视</button>
+    <button class="case-filter-btn" data-filter="public">公共</button>
+    <button class="case-filter-btn" data-filter="interior">室内</button>
   </div>
 
   <div class="case-grid reveal" id="case-grid">
@@ -1453,6 +1459,96 @@ const caseData = [
     dims: {图形:3, 色彩:3, 字体:4, 版式:2, 质感:4},
     sensitivity: '版式t=2是最强亲极元素（大留白）。质感t=4是提神点（精致光影）。主辅比约7:3，非常清晰。',
     improvement: '当前配比已非常精准，不建议大改。可在产品发布季临时提升色彩饱和度（色彩3→4），增加视觉冲击力。'
+  },
+  {
+    id: 'ios18-ui',
+    name: 'iOS 18 界面',
+    category: 'ui',
+    categoryLabel: 'UI/交互',
+    subtitle: '2024 · 苹果移动端操作系统 · 10亿+用户',
+    wt: 0.30,
+    paradigm: '亲和精致',
+    disease: '无',
+    advantage: '大圆角+微差补偿',
+    insight: 'iOS 18 是"亲和精致"范式的教科书级实现。W(T)=0.30 精准落在范式上沿——既保证了长期使用的亲和力，又通过色彩对比和字体精密感提供了足够的视觉张力。大圆角组件(t=2)是最强亲极基底，色彩和字体的中性偏危(t=4)提供了"提神"效果。',
+    dims: {布局:3, 色彩:4, 组件:2, 动效:3, 字体:4},
+    sensitivity: '组件形t=2是最强亲极元素（大圆角）。色彩和字体t=4是提神点。主辅比清晰，宏观柔和微观精密。',
+    improvement: '可在关键行动按钮（支付、确认）增加更明显对比，提升操作引导性。深色模式下部分文字对比度可微调。'
+  },
+  {
+    id: 'muji-fashion',
+    name: '无印良品服装',
+    category: 'fashion',
+    categoryLabel: '服装时尚',
+    subtitle: '日式极简生活方式品牌 · 无品牌的品牌',
+    wt: 0.215,
+    paradigm: '亲和精致(近治愈)',
+    disease: '轻度甜腻症',
+    advantage: '材质质感+减法极致',
+    insight: '无印良品是"亲极极致"的代表，W(T)=0.215 几乎全部维度都在亲极侧。它的美学策略是"减法到极致"——去掉logo、去掉装饰、去掉色彩、去掉廓形，最后剩下的只有材质和工艺本身。成功的关键在于：虽然没有显性危极元素，但面料质感提供了隐性的"微差补偿"。',
+    dims: {廓形:2, 面料:2, 色彩:2, 细节:3, 搭配:3},
+    sensitivity: '所有维度≤3，几乎无锐度。面料质感是唯一的"提神点"。对于追求个性的年轻消费者可能觉得"太素了"。',
+    improvement: '可推出设计师联名系列，在1-2个维度注入危极（如不对称剪裁、撞色缝线），W(T)提升至0.30左右。配饰类可作为"危极出口"。'
+  },
+  {
+    id: 'apple-sound',
+    name: '苹果产品提示音',
+    category: 'music',
+    categoryLabel: '音乐/声音',
+    subtitle: 'iOS/macOS系统提示音 · 全球使用量最大声音设计',
+    wt: 0.26,
+    paradigm: '亲和精致',
+    disease: '无',
+    advantage: '协和音程+记忆点',
+    insight: '苹果提示音是声音设计中"亲和精致"范式的典范。W(T)=0.26 意味着它在保证"不打扰、不刺耳"的前提下，通过音高和旋律的微差(t=3)提供了足够的辨识度和愉悦感。最经典的"三全音"短信音——虽然只有两个音，但高低音对比制造了微小张力，协和音程又保证了收束和解决。',
+    dims: {音高:3, 动态:2, 节奏:2, 旋律:3, 空间:3},
+    sensitivity: '动态和节奏t=2是最强亲极元素（柔和、规整）。音高和旋律t=3是提神点（微差对比）。整体柔和但有清晰"骨架"。',
+    improvement: '可在高优先级通知（紧急提醒、安全警报）中使用更高危极声音设计(t=6-7)，与普通通知形成明确区分。可增加情境自适应功能。'
+  },
+  {
+    id: 'bladerunner-2049',
+    name: '银翼杀手2049',
+    category: 'film',
+    categoryLabel: '影视/动画',
+    subtitle: '2017 · 罗杰·狄金斯摄影 · 奥斯卡最佳摄影',
+    wt: 0.64,
+    paradigm: '冷峻克制',
+    disease: '轻度攻击症',
+    advantage: '极端色彩+秩序约束',
+    insight: '《银翼杀手2049》是影视视觉中"冷峻克制"范式的巅峰之作。W(T)=0.64 意味着几乎所有视觉维度都在危极侧——极端色彩、极强明暗、压迫构图、冷峻质感。但它之所以"美"而不是"恐怖"，关键在于：第一，秩序约束——对称构图、精确比例、缓慢镜头运动，用极强秩序感把危极"收编"为审美张力；第二，安全框架——观众知道这是电影、是未来世界、是虚构的。',
+    dims: {构图:6, 色彩:7, 明度:8, 光影:7, 运动:4},
+    sensitivity: '明度t=8是最强危极元素（极强明暗对比）。色彩t=7、光影t=7是次强危极。镜头运动t=4是唯一的亲极补偿（缓慢、克制）。',
+    improvement: '当前配置已接近范式上沿，不建议继续提升危极。可在情感高潮场景短暂降低W(T)至0.40左右，用暖色、柔光制造"亲极喘息"，形成张力—释放节奏。'
+  },
+  {
+    id: 'daxing-airport',
+    name: '北京大兴机场',
+    category: 'public',
+    categoryLabel: '公共空间',
+    subtitle: '2019 · 扎哈·哈迪德设计 · 全球最大单体航站楼',
+    wt: 0.515,
+    paradigm: '崇高震撼',
+    disease: '无',
+    advantage: '超尺度+白色亲和',
+    insight: '大兴机场是公共空间中"崇高震撼"范式的优秀案例。W(T)=0.515 意味着它用超尺度(t=7)和流线形态(t=6)制造了足够的敬畏和震撼，同时用白色纯净色彩(t=2)和清晰动线秩序(t=3)稳稳地"接住"了张力，避免了大空间常见的"冰冷拒人"问题。这是典型的"宏观崇高、近人亲和"的嵌套策略。',
+    dims: {尺度:7, 形态:6, 材质:5, 色彩:2, 动线:3},
+    sensitivity: '尺度t=7是最强危极元素（超高大空间）。形态t=6是次强危极（流线型、非线性）。色彩t=2是最强亲极补偿（白色纯净）。',
+    improvement: '可在近人层（值机柜台、座椅、商业区域）增加更多温润材质（木色、织物），进一步降低近人层W(T)。可在指廊末端增加"亲极休息区"。'
+  },
+  {
+    id: 'aman-hotel',
+    name: '安缦酒店室内',
+    category: 'interior',
+    categoryLabel: '室内空间',
+    subtitle: '全球顶级奢华度假酒店 · 宁静私密与自然融合',
+    wt: 0.255,
+    paradigm: '亲和精致',
+    disease: '无',
+    advantage: '微差补偿+材质极致',
+    insight: '安缦酒店是室内设计中"亲和精致"范式的天花板。W(T)=0.255 意味着几乎所有维度都在亲极侧——温润材质、柔和色彩、漫射光影、围合空间。但它之所以是"奢华"而不是"平庸"，关键在于微差补偿的极致运用：虽然整体柔和，但每一个细节都有精确的"骨架"——石材纹理、木材结疤、光影渐变、陈设比例。远看一片柔和，近看每一处都有值得凝视的精密感。',
+    dims: {尺度:3, 材质:2, 色彩:2, 光影:3, 陈设:3},
+    sensitivity: '材质t=2和色彩t=2是最强亲极元素（温润、低饱和）。所有维度≤3，但材质和光影的微差提供了足够的"骨"。这是室内版的"柔中藏骨"。',
+    improvement: '可在公共区域（大堂、餐厅）适度提升W(T)至0.35左右，用一件"视觉锚点"艺术品制造张力。可在套房"功能区"（书房、衣帽间）增加更明确秩序感和精密感(t=4-5)。'
   }
 ];
 
