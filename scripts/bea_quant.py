@@ -1489,7 +1489,7 @@ def format_sensitivity(a: BEAAnalysis, results: List[Dict[str, object]],
     """格式化灵敏度分析结果输出。"""
     lines = []
     lines.append("=" * 70)
-    lines.append("  BEA 灵敏度分析（v3.0 务实版）")
+    lines.append("  BEA 灵敏度分析")
     lines.append("=" * 70)
     step = results[0].get("step", 1) if results else 1
     lines.append(f"  调整步长：t±{step}")
