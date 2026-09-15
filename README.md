@@ -3,54 +3,163 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-2.5.0-blue)
-![Type](https://img.shields.io/badge/type-Agent%20Skill-success)
-![Tests](https://img.shields.io/badge/tests-108%20passing-brightgreen)
+![Version](https://img.shields.io/badge/version-2.7.0-blue)
+![Type](https://img.shields.io/badge/type-AI%20Skill-success)
+![Platforms](https://img.shields.io/badge/platforms-6%2B-orange)
 ![Website](https://img.shields.io/badge/website-GitHub%20Pages-orange)
 
-> 把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作工具。
+> 把审美判断从"我觉得"变成可讨论、可比较、可追踪、可生成的协作工具。
 
-## 在线体验
+---
+
+## ⚡ 30秒快速开始
+
+**BEA 是一个 AI 技能（Skill），在你常用的 AI 平台安装后，上传图片或用大白话提问，就能获得专业的美学分析。**
+
+### 第1步：选择你的平台
+
+| 平台 | 推荐度 | 使用方式 |
+|---|---|---|
+| 🤖 **豆包 Doubao** | ⭐⭐⭐⭐⭐ 最推荐 | 技能市场搜索"双极情绪美学"安装，或直接使用本技能 |
+| 🔌 **扣子 Coze** | ⭐⭐⭐⭐ | 创建智能体，复制系统提示词，可发布到扣子商店 |
+| 💬 **ChatGPT** | ⭐⭐⭐⭐ | 在 Custom Instructions 中粘贴 BEA 框架，用 GPT-4V 分析图片 |
+| 🎨 **Claude** | ⭐⭐⭐⭐ | 在 Project Instructions 中配置，用 Claude 3 多模态分析 |
+| ✨ **通义千问** | ⭐⭐⭐ | 创建智能体，复制系统提示词 |
+| 🔧 **Dify** | ⭐⭐⭐ | 应用系统提示词配置 |
+
+### 第2步：安装/配置
+
+**最简单的方式（所有平台通用）：**
+1. 复制 [`platforms/universal-system-prompt.md`](platforms/universal-system-prompt.md) 中的 System Prompt
+2. 粘贴到你使用的 AI 平台的 System Prompt / 人设 / 指令中
+3. 完成！
+
+**豆包用户：** 直接在技能市场搜索"双极情绪美学"安装，或把本仓库放入你的技能目录。
+
+### 第3步：开始使用
+
+复制下面任意一句话，发给 AI，上传你的设计图片：
+
+```
+📱 产品分析："帮我看看这个手机设计怎么样，有什么问题，怎么改能更高级？"
+🚗 汽车造型："这个汽车造型给人什么感觉？是不是太凶了？怎么调整到崇高震撼风格？"
+🎨 品牌视觉："这个 logo 为什么看起来有点廉价？帮我诊断一下，给出具体改进建议。"
+💻 UI 界面："这个 UI 界面是不是太乱了？帮我找出问题，给出具体的改进步骤。"
+🏗️ 建筑空间："这个建筑设计是不是太冰冷了？怎么增加亲近感，同时保持崇高感？"
+⚡ 快速诊断："快速看看这个设计大概怎么样"（轻量级模式，只输出核心结论）
+```
+
+### 第4步：获得专业分析
+
+AI 会自动输出：
+- 📊 **W(T) 危极权重指数**：整体张力水平
+- 🎯 **范式定位**：治愈松弛/亲和精致/均衡典雅/崇高震撼/冷峻克制/先锋反叛
+- 🔍 **六维分析**：形状/色彩/明度/质感/构图/光影的极性分析
+- ⭐ **四维评分**：张力/秩序/阈值/语境，满分100
+- 🏥 **病症诊断**：7种审美病症识别
+- 💊 **改进处方**：具体到维度和数值的改进建议
+
+---
+
+## 🌐 在线体验
 
 **[BEA 官方网站 →](https://maxing0000.github.io/bipolar-emotion-aesthetics/)**
 
-无需安装，直接在浏览器中体验 BEA 双极情绪美学：
-
-- **W(T) 互动计算器**：拖动滑块，实时计算危极权重与范式落点（支持手机/汽车/品牌/UI/建筑）
+- **快速开始**：30秒上手 BEA 技能，各大平台使用指南
+- **W(T) 互动计算器**：拖动滑块，实时计算危极权重与范式落点
 - **六范式谱系**：交互式浏览治愈松弛→先锋反叛的完整风格谱
 - **核心理论**：亲极/危极双极模型、四维评分卡、六步创作法
 - **病症诊断**：7种常见审美病症及元素级改进处方
-- **案例库**：[30个真实案例完整分析](https://maxing0000.github.io/bipolar-emotion-aesthetics/case-library.html)（支持搜索/筛选/排序/对比）
+- **案例库**：[30个真实案例完整分析](https://maxing0000.github.io/bipolar-emotion-aesthetics/case-library.html)（支持搜索/筛选/排序）
 
-## 多平台支持
+---
 
-BEA 技能可在多个 AI 平台使用，**零依赖纯文本模式**适用于所有平台：
+## 📱 各大平台详细使用指南
 
-| 平台 | 适配方式 | 文档 |
-|---|---|---|
-| **豆包 Doubao** | 原生 SKILL.md | 本文件 |
-| **Coze 扣子** | Bot System Prompt / 插件 | `platforms/coze/` |
-| **ChatGPT / GPTs** | Custom Instructions / GPTs | `platforms/chatgpt/` |
-| **Claude** | Project Instructions | `platforms/claude/` |
-| **通义千问** | 智能体 System Prompt | `platforms/tongyi/` |
-| **Dify** | 应用系统提示词 / 工具 | `platforms/dify/` |
+### 🤖 豆包 Doubao（最推荐）
 
-**30秒快速使用**：
-1. 复制 `platforms/universal-system-prompt.md` 中的 System Prompt
-2. 粘贴到你使用的 AI 平台的 System Prompt / 人设 / 指令中
-3. 开始对话："帮我分析这个设计怎么样"
+**方式1：技能市场安装**
+1. 打开豆包，进入"技能"页面
+2. 搜索"双极情绪美学"或"BEA"
+3. 点击安装，即可在对话中使用
 
-**两种使用模式**：
-- **纯文本模式（推荐）**：零依赖，AI 按工作流程手动计算 W(T)，适用于所有平台
-- **脚本增强模式**：调用 `scripts/bea_quant.py` 精确计算，需平台支持代码执行
+**方式2：本地技能目录**
+1. 将本仓库复制到豆包的技能目录
+2. 在对话中 @双极情绪美学 或直接提问
+3. 上传图片，AI 自动按 BEA 框架分析
 
-**一键打包**：
-```bash
-python3 scripts/package.py --all  # 生成所有平台的适配包
-# 输出到 dist/ 目录：core.zip / full.zip / system-prompt.txt / bea-{platform}.zip
+**使用示例：**
+```
+用户：[上传手机图片] 帮我看看这个手机设计怎么样
+AI：【BEA 图片分析报告】
+整体判断：亲和精致范式，远看柔和、近看有细节
+W(T)：0.215（亲和精致）
+主辅比：亲极 78% : 危极 22%
+...
 ```
 
-## 核心价值
+### 🔌 扣子 Coze
+
+**步骤：**
+1. 登录 [扣子 Coze](https://www.coze.cn/)
+2. 创建新的 Bot（智能体）
+3. 在"人设与回复逻辑"中粘贴 [`platforms/coze/system-prompt.md`](platforms/coze/system-prompt.md)
+4. 配置插件（可选）：代码执行插件可调用 `bea_quant.py` 精确计算
+5. 发布到扣子商店，或直接在调试中使用
+
+**优势：** 可发布为公开智能体，其他用户可直接使用；支持多轮对话和插件扩展。
+
+### 💬 ChatGPT / GPTs
+
+**方式1：Custom Instructions（所有用户）**
+1. 打开 ChatGPT 设置 → Custom Instructions
+2. 在"How would you like ChatGPT to respond?"中粘贴 BEA 框架
+3. 保存，开始对话
+
+**方式2：创建 GPT（Plus 用户）**
+1. 进入 Explore → Create a GPT
+2. 在 Configure 中设置 Name、Description、Instructions
+3. 粘贴 BEA 框架到 Instructions
+4. 可上传本仓库的 references 文档作为 Knowledge
+5. 发布为 Public GPT
+
+**使用示例：**
+```
+用户：[上传汽车图片] 这个汽车造型给人什么感觉？
+AI：基于 BEA 双极情绪美学分析...
+```
+
+### 🎨 Claude
+
+**方式1：Project Instructions**
+1. 创建新的 Project
+2. 在 Project Settings → Instructions 中粘贴 BEA 框架
+3. 开始对话，上传图片
+
+**方式2：直接对话**
+1. 在新对话中先发送："请按照 BEA 双极情绪美学框架分析图片"
+2. 粘贴 BEA 核心理论（可从 [`platforms/universal-system-prompt.md`](platforms/universal-system-prompt.md) 复制）
+3. 上传图片，开始分析
+
+### ✨ 通义千问
+
+1. 登录 [百炼平台](https://bailian.console.aliyun.com/)
+2. 创建智能体应用
+3. 在"系统提示词"中粘贴 BEA 框架
+4. 配置模型（推荐通义千问 VL 多模态模型）
+5. 发布应用
+
+### 🔧 Dify
+
+1. 登录 Dify，创建新应用
+2. 在"提示词编排"中粘贴 BEA 框架
+3. 配置模型（推荐支持多模态的模型）
+4. 可添加代码执行节点调用 `bea_quant.py`
+5. 发布应用
+
+---
+
+## 🎯 核心价值
 
 BEA 不回答"什么是美"，而是解决"美感无法被讨论"的问题。
 
@@ -58,9 +167,13 @@ BEA 不回答"什么是美"，而是解决"美感无法被讨论"的问题。
 
 **核心命题**：美感 = 可控张力下的情绪奖赏。亲极（圆润/柔色/对称）安其心，危极（尖锐/强对比/坚硬）提其神，秩序统其乱，阈值守其界。
 
-## 安装
+---
 
-### 一键安装（推荐）
+## 🔧 本地安装（高级用户）
+
+> 大多数用户不需要本地安装，直接在 AI 平台使用即可。本部分适合开发者或需要精确计算的用户。
+
+### 一键安装
 
 **macOS / Linux：**
 ```bash
@@ -72,18 +185,12 @@ curl -fsSL https://raw.githubusercontent.com/Maxing0000/bipolar-emotion-aestheti
 irm https://raw.githubusercontent.com/Maxing0000/bipolar-emotion-aesthetics/main/install.ps1 | iex
 ```
 
-安装脚本会自动检测 Skill 目录、复制文件、运行自测试验证。
-
 ### 手动安装
 
 ```bash
-# 克隆到你的 Skill 目录
-git clone https://github.com/Maxing0000/bipolar-emotion-aesthetics.git \
-  ~/path/to/your/skills/bipolar-emotion-aesthetics
-
-# 验证
-cd ~/path/to/your/skills/bipolar-emotion-aesthetics
-python3 scripts/bea_quant.py test
+git clone https://github.com/Maxing0000/bipolar-emotion-aesthetics.git
+cd bipolar-emotion-aesthetics
+python3 scripts/bea_quant.py test  # 验证安装
 ```
 
 ### 环境要求
@@ -91,26 +198,18 @@ python3 scripts/bea_quant.py test
 - Python 3.7+（仅用标准库，无需 pip install）
 - Git（一键安装需要，手动安装可选）
 
-## 快速开始
+### 一键打包各平台适配包
 
 ```bash
-# 1. 生成分打模板（含维度顺序和锚点参考）
-python3 scripts/bea_quant.py template --category phone
-
-# 2. 完整分析报告
-python3 scripts/bea_quant.py report --category car --t "曲面=4,特征线=6,灯组=5,比例=3,材质=4"
-
-# 3. 调整建议：想达到某范式，该改哪个维度
-python3 scripts/bea_quant.py suggest --category car --t "曲面=4,特征线=6,灯组=5,比例=3,材质=4" --target 崇高震撼
-
-# 4. 美感生成：给定目标，自动生成最优维度配置
-python3 scripts/bea_quant.py generate --category phone --target 0.30 --strategy balanced
-
-# 5. 灵敏度分析：改哪个维度效果最明显
-python3 scripts/bea_quant.py sensitivity --category car --t "曲面=4,特征线=6,灯组=5,比例=3,材质=4" --target 0.55
+python3 scripts/package.py --all
+# 输出到 dist/ 目录：core.zip / full.zip / system-prompt.txt / bea-{platform}.zip
 ```
 
-## 功能详解
+---
+
+## 📊 量化引擎功能详解
+
+> 以下功能需要本地安装或平台支持代码执行。在纯文本模式下，AI 会按工作流程手动计算。
 
 ### 1. 分析报告（report）
 
@@ -423,7 +522,99 @@ bipolar-emotion-aesthetics/
     └── output-templates.md     # 标准化输出模板（4种格式）
 ```
 
-## 重要边界
+## ❓ 常见问题
+
+### Q1: BEA 技能和普通 AI 对话有什么区别？
+
+**A:** 普通 AI 对话分析设计时，往往凭感觉给出主观评价，结果不稳定、不可复现。BEA 技能提供了一套标准化的分析框架：
+- 统一的维度定义和极性量表
+- 可计算的 W(T) 危极权重指数
+- 六范式定位系统
+- 7种审美病症诊断
+- 元素级改进处方
+
+使用 BEA 技能，不同人、不同会话分析同一张图，结果差异 ≤1（t值）和 ≤0.1（W(T)），让审美判断从"我觉得"变成可讨论、可比较、可追踪的协作工具。
+
+### Q2: 我需要学习美学理论才能使用吗？
+
+**A:** 完全不需要！BEA 技能的设计目标就是让普通人也能专业分析设计。
+
+你只需要：
+1. 在 AI 平台安装/配置 BEA 技能
+2. 上传图片或用大白话描述你的设计
+3. 提问："帮我看看这个设计怎么样"
+
+AI 会自动按 BEA 框架分析，输出专业报告。你不需要知道任何专业术语，也不需要手动计算。
+
+### Q3: 分析结果准确吗？
+
+**A:** BEA 框架基于进化心理学、神经美学、格式塔心理学等理论，极性方向（圆润=安全、尖锐=威胁）跨文化相对恒定，具有普遍性。
+
+但需要注意：
+- W(T) 是协作刻度，不是心理物理常数，误差带 ±0.1
+- BEA 只分析形式美（形/色/质/空间/光影），不裁决内容美、道德美
+- 分析结果供参考，最终决策还需结合用户测试和市场反馈
+
+### Q4: 可以分析哪些类型的设计？
+
+**A:** BEA 适用于任何以感官形式呈现的对象，包括但不限于：
+
+- 📱 **消费电子**：手机、平板、耳机、智能手表
+- 🚗 **交通工具**：汽车、摩托车、自行车、飞行器
+- 🏗️ **建筑空间**：建筑外观、室内设计、公共空间
+- 🎨 **品牌视觉**：Logo、字体、海报、包装、VI系统
+- 💻 **数字界面**：UI、网页、App、图标、动效
+- 👗 **时尚服装**：服装、配饰、鞋履
+- 🎵 **声音音乐**：音乐、音效、提示音
+- 🎬 **影视动画**：镜头、构图、色彩、场景
+- 🪑 **产品工业**：家具、家电、工具、日用品
+
+### Q5: 如何提高分析准确性？
+
+**A:** 几个建议：
+1. **上传清晰的图片**：多角度、高分辨率、光线充足
+2. **提供上下文**：说明产品定位、目标用户、使用场景
+3. **指定品类**：告诉 AI 这是手机/汽车/建筑，AI 会使用对应的维度权重
+4. **多轮对话**：先让 AI 初步分析，再针对具体维度追问
+5. **对比分析**：上传多个方案，让 AI 对比差异
+6. **参考案例库**：查看 30 个真实案例，校准你的判断
+
+### Q6: 纯文本模式和脚本增强模式有什么区别？
+
+| 特性 | 纯文本模式（推荐） | 脚本增强模式 |
+|---|---|---|
+| 适用平台 | 所有 AI 平台 | 支持代码执行的平台（豆包、扣子等） |
+| 依赖 | 零依赖 | 需要 Python 环境 |
+| W(T) 计算 | AI 手动计算 | 脚本精确计算 |
+| 分析速度 | 快 | 稍慢（需要执行代码） |
+| 结果精度 | 高（误差 ±0.1） | 极高（精确到小数点后3位） |
+| 推荐度 | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+
+**大多数用户使用纯文本模式即可**，脚本增强模式适合需要精确数据或批量分析的专业用户。
+
+### Q7: 可以用于商业项目吗？
+
+**A:** BEA 采用 CC BY-NC-SA 4.0 许可证（署名-非商业性使用-相同方式共享）。
+
+- ✅ **个人学习、研究、非商业项目**：自由使用
+- ✅ **企业内部设计评审、团队协作**：可以使用
+- ⚠️ **商业产品、付费服务**：需要联系作者获得商业授权
+- ⚠️ **二次分发、修改后发布**：需要保持相同许可证并署名
+
+如需商业授权，请联系作者：马星
+
+### Q8: 如何贡献案例或反馈？
+
+**A:** 欢迎贡献！你可以通过以下方式参与：
+1. **提交案例**：用 BEA 分析你喜欢的设计，提交 PR 或 Issue
+2. **反馈问题**：在 GitHub Issues 中报告 bug 或提出改进建议
+3. **翻译文档**：帮助将文档翻译成其他语言
+4. **平台适配**：贡献更多 AI 平台的适配方案
+5. **学术研究**：基于 BEA 开展实证研究，验证和完善理论
+
+---
+
+## ⚠️ 重要边界
 
 1. W(T) 是协作刻度，不是物理常数——误差带至少 ±0.1
 2. 不替代用户测试——W(T) 高不等于用户喜欢
