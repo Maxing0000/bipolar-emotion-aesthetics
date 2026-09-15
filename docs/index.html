@@ -528,6 +528,36 @@ img{max-width:100%;display:block}
   border-radius:4px;
   transition:width .5s ease;
 }
+.calc-full-result{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(212,165,116,.15)}
+.calc-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+@media(max-width:600px){.calc-row{grid-template-columns:1fr}}
+.calc-metric{
+  text-align:center;padding:1rem;
+  background:rgba(10,10,15,.5);
+  border-radius:10px;border:1px solid rgba(212,165,116,.1);
+}
+.calc-metric-label{font-size:.75rem;color:#a8a29e;margin-bottom:.3rem}
+.calc-metric-value{font-size:1.3rem;font-weight:700;color:#d4a574;margin-bottom:.2rem}
+.calc-metric-desc{font-size:.7rem;color:rgba(245,230,211,.5)}
+.calc-section{margin-bottom:1.2rem}
+.calc-section-title{font-size:.85rem;font-weight:600;color:#f5e6d3;margin-bottom:.6rem;padding-left:.5rem;border-left:3px solid #d4a574}
+.calc-diseases{display:flex;flex-wrap:wrap;gap:.5rem}
+.calc-disease{
+  display:inline-block;padding:.3rem .8rem;
+  border-radius:100px;font-size:.75rem;
+}
+.calc-disease.healthy{background:rgba(76,175,80,.15);color:#81c784;border:1px solid rgba(76,175,80,.3)}
+.calc-disease.warning{background:rgba(255,152,0,.15);color:#ffb74d;border:1px solid rgba(255,152,0,.3)}
+.calc-disease.danger{background:rgba(244,67,54,.15);color:#ef5350;border:1px solid rgba(244,67,54,.3)}
+.calc-contributions{display:flex;flex-direction:column;gap:.4rem}
+.calc-contrib-row{display:flex;align-items:center;gap:.5rem;font-size:.75rem}
+.calc-contrib-name{width:80px;color:#a8a29e;flex-shrink:0}
+.calc-contrib-bar{flex:1;height:8px;background:rgba(212,165,116,.1);border-radius:4px;overflow:hidden}
+.calc-contrib-fill{height:100%;background:linear-gradient(90deg,#d4a574,#8b5a2b);border-radius:4px;transition:width .5s}
+.calc-contrib-val{width:50px;text-align:right;color:#d4a574;font-weight:600;flex-shrink:0}
+.calc-suggestions{font-size:.8rem;color:rgba(245,230,211,.7);line-height:1.7}
+.calc-suggestions p{margin-bottom:.5rem}
+.calc-suggestions strong{color:#d4a574}
 
 /* ===== 评分卡 ===== */
 .score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem}
@@ -786,7 +816,7 @@ img{max-width:100%;display:block}
   </div>
 
   <div class="calculator reveal">
-    <div class="calc-title">实时计算</div>
+    <div class="calc-title">实时分析</div>
     <div class="calc-category">
       <label for="category-select">选择品类</label>
       <select id="category-select">
@@ -802,6 +832,46 @@ img{max-width:100%;display:block}
       <div class="calc-wt" id="calc-wt">0.265</div>
       <div class="calc-paradigm" id="calc-paradigm">亲和精致</div>
       <div class="calc-bar"><div class="calc-bar-fill" id="calc-bar-fill" style="width:26.5%"></div></div>
+    </div>
+
+    <!-- 完整分析结果 -->
+    <div class="calc-full-result">
+      <div class="calc-row">
+        <div class="calc-metric">
+          <div class="calc-metric-label">主辅比</div>
+          <div class="calc-metric-value" id="calc-ratio">82:18</div>
+          <div class="calc-metric-desc" id="calc-ratio-desc">亲极主导，主辅分明</div>
+        </div>
+        <div class="calc-metric">
+          <div class="calc-metric-label">耐看指数</div>
+          <div class="calc-metric-value" id="calc-endurance">85/100</div>
+          <div class="calc-metric-desc" id="calc-endurance-desc">极耐看</div>
+        </div>
+        <div class="calc-metric">
+          <div class="calc-metric-label">四维评分</div>
+          <div class="calc-metric-value" id="calc-score">82/100</div>
+          <div class="calc-metric-desc" id="calc-score-desc">成熟作品</div>
+        </div>
+      </div>
+
+      <div class="calc-section">
+        <div class="calc-section-title">病症诊断</div>
+        <div class="calc-diseases" id="calc-diseases">
+          <span class="calc-disease healthy">✓ 无明显病症</span>
+        </div>
+      </div>
+
+      <div class="calc-section">
+        <div class="calc-section-title">维度贡献</div>
+        <div class="calc-contributions" id="calc-contributions"></div>
+      </div>
+
+      <div class="calc-section">
+        <div class="calc-section-title">改进建议</div>
+        <div class="calc-suggestions" id="calc-suggestions">
+          <p>当前配置已处于亲和精致范式，整体均衡。如需更高级感，可在高价值细节（如边缘倒角、按键）适度提升危极强度。</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1117,14 +1187,127 @@ function calculateWT() {
   const category = document.getElementById('category-select').value;
   const config = categoryConfigs[category];
   let wt = 0;
+  const values = [];
+  const contributions = [];
+
   config.dims.forEach((dim, i) => {
     const val = parseFloat(document.getElementById(`slider-${i}`).value);
     document.getElementById(`val-${i}`).textContent = val;
-    wt += dim.w * (val / 10);
+    const contrib = dim.w * (val / 10);
+    wt += contrib;
+    values.push(val);
+    contributions.push({ name: dim.name, val, w: dim.w, contrib });
   });
+
   document.getElementById('calc-wt').textContent = wt.toFixed(3);
   document.getElementById('calc-paradigm').textContent = getParadigm(wt);
   document.getElementById('calc-bar-fill').style.width = (wt * 100) + '%';
+
+  // 主辅比计算
+  const pCount = values.filter(v => v <= 3.5).length;
+  const tCount = values.filter(v => v >= 5.5).length;
+  const total = values.length;
+  const pRatio = Math.round((pCount / total) * 100);
+  const tRatio = Math.round((tCount / total) * 100);
+  const neutralRatio = 100 - pRatio - tRatio;
+  let ratioText, ratioDesc;
+  if (pRatio >= 60) {
+    ratioText = `${pRatio}:${100-pRatio}`;
+    ratioDesc = '亲极主导，主辅分明';
+  } else if (tRatio >= 60) {
+    ratioText = `${100-tRatio}:${tRatio}`;
+    ratioDesc = '危极主导，个性强烈';
+  } else {
+    ratioText = `${Math.max(pRatio,tRatio)}:${Math.min(pRatio,tRatio)}`;
+    ratioDesc = '⚠ 主辅不足，情绪暧昧';
+  }
+  document.getElementById('calc-ratio').textContent = ratioText;
+  document.getElementById('calc-ratio-desc').textContent = ratioDesc;
+
+  // 耐看性计算
+  const avg = values.reduce((a, b) => a + b, 0) / total;
+  const variance = values.reduce((sum, v) => sum + Math.pow(v - avg, 2), 0) / total;
+  const stdDev = Math.sqrt(variance);
+  let endurance = 100;
+  if (wt > 0.6) endurance -= (wt - 0.6) * 100;
+  if (stdDev < 1) endurance -= 10;
+  if (stdDev > 3) endurance -= 15;
+  if (pRatio < 50 && tRatio < 50) endurance -= 10;
+  endurance = Math.max(0, Math.min(100, Math.round(endurance)));
+  let enduranceDesc;
+  if (endurance >= 85) enduranceDesc = '极耐看';
+  else if (endurance >= 70) enduranceDesc = '较耐看';
+  else if (endurance >= 50) enduranceDesc = '一般';
+  else enduranceDesc = '⚠ 易疲劳';
+  document.getElementById('calc-endurance').textContent = `${endurance}/100`;
+  document.getElementById('calc-endurance-desc').textContent = enduranceDesc;
+
+  // 四维评分
+  let scoreTension = 25 - Math.abs(wt - 0.4) * 30;
+  let scoreOrder = 25;
+  if (stdDev < 1) scoreOrder -= 5;
+  if (pRatio < 50 && tRatio < 50) scoreOrder -= 8;
+  let scoreThreshold = 25;
+  if (Math.max(...values) >= 9) scoreThreshold -= 10;
+  if (wt > 0.8) scoreThreshold -= 15;
+  let scoreContext = 25;
+  const totalScore = Math.max(0, Math.min(100, Math.round(scoreTension + scoreOrder + scoreThreshold + scoreContext)));
+  let scoreDesc;
+  if (totalScore >= 80) scoreDesc = '成熟作品';
+  else if (totalScore >= 60) scoreDesc = '有待提升';
+  else scoreDesc = '⚠ 明显短板';
+  document.getElementById('calc-score').textContent = `${totalScore}/100`;
+  document.getElementById('calc-score-desc').textContent = scoreDesc;
+
+  // 病症诊断
+  const diseases = [];
+  if (Math.max(...values) >= 10) diseases.push({ name: '本能越界', level: 'danger' });
+  if (wt >= 0.55 && values.some(v => v >= 6)) diseases.push({ name: '攻击症', level: 'danger' });
+  if (wt >= 0.65 && values.every(v => v >= 7)) diseases.push({ name: '刺激疲劳', level: 'danger' });
+  if (values.filter(v => v >= 6).length >= 3) diseases.push({ name: '重点通胀症', level: 'warning' });
+  if (values.every(v => v >= 3 && v <= 5) && wt >= 0.35 && wt <= 0.45 && (Math.max(...values) - Math.min(...values)) < 2) diseases.push({ name: '均分症', level: 'warning' });
+  if (wt < 0.25 && values.every(v => v <= 4)) diseases.push({ name: '甜腻症', level: 'warning' });
+  if (wt < 0.35 && (Math.max(...values) - Math.min(...values)) < 2) diseases.push({ name: '张力不足症', level: 'warning' });
+
+  const diseaseContainer = document.getElementById('calc-diseases');
+  if (diseases.length === 0) {
+    diseaseContainer.innerHTML = '<span class="calc-disease healthy">✓ 无明显病症</span>';
+  } else {
+    diseaseContainer.innerHTML = diseases.map(d =>
+      `<span class="calc-disease ${d.level}">⚠ ${d.name}</span>`
+    ).join('');
+  }
+
+  // 维度贡献
+  contributions.sort((a, b) => b.contrib - a.contrib);
+  const maxContrib = Math.max(...contributions.map(c => c.contrib));
+  const contribContainer = document.getElementById('calc-contributions');
+  contribContainer.innerHTML = contributions.map(c => `
+    <div class="calc-contrib-row">
+      <span class="calc-contrib-name">${c.name}</span>
+      <div class="calc-contrib-bar"><div class="calc-contrib-fill" style="width:${(c.contrib/maxContrib*100).toFixed(0)}%"></div></div>
+      <span class="calc-contrib-val">${(c.contrib*100).toFixed(0)}%</span>
+    </div>
+  `).join('');
+
+  // 改进建议
+  const suggestions = [];
+  if (diseases.length > 0) {
+    diseases.forEach(d => {
+      if (d.name === '甜腻症') suggestions.push('<strong>甜腻症：</strong>在高价值细节（边缘倒角、按键、logo）注入 10%-20% 危极，柔中藏骨。');
+      if (d.name === '攻击症') suggestions.push('<strong>攻击症：</strong>扩大亲极基底（大曲面、柔光、对称），将危极维度降到 5 以下。');
+      if (d.name === '均分症') suggestions.push('<strong>均分症：</strong>确立至少 6:4 主辅比，让 1-2 个维度明显高于其他。');
+      if (d.name === '重点通胀症') suggestions.push('<strong>重点通胀症：</strong>做减法，将强调点压回 1-2 个，其他维度降到 4 以下。');
+      if (d.name === '张力不足症') suggestions.push('<strong>张力不足症：</strong>将 1-2 个高权重维度提升到 6+，制造清晰对比。');
+      if (d.name === '刺激疲劳') suggestions.push('<strong>刺激疲劳：</strong>安排亲极呼吸段，降低 2-3 个维度的强度，控制全程高能。');
+      if (d.name === '本能越界') suggestions.push('<strong>本能越界（一票否决）：</strong>立即删除或钝化 t>=10 的元素，无风格借口。');
+    });
+  } else {
+    if (wt < 0.2) suggestions.push('当前偏治愈松弛，如需更高级感，可在细节处适度提升危极。');
+    else if (wt > 0.6) suggestions.push('当前偏高危极，长期使用可能疲劳，建议增加亲极基底或降低 1-2 个维度。');
+    else suggestions.push('当前配置均衡，整体处于健康区间。可根据产品定位微调 1-2 个维度以增强个性。');
+  }
+  document.getElementById('calc-suggestions').innerHTML = suggestions.map(s => `<p>${s}</p>`).join('');
 }
 
 document.getElementById('category-select').addEventListener('change', (e) => {
