@@ -660,55 +660,6 @@
             font-weight: 600;
         }
 
-        /* ===== 对比模式 ===== */
-        .compare-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border-color);
-            padding: 16px 40px;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
-            z-index: 90;
-            display: none;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .compare-bar.active {
-            display: flex;
-        }
-
-        .compare-slots {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .compare-slot {
-            padding: 10px 20px;
-            border: 2px dashed var(--border-color);
-            border-radius: var(--radius-md);
-            min-width: 200px;
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-tertiary);
-        }
-
-        .compare-slot.filled {
-            border-style: solid;
-            border-color: var(--accent-color);
-            background: rgba(44,62,80,0.05);
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .compare-actions {
-            display: flex;
-            gap: 12px;
-        }
-
         .btn {
             padding: 10px 20px;
             border: none;
@@ -735,53 +686,6 @@
 
         .btn-secondary:hover {
             background: var(--border-color);
-        }
-
-        /* ===== 对比弹窗 ===== */
-        .compare-modal {
-            max-width: 1200px;
-        }
-
-        .compare-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        .compare-column {
-            padding: 20px;
-            background: var(--bg-tertiary);
-            border-radius: var(--radius-md);
-        }
-
-        .compare-column-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-            text-align: center;
-            font-family: 'Noto Serif SC', serif;
-        }
-
-        .compare-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 13px;
-        }
-
-        .compare-row:last-child {
-            border-bottom: none;
-        }
-
-        .compare-label {
-            color: var(--text-secondary);
-        }
-
-        .compare-value {
-            font-weight: 500;
-            color: var(--text-primary);
         }
 
         /* ===== 数据可视化 ===== */
@@ -895,10 +799,6 @@
             }
 
             .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .compare-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -1052,33 +952,6 @@
                 <p class="modal-subtitle" id="modalSubtitle"></p>
             </div>
             <div class="modal-body" id="modalBody"></div>
-        </div>
-    </div>
-
-    <!-- ===== 对比弹窗 ===== -->
-    <div class="modal-overlay" id="compareModal">
-        <div class="modal compare-modal">
-            <div class="modal-header">
-                <button class="modal-close" id="closeCompareModal">×</button>
-                <h2 class="modal-title">案例对比分析</h2>
-                <p class="modal-subtitle">双极情绪美学维度对比</p>
-            </div>
-            <div class="modal-body">
-                <div class="compare-grid" id="compareGrid"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== 对比栏 ===== -->
-    <div class="compare-bar" id="compareBar">
-        <div class="compare-slots">
-            <div class="compare-slot" id="slot1">选择案例 A</div>
-            <span style="color: var(--text-tertiary);">VS</span>
-            <div class="compare-slot" id="slot2">选择案例 B</div>
-        </div>
-        <div class="compare-actions">
-            <button class="btn btn-secondary" id="clearCompare">清空</button>
-            <button class="btn btn-primary" id="startCompare" disabled>开始对比</button>
         </div>
     </div>
 
@@ -1849,8 +1722,7 @@
             paradigm: null,
             category: null,
             type: null,
-            sort: 'default',
-            compareList: []
+            sort: 'default'
         };
 
         // ===== 范式配置 =====
@@ -2048,11 +1920,7 @@
             grid.querySelectorAll('.case-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const id = parseInt(card.dataset.id);
-                    if (state.compareList.length < 2 && !state.compareList.includes(id)) {
-                        addToCompare(id);
-                    } else {
-                        openDetail(id);
-                    }
+                    openDetail(id);
                 });
             });
         }
@@ -2118,10 +1986,6 @@
                         ${c.prescription.map(p => `<li>${p}</li>`).join('')}
                     </ul>
                 </div>
-
-                <div class="modal-section" style="text-align: center; padding-top: 10px;">
-                    <button class="btn btn-primary" onclick="addToCompare(${c.id}); closeModal();">加入对比</button>
-                </div>
             `;
 
             document.getElementById('detailModal').classList.add('active');
@@ -2130,77 +1994,6 @@
         // ===== 关闭详情 =====
         function closeModal() {
             document.getElementById('detailModal').classList.remove('active');
-        }
-
-        // ===== 加入对比 =====
-        function addToCompare(id) {
-            if (state.compareList.length >= 2) {
-                state.compareList = [id];
-            } else {
-                state.compareList.push(id);
-            }
-            updateCompareBar();
-        }
-
-        // ===== 更新对比栏 =====
-        function updateCompareBar() {
-            const bar = document.getElementById('compareBar');
-            const slot1 = document.getElementById('slot1');
-            const slot2 = document.getElementById('slot2');
-            const startBtn = document.getElementById('startCompare');
-
-            if (state.compareList.length > 0) {
-                bar.classList.add('active');
-                const c1 = cases.find(c => c.id === state.compareList[0]);
-                slot1.textContent = c1 ? c1.title : '选择案例 A';
-                slot1.classList.toggle('filled', !!c1);
-
-                const c2 = cases.find(c => c.id === state.compareList[1]);
-                slot2.textContent = c2 ? c2.title : '选择案例 B';
-                slot2.classList.toggle('filled', !!c2);
-
-                startBtn.disabled = state.compareList.length < 2;
-            } else {
-                bar.classList.remove('active');
-            }
-        }
-
-        // ===== 开始对比 =====
-        function startCompare() {
-            if (state.compareList.length < 2) return;
-
-            const c1 = cases.find(c => c.id === state.compareList[0]);
-            const c2 = cases.find(c => c.id === state.compareList[1]);
-
-            const grid = document.getElementById('compareGrid');
-            grid.innerHTML = `
-                <div class="compare-column paradigm-${c1.paradigm}">
-                    <div class="compare-column-title">${c1.title}</div>
-                    <div class="compare-row"><span class="compare-label">品牌</span><span class="compare-value">${c1.brand}</span></div>
-                    <div class="compare-row"><span class="compare-label">W(T)</span><span class="compare-value" style="color: var(--paradigm-color); font-weight: 700;">${c1.wt}</span></div>
-                    <div class="compare-row"><span class="compare-label">范式</span><span class="compare-value">${c1.paradigmName}</span></div>
-                    <div class="compare-row"><span class="compare-label">类型</span><span class="compare-value">${typeConfig[c1.type].name}</span></div>
-                    <div class="compare-row"><span class="compare-label">领域</span><span class="compare-value">${c1.category}</span></div>
-                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">关键洞察</div>
-                        <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.7;">${c1.insight}</p>
-                    </div>
-                </div>
-                <div class="compare-column paradigm-${c2.paradigm}">
-                    <div class="compare-column-title">${c2.title}</div>
-                    <div class="compare-row"><span class="compare-label">品牌</span><span class="compare-value">${c2.brand}</span></div>
-                    <div class="compare-row"><span class="compare-label">W(T)</span><span class="compare-value" style="color: var(--paradigm-color); font-weight: 700;">${c2.wt}</span></div>
-                    <div class="compare-row"><span class="compare-label">范式</span><span class="compare-value">${c2.paradigmName}</span></div>
-                    <div class="compare-row"><span class="compare-label">类型</span><span class="compare-value">${typeConfig[c2.type].name}</span></div>
-                    <div class="compare-row"><span class="compare-label">领域</span><span class="compare-value">${c2.category}</span></div>
-                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">关键洞察</div>
-                        <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.7;">${c2.insight}</p>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('compareModal').classList.add('active');
         }
 
         // ===== 事件绑定 =====
@@ -2219,35 +2012,19 @@
         });
 
         document.getElementById('resetBtn').addEventListener('click', () => {
-            state = { search: '', paradigm: null, category: null, type: null, sort: 'default', compareList: [] };
+            state = { search: '', paradigm: null, category: null, type: null, sort: 'default' };
             document.getElementById('searchInput').value = '';
             document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
             document.querySelector('.sort-btn[data-sort="default"]').classList.add('active');
             updateFilterUI();
-            updateCompareBar();
             renderCases();
         });
 
         document.getElementById('closeModal').addEventListener('click', closeModal);
-        document.getElementById('closeCompareModal').addEventListener('click', () => {
-            document.getElementById('compareModal').classList.remove('active');
-        });
-
-        document.getElementById('clearCompare').addEventListener('click', () => {
-            state.compareList = [];
-            updateCompareBar();
-        });
-
-        document.getElementById('startCompare').addEventListener('click', startCompare);
 
         // 点击遮罩关闭
         document.getElementById('detailModal').addEventListener('click', (e) => {
             if (e.target.id === 'detailModal') closeModal();
-        });
-        document.getElementById('compareModal').addEventListener('click', (e) => {
-            if (e.target.id === 'compareModal') {
-                document.getElementById('compareModal').classList.remove('active');
-            }
         });
 
         // ===== 初始化 =====
