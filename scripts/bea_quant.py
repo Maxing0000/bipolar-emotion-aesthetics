@@ -2,7 +2,8 @@
 # Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
 
 """
-BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.5.0
+BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.7.0
+（版本号与 manifest.json / SKILL.md 保持一致）
 
 核心价值：把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作对象。
 仅用 Python 标准库，离线可用。
@@ -27,6 +28,9 @@ import os
 import sys
 from dataclasses import dataclass
 from typing import Callable, Dict, List, Tuple
+
+# 版本号单一来源（与 manifest.json 保持一致，test 命令会校验）
+__version__ = "2.7.0"
 
 # ──────────────────────────────────────────────
 # 核心配置
@@ -557,7 +561,7 @@ def diagnose_diseases(w_t: float, dims: Dict[str, int]) -> List[Dict[str, str]]:
 def suggest_scores(w_t: float, dims: Dict[str, int], diseases: List[Dict[str, str]],
                    category: str = "phone") -> Dict[str, object]:
     """
-    四维评分辅助（v2.2.1 精细化版）
+    四维评分辅助（精细化版）
 
     评分逻辑：基于维度数据计算参考分，每个维度都有明确的加分/扣分项。
     注意：这是参考分，不是最终分。语境适配尤其需要人工判断。
@@ -1035,7 +1039,7 @@ def format_report_markdown(a: BEAAnalysis) -> str:
 
     lines.append("---")
     lines.append("")
-    lines.append(f"*BEA 双极情绪美学 v2.4.0 | 署名：马星 | CC BY-NC-SA 4.0*")
+    lines.append(f"*BEA 双极情绪美学 v{__version__} | 署名：马星 | CC BY-NC-SA 4.0*")
     return "\n".join(lines)
 
 
@@ -1110,7 +1114,7 @@ def _md_table_to_html(match):
 def format_score_detail(a: BEAAnalysis) -> str:
     lines = []
     lines.append("=" * 60)
-    lines.append("  BEA 四维评分辅助（v2.2.1 精细化版）")
+    lines.append(f"  BEA 四维评分辅助（v{__version__}）")
     lines.append("=" * 60)
     lines.append(f"  W(T)={a.w_t:.3f} · {a.paradigm}")
     lines.append("")
@@ -2376,8 +2380,22 @@ def run_tests() -> bool:
     check("t=10被接受（用于分析越阈值）", a_extreme.dimensions["曲面"] == 10)
     check("t=10时W(T)包含该维度", a_extreme.w_t > 0)
 
-    # 版本号一致性
-    check("代码版本号为v2.4.0", "v2.4.0" in open(__file__, encoding='utf-8').readline() or True)
+    # 版本号一致性：引擎 __version__ == manifest.json 版本 == 头注释版本
+    engine_ver = __version__
+    header_ver = None
+    with open(__file__, encoding="utf-8") as f_self:
+        for line in f_self:
+            if "量化引擎 v" in line:
+                header_ver = line.split("量化引擎 v")[1].split()[0].strip()
+                break
+    manifest_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "manifest.json")
+    if os.path.exists(manifest_path):
+        with open(manifest_path, encoding="utf-8") as f_manifest:
+            manifest_ver = json.load(f_manifest)["version"]
+        check(f"引擎版本号({engine_ver})与manifest.json({manifest_ver})一致", engine_ver == manifest_ver)
+        check(f"头注释版本号({header_ver})与 __version__({engine_ver})一致", header_ver == engine_ver)
+    else:
+        check("manifest.json 存在", False)
 
     # 新病症测试（v2.4.1）
     a_instinct = analyze("car", "曲面=10,特征线=5,灯组=5,比例=5,材质=5")
@@ -2422,7 +2440,7 @@ def run_tests() -> bool:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="BEA 双极情绪美学量化引擎 v2.4.0",
+        description=f"BEA 双极情绪美学量化引擎 v{__version__}",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例：

@@ -309,21 +309,18 @@ BEA 的适用边界是：**当你需要讨论、比较、优化"感官形式给�
 
 ### Q17: 如何安装 BEA？
 
-**一键安装（推荐）**：
-```bash
-# macOS / Linux
-curl -fsSL https://raw.githubusercontent.com/Maxing0000/bipolar-emotion-aesthetics/main/install.sh | bash
+**从技能市场安装（推荐）**：
 
-# Windows (PowerShell)
-irm https://raw.githubusercontent.com/Maxing0000/bipolar-emotion-aesthetics/main/install.ps1 | iex
-```
+在 **SkillHub** / **WorkBuddy** / **豆包** 的技能市场搜索「双极情绪美学」或「BEA」，点安装即可，无需本地环境。
 
-**手动安装**：
+**手动安装（开发者）**：
 ```bash
 git clone https://github.com/Maxing0000/bipolar-emotion-aesthetics.git ~/path/to/skills/bipolar-emotion-aesthetics
 cd ~/path/to/skills/bipolar-emotion-aesthetics
 python3 scripts/bea_quant.py test
 ```
+
+**在其它 AI 平台使用**：把 `platforms/universal-system-prompt.md` 的内容粘贴到该平台的自定义指令 / 系统提示词即可，各平台写法见 `platforms/` 目录。
 
 环境要求：Python 3.7+（仅用标准库，无需 pip install）。
 
@@ -450,4 +447,4 @@ python3 scripts/bea_quant.py multigroup --category car --groups "宏观外形=�
 
 ---
 
-*最后更新：v2.2.1，2026-09-14*
+*最后更新：v2.7.0，2026-09-15*

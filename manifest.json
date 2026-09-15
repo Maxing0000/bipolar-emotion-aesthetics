@@ -2,7 +2,7 @@
   "name": "bipolar-emotion-aesthetics",
   "display_name": "双极情绪美学 BEA",
   "version": "2.7.0",
-  "description": "双极情绪美学（Bipolar Emotion Aesthetics，BEA）v2.7.0——把审美判断从'我觉得'变成可讨论、可比较、可追踪、可生成的协作工具。支持图片分析、形式美感分析、诊断、优化和生成。在豆包、扣子、ChatGPT、Claude等6+ AI平台可用。",
+  "description": "双极情绪美学（Bipolar Emotion Aesthetics，BEA）v2.7.0——把审美判断从'我觉得'变成可讨论、可比较、可追踪、可生成的协作工具。支持图片分析、形式美感分析、诊断、优化和生成。在 WorkBuddy、豆包、SkillHub、扣子、ChatGPT、Claude 等平台可用，纯 Python 标准库离线运行。",
   "author": {
     "name": "马星",
     "username": "xkbk0000"
@@ -71,14 +71,17 @@
     {
       "id": "quick_diagnose",
       "name": "轻量级快速诊断",
-      "description": "v2.6新增。只输出W(T)+范式定位+主辅比+一句话结论，速度快一倍，适合快速筛选和初步判断",
+      "description": "只输出W(T)+范式定位+主辅比+一句话结论，速度快一倍，适合快速筛选和初步判断",
       "input": ["自然语言描述", "图片", "维度值"],
       "output": ["快速诊断结果"]
     }
   ],
   "supported_categories": [
-    "phone", "car", "brand", "ui", "building",
-    "fashion", "music", "film", "public_space", "interior"
+    "phone", "car", "brand", "ui", "building"
+  ],
+  "documented_domains": [
+    "消费电子", "交通工具", "建筑与室内", "品牌与平面", "数字界面",
+    "时尚服装", "声音音乐", "影视动画", "工业产品"
   ],
   "paradigms": [
     {"name": "治愈松弛", "wt_range": [0, 0.15]},

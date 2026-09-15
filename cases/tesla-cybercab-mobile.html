@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BEA案例分析：特斯拉Cybercab</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: #0a0a0f;
+            color: #e8e8e8;
+            line-height: 1.8;
+            font-size: 16px;
+            padding-bottom: 40px;
+        }
+        
+        .hero {
+            position: relative;
+            height: 280px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            border-radius: 20px;
+            font-size: 12px;
+            color: #d4af37;
+            margin-bottom: 16px;
+            letter-spacing: 2px;
+        }
+        
+        .hero-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        
+        .hero-subtitle {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+        
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section {
+            margin-top: 32px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 16px;
+            padding-left: 12px;
+            border-left: 3px solid #d4af37;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.6) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        
+        .score-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .score-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        
+        .score-label {
+            font-size: 12px;
+            color: #a0a0a0;
+            margin-bottom: 6px;
+        }
+        
+        .score-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #d4af37;
+        }
+        
+        .score-unit {
+            font-size: 12px;
+            color: #a0a0a0;
+        }
+        
+        .total-score {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .total-score .score-value {
+            font-size: 48px;
+        }
+        
+        .total-score .score-label {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37, #f4e4bc);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        
+        .dimension-score {
+            margin-bottom: 14px;
+        }
+        
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .dimension-name {
+            font-size: 14px;
+            color: #e8e8e8;
+        }
+        
+        .dimension-score-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #d4af37;
+        }
+        
+        p {
+            margin-bottom: 14px;
+            color: #c0c0c0;
+        }
+        
+        .highlight {
+            color: #d4af37;
+            font-weight: 600;
+        }
+        
+        .quote {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 3px solid #d4af37;
+            padding: 14px 18px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+            font-style: italic;
+            color: #e8e8e8;
+        }
+        
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 12px 0;
+        }
+        
+        .tag {
+            padding: 6px 14px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            font-size: 13px;
+            color: #d4af37;
+        }
+        
+        .tag.danger {
+            background: rgba(231, 76, 60, 0.15);
+            border-color: rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+        }
+        
+        .tag.success {
+            background: rgba(46, 204, 113, 0.15);
+            border-color: rgba(46, 204, 113, 0.3);
+            color: #2ecc71;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        
+        .comparison-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .comparison-item.pro {
+            border-top: 3px solid #2ecc71;
+        }
+        
+        .comparison-item.con {
+            border-top: 3px solid #e74c3c;
+        }
+        
+        .comparison-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .comparison-item.pro .comparison-title {
+            color: #2ecc71;
+        }
+        
+        .comparison-item.con .comparison-title {
+            color: #e74c3c;
+        }
+        
+        .comparison-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .comparison-list li {
+            font-size: 13px;
+            color: #c0c0c0;
+            padding: 4px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .comparison-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+        }
+        
+        .step-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: step;
+        }
+        
+        .step-list li {
+            counter-increment: step;
+            padding: 12px 0 12px 44px;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .step-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 12px;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #d4af37, #b8941f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #0a0a0f;
+        }
+        
+        .step-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e8e8e8;
+            margin-bottom: 4px;
+        }
+        
+        .step-desc {
+            font-size: 13px;
+            color: #a0a0a0;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 20px 20px;
+            color: #606060;
+            font-size: 12px;
+        }
+        
+        .footer-logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: #d4af37;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        
+        .wt-bar {
+            margin: 20px 0;
+        }
+        
+        .wt-scale {
+            position: relative;
+            height: 40px;
+            background: linear-gradient(90deg, 
+                #3498db 0%, 
+                #2ecc71 20%, 
+                #f1c40f 40%, 
+                #e67e22 60%, 
+                #e74c3c 80%, 
+                #8e44ad 100%
+            );
+            border-radius: 20px;
+            margin: 12px 0;
+        }
+        
+        .wt-marker {
+            position: absolute;
+            top: -8px;
+            width: 4px;
+            height: 56px;
+            background: #fff;
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        
+        .wt-marker::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid #fff;
+        }
+        
+        .wt-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #a0a0a0;
+            margin-top: 4px;
+        }
+        
+        .wt-value {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #d4af37;
+            margin: 8px 0;
+        }
+        
+        .wt-paradigm {
+            text-align: center;
+            font-size: 14px;
+            color: #e8e8e8;
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 480px) {
+            .hero {
+                height: 240px;
+            }
+            
+            .hero-title {
+                font-size: 24px;
+            }
+            
+            .score-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">BEA 案例分析</div>
+            <div class="hero-title">特斯拉 Cybercab</div>
+            <div class="hero-subtitle">双极情绪美学深度分析 · 2026.09</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- 核心数据 -->
+        <div class="section">
+            <div class="section-title">核心数据</div>
+            <div class="total-score">
+                <div class="score-label">BEA 综合评分</div>
+                <div class="score-value">85<span class="score-unit">/100</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 85%"></div>
+                </div>
+            </div>
+            
+            <div class="score-grid">
+                <div class="score-item">
+                    <div class="score-label">W(T) 危极权重</div>
+                    <div class="score-value">0.385</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">主辅比</div>
+                    <div class="score-value">65:35</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">视觉范式</div>
+                    <div class="score-value" style="font-size: 16px;">均衡典雅</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">概念范式</div>
+                    <div class="score-value" style="font-size: 16px;">先锋反叛</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- W(T) 范式定位 -->
+        <div class="section">
+            <div class="section-title">范式定位</div>
+            <div class="card">
+                <div class="wt-value">W(T) = 0.385</div>
+                <div class="wt-paradigm">视觉层面：均衡典雅</div>
+                <div class="wt-scale">
+                    <div class="wt-marker" style="left: 38.5%"></div>
+                </div>
+                <div class="wt-labels">
+                    <span>治愈</span>
+                    <span>亲和</span>
+                    <span>均衡</span>
+                    <span>崇高</span>
+                    <span>冷峻</span>
+                    <span>先锋</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 四维评分 -->
+        <div class="section">
+            <div class="section-title">四维评分卡</div>
+            <div class="card">
+                <div class="dimension-score">
+                    <div class="dimension-header">
+                        <span class="dimension-name">双极张力</span>
+                        <span class="dimension-score-value">21/25</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 84%"></div>
+                    </div>
+                </div>
+                
+                <div class="dimension-score">
+                    <div class="dimension-header">
+                        <span class="dimension-name">结构秩序</span>
+                        <span class="dimension-score-value">23/25</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 92%"></div>
+                    </div>
+                </div>
+                
+                <div class="dimension-score">
+                    <div class="dimension-header">
+                        <span class="dimension-name">阈值安全</span>
+                        <span class="dimension-score-value">19/25</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 76%"></div>
+                    </div>
+                </div>
+                
+                <div class="dimension-score">
+                    <div class="dimension-header">
+                        <span class="dimension-name">语境适配</span>
+                        <span class="dimension-score-value">22/25</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 88%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 核心发现 -->
+        <div class="section">
+            <div class="section-title">核心发现</div>
+            <div class="quote">
+                Cybercab 最精妙的设计策略：<span class="highlight">用视觉亲和降低概念激进的冲击。</span>
+            </div>
+            
+            <div class="comparison">
+                <div class="comparison-item pro">
+                    <div class="comparison-title">视觉层面（亲极主导）</div>
+                    <ul class="comparison-list">
+                        <li>圆润流畅的水滴造型</li>
+                        <li>香槟金暖色调</li>
+                        <li>光滑细腻的金属质感</li>
+                        <li>极简干净的设计语言</li>
+                        <li>低重心稳定姿态</li>
+                    </ul>
+                </div>
+                <div class="comparison-item con">
+                    <div class="comparison-title">概念层面（危极主导）</div>
+                    <ul class="comparison-list">
+                        <li>无方向盘、无踏板</li>
+                        <li>完全无人驾驶</li>
+                        <li>颠覆传统的比例</li>
+                        <li>蝴蝶门独特开启方式</li>
+                        <li>全封闭式轮辋</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <p>无人驾驶对普通用户来说是令人恐惧的激进概念，如果再配上锐利攻击性的外观，接受度会很低。特斯拉用<span class="highlight">圆润亲和的外观</span>，让用户觉得"这个东西很安全、很友好"，同时保持了概念的先锋性。</p>
+        </div>
+        
+        <!-- 双极构成 -->
+        <div class="section">
+            <div class="section-title">双极构成</div>
+            <div class="card">
+                <div class="card-title">亲极元素（P+）占比 65%</div>
+                <div class="tag-list">
+                    <span class="tag success">圆润造型</span>
+                    <span class="tag success">柔和色彩</span>
+                    <span class="tag success">光滑质感</span>
+                    <span class="tag success">简洁设计</span>
+                    <span class="tag success">稳定姿态</span>
+                    <span class="tag success">大面积玻璃</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">危极元素（T−）占比 35%</div>
+                <div class="tag-list">
+                    <span class="tag danger">贯穿式灯带</span>
+                    <span class="tag danger">黑色底部包围</span>
+                    <span class="tag danger">全封闭轮辋</span>
+                    <span class="tag danger">无方向盘</span>
+                    <span class="tag danger">蝴蝶门</span>
+                    <span class="tag danger">独特比例</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 层级策略 -->
+        <div class="section">
+            <div class="section-title">层级策略</div>
+            <div class="card">
+                <div class="card-title">微差补偿（高级型）</div>
+                <ul class="step-list">
+                    <li>
+                        <div class="step-title">宏观：圆润柔和</div>
+                        <div class="step-desc">整体水滴/胶囊造型，大曲面连续无断点</div>
+                    </li>
+                    <li>
+                        <div class="step-title">中观：简洁干净</div>
+                        <div class="step-desc">无进气格栅、无门把手、无后视镜，视觉极度干净</div>
+                    </li>
+                    <li>
+                        <div class="step-title">微观：锐利精密</div>
+                        <div class="step-desc">灯带边缘锐利、轮辋细节精密、接缝处理精细</div>
+                    </li>
+                </ul>
+                <p style="margin-top: 16px; margin-bottom: 0;">这种<span class="highlight">"远看亲和、近看精密"</span>的结构，是高级感设计的典型特征。</p>
+            </div>
+        </div>
+        
+        <!-- 核心优势 -->
+        <div class="section">
+            <div class="section-title">最值得学习的三点</div>
+            <div class="card">
+                <ul class="step-list">
+                    <li>
+                        <div class="step-title">视觉亲和降低概念激进的冲击</div>
+                        <div class="step-desc">对所有"颠覆性产品"都有借鉴意义，用亲和的外观降低用户对激进概念的恐惧</div>
+                    </li>
+                    <li>
+                        <div class="step-title">微差补偿的层级结构</div>
+                        <div class="step-desc">宏观圆润、微观精密，"远看亲和、近看有细节"是高级感的来源</div>
+                    </li>
+                    <li>
+                        <div class="step-title">功能与形式的高度统一</div>
+                        <div class="step-desc">每一个设计元素都有功能合理性，不是为了造型而造型</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 改进建议 -->
+        <div class="section">
+            <div class="section-title">改进建议</div>
+            <div class="card">
+                <ul class="step-list">
+                    <li>
+                        <div class="step-title">增加侧面特征线 <span class="tag" style="font-size: 10px; padding: 2px 8px;">中优先级</span></div>
+                        <div class="step-desc">侧面过于干净，增加细微特征线提升层次感，W(T) 从 0.385 微升到 0.42</div>
+                    </li>
+                    <li>
+                        <div class="step-title">优化车内环境的治愈感 <span class="tag danger" style="font-size: 10px; padding: 2px 8px;">高优先级</span></div>
+                        <div class="step-desc">无人驾驶会让乘客焦虑，车内需要更柔和的材质、氛围灯、安心显示</div>
+                    </li>
+                    <li>
+                        <div class="step-title">提供多种外观风格选项 <span class="tag" style="font-size: 10px; padding: 2px 8px;">中优先级</span></div>
+                        <div class="step-desc">亲和版/运动版/豪华版，满足不同用户的审美偏好</div>
+                    </li>
+                    <li>
+                        <div class="step-title">优化人机交互的学习曲线 <span class="tag danger" style="font-size: 10px; padding: 2px 8px;">高优先级</span></div>
+                        <div class="step-desc">无方向盘/隐藏门把手学习成本高，需要清晰引导和物理紧急按钮</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 一句话总结 -->
+        <div class="section">
+            <div class="section-title">一句话总结</div>
+            <div class="quote">
+                特斯拉 Cybercab 是一款<span class="highlight">"视觉亲和、概念激进"</span>的均衡典雅范式作品，用圆润柔和的外观降低了无人驾驶这一先锋概念的接受门槛，是高级感设计的典型案例。
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-logo">BEA</div>
+            <div>双极情绪美学 · Bipolar Emotion Aesthetics</div>
+            <div style="margin-top: 8px;">分析日期：2026年9月15日 · BEA v2.7</div>
+            <div style="margin-top: 8px;">作者：马星（星空本空）</div>
+        </div>
+    </div>
+</body>
+</html>

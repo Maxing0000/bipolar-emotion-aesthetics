@@ -1,5 +1,72 @@
 # 更新日志
 
+## v2.7.0（2026-09-15）— WorkBuddy 平台支持与文档全面引导
+
+### 新增
+- **WorkBuddy 平台适配**：新增 `platforms/workbuddy/`，多平台支持表加入 WorkBuddy（原生技能 + 多模态图片分析）
+- **图片分析方法论升级**：SKILL.md 补齐 9 步标准图片分析流程、打分一致性要求（同图 t 值差异 ≤1、W(T) 差异 ≤0.1）、图片分析输出模板、各品类分析重点与 5 条常见误区
+- **案例库 Web 应用** `docs/case-library.html`：30 个案例，支持搜索 / 筛选 / 排序 / 详情查看
+- **图片分析助手 H5** `docs/image-analyzer.html`：上传图片 → 六项图像特征提取（边缘锐度 / 对称性 / 纹理复杂度 / 光影硬度 / 色彩温度 / 构图重心）→ BEA 映射打分 → W(T) → 完整报告
+
+### 文档
+- 全面优化文档，最大限度引导用户用自然语言使用 BEA（SKILL.md / README / QUICKSTART 重写使用引导）
+- 官网与案例库增加各 AI 平台的使用引导，移除官网内的图片分析入口、统一引导至 BEA 技能
+
+### 资源
+- 30 个案例实现图片 100% 覆盖（含 AI 补图），统一 16:9 比例、压缩体积并支持 WebP
+- 统一 favicon 与 logo，移动端自适应布局与触摸交互优化
+
+### 修复
+- 统一版本号：SKILL.md 尾部、`docs/index.html` 页脚、`templates/output-templates.md`、`bea_quant.py` 头注释全部对齐至 2.7.0
+- `scripts/package.py`：版本号改为从 `manifest.json` 单一来源读取；修正打包清单（`LICENSE` → `LICENSE.md`、补入 `references/06-image-anchors.md`、移除已下线的安装脚本）；新增打包前预检（`--check`），缺失文件直接报错退出，避免产出缺文件的包
+- **上传包移除二进制文件**：SkillHub 禁止上传二进制文件（png/jpg 等会被平台跳过并警告），打包清单不再包含 `assets/` 下的 logo 图标——图标在 SkillHub 网页端单独上传；`package.py` 预检新增二进制文件拦截，命中直接报错退出
+- 修正文档中指向已移除安装脚本的失效命令（README / QUICKSTART / FAQ），改为技能市场安装 + 手动克隆两条可用路径
+- 补齐 CHANGELOG 中缺失的 v2.6.0–v2.6.4 版本记录
+
+### README 重构与文档一致性（第二轮）
+- **README 重写**：628 行 → 约 330 行，新增目录导航与读者分层（普通用户「30 秒上手」在前，开发者「命令速查」在后）；8 个命令的详细输出示例压缩为速查表，维度权重 5 张表合并为 1 张，FAQ 精选后外链 `FAQ.md`
+- **修正失实描述**：平台表补入 WorkBuddy；徽章平台数 6+ → 7+、案例数统一为 30+；「六维分析」的旧说法改为随品类变化的「维度极性审计」；README 示例数据改用脚本实测输出
+- **`manifest.json` 修正品类声明**：`supported_categories` 由 10 个改为引擎实际支持的 5 个（phone / car / brand / ui / building），新增 `documented_domains` 记录案例库覆盖的九大领域；描述补充 WorkBuddy / SkillHub
+- **版本号彻底收口**：`bea_quant.py` 新增 `__version__` 常量，输出脚注、CLI 标题、`--help` 描述全部改为动态引用（原先硬编码 v2.4.0 / v2.2.1）；自测新增「头注释版本号与 `__version__` 一致」断言（自测 108 → 109 项）
+- **测试数表述去数字**：文档中「108 项自测」统一改为「全量自测」，避免每次增删测试都要改文档（`FAQ.md` 页脚版本号同步至 2.7.0）
+- **新增 SkillHub 上传包**：`scripts/package.py --skillhub` 生成 SkillHub 上传用 zip，`--all` 会一并生成
+
+### SkillHub 合规（第三轮）
+- **补齐 SKILL.md frontmatter 必填字段**：新增 `slug: bipolar-emotion-aesthetics`、`displayName: 双极情绪美学 BEA`（官方 release.md 将这两项列为发布阻断项），并补 `summary` / `tags` / `homepage` 建议字段
+- **修正上传包结构**：SkillHub 要求"ZIP 根目录包含 SKILL.md"，`--skillhub` 包由"外层套技能目录"改为平铺结构（此前按"技能目录"直觉实现，可能不被识别）
+- **`package.py` 内置 SkillHub 规范校验**：新增 `check_skillhub_spec()`，校验 frontmatter 必填字段、slug 是否 kebab-case 且长度 2–128、version 是否合法 SemVer 且与 `manifest.json` 一致；`--check` / `--skillhub` / `--all` 均会执行，不合规直接报错退出
+- **安全自查**：扫描上传包内全部文本文件，确认无密钥、本地绝对路径与内网地址（对应 TRACE 评测的 Trust 红线维度）
+- `SKILLHUB.md` 重写发布章节：补充官方三种发布途径（网页 / CLI / Agent 对话，WorkBuddy 在支持列表内）、平台规范要求表、TRACE 评测说明、CLI 发布不带图标的注意事项
+
+## v2.6.4（2026-09-15）— 案例库丰富（第三阶段）
+- 新增 5 个案例：热门产品 + 经典案例——华为 Mate 60 Pro、蔚来 ET9、大众甲壳虫、包豪斯设计、迪士尼乐园
+
+## v2.6.3（2026-09-15）— 案例库丰富（第二阶段）
+- 新增 5 个案例：失败案例 2 个（某电竞游戏手机、某新势力轿车）、对比案例 2 个（iPhone Duo vs 游戏手机、奔驰 S 级 vs 宝马 7 系）、跨模态案例 1 个（苹果全家桶产品+界面+声音）
+
+## v2.6.2（2026-09-15）— 案例库丰富（第一阶段）
+- 新增 5 个案例，覆盖六大范式
+
+## v2.6.1（2026-09-15）
+
+### 新增
+- `references/06-image-anchors.md`：图片分析锚点示例与评分一致性指南（标准流程、视觉锚点速查表、完整示例、校准方法）
+- 官网新增图片分析章节与轻量级快速诊断模式说明
+
+### 修复
+- 修正 SKILL.md description 中的版本号
+
+## v2.6.0（2026-09-15）— 轻量级诊断模式
+
+### 新增
+- **轻量级快速诊断模式**：触发词「快速看看 / 简单诊断 / 大概怎么样 / 快速分析」，只输出 W(T) + 范式定位 + 主辅比 + 一句话结论，速度快一倍，减少长上下文导致的指令遗忘
+- `manifest.json` 新增 `quick_diagnose` 能力声明
+
+### 变更
+- SkillHub 同步适配：清理不支持的文件格式（.png 截图、.DS_Store 等），确保上传不丢文件
+- 修正 SKILL.md frontmatter 位置（移动到文件最开头）
+- 仓库不再内置 `install.sh` / `install.ps1` 等本地安装脚本，安装统一走技能市场
+
 ## v2.5.0（2026-09-15）— 核心算法范式升级
 
 ### P0 严谨性升级

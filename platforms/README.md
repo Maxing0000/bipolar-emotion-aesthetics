@@ -34,7 +34,7 @@ BEA（双极情绪美学）技能可在多个 AI 平台使用，本目录提供�
 - 需要平台支持代码执行（如 ChatGPT Code Interpreter、Claude Artifacts、Dify 代码节点）
 - 调用 `scripts/bea_quant.py` 进行精确计算
 - 支持 10+ 种命令：report/suggest/generate/sensitivity/compare/multigroup/style-cycle
-- 108 项自测试全部通过
+- 全量自测试全部通过
 
 ## 快速开始（30秒）
 

@@ -1897,6 +1897,33 @@
                     "新园区可适度提升至亲和精致",
                     "强化IP生态作为叙事性基础"
                 ]
+            },
+            {
+                id: 31,
+                title: "Tesla Cybercab",
+                brand: "特斯拉 Tesla",
+                category: "汽车/交通工具",
+                paradigm: "balanced",
+                paradigmName: "均衡典雅",
+                type: "success",
+                typeName: "成功案例",
+                wt: 0.385,
+                year: "2024",
+                description: "全自动驾驶Robotaxi，视觉亲和+概念激进的复合范式，用圆润外观降低无人驾驶的接受门槛。",
+                dimensions: [
+                    { name: "曲面", t: 3, polarity: "P+亲极", reason: "水滴/胶囊造型，大曲面连续无断点" },
+                    { name: "特征线", t: 4, polarity: "P+偏亲", reason: "几乎无明显腰线，侧面极简" },
+                    { name: "灯组", t: 6, polarity: "T−危极", reason: "贯穿式细灯带，边缘锐利，与圆润车身形成对比" },
+                    { name: "比例", t: 4, polarity: "中性", reason: "短前后悬、长轴距、低重心，造型独特" },
+                    { name: "材质", t: 3, polarity: "P+亲极", reason: "香槟金金属漆，光滑细腻，影棚柔光" }
+                ],
+                insight: "Cybercab最精妙的设计策略是'用视觉亲和降低概念激进的冲击'。无人驾驶、无方向盘对普通用户来说是令人恐惧的激进概念（概念层面W(T)≈0.75，先锋反叛），但特斯拉用圆润柔和的外观（视觉层面W(T)=0.385，均衡典雅）让用户觉得'这个东西很安全、很友好'。这种'外柔内刚'的组合，是高级感设计的典型案例，对所有颠覆性产品都有借鉴意义。层级策略采用微差补偿：宏观圆润、中观简洁、微观锐利精密，远看亲和、近看有细节。",
+                prescription: [
+                    "增加侧面细微特征线，W(T)从0.385微升至0.42，提升层次感",
+                    "优化车内环境的治愈感，更柔和材质+氛围灯+安心显示，降低乘客焦虑",
+                    "提供多种外观风格选项（亲和版/运动版/豪华版），满足不同偏好",
+                    "优化人机交互学习曲线，清晰引导+物理紧急按钮，降低首次使用门槛"
+                ]
             }
         ];
 
@@ -1931,7 +1958,8 @@
             27: 'assets/cases/nio-et9.jpg',
             28: 'assets/cases/volkswagen-beetle.jpg',
             29: 'assets/cases/bauhaus.jpg',
-            30: 'assets/cases/disneyland.jpg'
+            30: 'assets/cases/disneyland.jpg',
+            31: 'assets/cases/tesla-cybercab.jpg'
         };
         cases.forEach(c => { if (caseImages[c.id]) c.image = caseImages[c.id]; });
 

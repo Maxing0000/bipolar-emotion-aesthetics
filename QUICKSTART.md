@@ -8,16 +8,15 @@
 
 ### 第一步：安装（30秒）
 
-```bash
-# macOS / Linux（一键安装，自动检测豆包技能目录）
-curl -fsSL https://raw.githubusercontent.com/Maxing0000/bipolar-emotion-aesthetics/main/install.sh | bash
-```
+在 **SkillHub** / **WorkBuddy** / **豆包** 的技能市场里搜索「双极情绪美学」或「BEA」，点安装即可。
 
-安装成功后，重启豆包，技能自动加载。
+安装完成后技能自动加载，不需要重启或配置。
+
+> 其他平台（ChatGPT / Claude / 通义千问 / Dify）：把 `platforms/universal-system-prompt.md` 的内容粘贴到该平台的自定义指令或系统提示词里，写法见 `platforms/` 目录。
 
 ### 第二步：用自然语言提问（不需要记命令）
 
-在豆包里直接说：
+直接说就行：
 
 | 你想做什么 | 直接说 |
 |---|---|
@@ -93,4 +92,4 @@ A: 能。上传图片 + "帮我分析"，AI 会自动识别元素并分析。
 
 ---
 
-**BEA v2.5** — 让审美从"我觉得"变成"我们来算"
+**BEA v2.7.0** — 让审美从"我觉得"变成"我们来算"
