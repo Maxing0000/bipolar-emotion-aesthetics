@@ -64,6 +64,34 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo:hover .logo-icon {
+            transform: scale(1.05);
+        }
+
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .back-to-home:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(44,62,80,0.05);
         }
 
         .logo-icon {
@@ -925,13 +953,13 @@
     <!-- ===== 顶部导航 ===== -->
     <header class="header">
         <div class="header-content">
-            <div class="logo">
+            <a href="index.html" class="logo" title="返回 BEA 官网">
                 <div class="logo-icon">BEA</div>
                 <div class="logo-text">
                     <h1>双极情绪美学 · 案例库</h1>
                     <p>Bipolar Emotion Aesthetics Case Library</p>
                 </div>
-            </div>
+            </a>
             <div class="search-box">
                 <span class="search-icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -941,6 +969,12 @@
                 </span>
                 <input type="text" id="searchInput" placeholder="搜索案例名称、品牌、关键词...">
             </div>
+            <a href="index.html" class="back-to-home">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+                返回官网
+            </a>
             <div class="stats">
                 <div class="stat-item">
                     <div class="stat-number" id="totalCases">30</div>
