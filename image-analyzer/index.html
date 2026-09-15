@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEA 图片分析助手 · 双极情绪美学</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232c3e50'/%3E%3Ctext x='32' y='44' font-size='28' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'%3EBEA%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #252525;
+            --text-primary: #f5e6d3;
+            --text-secondary: #a8a29e;
+            --text-tertiary: #6b6560;
+            --accent-gold: #d4a574;
+            --accent-gold-light: #e8c9a0;
+            --border-color: rgba(212,165,116,0.15);
+            --paradigm-healing: #66bb6a;
+            --paradigm-friendly: #42a5f5;
+            --paradigm-balanced: #7c8bd6;
+            --paradigm-sublime: #ff7043;
+            --paradigm-cold: #78909c;
+            --paradigm-avant: #ba68c8;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ===== 导航 ===== */
+        .header {
+            background: rgba(26,26,26,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-gold), #b8956a);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .logo-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--accent-gold); }
+
+        /* ===== 主内容 ===== */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(212,165,116,0.1);
+            border: 1px solid rgba(212,165,116,0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--accent-gold);
+            margin-bottom: 16px;
+            letter-spacing: 0.05em;
+        }
+
+        .hero h2 {
+            font-size: 32px;
+            font-weight: 700;
+            font-family: 'Noto Serif SC', serif;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== 步骤指示器 ===== */
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            background: var(--bg-secondary);
+            transition: all 0.3s;
+        }
+
+        .step.active {
+            background: rgba(212,165,116,0.15);
+            color: var(--accent-gold);
+            border: 1px solid rgba(212,165,116,0.3);
+        }
+
+        .step.completed {
+            background: rgba(102,187,106,0.1);
+            color: var(--paradigm-healing);
+        }
+
+        .step-num {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .step.active .step-num { background: var(--accent-gold); color: #1a1a1a; }
+        .step.completed .step-num { background: var(--paradigm-healing); color: #1a1a1a; }
+
+        /* ===== 上传区域 ===== */
+        .upload-section {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 48px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 32px;
+        }
+
+        .upload-section:hover, .upload-section.dragover {
+            border-color: var(--accent-gold);
+            background: rgba(212,165,116,0.05);
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            background: rgba(212,165,116,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upload-section h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .upload-section p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .upload-formats {
+            margin-top: 12px;
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        /* ===== 图片预览 ===== */
+        .preview-section {
+            display: none;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .preview-section.active { display: block; }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .preview-header h3 { font-size: 16px; }
+
+        .preview-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover { background: #333; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-gold), #b8956a);
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(212,165,116,0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .preview-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .preview-image {
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .preview-image img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+        }
+
+        .color-analysis {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .color-swatch:hover { transform: scale(1.1); }
+
+        .color-swatch .color-hex {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+        }
+
+        .analysis-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        /* ===== 维度打分 ===== */
+        .scoring-section {
+            display: none;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .scoring-section.active { display: block; }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            font-family: 'Noto Serif SC', serif;
+            margin-bottom: 8px;
+        }
+
+        .section-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .dimension-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .dimension-item {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .dimension-name {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dimension-polarity {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
+        }
+
+        .polarity-t { background: rgba(255,112,67,0.15); color: var(--paradigm-sublime); }
+        .polarity-p { background: rgba(102,187,106,0.15); color: var(--paradigm-healing); }
+        .polarity-n { background: rgba(124,139,214,0.15); color: var(--paradigm-balanced); }
+
+        .dimension-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .slider-container {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(90deg, var(--paradigm-healing), var(--paradigm-balanced), var(--paradigm-sublime));
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(212,165,116,0.4);
+            transition: transform 0.2s;
+        }
+
+        .slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        .dimension-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            background: rgba(212,165,116,0.05);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-gold);
+        }
+
+        /* ===== 结果展示 ===== */
+        .result-section {
+            display: none;
+        }
+
+        .result-section.active { display: block; }
+
+        .result-hero {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--paradigm-color, rgba(212,165,116,0.1)), transparent 70%);
+            pointer-events: none;
+        }
+
+        .wt-display {
+            font-size: 72px;
+            font-weight: 900;
+            font-family: 'Noto Serif SC', serif;
+            color: var(--paradigm-color, var(--accent-gold));
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .wt-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .paradigm-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: var(--paradigm-color, var(--accent-gold));
+            color: #1a1a1a;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .result-summary {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .result-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .result-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .score-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .score-bar-label {
+            width: 80px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .score-bar-track {
+            flex: 1;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .score-bar-value {
+            width: 40px;
+            text-align: right;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .dimension-result-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dimension-result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .dimension-result-name {
+            font-size: 13px;
+        }
+
+        .dimension-result-value {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .t-indicator {
+            width: 40px;
+            height: 6px;
+            background: var(--bg-primary);
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .t-indicator-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--paradigm-healing), var(--paradigm-sublime));
+            border-radius: 3px;
+        }
+
+        .t-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-gold);
+            width: 24px;
+        }
+
+        /* ===== 诊断与建议 ===== */
+        .diagnosis-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .diagnosis-item {
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .diagnosis-item.warning { border-left-color: var(--paradigm-sublime); }
+        .diagnosis-item.success { border-left-color: var(--paradigm-healing); }
+
+        .diagnosis-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .diagnosis-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .prescription-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .prescription-list li {
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .prescription-list li::before {
+            content: '→';
+            position: absolute;
+            left: 14px;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        /* ===== 操作按钮 ===== */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== 历史记录 ===== */
+        .history-section {
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .history-header h3 {
+            font-size: 18px;
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .history-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .history-item {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .history-thumb {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .history-wt {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .history-paradigm {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .history-date {
+            font-size: 10px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        .history-delete {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .history-item:hover .history-delete { opacity: 1; }
+
+        .empty-history {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-tertiary);
+            font-size: 13px;
+        }
+
+        /* ===== 范式颜色 ===== */
+        .paradigm-healing { --paradigm-color: var(--paradigm-healing); }
+        .paradigm-friendly { --paradigm-color: var(--paradigm-friendly); }
+        .paradigm-balanced { --paradigm-color: var(--paradigm-balanced); }
+        .paradigm-sublime { --paradigm-color: var(--paradigm-sublime); }
+        .paradigm-cold { --paradigm-color: var(--paradigm-cold); }
+        .paradigm-avant { --paradigm-color: var(--paradigm-avant); }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .header { padding: 12px 16px; }
+            .nav-links { display: none; }
+            .main { padding: 16px; }
+            .hero h2 { font-size: 24px; }
+            .steps { flex-wrap: wrap; }
+            .upload-section { padding: 32px 16px; }
+            .preview-content { grid-template-columns: 1fr; }
+            .result-grid { grid-template-columns: 1fr; }
+            .wt-display { font-size: 48px; }
+            .scoring-section { padding: 20px; }
+            .result-hero { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== 导航 ===== -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">BEA</div>
+                <div class="logo-text">
+                    <h1>图片分析助手</h1>
+                    <p>Bipolar Emotion Aesthetics</p>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">返回官网</a></li>
+                <li><a href="case-library.html">案例库</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- ===== 主内容 ===== -->
+    <main class="main">
+        <div class="hero">
+            <span class="hero-badge">✨ AI 美学分析工具</span>
+            <h2>上传一张图片，读懂它的美感</h2>
+            <p>基于双极情绪美学（BEA）理论，自动分析图片的极性构成、计算 W(T) 危极权重、定位美学范式，给出专业的诊断与改进建议。</p>
+        </div>
+
+        <!-- 步骤指示器 -->
+        <div class="steps">
+            <div class="step active" id="step1">
+                <span class="step-num">1</span>
+                <span>上传图片</span>
+            </div>
+            <div class="step" id="step2">
+                <span class="step-num">2</span>
+                <span>维度打分</span>
+            </div>
+            <div class="step" id="step3">
+                <span class="step-num">3</span>
+                <span>生成报告</span>
+            </div>
+        </div>
+
+        <!-- ===== 上传区域 ===== -->
+        <div class="upload-section" id="uploadSection">
+            <div class="upload-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d4a574" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="17 8 12 3 7 8"/>
+                    <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+            </div>
+            <h3>点击或拖拽上传图片</h3>
+            <p>支持产品设计、建筑、UI界面、海报、品牌视觉等各类设计图片</p>
+            <div class="upload-formats">JPG / PNG / WebP · 建议尺寸 1000px 以上</div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+
+        <!-- ===== 图片预览 ===== -->
+        <div class="preview-section" id="previewSection">
+            <div class="preview-header">
+                <h3>📷 图片预览与自动分析</h3>
+                <div class="preview-actions">
+                    <button class="btn btn-secondary" onclick="resetAll()">重新上传</button>
+                    <button class="btn btn-primary" onclick="goToScoring()">开始维度打分 →</button>
+                </div>
+            </div>
+            <div class="preview-content">
+                <div class="preview-image">
+                    <img id="previewImage" src="" alt="预览图片">
+                </div>
+                <div class="color-analysis">
+                    <div>
+                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px;">🎨 主色调提取</div>
+                        <div class="color-palette" id="colorPalette"></div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px;">📊 图像统计</div>
+                        <div class="analysis-stats">
+                            <div class="stat-card">
+                                <div class="stat-label">平均亮度</div>
+                                <div class="stat-value" id="avgBrightness">-</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">对比度</div>
+                                <div class="stat-value" id="contrast">-</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">色彩饱和度</div>
+                                <div class="stat-value" id="saturation">-</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">图片尺寸</div>
+                                <div class="stat-value" id="imageSize">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 维度打分 ===== -->
+        <div class="scoring-section" id="scoringSection">
+            <h3 class="section-title">🎯 维度打分</h3>
+            <p class="section-desc">根据图片内容，为每个维度的危极强度打分（0-10）。0=完全亲极（柔和安全），10=完全危极（尖锐刺激）。系统会根据你的打分自动计算 W(T) 并生成分析报告。</p>
+
+            <div class="dimension-list" id="dimensionList">
+                <!-- 维度项目由 JS 动态生成 -->
+            </div>
+
+            <div class="action-bar">
+                <button class="btn btn-secondary" onclick="goToPreview()">← 返回预览</button>
+                <button class="btn btn-primary" onclick="generateReport()">生成分析报告 ✨</button>
+            </div>
+        </div>
+
+        <!-- ===== 结果展示 ===== -->
+        <div class="result-section" id="resultSection">
+            <!-- 结果由 JS 动态生成 -->
+        </div>
+
+        <!-- ===== 历史记录 ===== -->
+        <div class="history-section">
+            <div class="history-header">
+                <h3>📚 历史分析记录</h3>
+                <button class="btn btn-secondary" onclick="clearHistory()" style="font-size: 12px;">清空记录</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="empty-history">暂无历史记录，上传第一张图片开始分析吧！</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ===== 维度配置 =====
+        const dimensions = [
+            {
+                name: '形状线条',
+                key: 'shape',
+                hint: '圆润曲线=亲极(0-3)，直线中性(4-5)，锐角折线=危极(6-10)',
+                default: 4
+            },
+            {
+                name: '色彩色相',
+                key: 'color',
+                hint: '柔暖低饱和=亲极(0-3)，中性色(4-5)，高饱和撞色=危极(6-10)',
+                default: 4
+            },
+            {
+                name: '明度对比',
+                key: 'brightness',
+                hint: '高明度柔和过渡=亲极(0-3)，中等对比(4-5)，强黑白反差=危极(6-10)',
+                default: 4
+            },
+            {
+                name: '质感肌理',
+                key: 'texture',
+                hint: '光滑温润=亲极(0-3)，中性质感(4-5)，粗糙坚硬冰冷=危极(6-10)',
+                default: 4
+            },
+            {
+                name: '构图空间',
+                key: 'composition',
+                hint: '居中对称留白=亲极(0-3)，均衡构图(4-5)，偏移拥挤失衡=危极(6-10)',
+                default: 4
+            },
+            {
+                name: '光影',
+                key: 'light',
+                hint: '漫射柔光均匀=亲极(0-3)，自然光影(4-5)，硬光强对比=危极(6-10)',
+                default: 4
+            }
+        ];
+
+        // ===== 范式配置 =====
+        const paradigms = [
+            { max: 0.15, name: '治愈松弛', class: 'paradigm-healing', desc: '放松、舒展、无攻击性，像被温柔接住' },
+            { max: 0.30, name: '亲和精致', class: 'paradigm-friendly', desc: '第一眼亲和友好，细看精密有锐度' },
+            { max: 0.48, name: '均衡典雅', class: 'paradigm-balanced', desc: '刚柔各半、以柔领刚，克制端庄、持久耐看' },
+            { max: 0.60, name: '崇高震撼', class: 'paradigm-sublime', desc: '先屏息敬畏、后沉浸沉醉的深层震撼' },
+            { max: 0.66, name: '冷峻克制', class: 'paradigm-cold', desc: '以冷硬简为主，靠精准比例维持人性温度' },
+            { max: 0.85, name: '先锋反叛', class: 'paradigm-avant', desc: '刺激、反叛、临界于不适的痛快' },
+            { max: Infinity, name: '逼近越阈', class: 'paradigm-avant', desc: '越过审美阈值，产生真实不适' }
+        ];
+
+        // ===== 状态 =====
+        let currentImage = null;
+        let currentScores = {};
+        let history = JSON.parse(localStorage.getItem('bea_history') || '[]');
+
+        // ===== 初始化 =====
+        document.addEventListener('DOMContentLoaded', () => {
+            initUpload();
+            initDimensions();
+            renderHistory();
+        });
+
+        // ===== 上传功能 =====
+        function initUpload() {
+            const uploadSection = document.getElementById('uploadSection');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadSection.addEventListener('click', () => fileInput.click());
+
+            uploadSection.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadSection.classList.add('dragover');
+            });
+
+            uploadSection.addEventListener('dragleave', () => {
+                uploadSection.classList.remove('dragover');
+            });
+
+            uploadSection.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadSection.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    handleImage(file);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handleImage(file);
+            });
+        }
+
+        function handleImage(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImage = e.target.result;
+                document.getElementById('previewImage').src = currentImage;
+                document.getElementById('uploadSection').style.display = 'none';
+                document.getElementById('previewSection').classList.add('active');
+                updateStep(1, 2);
+                analyzeImage();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ===== 图片分析 =====
+        function analyzeImage() {
+            const img = document.getElementById('previewImage');
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const maxSize = 200;
+                const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+
+                // 计算统计数据
+                let totalBrightness = 0;
+                let totalSaturation = 0;
+                let minBrightness = 255;
+                let maxBrightness = 0;
+                const colorCounts = {};
+
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = data[i], g = data[i+1], b = data[i+2];
+                    const brightness = (r + g + b) / 3;
+                    totalBrightness += brightness;
+                    minBrightness = Math.min(minBrightness, brightness);
+                    maxBrightness = Math.max(maxBrightness, brightness);
+
+                    const max = Math.max(r, g, b);
+                    const min = Math.min(r, g, b);
+                    const saturation = max === 0 ? 0 : (max - min) / max;
+                    totalSaturation += saturation;
+
+                    // 量化颜色用于调色板
+                    const qr = Math.round(r / 32) * 32;
+                    const qg = Math.round(g / 32) * 32;
+                    const qb = Math.round(b / 32) * 32;
+                    const key = `${qr},${qg},${qb}`;
+                    colorCounts[key] = (colorCounts[key] || 0) + 1;
+                }
+
+                const pixelCount = data.length / 4;
+                const avgBrightness = Math.round(totalBrightness / pixelCount);
+                const contrast = Math.round(maxBrightness - minBrightness);
+                const avgSaturation = Math.round((totalSaturation / pixelCount) * 100);
+
+                document.getElementById('avgBrightness').textContent = avgBrightness + '/255';
+                document.getElementById('contrast').textContent = contrast;
+                document.getElementById('saturation').textContent = avgSaturation + '%';
+                document.getElementById('imageSize').textContent = img.width + '×' + img.height;
+
+                // 提取主色调
+                const sortedColors = Object.entries(colorCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 6);
+
+                const palette = document.getElementById('colorPalette');
+                palette.innerHTML = sortedColors.map(([key, count]) => {
+                    const [r, g, b] = key.split(',').map(Number);
+                    const hex = '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+                    return `<div class="color-swatch" style="background: ${hex};" title="${hex}"><span class="color-hex">${hex}</span></div>`;
+                }).join('');
+
+                // 根据图像统计自动建议分数
+                suggestScores(avgBrightness, contrast, avgSaturation);
+            };
+        }
+
+        function suggestScores(brightness, contrast, saturation) {
+            // 简单的自动建议逻辑
+            const brightnessScore = brightness < 80 ? 7 : brightness < 150 ? 5 : 3;
+            const contrastScore = contrast > 150 ? 7 : contrast > 100 ? 5 : 3;
+            const saturationScore = saturation > 60 ? 7 : saturation > 40 ? 5 : 3;
+
+            // 更新滑块
+            dimensions.forEach(dim => {
+                let suggested = dim.default;
+                if (dim.key === 'brightness') suggested = brightnessScore;
+                if (dim.key === 'color') suggested = saturationScore;
+                if (dim.key === 'light') suggested = contrastScore;
+
+                const slider = document.getElementById(`slider-${dim.key}`);
+                const valueDisplay = document.getElementById(`value-${dim.key}`);
+                if (slider) {
+                    slider.value = suggested;
+                    valueDisplay.textContent = suggested;
+                    currentScores[dim.key] = suggested;
+                }
+            });
+        }
+
+        // ===== 维度打分 =====
+        function initDimensions() {
+            const list = document.getElementById('dimensionList');
+            list.innerHTML = dimensions.map(dim => `
+                <div class="dimension-item">
+                    <div class="dimension-header">
+                        <div class="dimension-name">
+                            ${dim.name}
+                            <span class="dimension-polarity polarity-n" id="polarity-${dim.key}">中性</span>
+                        </div>
+                        <div class="dimension-value" id="value-${dim.key}">${dim.default}</div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="slider-${dim.key}" min="0" max="10" value="${dim.default}" step="1">
+                        <div class="slider-labels">
+                            <span>0 亲极（柔和）</span>
+                            <span>5 中性</span>
+                            <span>10 危极（刺激）</span>
+                        </div>
+                    </div>
+                    <div class="dimension-hint">💡 ${dim.hint}</div>
+                </div>
+            `).join('');
+
+            // 绑定滑块事件
+            dimensions.forEach(dim => {
+                const slider = document.getElementById(`slider-${dim.key}`);
+                const valueDisplay = document.getElementById(`value-${dim.key}`);
+                const polarityDisplay = document.getElementById(`polarity-${dim.key}`);
+
+                currentScores[dim.key] = dim.default;
+
+                slider.addEventListener('input', (e) => {
+                    const value = parseInt(e.target.value);
+                    currentScores[dim.key] = value;
+                    valueDisplay.textContent = value;
+
+                    // 更新极性标签
+                    if (value <= 3) {
+                        polarityDisplay.textContent = '亲极';
+                        polarityDisplay.className = 'dimension-polarity polarity-p';
+                    } else if (value >= 7) {
+                        polarityDisplay.textContent = '危极';
+                        polarityDisplay.className = 'dimension-polarity polarity-t';
+                    } else {
+                        polarityDisplay.textContent = '中性';
+                        polarityDisplay.className = 'dimension-polarity polarity-n';
+                    }
+                });
+            });
+        }
+
+        // ===== 步骤控制 =====
+        function updateStep(from, to) {
+            document.getElementById(`step${from}`).classList.remove('active');
+            document.getElementById(`step${from}`).classList.add('completed');
+            document.getElementById(`step${to}`).classList.add('active');
+        }
+
+        function goToScoring() {
+            document.getElementById('previewSection').classList.remove('active');
+            document.getElementById('scoringSection').classList.add('active');
+            updateStep(2, 3);
+            document.getElementById('scoringSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function goToPreview() {
+            document.getElementById('scoringSection').classList.remove('active');
+            document.getElementById('previewSection').classList.add('active');
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('step2').classList.remove('completed');
+        }
+
+        // ===== 生成报告 =====
+        function generateReport() {
+            // 计算 W(T) - 等权重平均
+            const scores = Object.values(currentScores);
+            const wt = scores.reduce((sum, s) => sum + s / 10, 0) / scores.length;
+            const wtRounded = Math.round(wt * 1000) / 1000;
+
+            // 定位范式
+            const paradigm = paradigms.find(p => wtRounded < p.max);
+
+            // 计算四维评分
+            const tensionScore = calculateTensionScore(wtRounded);
+            const orderScore = calculateOrderScore();
+            const thresholdScore = calculateThresholdScore(wtRounded);
+            const contextScore = 75; // 默认分
+            const totalScore = Math.round((tensionScore + orderScore + thresholdScore + contextScore) / 4);
+
+            // 诊断
+            const diagnoses = generateDiagnoses(wtRounded, paradigm);
+            const prescriptions = generatePrescriptions(wtRounded, paradigm);
+
+            // 生成摘要
+            const summary = generateSummary(wtRounded, paradigm, totalScore);
+
+            // 渲染结果
+            renderResult(wtRounded, paradigm, totalScore, summary, tensionScore, orderScore, thresholdScore, contextScore, diagnoses, prescriptions);
+
+            // 保存到历史
+            saveToHistory(wtRounded, paradigm.name);
+
+            // 滚动到结果
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function calculateTensionScore(wt) {
+            // 张力评分：W(T) 在 0.3-0.6 之间最佳
+            if (wt >= 0.3 && wt <= 0.6) return 22 + Math.round(Math.random() * 3);
+            if (wt >= 0.2 && wt <= 0.7) return 18 + Math.round(Math.random() * 4);
+            return 12 + Math.round(Math.random() * 6);
+        }
+
+        function calculateOrderScore() {
+            // 秩序评分：基于维度间的一致性
+            const scores = Object.values(currentScores);
+            const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+            const variance = scores.reduce((sum, s) => sum + Math.pow(s - avg, 2), 0) / scores.length;
+            const stdDev = Math.sqrt(variance);
+            // 标准差越小，秩序越好
+            return Math.max(15, Math.min(25, 25 - stdDev * 2));
+        }
+
+        function calculateThresholdScore(wt) {
+            // 阈值安全评分：W(T) 越接近越阈越低
+            if (wt < 0.7) return 22 + Math.round(Math.random() * 3);
+            if (wt < 0.85) return 15 + Math.round(Math.random() * 5);
+            return 8 + Math.round(Math.random() * 5);
+        }
+
+        function generateDiagnoses(wt, paradigm) {
+            const diagnoses = [];
+
+            if (wt < 0.15) {
+                diagnoses.push({
+                    type: 'warning',
+                    title: '⚠️ 甜腻症（亲极过载）',
+                    desc: 'W(T) 过低，全片柔和无锐度，可能显得发腻、幼稚、廉价。建议在高价值细节处注入 10%-20% 危极（利落线条、冷灰色、清晰边界），做到"柔中藏骨"。'
+                });
+            }
+
+            if (wt > 0.7 && wt < 0.85) {
+                diagnoses.push({
+                    type: 'warning',
+                    title: '⚠️ 攻击症（危极过载）',
+                    desc: 'W(T) 偏高，危极元素过多，可能令人紧张想回避。建议扩大亲极基底，用大曲面、柔光、对称接住张力，将 W(T) 降到范式区间内。'
+                });
+            }
+
+            if (wt > 0.85) {
+                diagnoses.push({
+                    type: 'warning',
+                    title: '🚨 越阈警告',
+                    desc: 'W(T) 超过 0.85，已逼近或越过审美阈值，可能产生真实不适而非审美张力。必须大幅增加亲极元素和秩序约束，否则将从"先锋"滑向"难看"。'
+                });
+            }
+
+            // 检查维度一致性
+            const scores = Object.values(currentScores);
+            const maxScore = Math.max(...scores);
+            const minScore = Math.min(...scores);
+            if (maxScore - minScore > 5) {
+                diagnoses.push({
+                    type: 'warning',
+                    title: '⚠️ 层级冲突症',
+                    desc: '各维度极性差异过大（最高分与最低分相差超过5），可能造成"宏观柔和却微观攻击"的违和感。建议逐层审计，选择同向叠加或微差补偿策略，消除方向冲突。'
+                });
+            }
+
+            if (diagnoses.length === 0) {
+                diagnoses.push({
+                    type: 'success',
+                    title: '✅ 双极配比健康',
+                    desc: `W(T)=${wt} 落在${paradigm.name}范式的健康区间内，双极配比合理，张力与秩序平衡。继续保持当前的极性配置，可在细节处做微优化。`
+                });
+            }
+
+            return diagnoses;
+        }
+
+        function generatePrescriptions(wt, paradigm) {
+            const prescriptions = [];
+
+            if (wt < 0.2) {
+                prescriptions.push('在视觉焦点处（如 logo、按钮、关键线条）注入锐利元素，将对应维度 t 值提升 2-3 级');
+                prescriptions.push('增加 1-2 个冷灰色或高对比色块，打破全柔和的单调感');
+                prescriptions.push('检查是否有"重点通胀"——确保有 1-2 个明确的视觉焦点');
+            } else if (wt > 0.6) {
+                prescriptions.push('扩大亲极基底：增加留白、柔和曲线、漫射光影，将 1-2 个维度的 t 值降低 2-3 级');
+                prescriptions.push('建立更强的秩序主线：对称、比例模数、节奏韵律，用秩序收编张力');
+                prescriptions.push('控制高危极元素数量：一屏内高危极强调点不超过 1-2 个');
+            } else {
+                prescriptions.push('保持当前的双极配比，这是最耐看的"黄金区间"');
+                prescriptions.push('可在微观细节处做微差补偿：宏观定基调，微观用对立极补偿，增加精密感');
+                prescriptions.push('尝试微调 1 个维度的 t 值（±1），观察整体感受变化，找到最精准的配比');
+            }
+
+            prescriptions.push('进行远观测试：退到真实使用距离，确认第一情绪等于目标范式');
+            prescriptions.push('进行近看/长期测试：凑近看是否有精密锚点，连续观看是否疲劳');
+
+            return prescriptions;
+        }
+
+        function generateSummary(wt, paradigm, score) {
+            let feeling = '';
+            if (wt < 0.15) feeling = '这张图片给人极度放松、治愈的感觉，像被温柔接住。';
+            else if (wt < 0.30) feeling = '这张图片亲和友好，细看有精密细节，舒适而不平庸。';
+            else if (wt < 0.48) feeling = '这张图片刚柔并济、克制端庄，持久耐看，是经典的均衡之美。';
+            else if (wt < 0.60) feeling = '这张图片先让人屏息敬畏，随后沉浸沉醉，具有深层的震撼力。';
+            else if (wt < 0.66) feeling = '这张图片冷硬简洁，靠精准比例维持人性温度，专业而克制。';
+            else if (wt < 0.85) feeling = '这张图片刺激、反叛，临界于不适的痛快，面向高阈值受众。';
+            else feeling = '这张图片张力过强，可能越过审美阈值，需要增加安抚元素。';
+
+            return `${feeling} 综合 BEA 四维评分 ${score}/100，定位为「${paradigm.name}」范式。${paradigm.desc}。`;
+        }
+
+        function renderResult(wt, paradigm, totalScore, summary, tension, order, threshold, context, diagnoses, prescriptions) {
+            const resultSection = document.getElementById('resultSection');
+            resultSection.classList.add('active');
+
+            resultSection.innerHTML = `
+                <div class="result-hero ${paradigm.class}">
+                    <div class="wt-display">${wt}</div>
+                    <div class="wt-label">W(T) 危极权重指数</div>
+                    <div class="paradigm-badge">${paradigm.name}</div>
+                    <p class="result-summary">${summary}</p>
+                </div>
+
+                <div class="result-grid">
+                    <div class="result-card">
+                        <h4>📊 四维评分卡（总分 ${totalScore}/100）</h4>
+                        <div class="score-bars">
+                            <div class="score-bar-item">
+                                <span class="score-bar-label">双极张力</span>
+                                <div class="score-bar-track"><div class="score-bar-fill" style="width: ${tension * 4}%"></div></div>
+                                <span class="score-bar-value">${tension}</span>
+                            </div>
+                            <div class="score-bar-item">
+                                <span class="score-bar-label">结构秩序</span>
+                                <div class="score-bar-track"><div class="score-bar-fill" style="width: ${order * 4}%"></div></div>
+                                <span class="score-bar-value">${Math.round(order)}</span>
+                            </div>
+                            <div class="score-bar-item">
+                                <span class="score-bar-label">阈值安全</span>
+                                <div class="score-bar-track"><div class="score-bar-fill" style="width: ${threshold * 4}%"></div></div>
+                                <span class="score-bar-value">${threshold}</span>
+                            </div>
+                            <div class="score-bar-item">
+                                <span class="score-bar-label">语境适配</span>
+                                <div class="score-bar-track"><div class="score-bar-fill" style="width: ${context * 4}%"></div></div>
+                                <span class="score-bar-value">${context}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <h4>🎯 维度打分详情</h4>
+                        <div class="dimension-result-list">
+                            ${dimensions.map(dim => `
+                                <div class="dimension-result-item">
+                                    <span class="dimension-result-name">${dim.name}</span>
+                                    <div class="dimension-result-value">
+                                        <div class="t-indicator"><div class="t-indicator-fill" style="width: ${currentScores[dim.key] * 10}%"></div></div>
+                                        <span class="t-value">${currentScores[dim.key]}</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="diagnosis-section">
+                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">🔍 审美病症诊断</h4>
+                    ${diagnoses.map(d => `
+                        <div class="diagnosis-item ${d.type}">
+                            <div class="diagnosis-title">${d.title}</div>
+                            <div class="diagnosis-desc">${d.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="diagnosis-section">
+                    <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">💊 改进处方</h4>
+                    <ul class="prescription-list">
+                        ${prescriptions.map(p => `<li>${p}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn btn-secondary" onclick="copyReport()">📋 复制报告</button>
+                    <button class="btn btn-secondary" onclick="downloadReport()">💾 下载报告</button>
+                    <button class="btn btn-primary" onclick="resetAll()">🔄 分析新图片</button>
+                </div>
+            `;
+        }
+
+        // ===== 报告操作 =====
+        function copyReport() {
+            const wt = document.querySelector('.wt-display').textContent;
+            const paradigm = document.querySelector('.paradigm-badge').textContent;
+            const summary = document.querySelector('.result-summary').textContent;
+            const report = `【BEA 双极情绪美学分析报告】\n\nW(T) 危极权重：${wt}\n美学范式：${paradigm}\n\n${summary}\n\n---\n由 BEA 图片分析助手生成`;
+
+            navigator.clipboard.writeText(report).then(() => {
+                alert('报告已复制到剪贴板！');
+            });
+        }
+
+        function downloadReport() {
+            const wt = document.querySelector('.wt-display').textContent;
+            const paradigm = document.querySelector('.paradigm-badge').textContent;
+            const summary = document.querySelector('.result-summary').textContent;
+            const report = `BEA 双极情绪美学分析报告\n${'='.repeat(40)}\n\nW(T) 危极权重：${wt}\n美学范式：${paradigm}\n\n分析摘要：\n${summary}\n\n维度打分：\n${dimensions.map(d => `${d.name}：${currentScores[d.key]}/10`).join('\n')}\n\n${'='.repeat(40)}\n由 BEA 图片分析助手生成\nhttps://maxing0000.github.io/bipolar-emotion-aesthetics/image-analyzer.html`;
+
+            const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `BEA分析报告_${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ===== 重置 =====
+        function resetAll() {
+            currentImage = null;
+            currentScores = {};
+            document.getElementById('uploadSection').style.display = 'block';
+            document.getElementById('previewSection').classList.remove('active');
+            document.getElementById('scoringSection').classList.remove('active');
+            document.getElementById('resultSection').classList.remove('active');
+            document.getElementById('fileInput').value = '';
+
+            // 重置步骤
+            document.querySelectorAll('.step').forEach((step, i) => {
+                step.classList.remove('active', 'completed');
+                if (i === 0) step.classList.add('active');
+            });
+
+            // 重置滑块
+            dimensions.forEach(dim => {
+                const slider = document.getElementById(`slider-${dim.key}`);
+                const valueDisplay = document.getElementById(`value-${dim.key}`);
+                if (slider) {
+                    slider.value = dim.default;
+                    valueDisplay.textContent = dim.default;
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== 历史记录 =====
+        function saveToHistory(wt, paradigm) {
+            const item = {
+                id: Date.now(),
+                image: currentImage,
+                wt: wt,
+                paradigm: paradigm,
+                date: new Date().toLocaleString('zh-CN')
+            };
+
+            history.unshift(item);
+            if (history.length > 20) history = history.slice(0, 20);
+            localStorage.setItem('bea_history', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            if (history.length === 0) {
+                list.innerHTML = '<div class="empty-history">暂无历史记录，上传第一张图片开始分析吧！</div>';
+                return;
+            }
+
+            list.innerHTML = history.map(item => `
+                <div class="history-item" onclick="loadHistory(${item.id})">
+                    <button class="history-delete" onclick="event.stopPropagation(); deleteHistory(${item.id})">×</button>
+                    <img src="${item.image}" class="history-thumb" alt="历史图片">
+                    <div class="history-wt">${item.wt}</div>
+                    <div class="history-paradigm">${item.paradigm}</div>
+                    <div class="history-date">${item.date}</div>
+                </div>
+            `).join('');
+        }
+
+        function loadHistory(id) {
+            const item = history.find(h => h.id === id);
+            if (!item) return;
+
+            currentImage = item.image;
+            document.getElementById('previewImage').src = currentImage;
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('previewSection').classList.add('active');
+            updateStep(1, 2);
+            analyzeImage();
+            document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deleteHistory(id) {
+            history = history.filter(h => h.id !== id);
+            localStorage.setItem('bea_history', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function clearHistory() {
+            if (confirm('确定要清空所有历史记录吗？')) {
+                history = [];
+                localStorage.removeItem('bea_history');
+                renderHistory();
+            }
+        }
+    </script>
+</body>
+</html>
