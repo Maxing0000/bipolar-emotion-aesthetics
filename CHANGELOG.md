@@ -29,6 +29,16 @@
 - **`manifest.json` 修正品类声明**：`supported_categories` 由 10 个改为引擎实际支持的 5 个（phone / car / brand / ui / building），新增 `documented_domains` 记录案例库覆盖的九大领域；描述补充 WorkBuddy / SkillHub
 - **版本号彻底收口**：`bea_quant.py` 新增 `__version__` 常量，输出脚注、CLI 标题、`--help` 描述全部改为动态引用（原先硬编码 v2.4.0 / v2.2.1）；自测新增「头注释版本号与 `__version__` 一致」断言（自测 108 → 109 项）
 - **测试数表述去数字**：文档中「108 项自测」统一改为「全量自测」，避免每次增删测试都要改文档（`FAQ.md` 页脚版本号同步至 2.7.0）
+
+### 代码与文档全面体检（第三轮）
+- **修复 `interactive` 子命令崩溃**：`bea_quant.py interactive` 调用了不存在的 `run_interactive()`（pyflakes 报 undefined name），现委托给同目录 `bea_guide.py`，导入 `subprocess` 实现
+- **修复 `bea_guide.py` 维度表与引擎不一致**：phone 品类 6 个维度中 3 个、brand 2 个、ui 1 个用旧维度名（如「形状线条」），走交互式引导会让引擎报错；已全部对齐 `CATEGORY_WEIGHTS`
+- **修复 WorkBuddy 适配文档事实错误**：`platforms/workbuddy/README.md` 把 WorkBuddy 误写成「字节跳动推出的 AI 工作助手，深度集成飞书办公生态」，使用场景、对比表、FAQ 全部基于该错误前提重写；SKILL.md 平台表「飞书集成」改为「MCP 连接器」
+- **文档维度名全面对齐引擎**：SKILL.md 打分表、`references/05-case-studies.md` 案例打分表（14 处）、`references/02-workflow.md`、`templates/output-templates.md` 共 24 处旧维度名（形状线条/构图比例/图形形状/版式构图/布局留白等）替换为引擎 canonical 维度名，照案例抄 t 值不再报错
+- **修复 SKILL.md 死引用**：`platforms/coze/system-prompt.md` 不存在，改指 `platforms/universal-system-prompt.md` + `platforms/coze/README.md`
+- **代码静态检查清零**：pyflakes 全清——24 处无占位符 f-string、2 处未使用变量（`secondary` 改为实际参与主辅比计算、`p_lp` 冗余赋值移除）
+- **16 个 CLI 子命令逐一冒烟验证**：analyze/report/score/suggest/sensitivity/compare/batch/multigroup/style-cycle/template/generate/profiles 三件套/test/interactive 全部可运行
+- **全仓库交叉引用核查**：33 处文档内文件引用全部存在；案例数（31）、平台表（7+SkillHub 渠道）、版本号（2.7.0）全线一致
 - **新增 SkillHub 上传包**：`scripts/package.py --skillhub` 生成 SkillHub 上传用 zip，`--all` 会一并生成
 
 ### SkillHub 合规（第三轮）

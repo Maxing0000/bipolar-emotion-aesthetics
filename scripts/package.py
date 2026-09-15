@@ -144,7 +144,7 @@ def extract_system_prompt(output_path):
 
     # 如果没找到代码块，直接复制
     shutil.copy(src, output_path)
-    print(f"  ✓ system-prompt.txt (直接复制)")
+    print("  ✓ system-prompt.txt (直接复制)")
 
 
 def preflight(file_list):
@@ -286,7 +286,7 @@ def main():
         platforms_to_package = [args.platform]
 
     if platforms_to_package:
-        print(f"\n【平台适配包】")
+        print("\n【平台适配包】")
         for platform in platforms_to_package:
             files = CORE_FILES + PLATFORM_FILES[platform]
             zip_files(files, output_dir / f"bea-{platform}-v{VERSION}.zip")

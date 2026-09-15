@@ -1308,8 +1308,14 @@ img{max-width:100%;display:block}
       </div>
     </div>
 
-    <div class="usage-quickstart reveal">
-      <h3>快速开始</h3>
+    <div class="usage-quickstart reveal" style="padding: 1.5rem; background: rgba(100,100,120,0.08); border: 1px solid rgba(150,150,170,0.15); border-radius: 12px;">
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+        <span style="padding: 0.2rem 0.6rem; background: rgba(150,150,170,0.2); color: #a0a0b0; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">高级 · 开发者专用</span>
+      </div>
+      <h3 style="font-size: 1.2rem; color: #d0d0d8; margin-bottom: 0.5rem;">⚙️ 量化引擎命令行用法</h3>
+      <p style="font-size: 0.85rem; color: #888890; line-height: 1.6; margin-bottom: 1rem;">
+        💡 <strong>普通用户请使用上方的 AI 技能方式（SkillHub 一键安装）</strong>，上传图片即可自动分析，无需命令行。本部分适合开发者批量处理、技术集成和学术研究。
+      </p>
       <div class="code-block">
 <pre><span class="comment"># 1. 生成分打模板</span>
 python3 scripts/bea_quant.py template --category phone

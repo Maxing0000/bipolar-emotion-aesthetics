@@ -14,7 +14,7 @@ author: "马星"
 
 > Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
 
-# 双极情绪美学（BEA）v2.7
+# 双极情绪美学（BEA）v2.7.0
 
 ## 多平台支持
 
@@ -23,7 +23,7 @@ BEA 技能可在多个 AI 平台使用，详见 `platforms/` 目录：
 | 平台 | 适配方式 | 文档 | 图片分析支持 |
 |---|---|---|---|
 | 豆包 Doubao | 原生 SKILL.md | 本文件 | ✅ 上传图片直接分析 |
-| WorkBuddy | 原生技能 + 飞书集成 | `platforms/workbuddy/` | ✅ 多模态图片分析 |
+| WorkBuddy | 原生技能 + MCP 连接器 | `platforms/workbuddy/` | ✅ 多模态图片分析 |
 | Coze 扣子 | Bot System Prompt | `platforms/coze/` | ✅ 智能体上传图片分析 |
 | ChatGPT / GPTs | Custom Instructions | `platforms/chatgpt/` | ✅ GPT-4V 多模态分析 |
 | Claude | Project Instructions | `platforms/claude/` | ✅ Claude 3 多模态分析 |
@@ -40,7 +40,7 @@ BEA 技能可在多个 AI 平台使用，详见 `platforms/` 目录：
 
 **步骤 1：安装/配置 BEA 技能**
 - 豆包：在技能市场搜索"双极情绪美学"并安装，或直接使用本 SKILL.md
-- 扣子：创建智能体，将 `platforms/coze/system-prompt.md` 复制到系统提示词
+- 扣子：创建智能体，将 `platforms/universal-system-prompt.md` 复制到系统提示词（详见 `platforms/coze/README.md`）
 - ChatGPT：在 Custom Instructions 中粘贴 BEA 理论框架和分析流程
 - 其他平台：将通用 System Prompt 复制到对应平台的系统提示词设置
 
@@ -318,7 +318,7 @@ python3 scripts/bea_quant.py test
 
 1. **远观定调**：先看整体，初步判断范式（治愈/亲和/均衡/崇高/冷峻/先锋），记录第一印象
 2. **视觉识别**：系统识别六个维度的形式元素：
-   - 形状线条：圆角/锐角、曲线/直线、对称/失衡
+   - 形状：圆角/锐角、曲线/直线、对称/失衡
    - 色彩色相：饱和度、冷暖、对比、数量
    - 明度对比：明暗反差、光影硬度、黑白占比
    - 质感肌理：光滑/粗糙、温润/冰冷、细腻/毛刺
@@ -351,7 +351,7 @@ python3 scripts/bea_quant.py test
 🔍 六维分析
 | 维度 | 极性 | 强度 | 判断依据 |
 |---|---|---|---|
-| 形状线条 | P/T | X/10 | [具体特征] |
+| 形状 | P/T | X/10 | [具体特征] |
 | 色彩色相 | P/T | X/10 | [具体特征] |
 | ... | ... | ... | ... |
 
@@ -375,11 +375,11 @@ python3 scripts/bea_quant.py test
 
 ### 不同品类的分析重点
 
-- **手机/消费电子**：重点看形状线条（握持感）、质感触觉（高级感）、细节线条（精密感）
+- **手机/消费电子**：重点看形状（握持感）、质感（高级感）、细节（精密感）
 - **汽车**：重点看形体曲面（安全感）、特征线条（速度感）、灯组图形（辨识度）、比例姿态（气场）
 - **建筑/室内**：重点看尺度（崇高感）、材料（温度感）、光影（氛围）、人体尺度（亲近感）
-- **品牌/平面**：重点看图形形状、色彩、字体、版式构图
-- **UI/交互**：重点看布局留白、色彩对比、组件形状、动效反馈
+- **品牌/平面**：重点看图形、色彩、字体、版式
+- **UI/交互**：重点看布局、色彩对比、组件形状、动效反馈
 
 ### 常见误区
 

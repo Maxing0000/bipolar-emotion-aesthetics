@@ -25,6 +25,7 @@ compare/batch 的产品值支持两种格式（自动识别）：
 import argparse
 import json
 import os
+import subprocess
 import sys
 from dataclasses import dataclass
 from typing import Callable, Dict, List, Tuple
@@ -322,7 +323,7 @@ def compute_polarity_ratio(dimensions: Dict[str, int], weights: Dict[str, float]
         secondary = minus_weight + neutral_weight * 0.5
 
     primary_pct = round(primary / total * 100) if total > 0 else 50
-    secondary_pct = 100 - primary_pct
+    secondary_pct = round(secondary / total * 100) if total > 0 else 50
     primary_secondary_ratio = f"{primary_pct}:{secondary_pct}"
 
     # BEA 理论要求主辅比在 6:4 到 9:1 之间
@@ -779,13 +780,13 @@ def format_report(a: BEAAnalysis) -> str:
         w = a.weights[dim]
         lines.append(f"{dim:<8} {w:>6.2f} {t:>4} {w * t / 10:>6.3f} {_polarity_label(t):<6}")
 
-    lines.append(f"\n【W(T) 危极综合权重】")
+    lines.append("\n【W(T) 危极综合权重】")
     lines.append(f"  W(T) = {a.w_t:.3f}")
     lines.append(f"  范式定位：{a.paradigm}（{a.paradigm_desc}）")
     lines.append(f"  范式区间：[{a.paradigm_range[0]:.2f}, {a.paradigm_range[1]:.2f})")
 
     # 维度贡献排序：哪些维度在主导风格
-    lines.append(f"\n【维度贡献排序】")
+    lines.append("\n【维度贡献排序】")
     contributions = [(dim, a.weights[dim] * a.dimensions[dim] / 10.0) for dim in a.dimensions]
     contributions.sort(key=lambda x: x[1], reverse=True)
     for i, (dim, contrib) in enumerate(contributions, 1):
@@ -793,30 +794,30 @@ def format_report(a: BEAAnalysis) -> str:
         lines.append(f"  {i}. {dim:<6} t={a.dimensions[dim]:>2}  贡献={contrib:.3f} ({pct:.0f}%)")
 
     # 范式距离：离边界多远
-    lines.append(f"\n【范式距离】")
+    lines.append("\n【范式距离】")
     low, high = a.paradigm_range
     dist_low = a.w_t - low
     dist_high = high - a.w_t
     lines.append(f"  距下沿：{dist_low:.3f}  距上沿：{dist_high:.3f}")
     if dist_high < 0.03 or dist_low < 0.03:
-        lines.append(f"  ⚠ 接近范式边界，微调维度可能改变定位")
+        lines.append("  ⚠ 接近范式边界，微调维度可能改变定位")
 
     # 主辅比
     pr = a.polarity_ratio
-    lines.append(f"\n【主辅比】")
+    lines.append("\n【主辅比】")
     lines.append(f"  主导极性：{pr['dominant']}")
     lines.append(f"  亲极占比：{pr['plus_ratio']*100:.0f}%  危极占比：{pr['minus_ratio']*100:.0f}%  中性：{(1-pr['plus_ratio']-pr['minus_ratio'])*100:.0f}%")
     lines.append(f"  主辅比：{pr['primary_secondary_ratio']}")
     if pr['is_balanced']:
-        lines.append(f"  ✓ 主辅分明（6:4 到 9:1），第一印象明确且有对立极提神")
+        lines.append("  ✓ 主辅分明（6:4 到 9:1），第一印象明确且有对立极提神")
     elif not pr['has_subordinate']:
-        lines.append(f"  ⚠ 从属极不足（>9:1），单一极性可能导致甜腻或攻击，建议注入10%-30%对立极")
+        lines.append("  ⚠ 从属极不足（>9:1），单一极性可能导致甜腻或攻击，建议注入10%-30%对立极")
     else:
-        lines.append(f"  ⚠ 主辅不足（<6:4），可能存在均分症，情绪暧昧，建议确立明确主导极性")
+        lines.append("  ⚠ 主辅不足（<6:4），可能存在均分症，情绪暧昧，建议确立明确主导极性")
 
     # 耐看性
     en = a.endurance
-    lines.append(f"\n【耐看性】")
+    lines.append("\n【耐看性】")
     lines.append(f"  耐看指数：{en['score']:.0f}/100  评级：{en['level']}")
     lines.append(f"  最优W(T)区间：[{en['optimal_range'][0]:.2f}, {en['optimal_range'][1]:.2f}]")
     for factor, score in en['factors'].items():
@@ -827,13 +828,13 @@ def format_report(a: BEAAnalysis) -> str:
     # 安全警告：越阈值检查
     extreme_dims = [dim for dim, t in a.dimensions.items() if t >= 10]
     if extreme_dims:
-        lines.append(f"\n【安全警告】")
-        lines.append(f"  ⛔ 本能安全阈越界：以下维度 t=10，可能引发真实伤害联想或生理不适")
+        lines.append("\n【安全警告】")
+        lines.append("  ⛔ 本能安全阈越界：以下维度 t=10，可能引发真实伤害联想或生理不适")
         for dim in extreme_dims:
             lines.append(f"    - {dim}（t=10）")
-        lines.append(f"  建议：将这些维度降到 t≤9，无风格借口可越过本能红线")
+        lines.append("  建议：将这些维度降到 t≤9，无风格借口可越过本能红线")
 
-    lines.append(f"\n【病症诊断】")
+    lines.append("\n【病症诊断】")
     if a.diseases:
         for i, d in enumerate(a.diseases, 1):
             lines.append(f"  {i}. {d['name']}")
@@ -843,7 +844,7 @@ def format_report(a: BEAAnalysis) -> str:
         lines.append("  未检测到自动诊断病症。")
 
     # 需人工判断的病症检查提示
-    lines.append(f"\n【需人工判断的病症】（无法仅通过维度值自动诊断，请逐项检查）")
+    lines.append("\n【需人工判断的病症】（无法仅通过维度值自动诊断，请逐项检查）")
     for i, d in enumerate(MANUAL_CHECK_DISEASES, 1):
         lines.append(f"  {i}. {d['name']}")
         lines.append(f"     检查：{d['check_prompt']}")
@@ -862,14 +863,14 @@ def format_compare(a1: BEAAnalysis, a2: BEAAnalysis, name1: str, name2: str) -> 
     lines.append(f"  BEA 对比报告 · {name1} vs {name2}")
     lines.append("=" * 60)
 
-    lines.append(f"\n【W(T) 与范式】")
+    lines.append("\n【W(T) 与范式】")
     lines.append(f"  {name1}: W(T)={a1.w_t:.3f} → {a1.paradigm}")
     lines.append(f"  {name2}: W(T)={a2.w_t:.3f} → {a2.paradigm}")
     diff = a1.w_t - a2.w_t
     direction = "前者更危极" if diff > 0 else ("后者更危极" if diff < 0 else "相同")
     lines.append(f"  差值：{diff:+.3f}（{direction}）")
 
-    lines.append(f"\n【维度对比】")
+    lines.append("\n【维度对比】")
     lines.append(f"  {'维度':<8} {name1:>8} {name2:>8} {'差值':>6}")
     lines.append("  " + "-" * 36)
     for dim in a1.dimensions:
@@ -877,7 +878,7 @@ def format_compare(a1: BEAAnalysis, a2: BEAAnalysis, name1: str, name2: str) -> 
         t2 = a2.dimensions.get(dim, 0)
         lines.append(f"  {dim:<8} {t1:>8} {t2:>8} {t1 - t2:>+6}")
 
-    lines.append(f"\n【病症对比】")
+    lines.append("\n【病症对比】")
     lines.append(f"  {name1}: {', '.join(d['name'] for d in a1.diseases) if a1.diseases else '无'}")
     lines.append(f"  {name2}: {', '.join(d['name'] for d in a2.diseases) if a2.diseases else '无'}")
 
@@ -921,9 +922,9 @@ def format_template(category: str) -> str:
     lines.append("")
     lines.append("【可直接复制的命令】")
     sample_t = ",".join(f"{d}=5" for d in dim_order)
-    lines.append(f'  # 分析报告')
+    lines.append('  # 分析报告')
     lines.append(f'  python3 bea_quant.py report --category {category} --t "{sample_t}"')
-    lines.append(f'  # 调整到目标范式（把5换成你的实际打分）')
+    lines.append('  # 调整到目标范式（把5换成你的实际打分）')
     lines.append(f'  python3 bea_quant.py suggest --category {category} --t "{sample_t}" --target 均衡典雅')
     return "\n".join(lines)
 
@@ -1030,7 +1031,7 @@ def format_report_markdown(a: BEAAnalysis) -> str:
     lines.append("")
     scores = a.score_suggestion
     total = sum(scores[k] for k in ["双极张力", "结构秩序", "阈值安全", "语境适配"])
-    lines.append(f"| 维度 | 得分 |")
+    lines.append("| 维度 | 得分 |")
     lines.append("|---|---|")
     for k in ["双极张力", "结构秩序", "阈值安全", "语境适配"]:
         lines.append(f"| {k} | {scores[k]}/25 |")
@@ -1327,7 +1328,7 @@ def format_suggest(a: BEAAnalysis, target_wt: float, target_desc: str,
     diff = target_wt - a.w_t
     lines.append(f"  差值：{diff:+.3f}（{'需要提升危极' if diff > 0 else '需要降低危极' if diff < 0 else '无需调整'}）")
     if abs(diff) > 0.5:
-        lines.append(f"  ⚠ 调整幅度过大（|ΔW(T)|>0.5），建议分阶段调整，每阶段变化≤0.3后验证效果")
+        lines.append("  ⚠ 调整幅度过大（|ΔW(T)|>0.5），建议分阶段调整，每阶段变化≤0.3后验证效果")
     lines.append("")
 
     if steps and "message" in steps[0]:
@@ -1506,7 +1507,7 @@ def format_sensitivity(a: BEAAnalysis, results: List[Dict[str, object]],
     lines.append("【核心结论】")
     # 最敏感的3个维度
     top3 = results[:3]
-    lines.append(f"  最值得改动的维度（按灵敏度排序）：")
+    lines.append("  最值得改动的维度（按灵敏度排序）：")
     for i, r in enumerate(top3, 1):
         lines.append(f"    {i}. {r['dimension']}（权重 {r['weight']:.2f}，当前 t={r['current_t']}）"
                      f" — 改动{step}级，W(T)变化 ±{abs(r['wt_plus']):.3f}")
@@ -2438,6 +2439,19 @@ def run_tests() -> bool:
 # CLI
 # ──────────────────────────────────────────────
 
+def run_interactive():
+    """交互式分析模式：委托给同目录的 bea_guide.py（逐步引导选择品类/操作/维度）"""
+    guide = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bea_guide.py")
+    if not os.path.exists(guide):
+        print("✗ 未找到 bea_guide.py（交互式引导脚本），请确认它与 bea_quant.py 在同一目录", file=sys.stderr)
+        sys.exit(1)
+    try:
+        sys.exit(subprocess.call([sys.executable, guide]))
+    except KeyboardInterrupt:
+        print("\n已取消")
+        sys.exit(0)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description=f"BEA 双极情绪美学量化引擎 v{__version__}",
@@ -2528,7 +2542,7 @@ def main():
     p_gen.add_argument("--json", action="store_true", help="输出JSON格式")
 
     # 权重配置管理
-    p_lp = sub.add_parser("list-profiles", help="列出所有保存的权重配置")
+    sub.add_parser("list-profiles", help="列出所有保存的权重配置")
     p_sp = sub.add_parser("save-profile", help="保存自定义权重配置")
     p_sp.add_argument("--name", required=True, help="配置名称")
     p_sp.add_argument("--weights", required=True, help='权重JSON，如 {"曲面":0.4,"特征线":0.3,...}')
