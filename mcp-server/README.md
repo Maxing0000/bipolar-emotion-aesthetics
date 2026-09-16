@@ -34,7 +34,7 @@
 **方式二：pipx 安装（推荐，需 Python 3.9+）**
 
 ```bash
-pipx install bea-aesthetics-mcp
+pipx install bea-mcp
 ```
 
 ```json

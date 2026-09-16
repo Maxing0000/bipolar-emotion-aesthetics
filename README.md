@@ -49,7 +49,7 @@ BEA 是一个 AI 技能（Skill）。在你常用的 AI 平台装上它，上传
 | 🎨 **Claude** | ⭐⭐⭐⭐ | Project Instructions 粘贴 BEA 框架 |
 | ✨ **通义千问** | ⭐⭐⭐ | 百炼创建智能体，粘贴系统提示词 |
 | 🔧 **Dify** | ⭐⭐⭐ | 应用提示词编排中粘贴 |
-| 🛠 **MCP Server** | ⭐⭐⭐⭐ | 一行接入：`npx -y bea-mcp`（npm）或 `pipx install bea-aesthetics-mcp`，见 [`mcp-server/`](mcp-server/README.md) |
+| 🛠 **MCP Server** | ⭐⭐⭐⭐ | 一行接入：`npx -y bea-mcp`（npm）或 `pipx install bea-mcp`（PyPI），见 [`mcp-server/`](mcp-server/README.md) |
 
 > **任意平台的最短路径**：复制 [`platforms/universal-system-prompt.md`](platforms/universal-system-prompt.md) 中的 System Prompt，粘贴到该平台的人设 / 系统提示词 / 自定义指令里，立刻可用。
 

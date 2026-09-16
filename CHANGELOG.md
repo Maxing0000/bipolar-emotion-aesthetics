@@ -5,13 +5,13 @@
 ### 新增
 - **npm / PyPI 分发包**（`package.py --npm --pypi`，产物在 dist/，零重复文件）：
   - npm `bea-mcp`：bin.js 拉起 python3 运行 server.py，客户端配置一行接入（`npx -y bea-mcp`）
-  - PyPI `bea-aesthetics-mcp`：console script `bea-mcp`（`pipx install bea-aesthetics-mcp`）
+  - PyPI `bea-mcp`：console script `bea-mcp`（`pipx install bea-mcp`）
   - server.py 引擎定位升级为三级回退：环境变量 BEA_ENGINE → 仓库结构 ../scripts/ → 同目录（pip 安装布局）
 - **官网 MCP 安装引导**（docs/index.html）：平台表新增 MCP Server 卡片；SkillHub 安装块下新增 MCP 接入块，npx / pipx 两种配置一键复制（含降级复制兼容）
 - 本地验证：npm tarball 安装 → bin 握手 + 7 工具；pip 安装 → console script 握手 + bea_compare 调用，均通过
 
 ### 变更
-- npm 包名 `bea-mcp` 可用；PyPI 包名 `bea-mcp` 已被占用，改用 `bea-aesthetics-mcp`（命令名仍为 bea-mcp）
+- **PyPI `bea-mcp` 收编升级**：该名下原为 2026-09-13 发布的旧 1.x（官方 SDK 版，维度命名与现引擎不同源）；本版作为全新引擎版取代之，版本号沿用仓库版本（2.10.0 > 1.2.0，可平滑升级）
 - 版本全线 2.9.0 → 2.10.0
 
 ## v2.9.0（2026-09-16）— MCP 工具补全：七个工具覆盖引擎全能力

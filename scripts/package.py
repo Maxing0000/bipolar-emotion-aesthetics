@@ -270,7 +270,7 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bea-aesthetics-mcp"
+name = "bea-mcp"
 version = "{version}"
 description = "BEA 双极情绪美学 MCP Server（纯 Python 标准库，零第三方依赖，离线可用）"
 readme = "README.md"
@@ -300,14 +300,16 @@ PYPI_INIT = '''"""BEA 双极情绪美学 MCP Server（纯标准库，零依赖�
 __version__ = "{version}"
 '''
 
-PYPI_README = """# bea-aesthetics-mcp
+PYPI_README = """# bea-mcp
 
 BEA 双极情绪美学 MCP Server —— 7 个工具，纯 Python 标准库，零第三方依赖。
+
+> v2.10.0 起为全新引擎版：与仓库 [bipolar-emotion-aesthetics](https://github.com/Maxing0000/bipolar-emotion-aesthetics) 的 bea_quant.py 单源同步，替代旧 1.x（官方 SDK 版，维度命名已过时）。
 
 ## 安装
 
 ```bash
-pipx install bea-aesthetics-mcp    # 或 pip install bea-aesthetics-mcp
+pipx install bea-mcp    # 或 pip install bea-mcp
 ```
 
 ## 客户端配置（一行接入）
