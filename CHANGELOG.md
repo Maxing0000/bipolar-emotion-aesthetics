@@ -1,5 +1,24 @@
 # 更新日志
 
+## v2.14.0（2026-09-16）— 撤销图片分析引擎化与判断协议，回归 AI 直接判断
+
+### 撤回
+
+- **图片分析引擎化（v2.11.0）与标定器（v2.12.0）整体撤除**：删除 `scripts/bea_image.py`（像素→t 值程序化通道）、`scripts/bea_rubric.py`（视觉评分标尺）、`scripts/bea_calibrate.py`（人工标定回归 CLI），以及 MCP 工具 `bea_analyze_image` / `bea_rubric`。
+  - 理由：像素特征线性映射算出的 t 值只是"能算"，不等于"看得准"。审美判断以 AI 直接观图的判断力为准，不用程序化通道替代它。
+- **判断协议（v2.13.0）撤除**：删除 `references/07-judgment-protocol.md`；SKILL.md 执行流程移除"步骤 0：判断协议"，输出格式中的"证据层级/自我反驳"等条目一并回退，正文恢复为 v2.10.0 状态。
+- **MCP 工具补全（v2.9.0）撤回**：MCP Server 回到 3 个工具（`bea_analyze` / `bea_compare` / `bea_dimensions`）。引擎内部的调整建议、美感生成、灵敏度、批量算法保持可用，CLI 与技能侧不受影响。
+- 打包：CORE_FILES 与 npm / PyPI 包移除上述脚本与文档；`pyproject` 移除 `image` 可选依赖（Pillow）。
+
+### 保留
+
+- 分发渠道不变：npm（`npx -y bea-mcp`）与 PyPI（`pipx install bea-mcp`）继续可用，本次同步发布 2.14.0。
+- 技能侧读图能力不变：`references/06-image-anchors.md` 与 SKILL.md 图片分析标准流程保持原样，由 AI 观图逐维度打分后交引擎计算 W(T)。
+
+### 测试
+
+- 全量自测 143 → 113 项（移除标尺 / 图像 / 标定测试段）；MCP 会话自测 41 → 22 项（三工具全链路）。版本 2.13.0 → 2.14.0。
+
 ## v2.13.0（2026-09-16）— 判断协议：公共判准与大师推理顺序
 
 ### 新增

@@ -2,7 +2,7 @@
 # Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
 
 """
-BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.13.0
+BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.14.0
 （版本号与 manifest.json / SKILL.md 保持一致）
 
 核心价值：把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作对象。
@@ -31,7 +31,7 @@ from dataclasses import dataclass
 from typing import Callable, Dict, List, Tuple
 
 # 版本号单一来源（与 manifest.json 保持一致，test 命令会校验）
-__version__ = "2.13.0"
+__version__ = "2.14.0"
 
 # ──────────────────────────────────────────────
 # 核心配置

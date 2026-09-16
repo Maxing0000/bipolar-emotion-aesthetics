@@ -3,7 +3,7 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-2.13.0-blue)
+![Version](https://img.shields.io/badge/version-2.14.0-blue)
 ![Type](https://img.shields.io/badge/type-AI%20Skill-success)
 ![Platforms](https://img.shields.io/badge/platforms-7%2B-green)
 ![Cases](https://img.shields.io/badge/cases-30%2B-orange)

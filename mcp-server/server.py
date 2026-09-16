@@ -5,16 +5,10 @@
 BEA MCP Server v（版本号动态读引擎）
 纯 Python 标准库实现的 MCP stdio 服务器，零第三方依赖，离线可用。
 
-通过 MCP 协议（JSON-RPC 2.0 over stdio）向任意 AI 客户端暴露九个工具：
+通过 MCP 协议（JSON-RPC 2.0 over stdio）向任意 AI 客户端暴露三个工具：
   bea_analyze       单对象分析：返回 W(T)、六范式定位、四维评分卡、病症诊断
   bea_compare       A/B 对比：返回两方分析、逐维度差值、引擎对比报告
   bea_dimensions    查询品类维度/权重定义与六范式锚点
-  bea_suggest       调整建议：目标范式/W(T) → 逐步调分方案
-  bea_generate      美感生成：目标 → 最优维度配置
-  bea_sensitivity   灵敏度分析：改哪个维度效果最明显
-  bea_batch         批量分析：多对象一次分析并排名
-  bea_rubric        视觉评分标尺：AI 看图打 t 值的锚点依据
-  bea_analyze_image 图片直接分析：程序提取特征 → t 值 → W(T)（需 Pillow）
 
 客户端配置示例（WorkBuddy / Claude Desktop 等通用）：
   "mcpServers": {
@@ -46,38 +40,11 @@ def _engine_path() -> str:
     return os.path.join(_HERE, "bea_quant.py")
 
 
-def _module_path(name: str) -> str:
-    """定位引擎目录下的模块：环境变量目录 → 仓库结构（../scripts/）→ 同目录。"""
-    env_dir = os.environ.get("BEA_ENGINE_DIR")
-    for base in ([env_dir] if env_dir and os.path.isdir(env_dir) else []) + [
-        os.path.join(_HERE, "..", "scripts"),
-        _HERE,
-    ]:
-        candidate = os.path.join(base, name)
-        if os.path.exists(candidate):
-            return candidate
-    raise FileNotFoundError(f"找不到模块 {name}（可设置 BEA_ENGINE_DIR 指向 scripts/）")
-
-
-def _load_module(name: str):
-    path = _module_path(name)
-    spec = importlib.util.spec_from_file_location(os.path.splitext(name)[0], path)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
-
 _ENGINE = _engine_path()
 
 _spec = importlib.util.spec_from_file_location("bea_quant", _ENGINE)
 _bq = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_bq)
-
-try:
-    _rubric = _load_module("bea_rubric.py")
-    _image = _load_module("bea_image.py")
-except FileNotFoundError:  # 允许只装引擎的极简布局，对应工具会报错
-    _rubric = _image = None
 
 SERVER_NAME = "bea"
 PROTOCOL_VERSION = "2024-11-05"
@@ -180,138 +147,6 @@ def tool_dimensions(args: dict) -> dict:
     }
 
 
-def tool_suggest(args: dict) -> dict:
-    category = args.get("category")
-    _check_category(category)
-    strategy = args.get("strategy", "focused")
-    if strategy not in ("focused", "distributed"):
-        raise ValueError(f"未知策略 '{strategy}'，可选：focused（集中）/ distributed（分散）")
-    a = _bq.analyze(category, _build_t_str(args.get("t_values"), category))
-    target_wt, target_desc = _bq.resolve_target(str(args.get("target")))
-    steps, verification = _bq.suggest_adjustment(a, target_wt, strategy)
-    return {
-        "category": category,
-        "current": _analysis_payload(a),
-        "target_wt": target_wt,
-        "target_desc": target_desc,
-        "strategy": strategy,
-        "steps": steps,
-        "verification": verification,
-        "report_markdown": _bq.format_suggest(a, target_wt, target_desc, steps, verification),
-    }
-
-
-def tool_generate(args: dict) -> dict:
-    category = args.get("category")
-    _check_category(category)
-    strategy = args.get("strategy", "balanced")
-    if strategy not in ("balanced", "focused", "distributed"):
-        raise ValueError(
-            f"未知策略 '{strategy}'，可选：balanced（均衡）/ focused（集中）/ distributed（分散）"
-        )
-    target_wt, target_desc = _bq.resolve_target(str(args.get("target")))
-    design = _bq.generate_design(category, target_wt, strategy)
-    analysis = design.pop("analysis")  # BEAAnalysis 对象不可直接 JSON 序列化，转为 dict
-    return {
-        "category": category,
-        "target_wt": design["target_wt"],
-        "target_desc": target_desc,
-        "strategy": strategy,
-        "t_str": design["t_str"],
-        "dimensions": design["dimensions"],
-        "w_t": design["w_t"],
-        "deviation": design["deviation"],
-        "paradigm": design["paradigm"],
-        "analysis": _analysis_payload(analysis),
-    }
-
-
-def tool_sensitivity(args: dict) -> dict:
-    category = args.get("category")
-    _check_category(category)
-    step = args.get("step", 1)
-    if step not in (1, 2, 3):
-        raise ValueError(f"步长 {step} 不支持，可选 1/2/3")
-    target_wt, target_desc = None, ""
-    if args.get("target") is not None:
-        target_wt, target_desc = _bq.resolve_target(str(args.get("target")))
-    a = _bq.analyze(category, _build_t_str(args.get("t_values"), category))
-    results = _bq.sensitivity_analysis(a, target_wt, step)
-    return {
-        "category": category,
-        "current_w_t": round(a.w_t, 3),
-        "step": step,
-        "target_wt": target_wt,
-        "results": results,
-        "report_markdown": _bq.format_sensitivity(a, results, target_wt, target_desc),
-    }
-
-
-def tool_batch(args: dict) -> dict:
-    category = args.get("category")
-    _check_category(category)
-    items = args.get("items")
-    if not isinstance(items, list) or not items:
-        raise ValueError("items 应为非空数组，如 [\"甲=3,6,4,3,5,6\", \"乙=4,4,4,4,4,4\"]")
-    results = []
-    for item in items:
-        name, dims = _bq.parse_compact_values(str(item), category)
-        a = _bq.analyze(category, _build_t_str(dims, category))
-        results.append((name, a))
-    ranked = sorted(results, key=lambda r: r[1].w_t)
-    return {
-        "category": category,
-        "count": len(results),
-        "results": [
-            {
-                "name": name,
-                "w_t": round(a.w_t, 3),
-                "paradigm": a.paradigm,
-                "paradigm_desc": a.paradigm_desc,
-                "dimensions": a.dimensions,
-                "diseases": [d["name"] for d in a.diseases],
-            }
-            for name, a in ranked
-        ],
-        "ranking": [name for name, _ in ranked],
-        "report_markdown": _bq.format_batch(results),
-    }
-
-
-def tool_rubric(args: dict) -> dict:
-    if _rubric is None:
-        raise RuntimeError("服务端缺少 bea_rubric.py 模块")
-    category = args.get("category")
-    _check_category(category)
-    text = _rubric.format_rubric(category, _bq.CATEGORY_WEIGHTS[category])
-    return {
-        "category": category,
-        "dimensions": list(_bq.CATEGORY_WEIGHTS[category].keys()),
-        "rubric_markdown": text,
-        "usage": "对照图像逐维度取 t 值（锚点间可插值），然后调用 bea_analyze 计算 W(T)",
-    }
-
-
-def tool_analyze_image(args: dict) -> dict:
-    if _image is None:
-        raise RuntimeError("服务端缺少 bea_image.py 模块")
-    category = args.get("category")
-    _check_category(category)
-    path = args.get("path")
-    if not path or not isinstance(path, str):
-        raise ValueError("path 应为图片文件的绝对路径")
-    analysis, feats, t_values, unmeasured = _image.analyze_image(path, category)
-    payload = _analysis_payload(analysis)
-    payload.update({
-        "path": path,
-        "features": {k: round(v, 4) for k, v in feats.items()},
-        "feature_t_values": t_values,
-        "unmeasured_dimensions": unmeasured,
-        "calibration_note": "特征→t 值为 v1 线性标定；如对自动打分有异议，可用 bea_rubric 人工对照打分后再 bea_analyze",
-    })
-    return payload
-
-
 TOOLS = [
     {
         "name": "bea_analyze",
@@ -376,164 +211,12 @@ TOOLS = [
             },
         },
     },
-    {
-        "name": "bea_suggest",
-        "description": (
-            "BEA 调整建议：给定当前打分与目标（范式名如'崇高震撼'，或 W(T) 数值如 0.54），"
-            "返回逐步调分方案（改哪个维度、从几改到几）与调整后验证。"
-            "strategy：focused（集中，默认）/ distributed（分散）。"
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string",
-                    "enum": ["phone", "car", "brand", "ui", "building"],
-                },
-                "t_values": {"description": "当前各维度 t 值，对象或 '维度=t,...' 字符串"},
-                "target": {
-                    "type": "string",
-                    "description": "目标：范式名（如'崇高震撼'）或 W(T) 数值字符串（如'0.54'）",
-                },
-                "strategy": {
-                    "type": "string",
-                    "enum": ["focused", "distributed"],
-                    "description": "调整策略，默认 focused",
-                },
-            },
-            "required": ["category", "t_values", "target"],
-        },
-    },
-    {
-        "name": "bea_generate",
-        "description": (
-            "BEA 美感生成：给定目标（范式名或 W(T) 数值），自动生成该品类最优维度配置，"
-            "使 W(T) 接近目标且主辅比健康。"
-            "strategy：balanced（均衡，默认）/ focused（集中张力）/ distributed（分散张力）。"
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string",
-                    "enum": ["phone", "car", "brand", "ui", "building"],
-                },
-                "target": {
-                    "type": "string",
-                    "description": "目标：范式名（如'冷峻克制'）或 W(T) 数值字符串（如'0.63'）",
-                },
-                "strategy": {
-                    "type": "string",
-                    "enum": ["balanced", "focused", "distributed"],
-                    "description": "生成策略，默认 balanced",
-                },
-            },
-            "required": ["category", "target"],
-        },
-    },
-    {
-        "name": "bea_sensitivity",
-        "description": (
-            "BEA 灵敏度分析：计算每个维度 t±step 对 W(T) 与四维评分的影响，"
-            "找出'改动哪个维度效果最明显'。step 可选 1/2/3，默认 1；target 可选。"
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string",
-                    "enum": ["phone", "car", "brand", "ui", "building"],
-                },
-                "t_values": {"description": "当前各维度 t 值，对象或 '维度=t,...' 字符串"},
-                "target": {
-                    "type": "string",
-                    "description": "可选目标：范式名或 W(T) 数值字符串",
-                },
-                "step": {
-                    "type": "integer",
-                    "enum": [1, 2, 3],
-                    "description": "调整步长，默认 1",
-                },
-            },
-            "required": ["category", "t_values"],
-        },
-    },
-    {
-        "name": "bea_batch",
-        "description": (
-            "BEA 批量分析：一次分析多个对象并排名（W(T) 从低到高，低者更亲和、高者更危极）。"
-            "items 为 '名称=值' 数组，支持紧凑/完整两种格式（同 bea_compare）。"
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string",
-                    "enum": ["phone", "car", "brand", "ui", "building"],
-                },
-                "items": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "如 [\"甲=3,6,4,3,5,6\", \"乙=形状=4,质感=4,...\"]",
-                },
-            },
-            "required": ["category", "items"],
-        },
-    },
-    {
-        "name": "bea_rubric",
-        "description": (
-            "BEA 视觉评分标尺：返回某品类逐维度的观察点与 t=2/5/8 三档锚点描述。"
-            "AI 看图打分前必查——先取标尺，对照图像逐维度取 t 值，再调 bea_analyze 算 W(T)。"
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string",
-                    "enum": ["phone", "car", "brand", "ui", "building"],
-                    "description": "品类",
-                },
-            },
-            "required": ["category"],
-        },
-    },
-    {
-        "name": "bea_analyze_image",
-        "description": (
-            "BEA 图片直接分析：程序解码图片、提取六项视觉特征（锐度/对称/纹理/光影硬度/"
-            "色彩强度/色温/构图重心）并映射为维度 t 值，返回精确 W(T) 与完整分析。"
-            "需要服务端安装 Pillow（pip install 'bea-mcp[image]'）。"
-            "path 为图片绝对路径。ui 品类的动效维度取中性值 5。"
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": {
-                "category": {
-                    "type": "string",
-                    "enum": ["phone", "car", "brand", "ui", "building"],
-                    "description": "分析品类",
-                },
-                "path": {
-                    "type": "string",
-                    "description": "图片文件的绝对路径",
-                },
-            },
-            "required": ["category", "path"],
-        },
-    },
 ]
 
 _TOOL_FUNCS = {
     "bea_analyze": tool_analyze,
     "bea_compare": tool_compare,
     "bea_dimensions": tool_dimensions,
-    "bea_suggest": tool_suggest,
-    "bea_generate": tool_generate,
-    "bea_sensitivity": tool_sensitivity,
-    "bea_batch": tool_batch,
-    "bea_rubric": tool_rubric,
-    "bea_analyze_image": tool_analyze_image,
 }
 
 
@@ -561,7 +244,7 @@ def handle_request(req: dict):
             "capabilities": {"tools": {}},
             "serverInfo": {
                 "name": SERVER_NAME,
-                "version": getattr(_bq, "__version__", "2.13.0"),
+                "version": getattr(_bq, "__version__", "2.14.0"),
             },
         })
 
