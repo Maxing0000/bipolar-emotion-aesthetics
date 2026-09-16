@@ -99,4 +99,4 @@ python3 mcp-server/test_server.py
 - 工具级错误按 MCP 规范放入 `result.isError`，不中断会话
 
 ---
-BEA v2.12.0 · 署名：马星 · CC BY-NC-SA 4.0
+BEA v2.13.0 · 署名：马星 · CC BY-NC-SA 4.0

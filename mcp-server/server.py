@@ -561,7 +561,7 @@ def handle_request(req: dict):
             "capabilities": {"tools": {}},
             "serverInfo": {
                 "name": SERVER_NAME,
-                "version": getattr(_bq, "__version__", "2.12.0"),
+                "version": getattr(_bq, "__version__", "2.13.0"),
             },
         })
 

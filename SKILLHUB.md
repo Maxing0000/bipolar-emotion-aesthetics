@@ -13,19 +13,19 @@
 5. 选择 `bipolar-emotion-aesthetics` 仓库
 6. 填写信息：
    - **显示名称**：双极情绪美学 BEA
-   - **版本号**：2.12.0（与 `manifest.json` 的 `version` 字段保持一致）
+   - **版本号**：2.13.0（与 `manifest.json` 的 `version` 字段保持一致）
    - **描述**：见下方"描述模板"
 7. 点击"发布"
 
 ### 方式2：本地上传（网页端）
 
 1. 生成上传包：`python3 scripts/package.py --skillhub`（会先跑一次平台规范校验）
-2. 上传 `dist/bea-v2.12.0-skillhub.zip`——压缩包**根目录直接包含 `SKILL.md`**，符合官方"确认根目录包含 SKILL.md"的要求
+2. 上传 `dist/bea-v2.13.0-skillhub.zip`——压缩包**根目录直接包含 `SKILL.md`**，符合官方"确认根目录包含 SKILL.md"的要求
 3. 登录 SkillHub → "发布 Skill" → 本地上传 ZIP 包（或直接选技能文件夹）
 4. 在网页表单里填写 Slug、显示名称、图标与描述后发布
 
 > Slug 填 `bipolar-emotion-aesthetics`（与既有发布保持一致，才能更新而不是新建；Slug 提交后不可修改）。
-> `bea-v2.12.0-full.zip` 内容与 skillhub 包相同，二者择一即可。
+> `bea-v2.13.0-full.zip` 内容与 skillhub 包相同，二者择一即可。
 
 **关于二进制文件**：SkillHub **禁止上传二进制文件**（png/jpg/pdf 等），包内若含此类文件，平台会提示"部分文件被跳过"。因此打包清单**不含 `assets/` 下的 logo 图标**——图标在网页端"编辑头像"处单独上传。`package.py` 预检会拦截二进制文件，命中直接报错退出。
 
@@ -42,7 +42,7 @@ skillhub login --key <你的Token> --host https://api.skillhub.cn
 skillhub publish /Users/m/Documents/BEA --host https://api.skillhub.cn --dry-run
 
 # 4. 正式发布
-skillhub publish /Users/m/Documents/BEA --host https://api.skillhub.cn --changelog "v2.12.0 文档与打包规范优化"
+skillhub publish /Users/m/Documents/BEA --host https://api.skillhub.cn --changelog "v2.13.0 文档与打包规范优化"
 ```
 
 ### 方式4：Agent 自然对话发布（WorkBuddy 可直接用）
@@ -65,7 +65,7 @@ Agent 会在后台调用同一套 CLI，完成预检、提交发布，并反馈�
 |---|---|---|
 | `slug` | **必填**，kebab-case，长度 2–128，全网唯一 | `bipolar-emotion-aesthetics` |
 | `displayName` | **必填**，对外展示名称 | `双极情绪美学 BEA` |
-| `version` | **必填**，合法 SemVer | `2.12.0` |
+| `version` | **必填**，合法 SemVer | `2.13.0` |
 | `summary` / `description` / `tags` / `license` / `homepage` | 建议填写（不阻断发布） | 均已填 |
 
 > 缺 `slug` / `displayName` / `version` 任一，发布会被阻断。`python3 scripts/package.py --check` 已内置该校验。
@@ -259,7 +259,7 @@ BEA 技能已适配多个 AI 平台，详见 `platforms/` 目录：
 | 平台 | 状态 | 适配方式 |
 |---|---|---|
 | 豆包 Doubao | ✅ 已发布 | 原生 SKILL.md |
-| SkillHub | ✅ 已发布（v2.6.1，待同步 v2.12.0） | 从 GitHub 导入 |
+| SkillHub | ✅ 已发布（v2.6.1，待同步 v2.13.0） | 从 GitHub 导入 |
 | WorkBuddy | ✅ 已发布 | 原生技能 + 多模态图片分析 |
 | Coze 扣子 | ✅ 已发布 | Bot System Prompt |
 | ChatGPT / GPTs | ⏳ 待发布 | Custom Instructions |

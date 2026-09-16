@@ -66,6 +66,7 @@ CORE_FILES = [
     "references/04-checklist.md",
     "references/05-case-studies.md",
     "references/06-image-anchors.md",
+    "references/07-judgment-protocol.md",
     "templates/review-record.md",
     "templates/output-templates.md",
 ]
