@@ -1,0 +1,30 @@
+name: publish-pypi
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: 构建 PyPI 包
+        run: |
+          python scripts/package.py --pypi
+          python -m pip install --upgrade build
+          python -m build dist/pypi
+
+      - name: 发布到 PyPI（可信发布，无需 token）
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/pypi/dist
