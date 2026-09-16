@@ -205,6 +205,158 @@ def check_skillhub_spec():
     return errors
 
 
+# ──────────────────────────────────────────────
+# npm / PyPI 分发包构建（v2.10.0 新增）
+# 从仓库源文件与 manifest 版本号生成，产物在 dist/npm 与 dist/pypi，
+# 不入库不重复维护；发布命令见各目录内说明。
+
+NPM_PACKAGE_JSON = {
+    "name": "bea-mcp",
+    "version": VERSION,
+    "description": "BEA Bipolar Emotion Aesthetics MCP Server - 7 tools (analyze/compare/dimensions/suggest/generate/sensitivity/batch). Pure Python stdlib, zero dependencies.",
+    "license": "CC-BY-NC-SA-4.0",
+    "author": "马星 (https://github.com/Maxing0000)",
+    "homepage": "https://maxing0000.github.io/bipolar-emotion-aesthetics/",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Maxing0000/bipolar-emotion-aesthetics.git",
+    },
+    "keywords": ["mcp", "mcp-server", "aesthetics", "design", "bea", "model-context-protocol"],
+    "bin": {"bea-mcp": "bin.js"},
+    "files": ["bin.js", "scripts/", "mcp-server/", "README.md"],
+    "engines": {"node": ">=14"},
+}
+
+NPM_BIN_JS = """#!/usr/bin/env node
+'use strict';
+const { spawn } = require('child_process');
+const path = require('path');
+
+const server = path.join(__dirname, 'mcp-server', 'server.py');
+const python = process.env.PYTHON || 'python3';
+const child = spawn(python, [server], { stdio: 'inherit' });
+
+child.on('error', (err) => {
+  console.error('bea-mcp: 启动 Python 失败（需要 python3 >= 3.9）：' + err.message);
+  process.exit(1);
+});
+child.on('exit', (code) => process.exit(code == null ? 0 : code));
+"""
+
+NPM_README = """# bea-mcp
+
+BEA 双极情绪美学 MCP Server —— 7 个工具（analyze / compare / dimensions / suggest / generate / sensitivity / batch），纯 Python 标准库，零第三方依赖。
+
+## 客户端配置（一行接入）
+
+```json
+{
+  "mcpServers": {
+    "bea": {
+      "command": "npx",
+      "args": ["-y", "bea-mcp"]
+    }
+  }
+}
+```
+
+要求：本机有 `python3`（>=3.9）。Windows 若 `python3` 不在 PATH，可加环境变量 `PYTHON` 指向 python.exe。
+
+工具与用法详见仓库 [mcp-server/README.md](https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/mcp-server/README.md)。
+"""
+
+PYPI_PYPROJECT = """[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bea-aesthetics-mcp"
+version = "{version}"
+description = "BEA 双极情绪美学 MCP Server（纯 Python 标准库，零第三方依赖，离线可用）"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {{text = "CC-BY-NC-SA-4.0"}}
+authors = [{{name = "马星"}}]
+keywords = ["mcp", "aesthetics", "design", "bea", "model-context-protocol"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Artistic Software",
+]
+
+[project.scripts]
+bea-mcp = "bea_mcp.server:main"
+
+[project.urls]
+Homepage = "https://maxing0000.github.io/bipolar-emotion-aesthetics/"
+Repository = "https://github.com/Maxing0000/bipolar-emotion-aesthetics"
+
+[tool.setuptools]
+packages = ["bea_mcp"]
+"""
+
+PYPI_INIT = '''"""BEA 双极情绪美学 MCP Server（纯标准库，零依赖）。"""
+
+__version__ = "{version}"
+'''
+
+PYPI_README = """# bea-aesthetics-mcp
+
+BEA 双极情绪美学 MCP Server —— 7 个工具，纯 Python 标准库，零第三方依赖。
+
+## 安装
+
+```bash
+pipx install bea-aesthetics-mcp    # 或 pip install bea-aesthetics-mcp
+```
+
+## 客户端配置（一行接入）
+
+```json
+{
+  "mcpServers": {
+    "bea": {
+      "command": "bea-mcp"
+    }
+  }
+}
+```
+
+工具与用法详见仓库 [mcp-server/README.md](https://github.com/Maxing0000/bipolar-emotion-aesthetics/blob/main/mcp-server/README.md)。
+"""
+
+
+def _copy(src: Path, dst: Path) -> None:
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, dst)
+
+
+def build_npm(output_dir: Path) -> None:
+    """生成 npm 包目录：bin.js 拉起 python3 运行 server.py。"""
+    out = output_dir / "npm"
+    out.mkdir(parents=True, exist_ok=True)
+    _copy(ROOT / "scripts" / "bea_quant.py", out / "scripts" / "bea_quant.py")
+    _copy(ROOT / "mcp-server" / "server.py", out / "mcp-server" / "server.py")
+    (out / "package.json").write_text(
+        json.dumps(NPM_PACKAGE_JSON, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (out / "bin.js").write_text(NPM_BIN_JS, encoding="utf-8")
+    (out / "README.md").write_text(NPM_README, encoding="utf-8")
+    print(f"  ✓ npm 包：{out}（发布：cd {out} && npm publish）")
+
+
+def build_pypi(output_dir: Path) -> None:
+    """生成 PyPI 包目录：bea_mcp 包 + console script。"""
+    out = output_dir / "pypi"
+    pkg = out / "bea_mcp"
+    pkg.mkdir(parents=True, exist_ok=True)
+    _copy(ROOT / "mcp-server" / "server.py", pkg / "server.py")
+    _copy(ROOT / "scripts" / "bea_quant.py", pkg / "bea_quant.py")
+    (pkg / "__init__.py").write_text(PYPI_INIT.format(version=VERSION), encoding="utf-8")
+    (out / "pyproject.toml").write_text(PYPI_PYPROJECT.format(version=VERSION), encoding="utf-8")
+    (out / "README.md").write_text(PYPI_README, encoding="utf-8")
+    print(f"  ✓ PyPI 包：{out}（发布：cd {out} && python -m build && twine upload dist/*）")
+
+
 def main():
     parser = argparse.ArgumentParser(description="BEA 技能打包工具")
     parser.add_argument("--all", action="store_true", help="打包所有平台")
@@ -214,6 +366,10 @@ def main():
     parser.add_argument("--check", action="store_true", help="只做预检，不生成 zip")
     parser.add_argument("--skillhub", action="store_true",
                         help="生成 SkillHub 上传包（根目录直接含 SKILL.md）并执行平台规范校验")
+    parser.add_argument("--npm", action="store_true",
+                        help="生成 npm 分发包（bea-mcp，npx 一行接入）")
+    parser.add_argument("--pypi", action="store_true",
+                        help="生成 PyPI 分发包（bea-mcp，pipx 一行接入）")
     args = parser.parse_args()
 
     output_dir = ROOT / args.output
@@ -291,6 +447,14 @@ def main():
         for platform in platforms_to_package:
             files = CORE_FILES + PLATFORM_FILES[platform]
             zip_files(files, output_dir / f"bea-{platform}-v{VERSION}.zip")
+
+    # npm / PyPI 分发包
+    if args.npm or args.all:
+        print("\n【npm 分发包】")
+        build_npm(output_dir)
+    if args.pypi or args.all:
+        print("\n【PyPI 分发包】")
+        build_pypi(output_dir)
 
     print()
     print("=" * 56)

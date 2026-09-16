@@ -27,7 +27,20 @@ import os
 import sys
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_ENGINE = os.path.join(_HERE, "..", "scripts", "bea_quant.py")
+
+
+def _engine_path() -> str:
+    """定位引擎：环境变量 → 仓库结构（../scripts/）→ 同目录（pip 安装布局）。"""
+    env = os.environ.get("BEA_ENGINE")
+    if env and os.path.exists(env):
+        return env
+    repo_layout = os.path.join(_HERE, "..", "scripts", "bea_quant.py")
+    if os.path.exists(repo_layout):
+        return repo_layout
+    return os.path.join(_HERE, "bea_quant.py")
+
+
+_ENGINE = _engine_path()
 
 _spec = importlib.util.spec_from_file_location("bea_quant", _ENGINE)
 _bq = importlib.util.module_from_spec(_spec)
@@ -437,7 +450,7 @@ def handle_request(req: dict):
             "capabilities": {"tools": {}},
             "serverInfo": {
                 "name": SERVER_NAME,
-                "version": getattr(_bq, "__version__", "2.9.0"),
+                "version": getattr(_bq, "__version__", "2.10.0"),
             },
         })
 
@@ -499,6 +512,11 @@ def serve() -> int:
     except BrokenPipeError:
         pass
     return 0
+
+
+def main() -> int:
+    """pip 安装后的 console_script 入口（bea-mcp 命令）。"""
+    return serve()
 
 
 if __name__ == "__main__":

@@ -18,6 +18,37 @@
 
 ## 客户端配置
 
+**方式一：npx 免安装（推荐，需 Node.js）**
+
+```json
+{
+  "mcpServers": {
+    "bea": {
+      "command": "npx",
+      "args": ["-y", "bea-mcp"]
+    }
+  }
+}
+```
+
+**方式二：pipx 安装（推荐，需 Python 3.9+）**
+
+```bash
+pipx install bea-aesthetics-mcp
+```
+
+```json
+{
+  "mcpServers": {
+    "bea": {
+      "command": "bea-mcp"
+    }
+  }
+}
+```
+
+**方式三：直接指向仓库**（开发者）
+
 将下方片段加入客户端的 MCP 配置（路径改为你的实际路径）：
 
 ```json
@@ -62,4 +93,4 @@ python3 mcp-server/test_server.py
 - 工具级错误按 MCP 规范放入 `result.isError`，不中断会话
 
 ---
-BEA v2.9.0 · 署名：马星 · CC BY-NC-SA 4.0
+BEA v2.10.0 · 署名：马星 · CC BY-NC-SA 4.0
