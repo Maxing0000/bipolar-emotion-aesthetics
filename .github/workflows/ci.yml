@@ -20,7 +20,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: 编译检查
-        run: python -m py_compile scripts/bea_quant.py scripts/bea_guide.py scripts/package.py tests/test_be.py
+        run: python -m py_compile scripts/bea_quant.py scripts/bea_guide.py scripts/package.py tests/test_be.py mcp-server/server.py mcp-server/test_server.py
 
       - name: 静态检查（pyflakes）
         # tests/ 不做静态检查：符号由运行时注入，静态分析必然误报；
@@ -28,10 +28,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip -q
           python -m pip install pyflakes -q
-          python -m pyflakes scripts/
+          python -m pyflakes scripts/ mcp-server/
 
-      - name: 全量自测（109 项）
+      - name: 全量自测（113 项）
         run: python scripts/bea_quant.py test
+
+      - name: MCP Server 会话自测
+        run: python mcp-server/test_server.py
 
       - name: 打包预检（含 SkillHub 规范校验）
         run: python scripts/package.py --check

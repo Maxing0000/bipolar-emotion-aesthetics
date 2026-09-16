@@ -1,5 +1,18 @@
 # 更新日志
 
+## v2.8.0（2026-09-16）— MCP Server：从提示词技能到软件产品
+
+### 新增
+- **MCP Server** `mcp-server/`：纯 Python 标准库实现 MCP stdio 服务器（JSON-RPC 2.0，零第三方依赖，离线可用），暴露三个工具——`bea_analyze`（单对象分析：W(T)/范式/病症/调分建议）、`bea_compare`（A/B 对比：逐维度差值 + 引擎报告）、`bea_dimensions`（品类维度/权重/范式锚点查询）；任意 MCP 客户端（WorkBuddy / Claude Desktop / Cursor 等）即可精确调用引擎
+- **MCP 自测** `mcp-server/test_server.py`：起真实子进程走完整 MCP 会话（握手 → 工具列表 → 三工具调用 → 错误路径），20 项检查，工具返回结果与引擎直算逐一比对
+
+### 修复
+- **引擎 bug（MCP 自测发现）**：`format_report_markdown` 在有病症时引用不存在的 `d['identify']`/`d['mechanism']` 键导致 KeyError，已对齐病症字典真实键（`evidence`/`prescription`）；自测套件补 4 项回归（有病症/无病症 markdown 报告、对比报告、病症触发确认），自测总数 109 → 113
+
+### 变更
+- CI 增加 MCP 相关关卡：mcp-server 编译检查、pyflakes、MCP 会话自测
+- 版本号全线对齐 2.8.0（引擎 / manifest / SKILL.md / 官网 / FAQ / 各文档页脚）
+
 ## v2.7.0（2026-09-15）— WorkBuddy 平台支持与文档全面引导
 
 ### 新增

@@ -389,6 +389,15 @@ def run_tests() -> bool:
     gen_distributed = generate_design("brand", 0.35, strategy="distributed")
     check("分散策略生成W(T)接近目标", abs(gen_distributed["w_t"] - 0.35) <= 0.05)
 
+    # 报告格式化回归测试（v2.7.1）：有病症时 markdown 报告不得再报 KeyError
+    a_dis = analyze("building", "形体轮廓=8,立面线条=7,比例尺度=6,材质肌理=5,光影空间=6")
+    check("该用例确实触发病症", len(a_dis.diseases) > 0)
+    md_with_diseases = format_report_markdown(a_dis)
+    check("markdown报告(有病症)可生成", "病症诊断" in md_with_diseases and "证据" in md_with_diseases)
+    a_clean = analyze("phone", "形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6")
+    check("markdown报告(无病症)可生成", "无明显病症" in format_report_markdown(a_clean))
+    check("对比报告可生成", "BEA 对比报告" in format_compare(a_dis, a_clean, "甲", "乙"))
+
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0
 

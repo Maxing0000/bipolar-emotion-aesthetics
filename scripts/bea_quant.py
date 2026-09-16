@@ -2,7 +2,7 @@
 # Copyright (c) 2026 马星. Licensed under CC BY-NC-SA 4.0.
 
 """
-BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.7.0
+BEA (Bipolar Emotion Aesthetics) 量化引擎 v2.8.0
 （版本号与 manifest.json / SKILL.md 保持一致）
 
 核心价值：把审美判断从"我觉得"变成可讨论、可比较、可追踪的协作对象。
@@ -31,7 +31,7 @@ from dataclasses import dataclass
 from typing import Callable, Dict, List, Tuple
 
 # 版本号单一来源（与 manifest.json 保持一致，test 命令会校验）
-__version__ = "2.7.0"
+__version__ = "2.8.0"
 
 # ──────────────────────────────────────────────
 # 核心配置
@@ -1019,8 +1019,7 @@ def format_report_markdown(a: BEAAnalysis) -> str:
     if a.diseases:
         for i, d in enumerate(a.diseases, 1):
             lines.append(f"### {i}. {d['name']}")
-            lines.append(f"- **识别**：{d['identify']}")
-            lines.append(f"- **机理**：{d['mechanism']}")
+            lines.append(f"- **证据**：{d['evidence']}")
             lines.append(f"- **处方**：{d['prescription']}")
             lines.append("")
     else:
