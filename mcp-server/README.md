@@ -9,6 +9,10 @@
 | `bea_analyze` | 单对象分析：输入品类 + 各维度 t 值（0-10），返回 W(T)、六范式定位、病症诊断、调分建议与 markdown 报告 |
 | `bea_compare` | A/B 对比：返回两方分析、逐维度差值与引擎对比报告 |
 | `bea_dimensions` | 查询品类维度/权重定义、t 值标尺与六范式锚点（打分前必查） |
+| `bea_suggest` | 调整建议：给定目标（范式名或 W(T)），返回逐步调分方案与调整后验证 |
+| `bea_generate` | 美感生成：给定目标自动生成最优维度配置（三种策略） |
+| `bea_sensitivity` | 灵敏度分析：找出"改动哪个维度效果最明显" |
+| `bea_batch` | 批量分析：多对象一次分析并按 W(T) 排名 |
 
 支持品类：`phone` / `car` / `brand` / `ui` / `building`
 
@@ -58,4 +62,4 @@ python3 mcp-server/test_server.py
 - 工具级错误按 MCP 规范放入 `result.isError`，不中断会话
 
 ---
-BEA v2.8.0 · 署名：马星 · CC BY-NC-SA 4.0
+BEA v2.9.0 · 署名：马星 · CC BY-NC-SA 4.0

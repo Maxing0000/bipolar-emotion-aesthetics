@@ -134,6 +134,104 @@ def tool_dimensions(args: dict) -> dict:
     }
 
 
+def tool_suggest(args: dict) -> dict:
+    category = args.get("category")
+    _check_category(category)
+    strategy = args.get("strategy", "focused")
+    if strategy not in ("focused", "distributed"):
+        raise ValueError(f"未知策略 '{strategy}'，可选：focused（集中）/ distributed（分散）")
+    a = _bq.analyze(category, _build_t_str(args.get("t_values"), category))
+    target_wt, target_desc = _bq.resolve_target(str(args.get("target")))
+    steps, verification = _bq.suggest_adjustment(a, target_wt, strategy)
+    return {
+        "category": category,
+        "current": _analysis_payload(a),
+        "target_wt": target_wt,
+        "target_desc": target_desc,
+        "strategy": strategy,
+        "steps": steps,
+        "verification": verification,
+        "report_markdown": _bq.format_suggest(a, target_wt, target_desc, steps, verification),
+    }
+
+
+def tool_generate(args: dict) -> dict:
+    category = args.get("category")
+    _check_category(category)
+    strategy = args.get("strategy", "balanced")
+    if strategy not in ("balanced", "focused", "distributed"):
+        raise ValueError(
+            f"未知策略 '{strategy}'，可选：balanced（均衡）/ focused（集中）/ distributed（分散）"
+        )
+    target_wt, target_desc = _bq.resolve_target(str(args.get("target")))
+    design = _bq.generate_design(category, target_wt, strategy)
+    analysis = design.pop("analysis")  # BEAAnalysis 对象不可直接 JSON 序列化，转为 dict
+    return {
+        "category": category,
+        "target_wt": design["target_wt"],
+        "target_desc": target_desc,
+        "strategy": strategy,
+        "t_str": design["t_str"],
+        "dimensions": design["dimensions"],
+        "w_t": design["w_t"],
+        "deviation": design["deviation"],
+        "paradigm": design["paradigm"],
+        "analysis": _analysis_payload(analysis),
+    }
+
+
+def tool_sensitivity(args: dict) -> dict:
+    category = args.get("category")
+    _check_category(category)
+    step = args.get("step", 1)
+    if step not in (1, 2, 3):
+        raise ValueError(f"步长 {step} 不支持，可选 1/2/3")
+    target_wt, target_desc = None, ""
+    if args.get("target") is not None:
+        target_wt, target_desc = _bq.resolve_target(str(args.get("target")))
+    a = _bq.analyze(category, _build_t_str(args.get("t_values"), category))
+    results = _bq.sensitivity_analysis(a, target_wt, step)
+    return {
+        "category": category,
+        "current_w_t": round(a.w_t, 3),
+        "step": step,
+        "target_wt": target_wt,
+        "results": results,
+        "report_markdown": _bq.format_sensitivity(a, results, target_wt, target_desc),
+    }
+
+
+def tool_batch(args: dict) -> dict:
+    category = args.get("category")
+    _check_category(category)
+    items = args.get("items")
+    if not isinstance(items, list) or not items:
+        raise ValueError("items 应为非空数组，如 [\"甲=3,6,4,3,5,6\", \"乙=4,4,4,4,4,4\"]")
+    results = []
+    for item in items:
+        name, dims = _bq.parse_compact_values(str(item), category)
+        a = _bq.analyze(category, _build_t_str(dims, category))
+        results.append((name, a))
+    ranked = sorted(results, key=lambda r: r[1].w_t)
+    return {
+        "category": category,
+        "count": len(results),
+        "results": [
+            {
+                "name": name,
+                "w_t": round(a.w_t, 3),
+                "paradigm": a.paradigm,
+                "paradigm_desc": a.paradigm_desc,
+                "dimensions": a.dimensions,
+                "diseases": [d["name"] for d in a.diseases],
+            }
+            for name, a in ranked
+        ],
+        "ranking": [name for name, _ in ranked],
+        "report_markdown": _bq.format_batch(results),
+    }
+
+
 TOOLS = [
     {
         "name": "bea_analyze",
@@ -198,12 +296,120 @@ TOOLS = [
             },
         },
     },
+    {
+        "name": "bea_suggest",
+        "description": (
+            "BEA 调整建议：给定当前打分与目标（范式名如'崇高震撼'，或 W(T) 数值如 0.54），"
+            "返回逐步调分方案（改哪个维度、从几改到几）与调整后验证。"
+            "strategy：focused（集中，默认）/ distributed（分散）。"
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "enum": ["phone", "car", "brand", "ui", "building"],
+                },
+                "t_values": {"description": "当前各维度 t 值，对象或 '维度=t,...' 字符串"},
+                "target": {
+                    "type": "string",
+                    "description": "目标：范式名（如'崇高震撼'）或 W(T) 数值字符串（如'0.54'）",
+                },
+                "strategy": {
+                    "type": "string",
+                    "enum": ["focused", "distributed"],
+                    "description": "调整策略，默认 focused",
+                },
+            },
+            "required": ["category", "t_values", "target"],
+        },
+    },
+    {
+        "name": "bea_generate",
+        "description": (
+            "BEA 美感生成：给定目标（范式名或 W(T) 数值），自动生成该品类最优维度配置，"
+            "使 W(T) 接近目标且主辅比健康。"
+            "strategy：balanced（均衡，默认）/ focused（集中张力）/ distributed（分散张力）。"
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "enum": ["phone", "car", "brand", "ui", "building"],
+                },
+                "target": {
+                    "type": "string",
+                    "description": "目标：范式名（如'冷峻克制'）或 W(T) 数值字符串（如'0.63'）",
+                },
+                "strategy": {
+                    "type": "string",
+                    "enum": ["balanced", "focused", "distributed"],
+                    "description": "生成策略，默认 balanced",
+                },
+            },
+            "required": ["category", "target"],
+        },
+    },
+    {
+        "name": "bea_sensitivity",
+        "description": (
+            "BEA 灵敏度分析：计算每个维度 t±step 对 W(T) 与四维评分的影响，"
+            "找出'改动哪个维度效果最明显'。step 可选 1/2/3，默认 1；target 可选。"
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "enum": ["phone", "car", "brand", "ui", "building"],
+                },
+                "t_values": {"description": "当前各维度 t 值，对象或 '维度=t,...' 字符串"},
+                "target": {
+                    "type": "string",
+                    "description": "可选目标：范式名或 W(T) 数值字符串",
+                },
+                "step": {
+                    "type": "integer",
+                    "enum": [1, 2, 3],
+                    "description": "调整步长，默认 1",
+                },
+            },
+            "required": ["category", "t_values"],
+        },
+    },
+    {
+        "name": "bea_batch",
+        "description": (
+            "BEA 批量分析：一次分析多个对象并排名（W(T) 从低到高，低者更亲和、高者更危极）。"
+            "items 为 '名称=值' 数组，支持紧凑/完整两种格式（同 bea_compare）。"
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "enum": ["phone", "car", "brand", "ui", "building"],
+                },
+                "items": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "如 [\"甲=3,6,4,3,5,6\", \"乙=形状=4,质感=4,...\"]",
+                },
+            },
+            "required": ["category", "items"],
+        },
+    },
 ]
 
 _TOOL_FUNCS = {
     "bea_analyze": tool_analyze,
     "bea_compare": tool_compare,
     "bea_dimensions": tool_dimensions,
+    "bea_suggest": tool_suggest,
+    "bea_generate": tool_generate,
+    "bea_sensitivity": tool_sensitivity,
+    "bea_batch": tool_batch,
 }
 
 
@@ -231,7 +437,7 @@ def handle_request(req: dict):
             "capabilities": {"tools": {}},
             "serverInfo": {
                 "name": SERVER_NAME,
-                "version": getattr(_bq, "__version__", "2.8.0"),
+                "version": getattr(_bq, "__version__", "2.9.0"),
             },
         })
 

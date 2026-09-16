@@ -89,7 +89,9 @@ def main():
         send(proc, {"jsonrpc": "2.0", "id": 3, "method": "tools/list"})
         tools = recv(proc)["result"]["tools"]
         ok([t["name"] for t in tools] ==
-           ["bea_analyze", "bea_compare", "bea_dimensions"], "tools/list：三个工具")
+           ["bea_analyze", "bea_compare", "bea_dimensions",
+            "bea_suggest", "bea_generate", "bea_sensitivity", "bea_batch"],
+           "tools/list：七个工具")
         ok(all("inputSchema" in t for t in tools), "tools/list：均带 inputSchema")
 
         # 4. bea_analyze：与引擎直算比对
@@ -128,7 +130,45 @@ def main():
         one = payload(call_tool(proc, "bea_dimensions", {"category": "car"}))
         ok(list(one["categories"]) == ["car"], "bea_dimensions：单品类过滤")
 
-        # 7. 错误路径：未知工具 / 非法品类 / 非法维度
+        # 6b. bea_suggest：范式名目标 + 步骤 + 验证
+        sug = payload(call_tool(proc, "bea_suggest",
+                                {"category": "phone",
+                                 "t_values": "形状=2,质感=4,色彩=3,构图=3,光影=4,细节=4",
+                                 "target": "崇高震撼"}))
+        ok(sug["target_wt"] == 0.54, "bea_suggest：范式名解析为中点 0.54")
+        ok(len(sug["steps"]) > 0 and all("dimension" in s for s in sug["steps"]),
+           "bea_suggest：调整步骤齐全")
+        ok(sug["verification"] is not None and "achieved" in sug["verification"],
+           "bea_suggest：附调整后验证")
+
+        # 6c. bea_generate：数值目标 + 生成配置可回流验证
+        gen = payload(call_tool(proc, "bea_generate",
+                                {"category": "car", "target": "0.30", "strategy": "balanced"}))
+        ok(set(gen["dimensions"]) == set(_bq.CATEGORY_WEIGHTS["car"]),
+           "bea_generate：生成维度与品类一致")
+        ok(abs(gen["w_t"] - 0.30) <= 0.05, f"bea_generate：W(T)={gen['w_t']} 接近目标 0.30")
+        ok("t_str" in gen and "=" in gen["t_str"], "bea_generate：附可直接复用的 t_str")
+        ok("w_t" in gen["analysis"], "bea_generate：analysis 已转为可序列化 dict")
+
+        # 6d. bea_sensitivity：结果按综合灵敏度排序
+        sen = payload(call_tool(proc, "bea_sensitivity",
+                                {"category": "phone",
+                                 "t_values": "形状=2,质感=4,色彩=3,构图=3,光影=4,细节=4",
+                                 "step": 1}))
+        ok(len(sen["results"]) == 6 and "wt_plus" in sen["results"][0],
+           "bea_sensitivity：六维度差分结果齐全")
+        ok("report_markdown" in sen and sen["report_markdown"], "bea_sensitivity：附报告")
+
+        # 6e. bea_batch：多对象排名
+        bat = payload(call_tool(proc, "bea_batch",
+                                {"category": "ui",
+                                 "items": ["甲=3,6,4,3,5", "乙=4,4,4,4,4", "丙=7,7,6,6,7"]}))
+        ok(bat["count"] == 3 and len(bat["ranking"]) == 3, "bea_batch：三对象全部分析")
+        wts = [r["w_t"] for r in bat["results"]]
+        ok(wts == sorted(wts), "bea_batch：结果按 W(T) 升序排名")
+        ok("report_markdown" in bat and bat["report_markdown"], "bea_batch：附批量报告")
+
+        # 7. 错误路径：未知工具 / 非法品类 / 非法维度 / 非法策略 / 空 items
         bad1 = call_tool(proc, "no_such_tool", {})
         ok(bad1.get("isError") is True, "未知工具 → isError")
         bad2 = call_tool(proc, "bea_analyze", {"category": "logo", "t_values": {}})
@@ -136,6 +176,11 @@ def main():
         bad3 = call_tool(proc, "bea_analyze",
                          {"category": "phone", "t_values": {"形状": 3}})
         ok(bad3.get("isError") is True, "缺维度 → isError")
+        bad4 = call_tool(proc, "bea_generate",
+                         {"category": "car", "target": "0.3", "strategy": "wild"})
+        ok(bad4.get("isError") is True, "非法策略 → isError")
+        bad5 = call_tool(proc, "bea_batch", {"category": "ui", "items": []})
+        ok(bad5.get("isError") is True, "空 items → isError")
 
         # 8. 未知方法 → JSON-RPC 错误
         send(proc, {"jsonrpc": "2.0", "id": 7, "method": "resources/list"})
