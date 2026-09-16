@@ -58,6 +58,7 @@ CORE_FILES = [
     "scripts/bea_guide.py",
     "scripts/bea_rubric.py",
     "scripts/bea_image.py",
+    "scripts/bea_calibrate.py",
     "tests/test_be.py",
     "references/01-core-theory.md",
     "references/02-workflow.md",

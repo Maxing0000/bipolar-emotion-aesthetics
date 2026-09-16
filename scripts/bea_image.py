@@ -15,6 +15,7 @@ v1 标定说明：特征→t 值的线性映射为初版人工标定，适用常
 """
 
 import importlib.util
+import json
 import os
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -107,6 +108,40 @@ DIM_MAP = {
 }
 
 UNMEASURED = {"ui": {"动效": 5}}  # 静态图无法测量的维度 → 中性值
+
+# ──────────────────────────────────────────────
+# 人工标定层（由 scripts/bea_calibrate.py 产出 data/calibration.json）
+# 逐维度仿射修正：t_final = clip(a * t_program + b, 0, 10)
+# 未标定时 CALIBRATION 为 None，行为与出厂线性表完全一致
+# ──────────────────────────────────────────────
+CALIBRATION = None
+
+
+def calibration_path() -> str:
+    env = os.environ.get("BEA_CALIBRATION")
+    if env and os.path.exists(env):
+        return env
+    for cand in (os.path.join(_HERE, "..", "data", "calibration.json"),
+                 os.path.join(_HERE, "data", "calibration.json")):
+        if os.path.exists(cand):
+            return cand
+    return ""
+
+
+def load_calibration(path: str = None):
+    """加载标定文件到全局 CALIBRATION。返回加载结果（无文件返回 None）。"""
+    global CALIBRATION
+    path = path or calibration_path()
+    if not path or not os.path.exists(path):
+        CALIBRATION = None
+        return None
+    with open(path, encoding="utf-8") as f:
+        cal = json.load(f)
+    CALIBRATION = cal if cal.get("per_dim") else None
+    return CALIBRATION
+
+
+load_calibration()  # 模块导入时静默尝试加载
 
 
 def _require_pillow():
@@ -263,12 +298,17 @@ def features_to_t(category: str, feats: dict):
     if category not in DIM_MAP:
         raise ValueError(f"未知品类 {category!r}，可选：{'/'.join(DIM_MAP)}")
     t = {}
+    calibrated = (CALIBRATION or {}).get("per_dim", {})
     for dim, parts in DIM_MAP[category].items():
         num = den = 0.0
         for fname, weight in parts:
             num += weight * _raw_to_t(fname, feats[fname])
             den += weight
-        t[dim] = int(round(num / den))
+        tv = num / den
+        rule = calibrated.get(f"{category}/{dim}")
+        if rule:
+            tv = max(0.0, min(10.0, rule["a"] * tv + rule["b"]))
+        t[dim] = int(round(tv))
     unmeasured = UNMEASURED.get(category, {})
     for dim, default in unmeasured.items():
         t[dim] = default

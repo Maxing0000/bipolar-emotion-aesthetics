@@ -447,4 +447,4 @@ python3 scripts/bea_quant.py multigroup --category car --groups "宏观外形=�
 
 ---
 
-*最后更新：v2.11.0，2026-09-15*
+*最后更新：v2.12.0，2026-09-15*

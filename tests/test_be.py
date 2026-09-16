@@ -9,6 +9,7 @@
 注：引擎符号在运行时注入全局（globals().update），静态分析器会误报 undefined name，
 因此 pyflakes 只检查 scripts/，本文件由 CI 的"全量自测"步骤实际执行验证。
 """
+import csv
 import os
 import sys
 
@@ -454,6 +455,55 @@ def run_tests() -> bool:
             check("图片不存在报错", True)
     else:
         print("  - 未安装 Pillow，跳过图像端到端测试（CI 无 Pillow 属预期）")
+
+    # ── 标定器（bea_calibrate）：OLS 恢复 + fit→应用 全链路（不依赖 Pillow）──
+    _cal_spec = importlib.util.spec_from_file_location(
+        "bea_calibrate", os.path.join(_SCRIPTS, "bea_calibrate.py"))
+    _cal = importlib.util.module_from_spec(_cal_spec)
+    _cal_spec.loader.exec_module(_cal)
+    _ols = _cal.ols([0, 1, 2, 3, 4], [1.2, 2.0, 2.8, 3.6, 4.4])  # y=0.8x+1.2
+    check("OLS 恢复直线系数", _ols["a"] == 0.8 and _ols["b"] == 1.2
+          and _ols["r2"] == 1.0)
+    check("OLS 不可拟合返回 None", _cal.ols([1, 1, 1], [1, 2, 3]) is None)
+    check("OLS 样本不足返回 None", _cal.ols([1], [1]) is None)
+
+    import tempfile
+    with tempfile.TemporaryDirectory() as _td:
+        _csv = os.path.join(_td, "samples.csv")
+        with open(_csv, "w", newline="", encoding="utf-8") as _f:
+            _w = csv.DictWriter(_f, fieldnames=_cal.CSV_COLUMNS)
+            _w.writeheader()
+            # 标注规则 t_human = 10 - t_program（强负修正），含一行未标注与一行非法维度
+            for _tv in (2, 4, 6, 8):
+                _w.writerow({"file": "x.png", "category": "phone",
+                             "dimension": "光影", "t_program": _tv,
+                             "t_human": 10 - _tv})
+            _w.writerow({"file": "y.png", "category": "phone",
+                         "dimension": "光影", "t_program": 5, "t_human": ""})
+            _w.writerow({"file": "z.png", "category": "phone",
+                         "dimension": "不存在", "t_program": 3, "t_human": 7})
+        _sum = _cal.fit(_csv, os.path.join(_td, "cal.json"))
+        check("fit 产出单一维度规则",
+              list(_sum["per_dim"]) == ["phone/光影"] and _sum["samples"] == 4)
+        _r = _sum["per_dim"]["phone/光影"]
+        check("fit 恢复负修正系数", abs(_r["a"] + 1.0) < 1e-6
+              and abs(_r["b"] - 10.0) < 1e-6 and _r["r2"] == 1.0)
+        check("fit 拒绝非法维度", _sum["samples"] == 4 and
+              "不存在" not in str(_sum["per_dim"]))
+
+        # 标定应用到 features_to_t：程序 t 5 → 标定后 ≈ 5
+        _feats = {"sharpness": 300.0, "symmetry": 0.8, "texture": 15.0,
+                  "light_hardness": 0.3, "color_intensity": 0.25,
+                  "warmth": 0.0, "gravity": 0.1}
+        _bimg.load_calibration("")  # 清空 → 出厂行为
+        _t_raw = _bimg.features_to_t("phone", _feats)[0]["光影"]
+        _bimg.load_calibration(os.path.join(_td, "cal.json"))
+        _t_cal = _bimg.features_to_t("phone", _feats)[0]["光影"]
+        check("标定前行为与出厂一致", isinstance(_t_raw, int))
+        check("标定后 t 值按规则平移",
+              _t_cal == int(round(max(0.0, min(10.0, -1.0 * _t_raw + 10.0)))))
+        check("标定后 t 值仍在 0-10", 0 <= _t_cal <= 10)
+        _bimg.load_calibration(os.path.join(_td, "no.json"))  # 清理现场
 
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0

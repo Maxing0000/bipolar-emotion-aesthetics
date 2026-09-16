@@ -1,5 +1,16 @@
 # 更新日志
 
+## v2.12.0（2026-09-16）— 标定器：让像素通道从「能用」变「可信」
+
+### 新增
+- **标定器 `scripts/bea_calibrate.py`**（维护者 CLI，纯标准库）：
+  - `collect`：对图片目录逐张提取特征与程序 t 值，产出待标注 CSV（t_human 列留空）；品类可按 `<品类>_<描述>.png` 文件名自动推断
+  - `fit`：逐维度最小二乘拟合 t_human ≈ a·t_program + b，产出 `data/calibration.json`；样本不足（<3）或无方差的维度自动跳过并说明原因
+  - `status`：查看当前标定状态与拟合质量（R²、样本数、优/良/差评级）
+- **bea_image 标定层**：自动加载 `data/calibration.json`（路径可由 `BEA_CALIBRATION` 环境变量指定），逐维度仿射修正 t_final = clip(a·t_program + b)；未标定时行为与 v2.11.0 出厂线性表完全一致
+- 自测 134 → 143 项（有 Pillow）/ 137（无 Pillow）：OLS 系数恢复、fit 全链路（含非法维度拒绝与未标注行跳过）、标定前后 t 值平移验证
+- 打包清单纳入 bea_calibrate.py；版本 2.11.0 → 2.12.0
+
 ## v2.11.0（2026-09-16）— 图片分析引擎化：从像素到 W(T) 的程序化通道
 
 ### 新增
