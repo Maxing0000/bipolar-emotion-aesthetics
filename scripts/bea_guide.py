@@ -83,16 +83,26 @@ def choose_operation():
         print("  ✗ 无效输入，请输入 1-5")
 
 
+def _load_engine():
+    """动态加载引擎模块（维度/权重唯一来源：bea_quant.py 的 CATEGORY_WEIGHTS）"""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("bea_quant", BEA_QUANT)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+_ENGINE = _load_engine()
+
+
+def get_categories():
+    """获取引擎支持的品类列表（单源：引擎 CATEGORY_WEIGHTS）"""
+    return list(_ENGINE.CATEGORY_WEIGHTS.keys())
+
+
 def get_dimensions(category):
-    """获取维度列表（与 bea_quant.py 的 CATEGORY_WEIGHTS 保持一致）"""
-    defaults = {
-        "phone": ["形状", "质感", "色彩", "构图", "光影", "细节"],
-        "car": ["曲面", "特征线", "灯组", "比例", "材质"],
-        "brand": ["图形", "色彩", "字体", "版式", "质感"],
-        "ui": ["布局", "色彩对比", "组件形", "动效", "字体图标"],
-        "building": ["形体轮廓", "立面线条", "比例尺度", "材质肌理", "光影空间"],
-    }
-    return defaults.get(category, ["维度1", "维度2", "维度3"])
+    """获取维度列表（单源：引擎 CATEGORY_WEIGHTS，不再手工维护副本）"""
+    return list(_ENGINE.CATEGORY_WEIGHTS[category].keys())
 
 
 def input_dimensions(category, dims):

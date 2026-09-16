@@ -1,1 +1,7 @@
-_shots/
+# 截图（任意层级）
+**/_shots/
+
+# 构建产物
+dist/
+__pycache__/
+*.pyc

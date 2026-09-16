@@ -406,7 +406,7 @@ python3 scripts/bea_quant.py test
 | `references/02-workflow.md` | 45分钟评审流程、竞品分析模板、定调流程、6个常见误区 | 实际执行评审时 |
 | `references/03-dimension-guide.md` | **五个品类每个维度的定义+真实产品锚点** | 打分前必读 |
 | `references/04-checklist.md` | **设计自查清单**（含5分钟快速版） | 设计定稿前、评审前 |
-| `references/05-case-studies.md` | **真实案例库**（31 个案例：iPhone Duo、尊界 S800、中国尊、中银 vs 汇丰、徕卡 M 等，覆盖九大领域与六大范式） | 校准打分、参考写法 |
+| `references/05-case-studies.md` | **真实案例库**（32 个案例：iPhone Duo、尊界 S800、中国尊、中银 vs 汇丰、徕卡 M 等，覆盖九大领域与六大范式） | 校准打分、参考写法 |
 | `references/06-image-anchors.md` | **图片分析锚点示例与评分一致性指南**（标准流程、视觉锚点、完整示例、校准方法） | 图片分析前必读，提升打分一致性 |
 | `templates/review-record.md` | **评审记录标准模板** | 每次评审后填写存档 |
 

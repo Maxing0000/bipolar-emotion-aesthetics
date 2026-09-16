@@ -56,6 +56,7 @@ CORE_FILES = [
     "QUICKSTART.md",
     "scripts/bea_quant.py",
     "scripts/bea_guide.py",
+    "tests/test_be.py",
     "references/01-core-theory.md",
     "references/02-workflow.md",
     "references/03-dimension-guide.md",

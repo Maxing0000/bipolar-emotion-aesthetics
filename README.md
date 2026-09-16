@@ -281,7 +281,7 @@ bipolar-emotion-aesthetics/
 │   ├── 02-workflow.md          # 评审流程、竞品分析、定调方法
 │   ├── 03-dimension-guide.md   # 维度定义 + 真实产品锚点
 │   ├── 04-checklist.md         # 设计自查清单
-│   ├── 05-case-studies.md      # 案例库（九大领域 31 个案例）
+│   ├── 05-case-studies.md      # 案例库（九大领域 32 个案例）
 │   └── 06-image-anchors.md     # 图片分析锚点与打分一致性指南
 ├── platforms/                  # 多平台适配
 │   ├── universal-system-prompt.md  # 通用 System Prompt（复制即用）

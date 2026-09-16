@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: 编译检查
+        run: python -m py_compile scripts/bea_quant.py scripts/bea_guide.py scripts/package.py tests/test_be.py
+
+      - name: 静态检查（pyflakes）
+        # tests/ 不做静态检查：符号由运行时注入，静态分析必然误报；
+        # tests 的正确性由下一步"全量自测"实际执行来保证
+        run: |
+          python -m pip install --upgrade pip -q
+          python -m pip install pyflakes -q
+          python -m pyflakes scripts/
+
+      - name: 全量自测（109 项）
+        run: python scripts/bea_quant.py test
+
+      - name: 打包预检（含 SkillHub 规范校验）
+        run: python scripts/package.py --check
+
+      - name: 案例库一致性（data/cases.json ↔ 网页）
+        run: python scripts/gen_case_library.py --check

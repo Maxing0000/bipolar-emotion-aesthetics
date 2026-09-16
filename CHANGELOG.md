@@ -30,6 +30,24 @@
 - **版本号彻底收口**：`bea_quant.py` 新增 `__version__` 常量，输出脚注、CLI 标题、`--help` 描述全部改为动态引用（原先硬编码 v2.4.0 / v2.2.1）；自测新增「头注释版本号与 `__version__` 一致」断言（自测 108 → 109 项）
 - **测试数表述去数字**：文档中「108 项自测」统一改为「全量自测」，避免每次增删测试都要改文档（`FAQ.md` 页脚版本号同步至 2.7.0）
 
+### 内容一致性（第四轮）
+- **案例库单一数据源**：案例数据从网页 JS 字面量抽出为 `data/cases.json`（唯一数据源），新增 `scripts/gen_case_library.py` 从 JSON 重新生成 `docs/case-library.html` 数据段（`--check` 校验一致性）；CI 增加对应检查步骤，网页数据被手改会直接报错
+- **补齐网页缺失的 3 个对比案例**：网页原 29 案例（缺 iPhone vs 游戏手机、奔驰S vs 宝马7、中银 vs 汇丰），md 原缺 Tesla Cybercab——合并后双侧均为 **32 个案例**（ids 1–32 连续），md 补写案例32 Cybercab，速查表/类型分类/时代分类/范式覆盖统计同步更新
+- **修正写死的统计数字**：网页页头「案例总数 30」改为随数据生成（32）；SKILL.md、README 的案例数表述（31→32）对齐
+- CHANGELOG 历史条目中的旧数字（v2.6 时期的 30 个案例）按惯例保留不改
+
+### 架构优化（第四轮）
+- **自测试拆出引擎**：109 项自测从 `bea_quant.py`（2798 行）整体迁移至 `tests/test_be.py`，引擎瘦身至 2437 行；`test` 子命令改为委托执行，入口与行为不变（`python3 scripts/bea_quant.py test`）；`tests/test_be.py` 加入打包清单，随技能包分发
+- **维度表单一数据源**：`bea_guide.py` 删除手工维护的维度副本（上轮 phone 3 个维度不一致 bug 的根因），改为 importlib 动态加载引擎并读取 `CATEGORY_WEIGHTS`——引擎增删品类/维度，引导脚本自动跟随
+- **新增 GitHub Actions**：`.github/workflows/ci.yml`——双 Python 版本（3.9/3.13）矩阵，编译检查、pyflakes（仅 scripts/，tests 符号运行时注入不做静态检查）、全量自测、打包预检四道关卡
+- 校验：三条 guide 路径（report/compare/interactive）冒烟通过，8 个上传包重打全绿（29 文件，无二进制）
+
+### 仓库卫生（第四轮）
+- **构建产物出库**：`dist/` 从 git 跟踪中移除（原 30 个文件，含 21 个 v2.5.0–v2.6.1 旧包）并加入 `.gitignore`；本地旧包已删，仅保留 v2.7.0 的 8 个包
+- **截图出库**：`.gitignore` 的 `_shots/` 规则改为 `**/_shots/`，`case-library/_shots`、`image-analyzer/_shots` 共 6 张截图移出跟踪
+- **删除 11 个空目录骨架**：`tests/`、`ci/`、`mcp-server/bea_mcp/`、`bea-website/`（含空 assets/_shots）、嵌套的 `bipolar-emotion-aesthetics/`、`docs/paper/`、`.github/workflows/`——全部为无文件的误导性空壳
+- 校验：文档无对已删目录的引用，打包预检与全量自测（109 项）通过
+
 ### 代码与文档全面体检（第三轮）
 - **修复 `interactive` 子命令崩溃**：`bea_quant.py interactive` 调用了不存在的 `run_interactive()`（pyflakes 报 undefined name），现委托给同目录 `bea_guide.py`，导入 `subprocess` 实现
 - **修复 `bea_guide.py` 维度表与引擎不一致**：phone 品类 6 个维度中 3 个、brand 2 个、ui 1 个用旧维度名（如「形状线条」），走交互式引导会让引擎报错；已全部对齐 `CATEGORY_WEIGHTS`

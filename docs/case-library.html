@@ -1056,7 +1056,7 @@
             </a>
             <div class="stats">
                 <div class="stat-item">
-                    <div class="stat-number" id="totalCases">30</div>
+                    <div class="stat-number" id="totalCases">32</div>
                     <div class="stat-label">案例总数</div>
                 </div>
                 <div class="stat-item">
@@ -1142,749 +1142,1653 @@
     <script>
         // ===== 案例数据 =====
         const cases = [
-            {
-                id: 1,
-                title: "iPhone Duo",
-                brand: "苹果 Apple",
-                category: "消费电子/手机",
-                paradigm: "balanced",
-                paradigmName: "均衡典雅",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.44,
-                year: "2026",
-                description: "苹果首款折叠屏旗舰，用经典亲和语言托底，用镜面钛金属提神。",
-                dimensions: [
-                    { name: "形状", t: 3, polarity: "P+亲极", reason: "圆润边角是苹果标志性语言" },
-                    { name: "质感", t: 6, polarity: "T−危极", reason: "镜面抛光5级钛金属中框" },
-                    { name: "色彩", t: 4, polarity: "中性", reason: "星光白偏亲，夜空色偏危" },
-                    { name: "构图", t: 3, polarity: "P+亲极", reason: "对称居中，双摄横排" },
-                    { name: "光影", t: 5, polarity: "中性", reason: "镜面金属强反射 vs 哑光屏幕" },
-                    { name: "细节", t: 6, polarity: "T−危极", reason: "100+组件精密铰链" }
-                ],
-                insight: "苹果首款折叠屏选择了最稳妥的美学策略：用经典亲和语言托底，用镜面钛金属提神。W(T)=0.44 说明它在'安全'和'冒险'之间走得很精准。",
-                prescription: [
-                    "增加1-2种中间调性配色，扩展情绪光谱",
-                    "可考虑哑光钛金属版本，W(T)降至0.39",
-                    "铰链护壳可加入极细微品牌刻印"
-                ]
-            },
-            {
-                id: 2,
-                title: "Samsung Galaxy S26 Ultra",
-                brand: "三星 Samsung",
-                category: "消费电子/手机",
-                paradigm: "balanced",
-                paradigmName: "均衡典雅",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.385,
-                year: "2026",
-                description: "三星年度旗舰，主动从'崇高震撼'退回'均衡典雅'，策略稳妥但代价是旗舰视觉冲击力被稀释。",
-                dimensions: [
-                    { name: "形状", t: 4, polarity: "中性", reason: "比前代圆润化处理" },
-                    { name: "质感", t: 4, polarity: "中性", reason: "装甲铝喷砂边框+磨砂玻璃" },
-                    { name: "色彩", t: 4, polarity: "中性", reason: "六色覆盖从亲和到冷峻" },
-                    { name: "构图", t: 3, polarity: "P+亲极", reason: "竖排四摄居左上" },
-                    { name: "光影", t: 3, polarity: "P+亲极", reason: "全机哑光处理" },
-                    { name: "细节", t: 5, polarity: "T−偏危", reason: "四摄+2亿像素+防窥屏" }
-                ],
-                insight: "三星这一代在做明确的'去危极化'——钛换铝、直角改圆润、全机哑光。W(T)从前代估计的0.48+降到0.385，主动从'崇高震撼'退回'均衡典雅'。",
-                prescription: [
-                    "边框做高光倒角，质感 t 从4→6",
-                    "氛围岛模组底座改用不同材质",
-                    "S Pen 笔杆做撞色设计"
-                ]
-            },
-            {
-                id: 3,
-                title: "Tesla Model 3",
-                brand: "特斯拉 Tesla",
-                category: "汽车/交通工具",
-                paradigm: "balanced",
-                paradigmName: "均衡典雅",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.39,
-                year: "2017",
-                description: "中型纯电轿车，主流走量车型，灯组是精准的提神点。",
-                dimensions: [
-                    { name: "曲面", t: 3, polarity: "P+偏亲", reason: "车身曲面流畅圆润" },
-                    { name: "特征线", t: 3, polarity: "P+偏亲", reason: "仅一条柔和腰线" },
-                    { name: "灯组", t: 6, polarity: "T−偏危", reason: "细长锐利的大灯" },
-                    { name: "比例", t: 5, polarity: "中性", reason: "长轴距、低车身" },
-                    { name: "材质", t: 4, polarity: "中性", reason: "普通金属漆，极简" }
-                ],
-                insight: "Model 3 是'大面柔、特征线锐'的典型代表。用饱满曲面托住安全感，少量极锐利灯组提供记忆点。",
-                prescription: [
-                    "可增加更有辨识度的特征线",
-                    "内饰可增加更多材质层次"
-                ]
-            },
-            {
-                id: 4,
-                title: "尊界 S800",
-                brand: "尊界（华为+江淮）",
-                category: "汽车/交通工具",
-                paradigm: "balanced",
-                paradigmName: "均衡典雅",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.455,
-                year: "2025",
-                description: "豪华行政轿车，灯组锐利+曲面力量感，平衡豪华与科技。",
-                dimensions: [
-                    { name: "曲面", t: 4, polarity: "中性", reason: "饱满大曲面+力量感" },
-                    { name: "特征线", t: 5, polarity: "中性", reason: "优雅腰线+水平延展" },
-                    { name: "灯组", t: 7, polarity: "T−危极", reason: "锐利灯组+智能交互" },
-                    { name: "比例", t: 4, polarity: "中性", reason: "长轴距+稳重姿态" },
-                    { name: "材质", t: 5, polarity: "中性", reason: "高端材质+精致工艺" }
-                ],
-                insight: "尊界 S800 用'大面柔、灯组锐'的策略，在豪华感和科技感之间找到了平衡。",
-                prescription: [
-                    "可进一步强化品牌识别元素",
-                    "内饰可增加更多温度感"
-                ]
-            },
-            {
-                id: 5,
-                title: "理想 L9",
-                brand: "理想 Li Auto",
-                category: "汽车/交通工具",
-                paradigm: "balanced",
-                paradigmName: "均衡典雅",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.36,
-                year: "2022",
-                description: "家庭豪华SUV，家用亲和+星环大灯，缺少焦点是秩序短板。",
-                dimensions: [
-                    { name: "曲面", t: 3, polarity: "P+偏亲", reason: "圆润饱满，家用亲和" },
-                    { name: "特征线", t: 3, polarity: "P+偏亲", reason: "简洁线条，无过多折面" },
-                    { name: "灯组", t: 5, polarity: "中性", reason: "星环大灯，识别度高" },
-                    { name: "比例", t: 4, polarity: "中性", reason: "大型SUV，稳重姿态" },
-                    { name: "材质", t: 3, polarity: "P+偏亲", reason: "家用材质，温暖舒适" }
-                ],
-                insight: "理想 L9 用亲和的造型服务家庭用户，但整体缺少一个强视觉焦点，导致记忆点不足。",
-                prescription: [
-                    "强化星环大灯的视觉权重",
-                    "增加更有辨识度的侧面特征"
-                ]
-            },
-            {
-                id: 6,
-                title: "小米 SU7",
-                brand: "小米 Xiaomi",
-                category: "汽车/交通工具",
-                paradigm: "balanced",
-                paradigmName: "均衡典雅",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.47,
-                year: "2024",
-                description: "运动轿跑，运动感最强+灯组犀利，接近崇高震撼上沿。",
-                dimensions: [
-                    { name: "曲面", t: 5, polarity: "中性", reason: "运动曲面，肌肉感强" },
-                    { name: "特征线", t: 6, polarity: "T−偏危", reason: "锐利腰线，运动感强" },
-                    { name: "灯组", t: 7, polarity: "T−危极", reason: "犀利灯组，攻击性强" },
-                    { name: "比例", t: 5, polarity: "中性", reason: "低趴姿态，运动比例" },
-                    { name: "材质", t: 4, polarity: "中性", reason: "运动材质，精致工艺" }
-                ],
-                insight: "小米 SU7 是'运动美学'的代表，用锐利的线条和灯组传递运动感，但整体仍在均衡典雅区间内。",
-                prescription: [
-                    "性能版可进一步提升运动感",
-                    "普通版可增加更多亲和元素"
-                ]
-            },
-            {
-                id: 7,
-                title: "特斯拉 Cybertruck",
-                brand: "特斯拉 Tesla",
-                category: "汽车/交通工具",
-                paradigm: "avant",
-                paradigmName: "先锋反叛",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.825,
-                year: "2023",
-                description: "电动皮卡，极端差异化+未来感，接近越阈但用绝对几何秩序压住攻击性。",
-                dimensions: [
-                    { name: "曲面", t: 9, polarity: "T−危极", reason: "全折线，无曲面，极端几何" },
-                    { name: "特征线", t: 9, polarity: "T−危极", reason: "锐利折角，攻击性极强" },
-                    { name: "灯组", t: 8, polarity: "T−危极", reason: "细长灯带，未来感强" },
-                    { name: "比例", t: 8, polarity: "T−危极", reason: "非常规比例，打破传统" },
-                    { name: "材质", t: 7, polarity: "T−偏危", reason: "裸露不锈钢，工业感强" }
-                ],
-                insight: "Cybertruck 是'高危极+高秩序'的极致案例。虽然 W(T)=0.825 接近越阈，但用'绝对几何+统一材质'的强秩序压住了攻击性，成为先锋经典。",
-                prescription: [
-                    "保持极端设计，这是核心竞争力",
-                    "可增加更多人性化细节补偿"
-                ]
-            },
-            {
-                id: 8,
-                title: "中国尊",
-                brand: "中国尊大厦",
-                category: "建筑/室内",
-                paradigm: "sublime",
-                paradigmName: "崇高震撼",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.55,
-                year: "2018",
-                description: "超高层地标建筑，超高层比例+礼器造型，轻度攻击症但被秩序收编。",
-                dimensions: [
-                    { name: "尺度", t: 7, polarity: "T−危极", reason: "528米超高层，压迫感强" },
-                    { name: "造型", t: 6, polarity: "T−偏危", reason: "礼器造型，收分曲线" },
-                    { name: "材质", t: 5, polarity: "中性", reason: "玻璃幕墙+金属，现代感" },
-                    { name: "光影", t: 5, polarity: "中性", reason: "光影变化，动态感" },
-                    { name: "秩序", t: 4, polarity: "中性", reason: "对称布局，稳定感" }
-                ],
-                insight: "中国尊用'礼器'的文化符号和超高层的尺度制造崇高感，同时用对称秩序保证稳定。",
-                prescription: [
-                    "底部可增加更多亲和元素",
-                    "夜景照明可更有层次"
-                ]
-            },
-            {
-                id: 9,
-                title: "苹果品牌视觉",
-                brand: "苹果 Apple",
-                category: "品牌/平面",
-                paradigm: "friendly",
-                paradigmName: "亲和精致",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.31,
-                year: "持续",
-                description: "苹果品牌视觉系统，大留白+精密光影，亲和与典雅边界。",
-                dimensions: [
-                    { name: "图形", t: 3, polarity: "P+亲极", reason: "极简logo，圆润造型" },
-                    { name: "色彩", t: 3, polarity: "P+亲极", reason: "低饱和，柔和渐变" },
-                    { name: "字体", t: 4, polarity: "中性", reason: "San Francisco，现代无衬线" },
-                    { name: "版式", t: 3, polarity: "P+亲极", reason: "大留白，居中对称" },
-                    { name: "质感", t: 4, polarity: "中性", reason: "精密光影，材质感" }
-                ],
-                insight: "苹果品牌视觉是'少即是多'的典范，用极简的元素传递高级感，大留白是其核心特征。",
-                prescription: [
-                    "可增加更多色彩实验",
-                    "保持极简，这是核心资产"
-                ]
-            },
-            {
-                id: 10,
-                title: "iOS 18 界面设计",
-                brand: "苹果 Apple",
-                category: "UI/交互",
-                paradigm: "friendly",
-                paradigmName: "亲和精致",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.30,
-                year: "2024",
-                description: "iOS 18 界面，大圆角+微差补偿，亲和精致范式的代表。",
-                dimensions: [
-                    { name: "布局", t: 3, polarity: "P+亲极", reason: "大留白，清晰层级" },
-                    { name: "色彩", t: 3, polarity: "P+亲极", reason: "柔和渐变，低饱和" },
-                    { name: "组件", t: 2, polarity: "P+亲极", reason: "全圆角，胶囊按钮" },
-                    { name: "动效", t: 3, polarity: "P+亲极", reason: "缓入缓出，物理惯性" },
-                    { name: "字体", t: 3, polarity: "P+亲极", reason: "圆润字体，适中字重" }
-                ],
-                insight: "iOS 18 是'微差补偿'的极致运用，宏观柔和，微观精密，远看亲和，近看有细节。",
-                prescription: [
-                    "可增加更多个性化选项",
-                    "保持一致性，这是核心优势"
-                ]
-            },
-            {
-                id: 11,
-                title: "无印良品服装系列",
-                brand: "无印良品 MUJI",
-                category: "服装/时尚",
-                paradigm: "friendly",
-                paradigmName: "亲和精致",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.215,
-                year: "持续",
-                description: "无印良品服装，材质质感+减法极致，接近治愈松弛，轻度甜腻症。",
-                dimensions: [
-                    { name: "廓形", t: 2, polarity: "P+亲极", reason: "宽松舒适，无硬挺" },
-                    { name: "色彩", t: 2, polarity: "P+亲极", reason: "大地色系，低饱和" },
-                    { name: "材质", t: 2, polarity: "P+亲极", reason: "天然材质，亲肤舒适" },
-                    { name: "细节", t: 3, polarity: "P+亲极", reason: "极简设计，无装饰" },
-                    { name: "搭配", t: 2, polarity: "P+亲极", reason: "同色系，统一感" }
-                ],
-                insight: "无印良品是'减法美学'的代表，用极致的简约传递生活态度，但需警惕过度简约导致的甜腻感。",
-                prescription: [
-                    "可增加少量设计感单品",
-                    "用材质差异增加层次"
-                ]
-            },
-            {
-                id: 12,
-                title: "苹果产品提示音",
-                brand: "苹果 Apple",
-                category: "音乐/声音",
-                paradigm: "friendly",
-                paradigmName: "亲和精致",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.26,
-                year: "持续",
-                description: "苹果系统提示音，协和音程+记忆点，声音设计的经典。",
-                dimensions: [
-                    { name: "音高", t: 2, polarity: "P+亲极", reason: "中低频，温暖音色" },
-                    { name: "音量", t: 2, polarity: "P+亲极", reason: "平稳，渐变" },
-                    { name: "节奏", t: 3, polarity: "P+亲极", reason: "规整，留白" },
-                    { name: "旋律", t: 2, polarity: "P+亲极", reason: "协和，完整收束" },
-                    { name: "空间", t: 3, polarity: "P+亲极", reason: "近距离，温暖混响" }
-                ],
-                insight: "苹果提示音是'声音微差补偿'的典范，用协和的音程和明确的收束创造记忆点。",
-                prescription: [
-                    "可增加更多个性化提示音",
-                    "保持简洁，这是核心优势"
-                ]
-            },
-            {
-                id: 13,
-                title: "《银翼杀手2049》视觉镜头",
-                brand: "电影影视",
-                category: "影视/动画",
-                paradigm: "cold",
-                paradigmName: "冷峻克制",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.64,
-                year: "2017",
-                description: "银翼杀手2049，极端色彩+秩序约束，冷峻克制范式的影视代表。",
-                dimensions: [
-                    { name: "色彩", t: 8, polarity: "T−危极", reason: "极端橙蓝对比，高饱和" },
-                    { name: "构图", t: 6, polarity: "T−偏危", reason: "对称构图，几何感强" },
-                    { name: "光影", t: 7, polarity: "T−危极", reason: "硬光，强对比，雾气" },
-                    { name: "节奏", t: 5, polarity: "中性", reason: "缓慢，长镜头" },
-                    { name: "质感", t: 6, polarity: "T−偏危", reason: "废墟，雨水，霓虹" }
-                ],
-                insight: "银翼杀手2049 用极端的色彩和光影制造冷峻感，但用对称构图和缓慢节奏保证秩序，形成'冷而不冰'的高级感。",
-                prescription: [
-                    "保持视觉风格，这是核心资产",
-                    "可增加更多情感温度"
-                ]
-            },
-            {
-                id: 14,
-                title: "北京大兴国际机场",
-                brand: "公共建筑",
-                category: "公共/医疗空间",
-                paradigm: "sublime",
-                paradigmName: "崇高震撼",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.515,
-                year: "2019",
-                description: "大兴机场，超尺度+白色亲和，崇高震撼范式的公共空间代表。",
-                dimensions: [
-                    { name: "尺度", t: 7, polarity: "T−危极", reason: "超大空间，震撼感" },
-                    { name: "造型", t: 6, polarity: "T−偏危", reason: "海星造型，流动曲线" },
-                    { name: "色彩", t: 3, polarity: "P+亲极", reason: "白色为主，亲和感" },
-                    { name: "光影", t: 4, polarity: "中性", reason: "自然采光，柔和" },
-                    { name: "秩序", t: 5, polarity: "中性", reason: "放射状布局，清晰" }
-                ],
-                insight: "大兴机场用'超尺度'制造崇高感，同时用'白色亲和'保证舒适度，是'危极尺度+亲极色彩'的成功组合。",
-                prescription: [
-                    "可增加更多人性化细节",
-                    "商业区域可更有温度"
-                ]
-            },
-            {
-                id: 15,
-                title: "安缦酒店室内设计",
-                brand: "安缦 Aman",
-                category: "建筑/室内",
-                paradigm: "friendly",
-                paradigmName: "亲和精致",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.255,
-                year: "持续",
-                description: "安缦酒店，微差补偿+材质极致，室内设计的亲和精致天花板。",
-                dimensions: [
-                    { name: "尺度", t: 3, polarity: "P+亲极", reason: "围合感，包裹感" },
-                    { name: "材质", t: 2, polarity: "P+亲极", reason: "天然材质，温润亲肤" },
-                    { name: "色彩", t: 2, polarity: "P+亲极", reason: "大地色系，低饱和" },
-                    { name: "光影", t: 3, polarity: "P+亲极", reason: "漫射柔光，温暖" },
-                    { name: "陈设", t: 3, polarity: "P+亲极", reason: "极简，对称，留白" }
-                ],
-                insight: "安缦酒店是'微差补偿'的室内版，远看一片柔和，近看每一处都有值得凝视的精密感。",
-                prescription: [
-                    "公共区域可增加视觉锚点",
-                    "功能区可增加秩序感"
-                ]
-            },
-            {
-                id: 16,
-                title: "Lululemon 服装系列",
-                brand: "Lululemon",
-                category: "服装/时尚",
-                paradigm: "healing",
-                paradigmName: "治愈松弛",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.175,
-                year: "持续",
-                description: "Lululemon，极致亲肤+专业功能，治愈松弛范式的服装代表。",
-                dimensions: [
-                    { name: "廓形", t: 2, polarity: "P+亲极", reason: "宽松落肩，流畅弧线" },
-                    { name: "色彩", t: 2, polarity: "P+亲极", reason: "莫兰迪色，低饱和" },
-                    { name: "材质", t: 1, polarity: "P+亲极", reason: "亲肤面料，高弹柔软" },
-                    { name: "细节", t: 2, polarity: "P+亲极", reason: "极简logo，隐藏缝线" },
-                    { name: "搭配", t: 2, polarity: "P+亲极", reason: "同色系，上下呼应" }
-                ],
-                insight: "Lululemon 是'柔中藏骨'的典范，视觉柔和、触觉亲肤、功能专业，三层结构支撑高溢价。",
-                prescription: [
-                    "高端线可增加设计感",
-                    "运动系列可增加功能性视觉"
-                ]
-            },
-            {
-                id: 17,
-                title: "Headspace App 界面",
-                brand: "Headspace",
-                category: "UI/交互",
-                paradigm: "healing",
-                paradigmName: "治愈松弛",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.13,
-                year: "持续",
-                description: "Headspace，呼吸动效+温暖插画，所有案例中 W(T) 最低。",
-                dimensions: [
-                    { name: "布局", t: 1, polarity: "P+亲极", reason: "超大留白，元素稀疏" },
-                    { name: "色彩", t: 1, polarity: "P+亲极", reason: "柔和渐变，暖色调" },
-                    { name: "组件", t: 1, polarity: "P+亲极", reason: "全圆角，胶囊按钮" },
-                    { name: "动效", t: 2, polarity: "P+亲极", reason: "缓入缓出，呼吸节奏" },
-                    { name: "字体", t: 2, polarity: "P+亲极", reason: "圆润字体，细字重" }
-                ],
-                insight: "Headspace 用'全感官柔和'创造治愈体验，极低的 W(T) 让用户最快放松，动效和插画提供生命力。",
-                prescription: [
-                    "专注模式可进一步极简",
-                    "发现页可增加适度张力"
-                ]
-            },
-            {
-                id: 18,
-                title: "徕卡 M 系列相机",
-                brand: "徕卡 Leica",
-                category: "消费电子/手机",
-                paradigm: "cold",
-                paradigmName: "冷峻克制",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.62,
-                year: "持续",
-                description: "徕卡 M，经典秩序+精密机械，冷峻克制范式的消费电子代表。",
-                dimensions: [
-                    { name: "形状", t: 6, polarity: "T−危极", reason: "直角矩形，锐利边缘" },
-                    { name: "质感", t: 7, polarity: "T−危极", reason: "黄铜机身，皮革蒙皮" },
-                    { name: "色彩", t: 6, polarity: "T−危极", reason: "黑银红三色，高对比" },
-                    { name: "构图", t: 5, polarity: "中性", reason: "横平竖直，对称布局" },
-                    { name: "光影", t: 6, polarity: "T−危极", reason: "金属高光，皮革哑光" },
-                    { name: "细节", t: 7, polarity: "T−危极", reason: "机械快门，手动对焦" }
-                ],
-                insight: "徕卡 M 用'经典秩序'压住'冷峻攻击性'，形成'冷而不冰、锐而不刺'的专业高端感。",
-                prescription: [
-                    "限量版可更极端",
-                    "入门款可更亲和"
-                ]
-            },
-            {
-                id: 19,
-                title: "无印良品门店空间",
-                brand: "无印良品 MUJI",
-                category: "建筑/室内",
-                paradigm: "cold",
-                paradigmName: "冷峻克制",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.585,
-                year: "持续",
-                description: "无印良品门店，空间冷峻+商品温暖，冷峻克制范式的零售空间代表。",
-                dimensions: [
-                    { name: "尺度", t: 5, polarity: "中性", reason: "层高适中，动线清晰" },
-                    { name: "材质", t: 6, polarity: "T−危极", reason: "原木，水泥，钢铁" },
-                    { name: "色彩", t: 6, polarity: "T−危极", reason: "白灰木色黑，无彩色" },
-                    { name: "光影", t: 6, polarity: "T−危极", reason: "自然光，硬光直射" },
-                    { name: "陈设", t: 7, polarity: "T−危极", reason: "排列精确，货架对称" }
-                ],
-                insight: "无印良品门店用'空间冷峻'衬托'商品温暖'，形成强烈对比，让商品更显质感。",
-                prescription: [
-                    "旗舰店可更极致",
-                    "社区店可更温暖"
-                ]
-            },
-            {
-                id: 20,
-                title: "Off-White 品牌视觉",
-                brand: "Off-White",
-                category: "品牌/平面",
-                paradigm: "avant",
-                paradigmName: "先锋反叛",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.745,
-                year: "持续",
-                description: "Off-White，视觉冲击+高端品质，先锋反叛范式的品牌代表。",
-                dimensions: [
-                    { name: "图形", t: 7, polarity: "T−危极", reason: "斜条纹，交叉线，箭头" },
-                    { name: "色彩", t: 8, polarity: "T−危极", reason: "黑白黄三色，高饱和" },
-                    { name: "字体", t: 7, polarity: "T−危极", reason: "粗体无衬线，全大写" },
-                    { name: "版式", t: 8, polarity: "T−危极", reason: "非对称，元素重叠" },
-                    { name: "质感", t: 7, polarity: "T−危极", reason: "做旧效果，印刷瑕疵" }
-                ],
-                insight: "Off-White 用'视觉危极+品质亲极'的跨模态冲突，形成独特的'高端街头'美学。",
-                prescription: [
-                    "高端线可更艺术",
-                    "基础款可更克制"
-                ]
-            },
-            {
-                id: 21,
-                title: "某电竞游戏手机",
-                brand: "匿名案例",
-                category: "消费电子/手机",
-                paradigm: "avant",
-                paradigmName: "先锋反叛",
-                type: "failure",
-                typeName: "失败案例",
-                wt: 0.725,
-                year: "典型",
-                description: "参数拉满但美感不足，攻击症+重点通胀+层级冲突的典型失败。",
-                dimensions: [
-                    { name: "形状", t: 8, polarity: "T−危极", reason: "大量锐角，机甲造型" },
-                    { name: "质感", t: 7, polarity: "T−危极", reason: "裸金属，碳纤维纹理" },
-                    { name: "色彩", t: 8, polarity: "T−危极", reason: "黑红撞色，RGB灯效" },
-                    { name: "构图", t: 7, polarity: "T−危极", reason: "非对称，巨大模组" },
-                    { name: "光影", t: 7, polarity: "T−危极", reason: "RGB灯效，金属高光" },
-                    { name: "细节", t: 6, polarity: "T−偏危", reason: "散热格栅，物理肩键" }
-                ],
-                insight: "这是'为了参数牺牲美感'的典型，危极没有被秩序收编，宏观攻击但微观粗糙，导致'参数党觉得不够专业，普通用户觉得太丑'。",
-                prescription: [
-                    "降 W(T) 至 0.60，立秩序",
-                    "修层级，提升细节工艺",
-                    "控重点，一屏高危极不超过2个"
-                ]
-            },
-            {
-                id: 22,
-                title: "某新势力轿车",
-                brand: "匿名案例",
-                category: "汽车/交通工具",
-                paradigm: "cold",
-                paradigmName: "冷峻克制",
-                type: "failure",
-                typeName: "失败案例",
-                wt: 0.635,
-                year: "典型",
-                description: "用力过猛的设计，失序症+重点通胀+认知超载的典型失败。",
-                dimensions: [
-                    { name: "曲面", t: 6, polarity: "T−偏危", reason: "非传统曲面，多段折线" },
-                    { name: "特征线", t: 7, polarity: "T−危极", reason: "大量特征线，互相打架" },
-                    { name: "灯组", t: 8, polarity: "T−危极", reason: "贯穿大灯，复杂日行灯" },
-                    { name: "比例", t: 5, polarity: "中性", reason: "长轴距，溜背造型" },
-                    { name: "材质", t: 6, polarity: "T−偏危", reason: "多材质拼接，异色装饰" }
-                ],
-                insight: "这是'用力过猛'的典型，高张力+低秩序，单个元素精彩但堆一起打架，失去主辅，导致'远看一团乱，近看没记忆点'。",
-                prescription: [
-                    "立秩序，建立主特征线",
-                    "定主辅，大面柔、特征线锐",
-                    "控重点，灯组或特征线二选一"
-                ]
-            },
-            {
-                id: 25,
-                title: "苹果全家桶",
-                brand: "苹果 Apple",
-                category: "跨模态案例",
-                paradigm: "friendly",
-                paradigmName: "亲和精致（三通道统一）",
-                type: "cross",
-                typeName: "跨模态案例",
-                wt: 0.35,
-                year: "持续",
-                description: "产品+界面+声音全通道协同，品牌美学的最高级形式。",
-                dimensions: [
-                    { name: "产品硬件", t: 4, polarity: "中性", reason: "iPhone W(T)=0.35" },
-                    { name: "软件界面", t: 3, polarity: "P+亲极", reason: "iOS W(T)=0.30" },
-                    { name: "系统声音", t: 2, polarity: "P+亲极", reason: "提示音 W(T)=0.26" }
-                ],
-                insight: "苹果全家桶是'全通道协同'的典范，三通道统一在亲和精致范式，W(T) 梯度设计（产品>界面>声音），形成统一的品牌美学。",
-                prescription: [
-                    "保持全通道一致性",
-                    "根据通道特性设计 W(T) 梯度",
-                    "微差补偿是通用策略"
-                ]
-            },
-            {
-                id: 26,
-                title: "华为 Mate 60 Pro",
-                brand: "华为 HUAWEI",
-                category: "消费电子/手机",
-                paradigm: "balanced",
-                paradigmName: "均衡典雅",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.47,
-                year: "2023",
-                description: "国民旗舰，星环设计+文化内涵，平衡科技感与亲和力。",
-                dimensions: [
-                    { name: "形状", t: 4, polarity: "中性", reason: "圆润边角+直屏，曲中带直" },
-                    { name: "质感", t: 6, polarity: "T−危极", reason: "金属中框+玻璃背板+精密倒角" },
-                    { name: "色彩", t: 4, polarity: "中性", reason: "雅川青、南糯紫等文化命名配色" },
-                    { name: "构图", t: 4, polarity: "中性", reason: "居中对称+星环模组居中" },
-                    { name: "光影", t: 5, polarity: "中性", reason: "金属中框高光 vs 哑光背板" },
-                    { name: "细节", t: 6, polarity: "T−危极", reason: "星环模组精密层次+卫星通信天线" }
-                ],
-                insight: "华为 Mate 60 Pro 用'文化内涵中和科技冷感'，星环模组作为统一视觉锚点，比 iPhone 略高但远低于游戏手机，完美平衡大众接受度和旗舰溢价感。",
-                prescription: [
-                    "Pro+ 版本可提升至崇高震撼",
-                    "标准版可更亲和扩大受众",
-                    "强化鸿蒙生态的跨模态温度感"
-                ]
-            },
-            {
-                id: 27,
-                title: "蔚来 ET9",
-                brand: "蔚来 NIO",
-                category: "汽车/交通工具",
-                paradigm: "sublime",
-                paradigmName: "崇高震撼",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.545,
-                year: "2023",
-                description: "高端智能电动旗舰，极简秩序+科技豪华，挑战传统豪华品牌。",
-                dimensions: [
-                    { name: "曲面", t: 5, polarity: "中性", reason: "溜背造型+流畅曲面+无传统格栅" },
-                    { name: "特征线", t: 5, polarity: "中性", reason: "简洁腰线+隐藏式门把手+无框车门" },
-                    { name: "灯组", t: 7, polarity: "T−危极", reason: "贯穿式大灯+独特日行灯+智能交互灯语" },
-                    { name: "比例", t: 6, polarity: "T−偏危", reason: "长轴距+短前后悬+低趴姿态+大轮毂" },
-                    { name: "材质", t: 6, polarity: "T−偏危", reason: "高光车漆+隐藏式传感器+智能座舱" }
-                ],
-                insight: "蔚来 ET9 用'极简秩序收编科技感'，智能电动作为范式创新基础，比奔驰S级略高传递更强未来感，但不过度极端，完美平衡传统豪华和未来科技。",
-                prescription: [
-                    "性能版可提升至冷峻克制",
-                    "标准版可更亲和吸引传统豪华用户",
-                    "强化蔚来服务的跨模态温度感"
-                ]
-            },
-            {
-                id: 28,
-                title: "大众甲壳虫",
-                brand: "大众 Volkswagen",
-                category: "汽车/交通工具",
-                paradigm: "healing",
-                paradigmName: "治愈松弛",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.175,
-                year: "1938-2019",
-                description: "经典治愈松弛，拟人化设计+可爱美学，跨越80年的永恒经典。",
-                dimensions: [
-                    { name: "曲面", t: 2, polarity: "P+亲极", reason: "全曲面设计+圆润车身+无棱角" },
-                    { name: "特征线", t: 1, polarity: "P+亲极", reason: "几乎无特征线+流畅过渡+一体式车身" },
-                    { name: "灯组", t: 2, polarity: "P+亲极", reason: "圆形大灯+圆润尾灯+对称布局" },
-                    { name: "比例", t: 2, polarity: "P+亲极", reason: "短轴距+高车身+四轮四角，像玩具车" },
-                    { name: "材质", t: 2, polarity: "P+亲极", reason: "柔和车漆+圆润曲面+漫反射光影" }
-                ],
-                insight: "大众甲壳虫是'拟人化设计赋予生命力'的典范，圆形大灯像眼睛，圆润车身像脸，整体像一只虫子或宠物，让冰冷机械有了生命感和情感连接。低 W(T) 不等于无聊，拟人化+情感连接让低 W(T) 成为永恒经典。",
-                prescription: [
-                    "复古版保持原汁原味",
-                    "电动版可适度提升至亲和精致",
-                    "强化社群文化作为情感连接延伸"
-                ]
-            },
-            {
-                id: 29,
-                title: "包豪斯设计",
-                brand: "包豪斯 Bauhaus",
-                category: "品牌/平面",
-                paradigm: "avant",
-                paradigmName: "先锋反叛",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.675,
-                year: "1919-1933",
-                description: "现代主义设计源头，功能主义+网格系统，冷峻克制范式的源头。",
-                dimensions: [
-                    { name: "图形", t: 7, polarity: "T−危极", reason: "几何形状（圆/方/三角）+直线+直角" },
-                    { name: "色彩", t: 7, polarity: "T−危极", reason: "三原色（红黄蓝）+黑白灰，高饱和强对比" },
-                    { name: "字体", t: 6, polarity: "T−偏危", reason: "无衬线字体+几何字形+粗体" },
-                    { name: "版式", t: 7, polarity: "T−危极", reason: "网格系统+非对称布局+留白精确" },
-                    { name: "质感", t: 6, polarity: "T−偏危", reason: "工业材料（钢/玻璃/混凝土）+无装饰" }
-                ],
-                insight: "包豪斯是'功能主义秩序收编几何先锋'的典范，'形式追随功能'，用网格系统和功能主义建立最强秩序，所以高危极成为经典而非混乱。它证明了高危极必须配高秩序，否则就是失控焦虑区。",
-                prescription: [
-                    "经典包豪斯保持原汁原味",
-                    "新包豪斯可适度降低至崇高震撼",
-                    "强化设计教育作为理论传播基础"
-                ]
-            },
-            {
-                id: 30,
-                title: "迪士尼乐园",
-                brand: "迪士尼 Disney",
-                category: "公共/娱乐空间",
-                paradigm: "healing",
-                paradigmName: "治愈松弛",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.205,
-                year: "1955-",
-                description: "全感官沉浸+叙事性设计，治愈松弛范式的沉浸式极致。",
-                dimensions: [
-                    { name: "尺度", t: 3, polarity: "P+亲极", reason: "人性化尺度+围合感+无压迫性大空间" },
-                    { name: "建筑", t: 2, polarity: "P+亲极", reason: "童话城堡+圆润建筑+可爱造型" },
-                    { name: "色彩", t: 2, polarity: "P+亲极", reason: "高饱和但柔和的童话色彩+暖色调" },
-                    { name: "光影", t: 2, polarity: "P+亲极", reason: "漫射柔光+温暖灯光+烟花表演" },
-                    { name: "声音", t: 2, polarity: "P+亲极", reason: "背景音乐+角色配音+自然音效" },
-                    { name: "互动", t: 1, polarity: "P+亲极", reason: "卡通角色+微笑服务+拥抱互动" }
-                ],
-                insight: "迪士尼乐园是'全感官沉浸+叙事性设计'的巅峰，六个感官通道同时作用形成全感官包围，每个区域都有故事，让简单的快乐有了情感深度和记忆点。BEA 不仅可分析单一感官形式，还可分析全感官组合，多通道极性一致时美感叠加增强。",
-                prescription: [
-                    "经典园区保持治愈松弛",
-                    "新园区可适度提升至亲和精致",
-                    "强化IP生态作为叙事性基础"
-                ]
-            },
-            {
-                id: 31,
-                title: "Tesla Cybercab",
-                brand: "特斯拉 Tesla",
-                category: "汽车/交通工具",
-                paradigm: "balanced",
-                paradigmName: "均衡典雅",
-                type: "success",
-                typeName: "成功案例",
-                wt: 0.385,
-                year: "2024",
-                description: "全自动驾驶Robotaxi，视觉亲和+概念激进的复合范式，用圆润外观降低无人驾驶的接受门槛。",
-                dimensions: [
-                    { name: "曲面", t: 3, polarity: "P+亲极", reason: "水滴/胶囊造型，大曲面连续无断点" },
-                    { name: "特征线", t: 4, polarity: "P+偏亲", reason: "几乎无明显腰线，侧面极简" },
-                    { name: "灯组", t: 6, polarity: "T−危极", reason: "贯穿式细灯带，边缘锐利，与圆润车身形成对比" },
-                    { name: "比例", t: 4, polarity: "中性", reason: "短前后悬、长轴距、低重心，造型独特" },
-                    { name: "材质", t: 3, polarity: "P+亲极", reason: "香槟金金属漆，光滑细腻，影棚柔光" }
-                ],
-                insight: "Cybercab最精妙的设计策略是'用视觉亲和降低概念激进的冲击'。无人驾驶、无方向盘对普通用户来说是令人恐惧的激进概念（概念层面W(T)≈0.75，先锋反叛），但特斯拉用圆润柔和的外观（视觉层面W(T)=0.385，均衡典雅）让用户觉得'这个东西很安全、很友好'。这种'外柔内刚'的组合，是高级感设计的典型案例，对所有颠覆性产品都有借鉴意义。层级策略采用微差补偿：宏观圆润、中观简洁、微观锐利精密，远看亲和、近看有细节。",
-                prescription: [
-                    "增加侧面细微特征线，W(T)从0.385微升至0.42，提升层次感",
-                    "优化车内环境的治愈感，更柔和材质+氛围灯+安心显示，降低乘客焦虑",
-                    "提供多种外观风格选项（亲和版/运动版/豪华版），满足不同偏好",
-                    "优化人机交互学习曲线，清晰引导+物理紧急按钮，降低首次使用门槛"
-                ]
-            }
-        ];
 
+            {
+                        "id": 1,
+                        "title": "iPhone Duo",
+                        "brand": "苹果 Apple",
+                        "category": "消费电子/手机",
+                        "paradigm": "balanced",
+                        "paradigmName": "均衡典雅",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.44,
+                        "year": "2026",
+                        "description": "苹果首款折叠屏旗舰，用经典亲和语言托底，用镜面钛金属提神。",
+                        "dimensions": [
+                                    {
+                                                "name": "形状",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "圆润边角是苹果标志性语言"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "镜面抛光5级钛金属中框"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "星光白偏亲，夜空色偏危"
+                                    },
+                                    {
+                                                "name": "构图",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "对称居中，双摄横排"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "镜面金属强反射 vs 哑光屏幕"
+                                    },
+                                    {
+                                                "name": "细节",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "100+组件精密铰链"
+                                    }
+                        ],
+                        "insight": "苹果首款折叠屏选择了最稳妥的美学策略：用经典亲和语言托底，用镜面钛金属提神。W(T)=0.44 说明它在'安全'和'冒险'之间走得很精准。",
+                        "prescription": [
+                                    "增加1-2种中间调性配色，扩展情绪光谱",
+                                    "可考虑哑光钛金属版本，W(T)降至0.39",
+                                    "铰链护壳可加入极细微品牌刻印"
+                        ]
+            },
+            {
+                        "id": 2,
+                        "title": "Samsung Galaxy S26 Ultra",
+                        "brand": "三星 Samsung",
+                        "category": "消费电子/手机",
+                        "paradigm": "balanced",
+                        "paradigmName": "均衡典雅",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.385,
+                        "year": "2026",
+                        "description": "三星年度旗舰，主动从'崇高震撼'退回'均衡典雅'，策略稳妥但代价是旗舰视觉冲击力被稀释。",
+                        "dimensions": [
+                                    {
+                                                "name": "形状",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "比前代圆润化处理"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "装甲铝喷砂边框+磨砂玻璃"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "六色覆盖从亲和到冷峻"
+                                    },
+                                    {
+                                                "name": "构图",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "竖排四摄居左上"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "全机哑光处理"
+                                    },
+                                    {
+                                                "name": "细节",
+                                                "t": 5,
+                                                "polarity": "T−偏危",
+                                                "reason": "四摄+2亿像素+防窥屏"
+                                    }
+                        ],
+                        "insight": "三星这一代在做明确的'去危极化'——钛换铝、直角改圆润、全机哑光。W(T)从前代估计的0.48+降到0.385，主动从'崇高震撼'退回'均衡典雅'。",
+                        "prescription": [
+                                    "边框做高光倒角，质感 t 从4→6",
+                                    "氛围岛模组底座改用不同材质",
+                                    "S Pen 笔杆做撞色设计"
+                        ]
+            },
+            {
+                        "id": 3,
+                        "title": "Tesla Model 3",
+                        "brand": "特斯拉 Tesla",
+                        "category": "汽车/交通工具",
+                        "paradigm": "balanced",
+                        "paradigmName": "均衡典雅",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.39,
+                        "year": "2017",
+                        "description": "中型纯电轿车，主流走量车型，灯组是精准的提神点。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 3,
+                                                "polarity": "P+偏亲",
+                                                "reason": "车身曲面流畅圆润"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 3,
+                                                "polarity": "P+偏亲",
+                                                "reason": "仅一条柔和腰线"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "细长锐利的大灯"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "长轴距、低车身"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "普通金属漆，极简"
+                                    }
+                        ],
+                        "insight": "Model 3 是'大面柔、特征线锐'的典型代表。用饱满曲面托住安全感，少量极锐利灯组提供记忆点。",
+                        "prescription": [
+                                    "可增加更有辨识度的特征线",
+                                    "内饰可增加更多材质层次"
+                        ]
+            },
+            {
+                        "id": 4,
+                        "title": "尊界 S800",
+                        "brand": "尊界（华为+江淮）",
+                        "category": "汽车/交通工具",
+                        "paradigm": "balanced",
+                        "paradigmName": "均衡典雅",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.455,
+                        "year": "2025",
+                        "description": "豪华行政轿车，灯组锐利+曲面力量感，平衡豪华与科技。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "饱满大曲面+力量感"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "优雅腰线+水平延展"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "锐利灯组+智能交互"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "长轴距+稳重姿态"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "高端材质+精致工艺"
+                                    }
+                        ],
+                        "insight": "尊界 S800 用'大面柔、灯组锐'的策略，在豪华感和科技感之间找到了平衡。",
+                        "prescription": [
+                                    "可进一步强化品牌识别元素",
+                                    "内饰可增加更多温度感"
+                        ]
+            },
+            {
+                        "id": 5,
+                        "title": "理想 L9",
+                        "brand": "理想 Li Auto",
+                        "category": "汽车/交通工具",
+                        "paradigm": "balanced",
+                        "paradigmName": "均衡典雅",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.36,
+                        "year": "2022",
+                        "description": "家庭豪华SUV，家用亲和+星环大灯，缺少焦点是秩序短板。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 3,
+                                                "polarity": "P+偏亲",
+                                                "reason": "圆润饱满，家用亲和"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 3,
+                                                "polarity": "P+偏亲",
+                                                "reason": "简洁线条，无过多折面"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "星环大灯，识别度高"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "大型SUV，稳重姿态"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 3,
+                                                "polarity": "P+偏亲",
+                                                "reason": "家用材质，温暖舒适"
+                                    }
+                        ],
+                        "insight": "理想 L9 用亲和的造型服务家庭用户，但整体缺少一个强视觉焦点，导致记忆点不足。",
+                        "prescription": [
+                                    "强化星环大灯的视觉权重",
+                                    "增加更有辨识度的侧面特征"
+                        ]
+            },
+            {
+                        "id": 6,
+                        "title": "小米 SU7",
+                        "brand": "小米 Xiaomi",
+                        "category": "汽车/交通工具",
+                        "paradigm": "balanced",
+                        "paradigmName": "均衡典雅",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.47,
+                        "year": "2024",
+                        "description": "运动轿跑，运动感最强+灯组犀利，接近崇高震撼上沿。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "运动曲面，肌肉感强"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "锐利腰线，运动感强"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "犀利灯组，攻击性强"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "低趴姿态，运动比例"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "运动材质，精致工艺"
+                                    }
+                        ],
+                        "insight": "小米 SU7 是'运动美学'的代表，用锐利的线条和灯组传递运动感，但整体仍在均衡典雅区间内。",
+                        "prescription": [
+                                    "性能版可进一步提升运动感",
+                                    "普通版可增加更多亲和元素"
+                        ]
+            },
+            {
+                        "id": 7,
+                        "title": "特斯拉 Cybertruck",
+                        "brand": "特斯拉 Tesla",
+                        "category": "汽车/交通工具",
+                        "paradigm": "avant",
+                        "paradigmName": "先锋反叛",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.825,
+                        "year": "2023",
+                        "description": "电动皮卡，极端差异化+未来感，接近越阈但用绝对几何秩序压住攻击性。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 9,
+                                                "polarity": "T−危极",
+                                                "reason": "全折线，无曲面，极端几何"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 9,
+                                                "polarity": "T−危极",
+                                                "reason": "锐利折角，攻击性极强"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 8,
+                                                "polarity": "T−危极",
+                                                "reason": "细长灯带，未来感强"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 8,
+                                                "polarity": "T−危极",
+                                                "reason": "非常规比例，打破传统"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 7,
+                                                "polarity": "T−偏危",
+                                                "reason": "裸露不锈钢，工业感强"
+                                    }
+                        ],
+                        "insight": "Cybertruck 是'高危极+高秩序'的极致案例。虽然 W(T)=0.825 接近越阈，但用'绝对几何+统一材质'的强秩序压住了攻击性，成为先锋经典。",
+                        "prescription": [
+                                    "保持极端设计，这是核心竞争力",
+                                    "可增加更多人性化细节补偿"
+                        ]
+            },
+            {
+                        "id": 8,
+                        "title": "中国尊",
+                        "brand": "中国尊大厦",
+                        "category": "建筑/室内",
+                        "paradigm": "sublime",
+                        "paradigmName": "崇高震撼",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.55,
+                        "year": "2018",
+                        "description": "超高层地标建筑，超高层比例+礼器造型，轻度攻击症但被秩序收编。",
+                        "dimensions": [
+                                    {
+                                                "name": "尺度",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "528米超高层，压迫感强"
+                                    },
+                                    {
+                                                "name": "造型",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "礼器造型，收分曲线"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "玻璃幕墙+金属，现代感"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "光影变化，动态感"
+                                    },
+                                    {
+                                                "name": "秩序",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "对称布局，稳定感"
+                                    }
+                        ],
+                        "insight": "中国尊用'礼器'的文化符号和超高层的尺度制造崇高感，同时用对称秩序保证稳定。",
+                        "prescription": [
+                                    "底部可增加更多亲和元素",
+                                    "夜景照明可更有层次"
+                        ]
+            },
+            {
+                        "id": 9,
+                        "title": "苹果品牌视觉",
+                        "brand": "苹果 Apple",
+                        "category": "品牌/平面",
+                        "paradigm": "friendly",
+                        "paradigmName": "亲和精致",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.31,
+                        "year": "持续",
+                        "description": "苹果品牌视觉系统，大留白+精密光影，亲和与典雅边界。",
+                        "dimensions": [
+                                    {
+                                                "name": "图形",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "极简logo，圆润造型"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "低饱和，柔和渐变"
+                                    },
+                                    {
+                                                "name": "字体",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "San Francisco，现代无衬线"
+                                    },
+                                    {
+                                                "name": "版式",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "大留白，居中对称"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "精密光影，材质感"
+                                    }
+                        ],
+                        "insight": "苹果品牌视觉是'少即是多'的典范，用极简的元素传递高级感，大留白是其核心特征。",
+                        "prescription": [
+                                    "可增加更多色彩实验",
+                                    "保持极简，这是核心资产"
+                        ]
+            },
+            {
+                        "id": 10,
+                        "title": "iOS 18 界面设计",
+                        "brand": "苹果 Apple",
+                        "category": "UI/交互",
+                        "paradigm": "friendly",
+                        "paradigmName": "亲和精致",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.3,
+                        "year": "2024",
+                        "description": "iOS 18 界面，大圆角+微差补偿，亲和精致范式的代表。",
+                        "dimensions": [
+                                    {
+                                                "name": "布局",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "大留白，清晰层级"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "柔和渐变，低饱和"
+                                    },
+                                    {
+                                                "name": "组件",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "全圆角，胶囊按钮"
+                                    },
+                                    {
+                                                "name": "动效",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "缓入缓出，物理惯性"
+                                    },
+                                    {
+                                                "name": "字体",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "圆润字体，适中字重"
+                                    }
+                        ],
+                        "insight": "iOS 18 是'微差补偿'的极致运用，宏观柔和，微观精密，远看亲和，近看有细节。",
+                        "prescription": [
+                                    "可增加更多个性化选项",
+                                    "保持一致性，这是核心优势"
+                        ]
+            },
+            {
+                        "id": 11,
+                        "title": "无印良品服装系列",
+                        "brand": "无印良品 MUJI",
+                        "category": "服装/时尚",
+                        "paradigm": "friendly",
+                        "paradigmName": "亲和精致",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.215,
+                        "year": "持续",
+                        "description": "无印良品服装，材质质感+减法极致，接近治愈松弛，轻度甜腻症。",
+                        "dimensions": [
+                                    {
+                                                "name": "廓形",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "宽松舒适，无硬挺"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "大地色系，低饱和"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "天然材质，亲肤舒适"
+                                    },
+                                    {
+                                                "name": "细节",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "极简设计，无装饰"
+                                    },
+                                    {
+                                                "name": "搭配",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "同色系，统一感"
+                                    }
+                        ],
+                        "insight": "无印良品是'减法美学'的代表，用极致的简约传递生活态度，但需警惕过度简约导致的甜腻感。",
+                        "prescription": [
+                                    "可增加少量设计感单品",
+                                    "用材质差异增加层次"
+                        ]
+            },
+            {
+                        "id": 12,
+                        "title": "苹果产品提示音",
+                        "brand": "苹果 Apple",
+                        "category": "音乐/声音",
+                        "paradigm": "friendly",
+                        "paradigmName": "亲和精致",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.26,
+                        "year": "持续",
+                        "description": "苹果系统提示音，协和音程+记忆点，声音设计的经典。",
+                        "dimensions": [
+                                    {
+                                                "name": "音高",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "中低频，温暖音色"
+                                    },
+                                    {
+                                                "name": "音量",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "平稳，渐变"
+                                    },
+                                    {
+                                                "name": "节奏",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "规整，留白"
+                                    },
+                                    {
+                                                "name": "旋律",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "协和，完整收束"
+                                    },
+                                    {
+                                                "name": "空间",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "近距离，温暖混响"
+                                    }
+                        ],
+                        "insight": "苹果提示音是'声音微差补偿'的典范，用协和的音程和明确的收束创造记忆点。",
+                        "prescription": [
+                                    "可增加更多个性化提示音",
+                                    "保持简洁，这是核心优势"
+                        ]
+            },
+            {
+                        "id": 13,
+                        "title": "《银翼杀手2049》视觉镜头",
+                        "brand": "电影影视",
+                        "category": "影视/动画",
+                        "paradigm": "cold",
+                        "paradigmName": "冷峻克制",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.64,
+                        "year": "2017",
+                        "description": "银翼杀手2049，极端色彩+秩序约束，冷峻克制范式的影视代表。",
+                        "dimensions": [
+                                    {
+                                                "name": "色彩",
+                                                "t": 8,
+                                                "polarity": "T−危极",
+                                                "reason": "极端橙蓝对比，高饱和"
+                                    },
+                                    {
+                                                "name": "构图",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "对称构图，几何感强"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "硬光，强对比，雾气"
+                                    },
+                                    {
+                                                "name": "节奏",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "缓慢，长镜头"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "废墟，雨水，霓虹"
+                                    }
+                        ],
+                        "insight": "银翼杀手2049 用极端的色彩和光影制造冷峻感，但用对称构图和缓慢节奏保证秩序，形成'冷而不冰'的高级感。",
+                        "prescription": [
+                                    "保持视觉风格，这是核心资产",
+                                    "可增加更多情感温度"
+                        ]
+            },
+            {
+                        "id": 14,
+                        "title": "北京大兴国际机场",
+                        "brand": "公共建筑",
+                        "category": "公共/医疗空间",
+                        "paradigm": "sublime",
+                        "paradigmName": "崇高震撼",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.515,
+                        "year": "2019",
+                        "description": "大兴机场，超尺度+白色亲和，崇高震撼范式的公共空间代表。",
+                        "dimensions": [
+                                    {
+                                                "name": "尺度",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "超大空间，震撼感"
+                                    },
+                                    {
+                                                "name": "造型",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "海星造型，流动曲线"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "白色为主，亲和感"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "自然采光，柔和"
+                                    },
+                                    {
+                                                "name": "秩序",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "放射状布局，清晰"
+                                    }
+                        ],
+                        "insight": "大兴机场用'超尺度'制造崇高感，同时用'白色亲和'保证舒适度，是'危极尺度+亲极色彩'的成功组合。",
+                        "prescription": [
+                                    "可增加更多人性化细节",
+                                    "商业区域可更有温度"
+                        ]
+            },
+            {
+                        "id": 15,
+                        "title": "安缦酒店室内设计",
+                        "brand": "安缦 Aman",
+                        "category": "建筑/室内",
+                        "paradigm": "friendly",
+                        "paradigmName": "亲和精致",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.255,
+                        "year": "持续",
+                        "description": "安缦酒店，微差补偿+材质极致，室内设计的亲和精致天花板。",
+                        "dimensions": [
+                                    {
+                                                "name": "尺度",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "围合感，包裹感"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "天然材质，温润亲肤"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "大地色系，低饱和"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "漫射柔光，温暖"
+                                    },
+                                    {
+                                                "name": "陈设",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "极简，对称，留白"
+                                    }
+                        ],
+                        "insight": "安缦酒店是'微差补偿'的室内版，远看一片柔和，近看每一处都有值得凝视的精密感。",
+                        "prescription": [
+                                    "公共区域可增加视觉锚点",
+                                    "功能区可增加秩序感"
+                        ]
+            },
+            {
+                        "id": 16,
+                        "title": "Lululemon 服装系列",
+                        "brand": "Lululemon",
+                        "category": "服装/时尚",
+                        "paradigm": "healing",
+                        "paradigmName": "治愈松弛",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.175,
+                        "year": "持续",
+                        "description": "Lululemon，极致亲肤+专业功能，治愈松弛范式的服装代表。",
+                        "dimensions": [
+                                    {
+                                                "name": "廓形",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "宽松落肩，流畅弧线"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "莫兰迪色，低饱和"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 1,
+                                                "polarity": "P+亲极",
+                                                "reason": "亲肤面料，高弹柔软"
+                                    },
+                                    {
+                                                "name": "细节",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "极简logo，隐藏缝线"
+                                    },
+                                    {
+                                                "name": "搭配",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "同色系，上下呼应"
+                                    }
+                        ],
+                        "insight": "Lululemon 是'柔中藏骨'的典范，视觉柔和、触觉亲肤、功能专业，三层结构支撑高溢价。",
+                        "prescription": [
+                                    "高端线可增加设计感",
+                                    "运动系列可增加功能性视觉"
+                        ]
+            },
+            {
+                        "id": 17,
+                        "title": "Headspace App 界面",
+                        "brand": "Headspace",
+                        "category": "UI/交互",
+                        "paradigm": "healing",
+                        "paradigmName": "治愈松弛",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.13,
+                        "year": "持续",
+                        "description": "Headspace，呼吸动效+温暖插画，所有案例中 W(T) 最低。",
+                        "dimensions": [
+                                    {
+                                                "name": "布局",
+                                                "t": 1,
+                                                "polarity": "P+亲极",
+                                                "reason": "超大留白，元素稀疏"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 1,
+                                                "polarity": "P+亲极",
+                                                "reason": "柔和渐变，暖色调"
+                                    },
+                                    {
+                                                "name": "组件",
+                                                "t": 1,
+                                                "polarity": "P+亲极",
+                                                "reason": "全圆角，胶囊按钮"
+                                    },
+                                    {
+                                                "name": "动效",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "缓入缓出，呼吸节奏"
+                                    },
+                                    {
+                                                "name": "字体",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "圆润字体，细字重"
+                                    }
+                        ],
+                        "insight": "Headspace 用'全感官柔和'创造治愈体验，极低的 W(T) 让用户最快放松，动效和插画提供生命力。",
+                        "prescription": [
+                                    "专注模式可进一步极简",
+                                    "发现页可增加适度张力"
+                        ]
+            },
+            {
+                        "id": 18,
+                        "title": "徕卡 M 系列相机",
+                        "brand": "徕卡 Leica",
+                        "category": "消费电子/手机",
+                        "paradigm": "cold",
+                        "paradigmName": "冷峻克制",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.62,
+                        "year": "持续",
+                        "description": "徕卡 M，经典秩序+精密机械，冷峻克制范式的消费电子代表。",
+                        "dimensions": [
+                                    {
+                                                "name": "形状",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "直角矩形，锐利边缘"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "黄铜机身，皮革蒙皮"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "黑银红三色，高对比"
+                                    },
+                                    {
+                                                "name": "构图",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "横平竖直，对称布局"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "金属高光，皮革哑光"
+                                    },
+                                    {
+                                                "name": "细节",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "机械快门，手动对焦"
+                                    }
+                        ],
+                        "insight": "徕卡 M 用'经典秩序'压住'冷峻攻击性'，形成'冷而不冰、锐而不刺'的专业高端感。",
+                        "prescription": [
+                                    "限量版可更极端",
+                                    "入门款可更亲和"
+                        ]
+            },
+            {
+                        "id": 19,
+                        "title": "无印良品门店空间",
+                        "brand": "无印良品 MUJI",
+                        "category": "建筑/室内",
+                        "paradigm": "cold",
+                        "paradigmName": "冷峻克制",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.585,
+                        "year": "持续",
+                        "description": "无印良品门店，空间冷峻+商品温暖，冷峻克制范式的零售空间代表。",
+                        "dimensions": [
+                                    {
+                                                "name": "尺度",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "层高适中，动线清晰"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "原木，水泥，钢铁"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "白灰木色黑，无彩色"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "自然光，硬光直射"
+                                    },
+                                    {
+                                                "name": "陈设",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "排列精确，货架对称"
+                                    }
+                        ],
+                        "insight": "无印良品门店用'空间冷峻'衬托'商品温暖'，形成强烈对比，让商品更显质感。",
+                        "prescription": [
+                                    "旗舰店可更极致",
+                                    "社区店可更温暖"
+                        ]
+            },
+            {
+                        "id": 20,
+                        "title": "Off-White 品牌视觉",
+                        "brand": "Off-White",
+                        "category": "品牌/平面",
+                        "paradigm": "avant",
+                        "paradigmName": "先锋反叛",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.745,
+                        "year": "持续",
+                        "description": "Off-White，视觉冲击+高端品质，先锋反叛范式的品牌代表。",
+                        "dimensions": [
+                                    {
+                                                "name": "图形",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "斜条纹，交叉线，箭头"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 8,
+                                                "polarity": "T−危极",
+                                                "reason": "黑白黄三色，高饱和"
+                                    },
+                                    {
+                                                "name": "字体",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "粗体无衬线，全大写"
+                                    },
+                                    {
+                                                "name": "版式",
+                                                "t": 8,
+                                                "polarity": "T−危极",
+                                                "reason": "非对称，元素重叠"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "做旧效果，印刷瑕疵"
+                                    }
+                        ],
+                        "insight": "Off-White 用'视觉危极+品质亲极'的跨模态冲突，形成独特的'高端街头'美学。",
+                        "prescription": [
+                                    "高端线可更艺术",
+                                    "基础款可更克制"
+                        ]
+            },
+            {
+                        "id": 21,
+                        "title": "某电竞游戏手机",
+                        "brand": "匿名案例",
+                        "category": "消费电子/手机",
+                        "paradigm": "avant",
+                        "paradigmName": "先锋反叛",
+                        "type": "failure",
+                        "typeName": "失败案例",
+                        "wt": 0.725,
+                        "year": "典型",
+                        "description": "参数拉满但美感不足，攻击症+重点通胀+层级冲突的典型失败。",
+                        "dimensions": [
+                                    {
+                                                "name": "形状",
+                                                "t": 8,
+                                                "polarity": "T−危极",
+                                                "reason": "大量锐角，机甲造型"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "裸金属，碳纤维纹理"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 8,
+                                                "polarity": "T−危极",
+                                                "reason": "黑红撞色，RGB灯效"
+                                    },
+                                    {
+                                                "name": "构图",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "非对称，巨大模组"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "RGB灯效，金属高光"
+                                    },
+                                    {
+                                                "name": "细节",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "散热格栅，物理肩键"
+                                    }
+                        ],
+                        "insight": "这是'为了参数牺牲美感'的典型，危极没有被秩序收编，宏观攻击但微观粗糙，导致'参数党觉得不够专业，普通用户觉得太丑'。",
+                        "prescription": [
+                                    "降 W(T) 至 0.60，立秩序",
+                                    "修层级，提升细节工艺",
+                                    "控重点，一屏高危极不超过2个"
+                        ]
+            },
+            {
+                        "id": 22,
+                        "title": "某新势力轿车",
+                        "brand": "匿名案例",
+                        "category": "汽车/交通工具",
+                        "paradigm": "cold",
+                        "paradigmName": "冷峻克制",
+                        "type": "failure",
+                        "typeName": "失败案例",
+                        "wt": 0.635,
+                        "year": "典型",
+                        "description": "用力过猛的设计，失序症+重点通胀+认知超载的典型失败。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "非传统曲面，多段折线"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "大量特征线，互相打架"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 8,
+                                                "polarity": "T−危极",
+                                                "reason": "贯穿大灯，复杂日行灯"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "长轴距，溜背造型"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "多材质拼接，异色装饰"
+                                    }
+                        ],
+                        "insight": "这是'用力过猛'的典型，高张力+低秩序，单个元素精彩但堆一起打架，失去主辅，导致'远看一团乱，近看没记忆点'。",
+                        "prescription": [
+                                    "立秩序，建立主特征线",
+                                    "定主辅，大面柔、特征线锐",
+                                    "控重点，灯组或特征线二选一"
+                        ]
+            },
+            {
+                        "id": 23,
+                        "title": "iPhone Duo vs 某游戏手机",
+                        "brand": "苹果 vs 某电竞品牌",
+                        "category": "消费电子/手机",
+                        "paradigm": "balanced",
+                        "paradigmName": "均衡典雅 vs 先锋反叛",
+                        "type": "cross",
+                        "typeName": "对比案例",
+                        "wt": 0.44,
+                        "year": "2026",
+                        "description": "同品类、两种范式的正反面对照：均衡典雅的折叠屏旗舰（W(T)=0.44）vs 先锋反叛的电竞手机（W(T)=0.725），相差 0.285，几乎跨 3 个范式。",
+                        "dimensions": [
+                                    {
+                                                "name": "形状",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "iPhone 圆润边角保证握持；游戏手机 t=8 锐角机甲强化攻击性"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "iPhone 精密高光镜面钛；游戏手机粗糙工业裸金属+碳纤维"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "iPhone 低饱和双色保高级感；游戏手机黑红撞色+RGB 强化电竞感"
+                                    },
+                                    {
+                                                "name": "构图",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "iPhone 对称居中保稳定；游戏手机非对称+巨大模组强化动感"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "iPhone 静态镜面/哑光对比；游戏手机 RGB 动态变化"
+                                    },
+                                    {
+                                                "name": "细节",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "iPhone 隐形精密铰链；游戏手机外露散热格栅+肩键"
+                                    }
+                        ],
+                        "insight": "范式选择决定产品定位：一个走大众高溢价（供不应求），一个走小众身份认同（话题高销量有限）。核心教训是『高危极必须配高秩序』——游戏手机 W(T) 0.725 比 Cybertruck 0.825 低，却因秩序感不足沦为杂乱；而 iPhone 的『宏观柔和+微观精密』层级嵌套正是高级感的标准结构。",
+                        "prescription": [
+                                    "游戏手机若要成为经典：用强秩序收编高危极（参照 Cybertruck 的绝对几何+统一材质）",
+                                    "宏观柔和+微观精密的层级嵌套是高级感的标准结构，宏观攻击+微观粗糙只会显廉价",
+                                    "范式没有好坏，只有合适与否——关键是秩序感是否匹配 W(T) 水平"
+                        ]
+            },
+            {
+                        "id": 24,
+                        "title": "奔驰 S 级 vs 宝马 7 系",
+                        "brand": "梅赛德斯-奔驰 vs 宝马",
+                        "category": "汽车/交通工具",
+                        "paradigm": "sublime",
+                        "paradigmName": "崇高震撼 vs 冷峻克制",
+                        "type": "cross",
+                        "typeName": "对比案例",
+                        "wt": 0.5,
+                        "year": "2024",
+                        "description": "同品类、不同品牌基因的范式分化：乘坐者之车选崇高震撼（W(T)=0.50），驾驶者之车选冷峻克制（W(T)=0.58），相差 0.08 跨 1 个范式。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "奔驰饱满大曲面强化豪华感；宝马 t=5 更有棱角强化运动感"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "奔驰优雅腰线+镀铬；宝马锋利腰线+霍氏拐角"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "奔驰三道杠大灯+贯穿尾灯走科技优雅；宝马水晶大灯+发光格栅走科技锋利"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "同为长轴距，奔驰水平稳重，宝马前冲姿态"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "奔驰高光漆+镀铬+真皮的温暖豪华；宝马碳纤维+水晶的冷峻科技"
+                                    }
+                        ],
+                        "insight": "品牌基因决定范式选择：奔驰的安抚力来自『柔』（饱满曲面、温润内饰、绝对对称），宝马的安抚力来自『序』（精准比例、清晰层级、机械质感）——两种不同的高级感路径。同品类的不同范式选择是差异化竞争的最高级形式，让双方都能在细分市场维持高溢价而免于价格战。",
+                        "prescription": [
+                                    "范式随时代可调（两者都在向更高 W(T) 移动维持旗舰感），但品牌相对位置应保持稳定",
+                                    "奔驰始终比宝马更柔、宝马始终比奔驰更锐——这是品牌基因的稳定性，不该被动摇",
+                                    "避免与竞品选择同一范式陷入同质化竞争，只能靠价格配置取胜"
+                        ]
+            },
+            {
+                        "id": 25,
+                        "title": "苹果全家桶",
+                        "brand": "苹果 Apple",
+                        "category": "跨模态案例",
+                        "paradigm": "friendly",
+                        "paradigmName": "亲和精致（三通道统一）",
+                        "type": "cross",
+                        "typeName": "跨模态案例",
+                        "wt": 0.35,
+                        "year": "持续",
+                        "description": "产品+界面+声音全通道协同，品牌美学的最高级形式。",
+                        "dimensions": [
+                                    {
+                                                "name": "产品硬件",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "iPhone W(T)=0.35"
+                                    },
+                                    {
+                                                "name": "软件界面",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "iOS W(T)=0.30"
+                                    },
+                                    {
+                                                "name": "系统声音",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "提示音 W(T)=0.26"
+                                    }
+                        ],
+                        "insight": "苹果全家桶是'全通道协同'的典范，三通道统一在亲和精致范式，W(T) 梯度设计（产品>界面>声音），形成统一的品牌美学。",
+                        "prescription": [
+                                    "保持全通道一致性",
+                                    "根据通道特性设计 W(T) 梯度",
+                                    "微差补偿是通用策略"
+                        ]
+            },
+            {
+                        "id": 26,
+                        "title": "华为 Mate 60 Pro",
+                        "brand": "华为 HUAWEI",
+                        "category": "消费电子/手机",
+                        "paradigm": "balanced",
+                        "paradigmName": "均衡典雅",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.47,
+                        "year": "2023",
+                        "description": "国民旗舰，星环设计+文化内涵，平衡科技感与亲和力。",
+                        "dimensions": [
+                                    {
+                                                "name": "形状",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "圆润边角+直屏，曲中带直"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "金属中框+玻璃背板+精密倒角"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "雅川青、南糯紫等文化命名配色"
+                                    },
+                                    {
+                                                "name": "构图",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "居中对称+星环模组居中"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "金属中框高光 vs 哑光背板"
+                                    },
+                                    {
+                                                "name": "细节",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "星环模组精密层次+卫星通信天线"
+                                    }
+                        ],
+                        "insight": "华为 Mate 60 Pro 用'文化内涵中和科技冷感'，星环模组作为统一视觉锚点，比 iPhone 略高但远低于游戏手机，完美平衡大众接受度和旗舰溢价感。",
+                        "prescription": [
+                                    "Pro+ 版本可提升至崇高震撼",
+                                    "标准版可更亲和扩大受众",
+                                    "强化鸿蒙生态的跨模态温度感"
+                        ]
+            },
+            {
+                        "id": 27,
+                        "title": "蔚来 ET9",
+                        "brand": "蔚来 NIO",
+                        "category": "汽车/交通工具",
+                        "paradigm": "sublime",
+                        "paradigmName": "崇高震撼",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.545,
+                        "year": "2023",
+                        "description": "高端智能电动旗舰，极简秩序+科技豪华，挑战传统豪华品牌。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "溜背造型+流畅曲面+无传统格栅"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "简洁腰线+隐藏式门把手+无框车门"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "贯穿式大灯+独特日行灯+智能交互灯语"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "长轴距+短前后悬+低趴姿态+大轮毂"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "高光车漆+隐藏式传感器+智能座舱"
+                                    }
+                        ],
+                        "insight": "蔚来 ET9 用'极简秩序收编科技感'，智能电动作为范式创新基础，比奔驰S级略高传递更强未来感，但不过度极端，完美平衡传统豪华和未来科技。",
+                        "prescription": [
+                                    "性能版可提升至冷峻克制",
+                                    "标准版可更亲和吸引传统豪华用户",
+                                    "强化蔚来服务的跨模态温度感"
+                        ]
+            },
+            {
+                        "id": 28,
+                        "title": "大众甲壳虫",
+                        "brand": "大众 Volkswagen",
+                        "category": "汽车/交通工具",
+                        "paradigm": "healing",
+                        "paradigmName": "治愈松弛",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.175,
+                        "year": "1938-2019",
+                        "description": "经典治愈松弛，拟人化设计+可爱美学，跨越80年的永恒经典。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "全曲面设计+圆润车身+无棱角"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 1,
+                                                "polarity": "P+亲极",
+                                                "reason": "几乎无特征线+流畅过渡+一体式车身"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "圆形大灯+圆润尾灯+对称布局"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "短轴距+高车身+四轮四角，像玩具车"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "柔和车漆+圆润曲面+漫反射光影"
+                                    }
+                        ],
+                        "insight": "大众甲壳虫是'拟人化设计赋予生命力'的典范，圆形大灯像眼睛，圆润车身像脸，整体像一只虫子或宠物，让冰冷机械有了生命感和情感连接。低 W(T) 不等于无聊，拟人化+情感连接让低 W(T) 成为永恒经典。",
+                        "prescription": [
+                                    "复古版保持原汁原味",
+                                    "电动版可适度提升至亲和精致",
+                                    "强化社群文化作为情感连接延伸"
+                        ]
+            },
+            {
+                        "id": 29,
+                        "title": "包豪斯设计",
+                        "brand": "包豪斯 Bauhaus",
+                        "category": "品牌/平面",
+                        "paradigm": "avant",
+                        "paradigmName": "先锋反叛",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.675,
+                        "year": "1919-1933",
+                        "description": "现代主义设计源头，功能主义+网格系统，冷峻克制范式的源头。",
+                        "dimensions": [
+                                    {
+                                                "name": "图形",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "几何形状（圆/方/三角）+直线+直角"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "三原色（红黄蓝）+黑白灰，高饱和强对比"
+                                    },
+                                    {
+                                                "name": "字体",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "无衬线字体+几何字形+粗体"
+                                    },
+                                    {
+                                                "name": "版式",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "网格系统+非对称布局+留白精确"
+                                    },
+                                    {
+                                                "name": "质感",
+                                                "t": 6,
+                                                "polarity": "T−偏危",
+                                                "reason": "工业材料（钢/玻璃/混凝土）+无装饰"
+                                    }
+                        ],
+                        "insight": "包豪斯是'功能主义秩序收编几何先锋'的典范，'形式追随功能'，用网格系统和功能主义建立最强秩序，所以高危极成为经典而非混乱。它证明了高危极必须配高秩序，否则就是失控焦虑区。",
+                        "prescription": [
+                                    "经典包豪斯保持原汁原味",
+                                    "新包豪斯可适度降低至崇高震撼",
+                                    "强化设计教育作为理论传播基础"
+                        ]
+            },
+            {
+                        "id": 30,
+                        "title": "迪士尼乐园",
+                        "brand": "迪士尼 Disney",
+                        "category": "公共/娱乐空间",
+                        "paradigm": "healing",
+                        "paradigmName": "治愈松弛",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.205,
+                        "year": "1955-",
+                        "description": "全感官沉浸+叙事性设计，治愈松弛范式的沉浸式极致。",
+                        "dimensions": [
+                                    {
+                                                "name": "尺度",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "人性化尺度+围合感+无压迫性大空间"
+                                    },
+                                    {
+                                                "name": "建筑",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "童话城堡+圆润建筑+可爱造型"
+                                    },
+                                    {
+                                                "name": "色彩",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "高饱和但柔和的童话色彩+暖色调"
+                                    },
+                                    {
+                                                "name": "光影",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "漫射柔光+温暖灯光+烟花表演"
+                                    },
+                                    {
+                                                "name": "声音",
+                                                "t": 2,
+                                                "polarity": "P+亲极",
+                                                "reason": "背景音乐+角色配音+自然音效"
+                                    },
+                                    {
+                                                "name": "互动",
+                                                "t": 1,
+                                                "polarity": "P+亲极",
+                                                "reason": "卡通角色+微笑服务+拥抱互动"
+                                    }
+                        ],
+                        "insight": "迪士尼乐园是'全感官沉浸+叙事性设计'的巅峰，六个感官通道同时作用形成全感官包围，每个区域都有故事，让简单的快乐有了情感深度和记忆点。BEA 不仅可分析单一感官形式，还可分析全感官组合，多通道极性一致时美感叠加增强。",
+                        "prescription": [
+                                    "经典园区保持治愈松弛",
+                                    "新园区可适度提升至亲和精致",
+                                    "强化IP生态作为叙事性基础"
+                        ]
+            },
+            {
+                        "id": 31,
+                        "title": "香港中银大厦 vs 汇丰总行大厦",
+                        "brand": "贝聿铭 vs 诺曼·福斯特",
+                        "category": "建筑/室内",
+                        "paradigm": "cold",
+                        "paradigmName": "冷峻克制 vs 崇高震撼",
+                        "type": "cross",
+                        "typeName": "对比案例",
+                        "wt": 0.645,
+                        "year": "1990",
+                        "description": "同城、同时代、同一冷色谱系的地标 A/B 对比：中银把危极押在形体轮廓（W(T)=0.645，赢天际线输楼下），汇丰押在结构肌理（W(T)=0.550，赢楼下输天际线）。",
+                        "dimensions": [
+                                    {
+                                                "name": "形体轮廓",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "中银三棱柱斜切收分，棱线锋利非对称，利刃入云；汇丰 t=5 五段水平堆叠不尖锐"
+                                    },
+                                    {
+                                                "name": "立面线条",
+                                                "t": 7,
+                                                "polarity": "T−危极",
+                                                "reason": "中银竹节式竖棱+外露 X 形钢桁架；汇丰裸钢桁架拉杆全外露信息密度极高"
+                                    },
+                                    {
+                                                "name": "比例尺度",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "中银 367 米通高尖端上扬压迫感强；汇丰 178.8 米体量水平不制造俯视压迫"
+                                    },
+                                    {
+                                                "name": "材质肌理",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "中银银灰镜面玻璃幕墙通体无暖材料；汇丰不涂装裸钢是最强危极"
+                                    },
+                                    {
+                                                "name": "光影空间",
+                                                "t": 5,
+                                                "polarity": "中性",
+                                                "reason": "中银幕墙反射天光云影是全案唯一柔性层；汇丰 10 层中庭+阳光镜内部反而柔和"
+                                    }
+                        ],
+                        "insight": "同一谱系、两种押注点：A 赢在远观轮廓（天际线识别度），B 赢在近看信息密度与架空广场（主辅比 70:30，耐看指数 89 vs 62）。主辅比是否留亲极呼吸段直接决定耐看性；尖角的风水文化误读属 t 值覆盖不到的符号层风险；数字比较的前提是同一套品类权重。",
+                        "prescription": [
+                                    "中银：形体轮廓 7→6、立面线条 7→6 回到崇高上沿解除重点通胀；或补亲极（幕墙暖色过渡、底部园林延伸）保持 W(T) 不变",
+                                    "汇丰：形体轮廓 5→6 提升远观辨识度，务必保住架空广场与中庭这一亲极资产",
+                                    "病症诊断须结合观看距离——远观地标的重点通胀是资产，近人空间的重点通胀才是负债"
+                        ]
+            },
+            {
+                        "id": 32,
+                        "title": "Tesla Cybercab",
+                        "brand": "特斯拉 Tesla",
+                        "category": "汽车/交通工具",
+                        "paradigm": "balanced",
+                        "paradigmName": "均衡典雅",
+                        "type": "success",
+                        "typeName": "成功案例",
+                        "wt": 0.385,
+                        "year": "2024",
+                        "description": "全自动驾驶Robotaxi，视觉亲和+概念激进的复合范式，用圆润外观降低无人驾驶的接受门槛。",
+                        "dimensions": [
+                                    {
+                                                "name": "曲面",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "水滴/胶囊造型，大曲面连续无断点"
+                                    },
+                                    {
+                                                "name": "特征线",
+                                                "t": 4,
+                                                "polarity": "P+偏亲",
+                                                "reason": "几乎无明显腰线，侧面极简"
+                                    },
+                                    {
+                                                "name": "灯组",
+                                                "t": 6,
+                                                "polarity": "T−危极",
+                                                "reason": "贯穿式细灯带，边缘锐利，与圆润车身形成对比"
+                                    },
+                                    {
+                                                "name": "比例",
+                                                "t": 4,
+                                                "polarity": "中性",
+                                                "reason": "短前后悬、长轴距、低重心，造型独特"
+                                    },
+                                    {
+                                                "name": "材质",
+                                                "t": 3,
+                                                "polarity": "P+亲极",
+                                                "reason": "香槟金金属漆，光滑细腻，影棚柔光"
+                                    }
+                        ],
+                        "insight": "Cybercab最精妙的设计策略是'用视觉亲和降低概念激进的冲击'。无人驾驶、无方向盘对普通用户来说是令人恐惧的激进概念（概念层面W(T)≈0.75，先锋反叛），但特斯拉用圆润柔和的外观（视觉层面W(T)=0.385，均衡典雅）让用户觉得'这个东西很安全、很友好'。这种'外柔内刚'的组合，是高级感设计的典型案例，对所有颠覆性产品都有借鉴意义。层级策略采用微差补偿：宏观圆润、中观简洁、微观锐利精密，远看亲和、近看有细节。",
+                        "prescription": [
+                                    "增加侧面细微特征线，W(T)从0.385微升至0.42，提升层次感",
+                                    "优化车内环境的治愈感，更柔和材质+氛围灯+安心显示，降低乘客焦虑",
+                                    "提供多种外观风格选项（亲和版/运动版/豪华版），满足不同偏好",
+                                    "优化人机交互学习曲线，清晰引导+物理紧急按钮，降低首次使用门槛"
+                        ]
+            }
+        ];;
         // ===== 案例图片映射 =====
         const caseImages = {
             1: 'assets/cases/iphone-17-pro.jpg',
