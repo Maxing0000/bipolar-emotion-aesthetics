@@ -56,6 +56,8 @@ CORE_FILES = [
     "QUICKSTART.md",
     "scripts/bea_quant.py",
     "scripts/bea_guide.py",
+    "scripts/bea_rubric.py",
+    "scripts/bea_image.py",
     "tests/test_be.py",
     "references/01-core-theory.md",
     "references/02-workflow.md",
@@ -213,7 +215,7 @@ def check_skillhub_spec():
 NPM_PACKAGE_JSON = {
     "name": "bea-mcp",
     "version": VERSION,
-    "description": "BEA Bipolar Emotion Aesthetics MCP Server - 7 tools (analyze/compare/dimensions/suggest/generate/sensitivity/batch). Pure Python stdlib, zero dependencies.",
+    "description": "BEA Bipolar Emotion Aesthetics MCP Server - 9 tools (analyze/compare/dimensions/suggest/generate/sensitivity/batch/rubric/analyze_image). Pure Python stdlib; Pillow optional for image analysis.",
     "license": "CC-BY-NC-SA-4.0",
     "author": "马星 (https://github.com/Maxing0000)",
     "homepage": "https://maxing0000.github.io/bipolar-emotion-aesthetics/",
@@ -245,7 +247,9 @@ child.on('exit', (code) => process.exit(code == null ? 0 : code));
 
 NPM_README = """# bea-mcp
 
-BEA 双极情绪美学 MCP Server —— 7 个工具（analyze / compare / dimensions / suggest / generate / sensitivity / batch），纯 Python 标准库，零第三方依赖。
+BEA 双极情绪美学 MCP Server —— 9 个工具（analyze / compare / dimensions / suggest / generate / sensitivity / batch / rubric / analyze_image），纯 Python 标准库，零第三方依赖。
+
+图片直接分析（bea_analyze_image）需要可选依赖 Pillow，本 npm 包不含——如需该工具，建议改用 PyPI 版：`pipx install "bea-mcp[image]"`。
 
 ## 客户端配置（一行接入）
 
@@ -287,6 +291,9 @@ classifiers = [
 [project.scripts]
 bea-mcp = "bea_mcp.server:main"
 
+[project.optional-dependencies]
+image = ["Pillow>=9.0"]
+
 [project.urls]
 Homepage = "https://maxing0000.github.io/bipolar-emotion-aesthetics/"
 Repository = "https://github.com/Maxing0000/bipolar-emotion-aesthetics"
@@ -302,14 +309,15 @@ __version__ = "{version}"
 
 PYPI_README = """# bea-mcp
 
-BEA 双极情绪美学 MCP Server —— 7 个工具，纯 Python 标准库，零第三方依赖。
+BEA 双极情绪美学 MCP Server —— 9 个工具，纯 Python 标准库，零第三方依赖（图像分析的可选 Pillow 见下）。
 
 > v2.10.0 起为全新引擎版：与仓库 [bipolar-emotion-aesthetics](https://github.com/Maxing0000/bipolar-emotion-aesthetics) 的 bea_quant.py 单源同步，替代旧 1.x（官方 SDK 版，维度命名已过时）。
 
 ## 安装
 
 ```bash
-pipx install bea-mcp    # 或 pip install bea-mcp
+pipx install bea-mcp              # 基础版（8 个工具）
+pipx install "bea-mcp[image]"     # 含图片直接分析 bea_analyze_image
 ```
 
 ## 客户端配置（一行接入）
@@ -337,7 +345,8 @@ def build_npm(output_dir: Path) -> None:
     """生成 npm 包目录：bin.js 拉起 python3 运行 server.py。"""
     out = output_dir / "npm"
     out.mkdir(parents=True, exist_ok=True)
-    _copy(ROOT / "scripts" / "bea_quant.py", out / "scripts" / "bea_quant.py")
+    for _f in ("bea_quant.py", "bea_rubric.py", "bea_image.py"):
+        _copy(ROOT / "scripts" / _f, out / "scripts" / _f)
     _copy(ROOT / "mcp-server" / "server.py", out / "mcp-server" / "server.py")
     (out / "package.json").write_text(
         json.dumps(NPM_PACKAGE_JSON, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -352,7 +361,8 @@ def build_pypi(output_dir: Path) -> None:
     pkg = out / "bea_mcp"
     pkg.mkdir(parents=True, exist_ok=True)
     _copy(ROOT / "mcp-server" / "server.py", pkg / "server.py")
-    _copy(ROOT / "scripts" / "bea_quant.py", pkg / "bea_quant.py")
+    for _f in ("bea_quant.py", "bea_rubric.py", "bea_image.py"):
+        _copy(ROOT / "scripts" / _f, pkg / _f)
     (pkg / "__init__.py").write_text(PYPI_INIT.format(version=VERSION), encoding="utf-8")
     (out / "pyproject.toml").write_text(PYPI_PYPROJECT.format(version=VERSION), encoding="utf-8")
     (out / "README.md").write_text(PYPI_README, encoding="utf-8")

@@ -30,7 +30,7 @@ jobs:
           python -m pip install pyflakes -q
           python -m pyflakes scripts/ mcp-server/
 
-      - name: 全量自测（113 项）
+      - name: 全量自测（134 项）
         run: python scripts/bea_quant.py test
 
       - name: MCP Server 会话自测

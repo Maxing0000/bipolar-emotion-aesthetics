@@ -5,10 +5,16 @@
 BEA MCP Server v（版本号动态读引擎）
 纯 Python 标准库实现的 MCP stdio 服务器，零第三方依赖，离线可用。
 
-通过 MCP 协议（JSON-RPC 2.0 over stdio）向任意 AI 客户端暴露三个工具：
-  bea_analyze    单对象分析：返回 W(T)、六范式定位、四维评分卡、病症诊断
-  bea_compare    A/B 对比：返回两方分析、逐维度差值、引擎对比报告
-  bea_dimensions 查询品类维度/权重定义与六范式锚点
+通过 MCP 协议（JSON-RPC 2.0 over stdio）向任意 AI 客户端暴露九个工具：
+  bea_analyze       单对象分析：返回 W(T)、六范式定位、四维评分卡、病症诊断
+  bea_compare       A/B 对比：返回两方分析、逐维度差值、引擎对比报告
+  bea_dimensions    查询品类维度/权重定义与六范式锚点
+  bea_suggest       调整建议：目标范式/W(T) → 逐步调分方案
+  bea_generate      美感生成：目标 → 最优维度配置
+  bea_sensitivity   灵敏度分析：改哪个维度效果最明显
+  bea_batch         批量分析：多对象一次分析并排名
+  bea_rubric        视觉评分标尺：AI 看图打 t 值的锚点依据
+  bea_analyze_image 图片直接分析：程序提取特征 → t 值 → W(T)（需 Pillow）
 
 客户端配置示例（WorkBuddy / Claude Desktop 等通用）：
   "mcpServers": {
@@ -40,11 +46,38 @@ def _engine_path() -> str:
     return os.path.join(_HERE, "bea_quant.py")
 
 
+def _module_path(name: str) -> str:
+    """定位引擎目录下的模块：环境变量目录 → 仓库结构（../scripts/）→ 同目录。"""
+    env_dir = os.environ.get("BEA_ENGINE_DIR")
+    for base in ([env_dir] if env_dir and os.path.isdir(env_dir) else []) + [
+        os.path.join(_HERE, "..", "scripts"),
+        _HERE,
+    ]:
+        candidate = os.path.join(base, name)
+        if os.path.exists(candidate):
+            return candidate
+    raise FileNotFoundError(f"找不到模块 {name}（可设置 BEA_ENGINE_DIR 指向 scripts/）")
+
+
+def _load_module(name: str):
+    path = _module_path(name)
+    spec = importlib.util.spec_from_file_location(os.path.splitext(name)[0], path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 _ENGINE = _engine_path()
 
 _spec = importlib.util.spec_from_file_location("bea_quant", _ENGINE)
 _bq = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_bq)
+
+try:
+    _rubric = _load_module("bea_rubric.py")
+    _image = _load_module("bea_image.py")
+except FileNotFoundError:  # 允许只装引擎的极简布局，对应工具会报错
+    _rubric = _image = None
 
 SERVER_NAME = "bea"
 PROTOCOL_VERSION = "2024-11-05"
@@ -245,6 +278,40 @@ def tool_batch(args: dict) -> dict:
     }
 
 
+def tool_rubric(args: dict) -> dict:
+    if _rubric is None:
+        raise RuntimeError("服务端缺少 bea_rubric.py 模块")
+    category = args.get("category")
+    _check_category(category)
+    text = _rubric.format_rubric(category, _bq.CATEGORY_WEIGHTS[category])
+    return {
+        "category": category,
+        "dimensions": list(_bq.CATEGORY_WEIGHTS[category].keys()),
+        "rubric_markdown": text,
+        "usage": "对照图像逐维度取 t 值（锚点间可插值），然后调用 bea_analyze 计算 W(T)",
+    }
+
+
+def tool_analyze_image(args: dict) -> dict:
+    if _image is None:
+        raise RuntimeError("服务端缺少 bea_image.py 模块")
+    category = args.get("category")
+    _check_category(category)
+    path = args.get("path")
+    if not path or not isinstance(path, str):
+        raise ValueError("path 应为图片文件的绝对路径")
+    analysis, feats, t_values, unmeasured = _image.analyze_image(path, category)
+    payload = _analysis_payload(analysis)
+    payload.update({
+        "path": path,
+        "features": {k: round(v, 4) for k, v in feats.items()},
+        "feature_t_values": t_values,
+        "unmeasured_dimensions": unmeasured,
+        "calibration_note": "特征→t 值为 v1 线性标定；如对自动打分有异议，可用 bea_rubric 人工对照打分后再 bea_analyze",
+    })
+    return payload
+
+
 TOOLS = [
     {
         "name": "bea_analyze",
@@ -413,6 +480,48 @@ TOOLS = [
             "required": ["category", "items"],
         },
     },
+    {
+        "name": "bea_rubric",
+        "description": (
+            "BEA 视觉评分标尺：返回某品类逐维度的观察点与 t=2/5/8 三档锚点描述。"
+            "AI 看图打分前必查——先取标尺，对照图像逐维度取 t 值，再调 bea_analyze 算 W(T)。"
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "enum": ["phone", "car", "brand", "ui", "building"],
+                    "description": "品类",
+                },
+            },
+            "required": ["category"],
+        },
+    },
+    {
+        "name": "bea_analyze_image",
+        "description": (
+            "BEA 图片直接分析：程序解码图片、提取六项视觉特征（锐度/对称/纹理/光影硬度/"
+            "色彩强度/色温/构图重心）并映射为维度 t 值，返回精确 W(T) 与完整分析。"
+            "需要服务端安装 Pillow（pip install 'bea-mcp[image]'）。"
+            "path 为图片绝对路径。ui 品类的动效维度取中性值 5。"
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "enum": ["phone", "car", "brand", "ui", "building"],
+                    "description": "分析品类",
+                },
+                "path": {
+                    "type": "string",
+                    "description": "图片文件的绝对路径",
+                },
+            },
+            "required": ["category", "path"],
+        },
+    },
 ]
 
 _TOOL_FUNCS = {
@@ -423,6 +532,8 @@ _TOOL_FUNCS = {
     "bea_generate": tool_generate,
     "bea_sensitivity": tool_sensitivity,
     "bea_batch": tool_batch,
+    "bea_rubric": tool_rubric,
+    "bea_analyze_image": tool_analyze_image,
 }
 
 
@@ -450,7 +561,7 @@ def handle_request(req: dict):
             "capabilities": {"tools": {}},
             "serverInfo": {
                 "name": SERVER_NAME,
-                "version": getattr(_bq, "__version__", "2.10.0"),
+                "version": getattr(_bq, "__version__", "2.11.0"),
             },
         })
 

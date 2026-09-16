@@ -92,7 +92,7 @@
 
 ```json
 {
-  "version": "2.10.0",
+  "version": "2.11.0",
   "category": "car",
   "category_label": "汽车",
   "dimensions": {

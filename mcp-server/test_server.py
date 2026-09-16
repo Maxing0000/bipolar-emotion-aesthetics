@@ -90,8 +90,9 @@ def main():
         tools = recv(proc)["result"]["tools"]
         ok([t["name"] for t in tools] ==
            ["bea_analyze", "bea_compare", "bea_dimensions",
-            "bea_suggest", "bea_generate", "bea_sensitivity", "bea_batch"],
-           "tools/list：七个工具")
+            "bea_suggest", "bea_generate", "bea_sensitivity", "bea_batch",
+            "bea_rubric", "bea_analyze_image"],
+           "tools/list：九个工具")
         ok(all("inputSchema" in t for t in tools), "tools/list：均带 inputSchema")
 
         # 4. bea_analyze：与引擎直算比对
@@ -168,6 +169,43 @@ def main():
         ok(wts == sorted(wts), "bea_batch：结果按 W(T) 升序排名")
         ok("report_markdown" in bat and bat["report_markdown"], "bea_batch：附批量报告")
 
+        # 6f. bea_rubric：标尺文本与引擎维度一致
+        rub = payload(call_tool(proc, "bea_rubric", {"category": "building"}))
+        ok(list(rub["dimensions"]) == list(_bq.CATEGORY_WEIGHTS["building"]),
+           "bea_rubric：building 维度与引擎一致")
+        ok("形体轮廓" in rub["rubric_markdown"] and "t=8" in rub["rubric_markdown"],
+           "bea_rubric：标尺文本含锚点")
+        bad_rub = call_tool(proc, "bea_rubric", {"category": "nope"})
+        ok(bad_rub.get("isError") is True, "bea_rubric：未知品类 → isError")
+
+        # 6g. bea_analyze_image：Pillow 可用则端到端，不可用则优雅报错
+        _has_pil = importlib.util.find_spec("PIL") is not None
+        if _has_pil:
+            import tempfile
+            with tempfile.TemporaryDirectory() as td:
+                p1 = os.path.join(td, "soft.png")
+                p2 = os.path.join(td, "harsh.png")
+                _make_images(p1, p2)
+                img1 = payload(call_tool(proc, "bea_analyze_image",
+                                         {"category": "phone", "path": p1}))
+                img2 = payload(call_tool(proc, "bea_analyze_image",
+                                         {"category": "phone", "path": p2}))
+                ok(set(img1["features"]) ==
+                   {"sharpness", "symmetry", "texture", "light_hardness",
+                    "color_intensity", "warmth", "gravity"},
+                   "bea_analyze_image：七项特征齐全")
+                ok(all(0 <= v <= 10 for v in img1["feature_t_values"].values()),
+                   "bea_analyze_image：t 值在 0-10")
+                ok(img1["w_t"] < img2["w_t"], "bea_analyze_image：柔和图 W(T) < 硬朗图")
+                bad_img = call_tool(proc, "bea_analyze_image",
+                                    {"category": "phone", "path": "/nonexistent.png"})
+                ok(bad_img.get("isError") is True, "bea_analyze_image：文件不存在 → isError")
+        else:
+            no_pil = call_tool(proc, "bea_analyze_image",
+                               {"category": "phone", "path": "/tmp/x.png"})
+            ok(no_pil.get("isError") is True and "Pillow" in no_pil["content"][0]["text"],
+               "bea_analyze_image：无 Pillow 优雅报错（CI 环境属预期）")
+
         # 7. 错误路径：未知工具 / 非法品类 / 非法维度 / 非法策略 / 空 items
         bad1 = call_tool(proc, "no_such_tool", {})
         ok(bad1.get("isError") is True, "未知工具 → isError")
@@ -192,6 +230,31 @@ def main():
     finally:
         proc.stdin.close()
         proc.wait(timeout=5)
+
+
+def _make_images(soft_path, harsh_path):
+    """生成一柔一硬两张合成图，供 bea_analyze_image 端到端验证。"""
+    from PIL import Image, ImageDraw
+    size = 256
+    im = Image.new("RGB", (size, size))
+    px = im.load()
+    for y in range(size):
+        for x in range(size):
+            px[x, y] = (220 - y // 6, 210 - y // 8, 190)
+    ImageDraw.Draw(im).ellipse([88, 88, 168, 168], fill=(235, 225, 205))
+    im.save(soft_path)
+
+    im2 = Image.new("RGB", (size, size))
+    px2 = im2.load()
+    for y in range(size):
+        for x in range(size):
+            v = 255 if ((x // 16 + y // 16) % 2 == 0) else 10
+            if abs(x - y) < 6:
+                v = 255 - v
+            px2[x, y] = (v, v, 255 - v)
+    ImageDraw.Draw(im2).polygon([(0, 255), (128, 0), (255, 255)],
+                                outline=(255, 255, 255), width=8)
+    im2.save(harsh_path)
 
 
 if __name__ == "__main__":

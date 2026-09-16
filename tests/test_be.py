@@ -398,8 +398,88 @@ def run_tests() -> bool:
     check("markdown报告(无病症)可生成", "无明显病症" in format_report_markdown(a_clean))
     check("对比报告可生成", "BEA 对比报告" in format_compare(a_dis, a_clean, "甲", "乙"))
 
+    # ── 视觉评分标尺（bea_rubric）一致性：维度名必须与引擎 canonical 名严格一致 ──
+    _rubric_spec = importlib.util.spec_from_file_location(
+        "bea_rubric", os.path.join(_SCRIPTS, "bea_rubric.py"))
+    _rubric = importlib.util.module_from_spec(_rubric_spec)
+    _rubric_spec.loader.exec_module(_rubric)
+    check("标尺品类齐全(5个)", set(_rubric.RUBRICS) == set(CATEGORY_WEIGHTS))
+    for _cat, _dims in CATEGORY_WEIGHTS.items():
+        check(f"标尺[{_cat}]维度与引擎一致",
+              list(_rubric.RUBRICS[_cat].keys()) == list(_dims.keys()))
+        for _dim, _spec_r in _rubric.RUBRICS[_cat].items():
+            if not ({"look"} <= set(_spec_r) and {2, 5, 8} == set(_spec_r["anchors"])):
+                check(f"标尺[{_cat}][{_dim}]结构完整(look+2/5/8锚点)", False)
+                break
+    rub_text = _rubric.format_rubric("building", CATEGORY_WEIGHTS["building"])
+    check("标尺文本可生成且带权重", "形体轮廓" in rub_text and "权重" in rub_text)
+    try:
+        _rubric.format_rubric("nope")
+        check("未知品类标尺报错", False)
+    except ValueError:
+        check("未知品类标尺报错", True)
+
+    # ── 图像特征引擎（bea_image）：无 Pillow 时优雅降级，有 Pillow 时端到端 ──
+    _img_spec = importlib.util.spec_from_file_location(
+        "bea_image", os.path.join(_SCRIPTS, "bea_image.py"))
+    _bimg = importlib.util.module_from_spec(_img_spec)
+    _img_spec.loader.exec_module(_bimg)
+    check("bea_image 引擎加载且维度映射覆盖5品类",
+          set(_bimg.DIM_MAP) == set(CATEGORY_WEIGHTS))
+    for _cat, _dims in CATEGORY_WEIGHTS.items():
+        mapped = set(_bimg.DIM_MAP[_cat]) | set(_bimg.UNMEASURED.get(_cat, {}))
+        check(f"bea_image[{_cat}]维度映射覆盖引擎维度", mapped == set(_dims.keys()))
+    check("特征标定表完备", set(_bimg.FEATURE_SCALE) ==
+          {"sharpness", "symmetry", "texture", "light_hardness",
+           "color_intensity", "warmth", "gravity"})
+    if _bimg.Image is not None:
+        import tempfile
+        with tempfile.TemporaryDirectory() as _td:
+            _p1 = os.path.join(_td, "soft.png")
+            _p2 = os.path.join(_td, "harsh.png")
+            _make_test_image(_bimg, _p1, soft=True)
+            _make_test_image(_bimg, _p2, soft=False)
+            _a1, _f1, _t1, _u1 = _bimg.analyze_image(_p1, "phone")
+            _a2, _f2, _t2, _u2 = _bimg.analyze_image(_p2, "phone")
+            check("柔和图特征解析正常", 0 <= _f1["sharpness"] and 0 <= _f1["symmetry"] <= 1)
+            check("两张图特征可区分(锐度)", _f2["sharpness"] > _f1["sharpness"])
+            check("柔和图 W(T) 低于硬朗图", _a1.w_t < _a2.w_t)
+            check("t 值均在 0-10", all(0 <= v <= 10 for v in _t1.values())
+                  and all(0 <= v <= 10 for v in _t2.values()))
+            check("ui 品类动效取中性值", _bimg.features_to_t("ui", _f1)[0]["动效"] == 5)
+        try:
+            _bimg.extract_features(os.path.join(_td, "不存在.png"))
+            check("图片不存在报错", False)
+        except FileNotFoundError:
+            check("图片不存在报错", True)
+    else:
+        print("  - 未安装 Pillow，跳过图像端到端测试（CI 无 Pillow 属预期）")
+
     print(f"\n结果：{passed} 通过，{failed} 失败")
     return failed == 0
+
+
+def _make_test_image(_bimg, path: str, soft: bool):
+    """用 Pillow 画一张柔和/硬朗的合成图，供特征提取端到端验证。"""
+    from PIL import ImageDraw
+    size = 256
+    im = _bimg.Image.new("RGB", (size, size))
+    px = im.load()
+    for y in range(size):
+        for x in range(size):
+            if soft:  # 低饱和暖渐变，柔和
+                px[x, y] = (220 - y // 6, 210 - y // 8, 190)
+            else:     # 高对比冷色棋盘+锐利斜线
+                v = 255 if ((x // 16 + y // 16) % 2 == 0) else 10
+                if abs(x - y) < 6:
+                    v = 255 - v
+                px[x, y] = (v, v, 255 - v)
+    d = ImageDraw.Draw(im)
+    if soft:
+        d.ellipse([88, 88, 168, 168], fill=(235, 225, 205))
+    else:
+        d.polygon([(0, 255), (128, 0), (255, 255)], outline=(255, 255, 255), width=8)
+    im.save(path)
 
 
 

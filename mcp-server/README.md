@@ -13,6 +13,8 @@
 | `bea_generate` | 美感生成：给定目标自动生成最优维度配置（三种策略） |
 | `bea_sensitivity` | 灵敏度分析：找出"改动哪个维度效果最明显" |
 | `bea_batch` | 批量分析：多对象一次分析并按 W(T) 排名 |
+| `bea_rubric` | 视觉评分标尺：AI 看图打 t 值的锚点依据（看图打分前必查） |
+| `bea_analyze_image` | 图片直接分析：程序提取六项视觉特征 → t 值 → W(T)（需 Pillow，`pipx install "bea-mcp[image]"`） |
 
 支持品类：`phone` / `car` / `brand` / `ui` / `building`
 
@@ -34,7 +36,8 @@
 **方式二：pipx 安装（推荐，需 Python 3.9+）**
 
 ```bash
-pipx install bea-mcp
+pipx install bea-mcp              # 基础版（8 个工具）
+pipx install "bea-mcp[image]"     # 加图片直接分析（9 个工具）
 ```
 
 ```json
@@ -68,6 +71,8 @@ pipx install bea-mcp
 ## 调用示例
 
 ```
+bea_rubric { category: "building" }        → 看图打分前先取标尺
+bea_analyze_image { category: "building", path: "/path/to/photo.jpg" }
 bea_dimensions {}                          → 获取 5 个品类的维度与权重
 bea_analyze { category: "phone",
               t_values: "形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6" }
@@ -84,13 +89,14 @@ bea_compare { category: "building",
 python3 mcp-server/test_server.py
 ```
 
-起真实子进程走完整 MCP 会话（握手 → 工具列表 → 三工具调用 → 错误路径），共 20 项检查，并与引擎直算结果比对。
+起真实子进程走完整 MCP 会话（握手 → 工具列表 → 九工具调用 → 错误路径），共 41 项检查，并与引擎直算结果比对。
 
 ## 设计说明
 
 - 协议：JSON-RPC 2.0 over stdio（MCP `2024-11-05`），逐行读入、逐行写出
-- 引擎复用：通过 `importlib` 动态加载 `scripts/bea_quant.py`，版本号直接读引擎 `__version__`，不重复维护
+- 引擎复用：通过 `importlib` 动态加载 `scripts/bea_quant.py`（以及 `bea_rubric.py`、`bea_image.py`），版本号直接读引擎 `__version__`，不重复维护
+- 图像分析（`bea_analyze_image`）依赖可选的 Pillow；未安装时该工具优雅报错，其余 8 个工具不受影响
 - 工具级错误按 MCP 规范放入 `result.isError`，不中断会话
 
 ---
-BEA v2.10.0 · 署名：马星 · CC BY-NC-SA 4.0
+BEA v2.11.0 · 署名：马星 · CC BY-NC-SA 4.0

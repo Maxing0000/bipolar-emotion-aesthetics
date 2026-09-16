@@ -1,5 +1,19 @@
 # 更新日志
 
+## v2.11.0（2026-09-16）— 图片分析引擎化：从像素到 W(T) 的程序化通道
+
+### 新增
+- **`bea_rubric`（MCP 工具）**：视觉评分标尺模块 `scripts/bea_rubric.py`——5 品类 × 引擎 canonical 维度名的观察点与 t=2/5/8 三档锚点，AI 看图打分的标准依据（移植自旧 PyPI 包 rubric_data.py，按 v2.x 维度名重写并补 building 品类）
+- **`bea_analyze_image`（MCP 工具）**：图像特征引擎 `scripts/bea_image.py`——程序解码图片，提取七项视觉特征（锐度/对称/纹理/光影硬度/色彩强度/色温/构图重心），线性映射为维度 t 值后走引擎全链路，返回精确 W(T)
+  - Pillow 为可选依赖：PyPI `pipx install "bea-mcp[image]"`；未安装时该工具优雅报错，其余工具不受影响
+  - ui 品类「动效」维度静态图无法测量，取中性值 5 并在结果中标注
+  - 特征→t 值为 v1 人工标定，随案例库积累可继续回归校准
+
+### 测试与工程
+- 自测扩至 **134 项**（引擎，含标尺一致性回归：RUBRICS 维度名与 CATEGORY_WEIGHTS 严格比对；图像端到端在无 Pillow 环境自动跳过）
+- MCP 会话自测 **41 项**（rubric 维度一致性、图片端到端/无 Pillow/文件不存在三条路径）
+- 打包：bea_rubric.py / bea_image.py 进 CORE_FILES 与 npm/PyPI 包；pyproject 新增 `[project.optional-dependencies] image`
+
 ## v2.10.0（2026-09-16）— npm / PyPI 分发 + 官网 MCP 安装引导
 
 ### 新增
