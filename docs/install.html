@@ -458,7 +458,7 @@
                 </button>
             </div>
             <textarea class="prompt-textarea" id="promptTextarea" readonly></textarea>
-            <div class="prompt-info">
+            <div class="prompt-info" id="promptHint">
                 💡 提示：点击「一键复制」后，粘贴到对应平台的系统提示词设置中即可使用
             </div>
         </section>
@@ -634,6 +634,30 @@
                     'Chatflow 自动化：将分析流程拆分为多个节点，实现自动化分析',
                     'API 集成：通过 API 将 BEA 分析能力集成到企业应用和设计工具',
                     '多模型选择：根据需求选择合适的 LLM 模型，图片分析选择多模态模型'
+                ]
+            },
+            mcp: {
+                name: 'MCP 服务器',
+                icon: '🔌',
+                desc: '12 工具 · 精确计算',
+                steps: [
+                    { title: '运行一键安装脚本', desc: '在终端运行 `python3 mcp-server/install.py`，脚本自动检测已安装的 AI 客户端并引导配置' },
+                    { title: '选择要配置的平台', desc: '支持 Claude Desktop、WorkBuddy、Cursor、Cline、Continue，脚本自动写入 MCP 配置（Python 路径和服务器路径自动获取）' },
+                    { title: '重启 AI 客户端', desc: '配置完成后重启对应的 AI 客户端，即可在对话中直接调用 12 个 BEA 专业工具，计算结果精确可复现' }
+                ],
+                examples: [
+                    { q: '调用 bea_analyze 分析这款手机：形状=3,质感=6,色彩=4,构图=3,光影=5,细节=6', a: '## 【BEA 分析结果】\n\n**W(T) = 0.365** | **范式：亲和精致** | 主辅比 64:36\n\n### 四维评分\n- 双极张力：20/25\n- 结构秩序：22/25\n- 阈值安全：22/25\n- 语境适配：20/25\n- **总分：84/100**\n\n### 病症诊断\n无明显病症 ✓\n\n### 维度详情\n| 维度 | t值 | 权重 | 极性 |\n|---|---|---|---|\n| 形状 | 3 | 0.25 | P+亲极 |\n| 质感 | 6 | 0.25 | T−危极 |\n| 色彩 | 4 | 0.15 | 中性 |\n| 构图 | 3 | 0.15 | P+亲极 |\n| 光影 | 5 | 0.10 | 中性 |\n| 细节 | 6 | 0.10 | T−危极 |' },
+                    { q: '调用 bea_suggest，目标 W(T)=0.30，策略 focused', a: '## 【BEA 调整建议】\n\n**当前 W(T) = 0.365** → **目标 W(T) = 0.30**\n**策略：focused（集中改动）**\n\n### 调整方案\n1. **质感维度**：t=6 → t=3，降低质感锐度，从亮面改为哑光\n   - W(T) 变化：-0.075\n2. **细节维度**：t=6 → t=4，降低细节锐度，倒角更圆润\n   - W(T) 变化：-0.020\n\n### 验证\n- 调整后 W(T) = 0.270 ✓（落入目标区间 0.15-0.30）\n- 范式：亲和精致\n- 总改动等级：5 级\n- 改动维度数：2 个' },
+                    { q: '调用 bea_generate，品类 phone，目标 亲和精致，策略 balanced', a: '## 【BEA 美感生成结果】\n\n**目标：亲和精致（W(T)=0.20）**\n**策略：balanced（均衡）**\n\n### 生成的维度配置\n| 维度 | t值 | 说明 |\n|---|---|---|\n| 形状 | 3 | 大圆角，握持舒适 |\n| 质感 | 4 | 磨砂亲肤，微差补偿 |\n| 色彩 | 3 | 低饱和暖灰，柔和 |\n| 构图 | 2 | 居中对称，稳定呼吸 |\n| 光影 | 3 | 柔光均匀，无硬阴影 |\n| 细节 | 6 | 精密倒角，锐利线条提神 |\n\n### 验证\n- 实际 W(T) = 0.205 ✓（目标 0.20，偏差 +0.005）\n- 范式：亲和精致\n- 主辅比：亲极 80% : 危极 20%\n- 结构：宏观柔和 + 微观补偿（高级感标准结构）' }
+                ],
+                practices: [
+                    '优先使用 MCP 工具：需要精确计算时调用 bea_analyze/bea_compare 等工具，结果可复现',
+                    '工具组合使用：先用 bea_dimensions 查询维度，再用 bea_analyze 分析，最后用 bea_suggest 给建议',
+                    '批量分析：用 bea_multigroup 同时分析多个方案（外形/内饰/声音），效率更高',
+                    '灵敏度优先：不确定改哪里时，先调用 bea_sensitivity 找出影响最大的维度',
+                    '健康检查：连接失败时调用 bea_health 检查服务器状态和版本',
+                    '零依赖：纯 Python 标准库实现，无需安装任何第三方包，离线可用',
+                    '一键安装：运行 install.py 自动配置所有支持的平台，无需手动编辑配置文件'
                 ]
             }
         };
@@ -1192,6 +1216,171 @@ W(T) = 危极综合权重 = Σ wᵢ × (tᵢ/10)，Σwᵢ=1，结果 0-1
 6. Chatflow 配置复杂时，建议从简单的聊天助手开始，逐步增加工作流节点
 7. 代码节点需要注意 Python 版本和依赖库，bea_quant.py 仅使用标准库，兼容性好
 8. API 发布需要注意访问频率限制和安全性`
+            ,
+            mcp: `# BEA MCP 服务器配置说明
+
+## 🔌 什么是 MCP？
+
+MCP（Model Context Protocol）是一种开放协议，允许 AI 模型连接到外部工具和数据源。通过 BEA MCP 服务器，支持 MCP 的 AI 客户端可以直接调用 12 个 BEA 专业工具，计算结果精确可复现。
+
+## 🚀 一键安装（推荐）
+
+\`\`\`bash
+# 交互式安装（推荐）
+python3 mcp-server/install.py
+
+# 自动配置所有检测到的平台
+python3 mcp-server/install.py --all
+
+# 只配置指定平台
+python3 mcp-server/install.py --claude
+python3 mcp-server/install.py --cursor
+python3 mcp-server/install.py --workbuddy
+
+# 查看配置状态
+python3 mcp-server/install.py --status
+
+# 卸载
+python3 mcp-server/install.py --uninstall
+\`\`\`
+
+安装后**重启对应的 AI 客户端**即可使用。
+
+## ⚙️ 手动配置
+
+将以下 JSON 添加到你的 MCP 客户端配置文件中（路径改为你的实际路径）：
+
+\`\`\`json
+{
+  "mcpServers": {
+    "bea": {
+      "command": "python3",
+      "args": ["/绝对路径/BEA/mcp-server/server.py"]
+    }
+  }
+}
+\`\`\`
+
+### 各平台配置文件位置
+
+| 平台 | 配置文件路径 |
+|------|-------------|
+| Claude Desktop (macOS) | ~/Library/Application Support/Claude/claude_desktop_config.json |
+| Claude Desktop (Windows) | %APPDATA%\\Claude\\claude_desktop_config.json |
+| WorkBuddy | ~/.workbuddy/mcp.json |
+| Cursor (macOS) | ~/Library/Application Support/Cursor/User/mcp.json |
+| Cursor (Windows) | %APPDATA%\\Cursor\\User\\mcp.json |
+| Cline (VS Code) | ~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/mcp_settings.json |
+| Continue (VS Code) | ~/.continue/config.json |
+
+## 🛠️ 12 个可用工具
+
+| 工具 | 功能 |
+|------|------|
+| bea_analyze | 单对象分析：W(T)、范式、四维评分、病症诊断 |
+| bea_compare | A/B 对比：两方分析、逐维度差值、对比报告 |
+| bea_dimensions | 查询品类维度/权重定义与七范式锚点 |
+| bea_diagnose | 审美病症诊断：7 种病症按优先级排序 |
+| bea_suggest | 调整建议：给定目标，输出维度变更方案（含验证） |
+| bea_generate | 美感生成：给定目标，自动生成最优维度配置 |
+| bea_sensitivity | 灵敏度分析：找出改动哪个维度效果最明显 |
+| bea_paradigms | 查询七范式定义、区间、核心体验、应用场景 |
+| bea_diseases | 查询 7 种审美病症诊断表（特征+机理+处方） |
+| bea_health | 健康检查：服务器状态、版本、支持的品类和工具 |
+| bea_multigroup | 多组/跨模态分析：外形+内饰+声音一致性检查 |
+| bea_style_cycle | 风格周期律分析：判断当前风格位置和趋势 |
+
+## 📝 调用示例
+
+\`\`\`
+# 1. 查询维度（打分前必查）
+bea_dimensions {}
+bea_dimensions { "category": "car" }
+
+# 2. 单对象分析
+bea_analyze {
+  "category": "car",
+  "t_values": "曲面=4,特征线=6,灯组=5,比例=3,材质=4"
+}
+
+# 3. A/B 对比
+bea_compare {
+  "category": "car",
+  "a": "方案A=4,6,5,3,4",
+  "b": "方案B=曲面=7,特征线=6,灯组=5,比例=4,材质=4"
+}
+
+# 4. 调整建议
+bea_suggest {
+  "category": "car",
+  "t_values": "曲面=4,特征线=6,灯组=5,比例=3,材质=4",
+  "target": "0.30",
+  "strategy": "focused"
+}
+
+# 5. 美感生成
+bea_generate {
+  "category": "phone",
+  "target": "亲和精致",
+  "strategy": "balanced"
+}
+
+# 6. 灵敏度分析
+bea_sensitivity {
+  "category": "car",
+  "t_values": "曲面=4,特征线=6,灯组=5,比例=3,材质=4",
+  "target": "0.30",
+  "step": 1
+}
+
+# 7. 多组/跨模态分析
+bea_multigroup {
+  "category": "car",
+  "groups": [
+    {"name": "外形", "t_values": "曲面=4,特征线=6,灯组=5,比例=3,材质=4"},
+    {"name": "内饰", "t_values": "曲面=3,特征线=3,灯组=3,比例=4,材质=3"}
+  ]
+}
+
+# 8. 健康检查
+bea_health {}
+\`\`\`
+
+## ✅ 自测
+
+\`\`\`bash
+python3 mcp-server/test_server.py
+\`\`\`
+
+155 项测试全部通过，覆盖所有 12 个工具和错误路径。
+
+## 🎯 支持的品类
+
+- phone（手机/消费电子）
+- car（汽车/交通工具）
+- brand（品牌/平面）
+- ui（界面/交互）
+- building（建筑/室内）
+
+## 💡 最佳实践
+
+1. **工具组合使用**：先用 bea_dimensions 查询维度，再用 bea_analyze 分析，最后用 bea_suggest 给建议
+2. **灵敏度优先**：不确定改哪里时，先调用 bea_sensitivity 找出影响最大的维度
+3. **批量分析**：用 bea_multigroup 同时分析多个方案，效率更高
+4. **健康检查**：连接失败时调用 bea_health 检查服务器状态和版本
+5. **零依赖**：纯 Python 标准库实现，无需安装任何第三方包，离线可用
+
+## 📄 更多文档
+
+- 完整理论：references/01-core-theory.md
+- 创作方法论：references/02-workflow.md
+- 维度指南：references/03-dimension-guide.md
+- 自查清单：references/04-checklist.md
+- 案例库：references/05-case-studies.md
+- 图片分析锚点：references/06-image-anchors.md
+
+---
+BEA v2.8.0 · 署名：马星 · CC BY-NC-SA 4.0`
         };
 
         let currentPlatform = 'doubao';
@@ -1243,6 +1432,20 @@ W(T) = 危极综合权重 = Σ wᵢ × (tᵢ/10)，Σwᵢ=1，结果 0-1
 
             // Render prompt
             document.getElementById('promptTextarea').value = systemPrompts[currentPlatform];
+
+            // Update title and button text based on platform type
+            const promptTitle = document.querySelector('.prompt-title');
+            const copyText = document.getElementById('copyText');
+            const promptHint = document.getElementById('promptHint');
+            if (currentPlatform === 'mcp') {
+                promptTitle.innerHTML = '🔌 MCP 服务器配置说明';
+                copyText.textContent = '复制配置';
+                promptHint.innerHTML = '💡 提示：点击「复制配置」后，粘贴到对应平台的 MCP 配置文件中，或直接运行一键安装脚本';
+            } else {
+                promptTitle.innerHTML = '📋 平台专用 System Prompt';
+                copyText.textContent = '一键复制';
+                promptHint.innerHTML = '💡 提示：点击「一键复制」后，粘贴到对应平台的系统提示词设置中即可使用';
+            }
 
             // Reset copy button
             resetCopyButton();
