@@ -1,8 +1,8 @@
 {
   "name": "bipolar-emotion-aesthetics",
   "display_name": "双极情绪美学 BEA",
-  "version": "2.14.0",
-  "description": "双极情绪美学（Bipolar Emotion Aesthetics，BEA）v2.14.0——把审美判断从'我觉得'变成可讨论、可比较、可追踪、可生成的协作工具。支持图片分析、形式美感分析、诊断、优化和生成。在 WorkBuddy、豆包、SkillHub、扣子、ChatGPT、Claude 等平台可用，另提供 MCP Server 供任意 MCP 客户端调用，纯 Python 标准库离线运行。",
+  "version": "2.8.0",
+  "description": "双极情绪美学（Bipolar Emotion Aesthetics，BEA）v2.8.0——把审美判断从'我觉得'变成可讨论、可比较、可改进的协作工具。用 W(T) 危极权重 + 六范式定位 + 四维评分卡，把'这个设计好不好看'变成可计算的元素级改进方案。支持图片分析、病症诊断、设计优化、美感生成与轻量级快速诊断，覆盖产品/汽车/建筑/品牌/UI/时尚九大领域。在豆包、WorkBuddy、SkillHub、扣子、ChatGPT、Claude、通义千问、Dify 等平台可用，纯 Python 标准库离线运行。",
   "author": {
     "name": "马星",
     "username": "xkbk0000"
@@ -150,5 +150,5 @@
     "skillhub": "https://skillhub.cn/"
   },
   "website": "https://maxing0000.github.io/bipolar-emotion-aesthetics/",
-  "updated": "2026-09-16"
+  "updated": "2026-09-17"
 }

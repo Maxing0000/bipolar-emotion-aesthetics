@@ -3,12 +3,12 @@
 # 双极情绪美学 · Bipolar Emotion Aesthetics（BEA）
 
 ![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey)
-![Version](https://img.shields.io/badge/version-2.14.0-blue)
+![Version](https://img.shields.io/badge/version-2.8.0-blue)
 ![Type](https://img.shields.io/badge/type-AI%20Skill-success)
 ![Platforms](https://img.shields.io/badge/platforms-7%2B-green)
 ![Cases](https://img.shields.io/badge/cases-30%2B-orange)
 
-> 把审美判断从"我觉得"变成**可讨论、可比较、可追踪、可生成**的协作工具。
+> 把审美判断从"我觉得"变成**可讨论、可比较、可改进**的协作工具。
 
 BEA 是一个 AI 技能（Skill）。在你常用的 AI 平台装上它，上传一张设计图、说一句大白话，就能得到一份可复现的美学分析：W(T) 张力指数、六范式定位、四维评分、病症诊断，以及精确到维度的改进处方。
 
@@ -264,40 +264,66 @@ python3 scripts/package.py --skillhub   # 生成 SkillHub 本地上传包（解�
 
 ```
 bipolar-emotion-aesthetics/
-├── SKILL.md                    # 技能入口（AI 平台读取的说明书）
-├── manifest.json               # 标准化元数据（版本号单一来源）
-├── README.md                   # 项目说明（本文件）
-├── QUICKSTART.md               # 1 分钟快速上手
-├── FAQ.md                      # 常见问题（含进阶用法与常见误区）
-├── CHANGELOG.md                # 版本变更记录
-├── SKILLHUB.md                 # SkillHub 发布指南（作者用）
-├── LICENSE.md                  # CC BY-NC-SA 4.0
-├── assets/                     # Logo 等品牌素材
+├── SKILL.md                        # 技能入口（AI 平台读取的说明书）
+├── manifest.json                   # 标准化元数据（版本号单一来源）
+├── README.md                       # 项目说明（本文件）
+├── QUICKSTART.md                   # 1 分钟快速上手
+├── FAQ.md                          # 常见问题（含进阶用法与常见误区）
+├── CHANGELOG.md                    # 版本变更记录
+├── SKILLHUB.md                     # SkillHub 发布指南（作者用）
+├── PLATFORMS-UNIFIED-COPY.md      # 各平台统一文案包（名称/描述/示例/Logo）
+├── LICENSE.md                      # CC BY-NC-SA 4.0
+├── cover.png                       # GitHub 仓库封面图
+├── assets/                         # Logo 等品牌素材
 ├── scripts/
-│   ├── bea_quant.py            # 量化引擎（纯标准库，离线可用）
-│   ├── bea_guide.py            # 交互式引导（不用记命令）
-│   └── package.py              # 多平台打包工具（含打包前预检 + SkillHub 规范校验）
-├── references/                 # 理论与参考
-│   ├── 01-core-theory.md       # 核心理论、W(T) 公式、病症处方
-│   ├── 02-workflow.md          # 评审流程、竞品分析、定调方法
-│   ├── 03-dimension-guide.md   # 维度定义 + 真实产品锚点
-│   ├── 04-checklist.md         # 设计自查清单
-│   ├── 05-case-studies.md      # 案例库（九大领域 32 个案例）
-│   └── 06-image-anchors.md     # 图片分析锚点与打分一致性指南
-├── platforms/                  # 多平台适配
+│   ├── bea_quant.py                # 量化引擎（纯标准库，离线可用）
+│   ├── bea_guide.py                # 交互式引导（不用记命令）
+│   ├── gen_case_library.py         # 案例库生成工具
+│   └── package.py                  # 多平台打包工具（含打包前预检 + SkillHub 规范校验）
+├── references/                     # 理论与参考
+│   ├── 01-core-theory.md           # 核心理论、W(T) 公式、病症处方
+│   ├── 02-workflow.md              # 评审流程、竞品分析、定调方法
+│   ├── 03-dimension-guide.md       # 维度定义 + 真实产品锚点
+│   ├── 04-checklist.md             # 设计自查清单
+│   ├── 05-case-studies.md          # 案例库（九大领域 32 个案例）
+│   └── 06-image-anchors.md         # 图片分析锚点与打分一致性指南
+├── platforms/                      # 多平台适配
+│   ├── README.md
 │   ├── universal-system-prompt.md  # 通用 System Prompt（复制即用）
-│   ├── workbuddy/  coze/  chatgpt/  claude/  tongyi/  dify/
-├── docs/                       # 站点与在线工具
-│   ├── index.html              # 官方网站（含 W(T) 计算器）
-│   ├── case-library.html       # 案例库 Web 应用
-│   ├── image-analyzer.html     # 图片分析助手
-│   └── paper.md                # 理论长文
-├── case-library/               # 案例库页面源文件
-├── image-analyzer/             # 图片分析助手源文件
-├── templates/                  # 输出模板
-│   ├── output-templates.md     # 标准化输出模板（4 种格式）
-│   └── review-record.md        # 评审记录模板
-└── arxiv/                      # 论文生成脚本（SkillHub 可能跳过）
+│   ├── workbuddy/                  # WorkBuddy 平台适配
+│   ├── coze/                       # 扣子 Coze 平台适配
+│   ├── chatgpt/                    # ChatGPT / GPTs 平台适配
+│   ├── claude/                     # Claude 平台适配
+│   ├── tongyi/                     # 通义千问平台适配
+│   └── dify/                       # Dify 平台适配
+├── templates/                      # 输出模板
+│   ├── output-templates.md         # 标准化输出模板（4 种格式）
+│   └── review-record.md            # 评审记录模板
+├── cases/                          # 完整案例分析文档
+│   ├── tesla-cybercab-BEA-analysis.md
+│   └── tesla-cybercab-mobile.html
+├── data/                           # 数据文件
+│   └── cases.json                  # 案例库结构化数据
+├── docs/                           # 官方网站（GitHub Pages）
+│   ├── index.html                  # 官网首页
+│   ├── case-library.html           # 案例库 Web 应用
+│   ├── image-analyzer.html         # 图片分析助手（简化版）
+│   ├── paper.md                    # 理论长文
+│   ├── favicon.png                 # 网站图标
+│   └── assets/cases/               # 案例图片（jpg/webp/mobile）
+├── mcp-server/                     # MCP 服务器（供任意 MCP 客户端调用）
+│   ├── server.py
+│   ├── test_server.py
+│   └── README.md
+├── papers/                         # 学术论文与文章
+│   ├── BEA-World-Models-Paper.md  # 《双极情绪美学对世界模型的补充》
+│   ├── douyin-article-BEA-world-models.md  # 抖音长文
+│   └── BEA-introduction-article.md # BEA 理论介绍文章
+├── tests/                          # 测试文件
+│   └── test_be.py
+└── arxiv/                          # 论文生成脚本（SkillHub 可能跳过）
+    ├── generate_docx.py
+    └── generate_pdf.py
 ```
 
 ---
