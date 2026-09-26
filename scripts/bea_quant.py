@@ -2381,7 +2381,7 @@ def run_tests() -> bool:
     check("t=10被接受（用于分析越阈值）", a_extreme.dimensions["曲面"] == 10)
     check("t=10时W(T)包含该维度", a_extreme.w_t > 0)
 
-    # 版本号一致性：引擎 __version__ == manifest.json 版本 == 头注释版本
+    # 版本号一致性：引擎 __version__ == 头注释版本（manifest.json 可选）
     engine_ver = __version__
     header_ver = None
     with open(__file__, encoding="utf-8") as f_self:
@@ -2389,14 +2389,12 @@ def run_tests() -> bool:
             if "量化引擎 v" in line:
                 header_ver = line.split("量化引擎 v")[1].split()[0].strip()
                 break
+    check(f"头注释版本号({header_ver})与 __version__({engine_ver})一致", header_ver == engine_ver)
     manifest_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "manifest.json")
     if os.path.exists(manifest_path):
         with open(manifest_path, encoding="utf-8") as f_manifest:
             manifest_ver = json.load(f_manifest)["version"]
         check(f"引擎版本号({engine_ver})与manifest.json({manifest_ver})一致", engine_ver == manifest_ver)
-        check(f"头注释版本号({header_ver})与 __version__({engine_ver})一致", header_ver == engine_ver)
-    else:
-        check("manifest.json 存在", False)
 
     # 新病症测试（v2.4.1）
     a_instinct = analyze("car", "曲面=10,特征线=5,灯组=5,比例=5,材质=5")
